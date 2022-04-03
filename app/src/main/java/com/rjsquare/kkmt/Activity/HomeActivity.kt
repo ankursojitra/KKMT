@@ -50,7 +50,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     private val DefaultKeyboardDP = 100
 
     companion object {
-
+        var TestVar = 0
         lateinit var thisHomeActivity: Activity
         lateinit var DB_HomeActivity: ActivityHomeBinding
         lateinit var mCrdLoader: CardView
