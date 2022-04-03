@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "254652852883",
+    "firebase_url": "https://kkmt-ca2c4.firebaseio.com",
+    "project_id": "kkmt-ca2c4",
+    "storage_bucket": "kkmt-ca2c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254652852883:android:b3dc30d28d4af5308bbb66",
+        "android_client_info": {
+          "package_name": "com.rjsquare.kkmt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254652852883-63bn4hh3812u8infksjk6qrikunf440o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqP5NQX6dta-JBSa7UuxKyYqNFIwK6xx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254652852883-63bn4hh3812u8infksjk6qrikunf440o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

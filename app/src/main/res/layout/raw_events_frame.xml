@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/id_mainCnt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/id_frameconstraint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_4dp"
+            android:layout_marginTop="@dimen/_8dp"
+            android:layout_marginRight="@dimen/_4dp"
+            android:layout_marginBottom="@dimen/_8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/img_event"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_55dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/event1"
+                app:layout_constraintBottom_toTopOf="@+id/txt_event_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_event_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4dp"
+                android:fontFamily="@font/lato_regular"
+                android:padding="@dimen/_1dp"
+                android:singleLine="true"
+                android:text="My Biggest Lesson"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_12dp"
+                app:layout_constraintBottom_toTopOf="@+id/txt_event_time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_event" />
+
+            <TextView
+                android:id="@+id/txt_event_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_light"
+                android:lineSpacingExtra="@dimen/_3dp"
+                android:maxLines="1"
+                android:minLines="1"
+                android:padding="@dimen/_1dp"
+                android:singleLine="true"
+                android:text="Posted 1h ago"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_9dp"
+                app:layout_constraintBottom_toTopOf="@id/txt_event_date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_event_title" />
+
+            <TextView
+                android:id="@+id/txt_event_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:lineSpacingExtra="@dimen/_3dp"
+                android:maxLines="1"
+                android:minLines="1"
+                android:padding="@dimen/_1dp"
+                android:singleLine="true"
+                android:text="Saturday 1st January 2020"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_9dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_event_time" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

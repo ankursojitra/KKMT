@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blue_dark"
+        tools:context=".Activity.Events.EventsFullView">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cnt_tool"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_48dp"
+            android:layout_marginTop="@dimen/_15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Events"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_14dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="@dimen/_35dp"
+                android:layout_height="@dimen/_35dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:padding="@dimen/_10dp"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2dp"
+                android:background="@color/white_8"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:layout_width="@dimen/_36dp"
+                android:layout_height="@dimen/_2dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--    <com.potyvideo.library.AndExoPlayerView-->
+        <!--        android:id="@+id/andExoPlayerView"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        app:andexo_aspect_ratio="aspect_16_9"-->
+        <!--        app:andexo_full_screen="true"-->
+        <!--        app:andexo_play_when_ready="true"-->
+        <!--        app:andexo_resize_mode="Fit"-->
+        <!--        app:andexo_show_controller="true"-->
+        <!--        app:default_artwork="@drawable/event1" />-->
+
+        <ImageView
+            android:id="@+id/img_event"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_170dp"
+            android:scaleType="centerCrop"
+            android:visibility="invisible"
+            android:src="@drawable/event1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cnt_tool" />
+
+        <com.afdhal_fa.imageslider.ImageSlider
+            android:id="@+id/imageSlide"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_170dp"
+            app:iss_auto_cycle="true"
+            app:iss_delay="0"
+            app:iss_period="1000"
+            android:overScrollMode="never"
+            app:iss_with_title="false"
+            app:iss_with_background="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cnt_tool"  />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/_12dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_event">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/txt_event_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato_medium"
+                    android:text="Intense Wibe"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_event_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6dp"
+                    android:fontFamily="@font/lato_light"
+                    android:text="posted 1 hour ago, 01 March 2020"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_11dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_event_title" />
+
+                <ImageView
+                    android:id="@+id/imageView15"
+                    android:layout_width="@dimen/_12dp"
+                    android:layout_height="@dimen/_12dp"
+                    android:layout_marginRight="@dimen/_2dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_event_location"
+                    app:layout_constraintEnd_toStartOf="@+id/txt_event_location"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txt_event_location"
+                    app:srcCompat="@drawable/ic_location_pin"
+                    app:tint="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/txt_event_location"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_4dp"
+                    android:layout_marginTop="@dimen/_6dp"
+                    android:fontFamily="@font/lato_light"
+                    android:text="Location : California"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_11dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/imageView15"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_event_time" />
+
+                <TextView
+                    android:id="@+id/txt_event_desc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8dp"
+                    android:fontFamily="@font/lato_regular"
+                    android:text="@string/eventDesc"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_14dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_event_location" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

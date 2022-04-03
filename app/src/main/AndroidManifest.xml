@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.rjsquare.kkmt">
+    <queries>
+        <!-- Camera -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+     <uses-permission android:name="android.permission.CAMERA" />
+     <uses-feature android:name="android.hardware.camera" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <uses-feature android:name="android.hardware.camera2.full" />
+
+    <application
+        android:name=".AppConstant.ApplicationClass"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:requestLegacyExternalStorage="true"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Activity.Review.SearchEmployee"
+            android:exported="true" >
+
+        </activity>
+        <activity
+            android:name=".Activity.Store.StoreItemRedeemConfirm"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Register.Upload_Selfie"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Bussiness.BussinessCheckIn"
+            android:screenOrientation="portrait" >
+
+        </activity>
+        <activity
+            android:name=".Activity.SearchCompany.Search_company_list"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Store.StoreLevelList"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Review.AndroidCameraApi"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Review.ReviewList"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Challenges.ActiveChallenge"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Challenges.Challenge_info"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.LuckyDraw.LuckyDraw"
+            android:screenOrientation="portrait" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".Activity.MapsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Video.ResultQuestion"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Video.Questions"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Video.VideoPlayer"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Video.Video"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Store.Store"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Notifications.NotificationList"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Events.EventsFullView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Events.Events"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Challenges.Challenges"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.PrizesList.Prizes"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Review.ReviewDisplay"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Review.ReviewEdit"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Review.ReviewEmployeeSearch"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Bussiness.Bussiness_Location"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Setting.Settings"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Profile.Profile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.HomeActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.dialoug"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Register.upload_doc"
+            android:exported="true"
+            android:screenOrientation="portrait">
+
+            <!--
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.MAIN"
+                    android:screenOrientation="portrait" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+
+        </activity>
+        <activity
+            android:name=".Activity.Register.Register_User"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.OTP.OTP_Confirmation"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustUnspecified" />
+        <activity
+            android:name=".Activity.Login.Login"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.rjsquare.kkmt.Activity.Splash.Splash"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.MAIN"
+                    android:screenOrientation="portrait" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.rjsquare.kkmt.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+    </application>
+
+</manifest>

@@ -1,0 +1,209 @@
+<resources>
+    <string name="app_name">EXPE</string>
+    <string name="welcomeuser">Welcome</string>
+    <string name="Phonenumber">Phone Number</string>
+    <string name="confirmyou">Confirm it\'s you</string>
+    <string name="loginmsg">WE ARE HAPPY TO HAVE YOU.\n LOGIN OR SIGNUP
+        TO BEGIN YOUR EXPERIENCE.</string>
+    <string name="otpmsg">ONE-TIME PASSWORD (OTP) WAS SENT TO YOUR MOBILE TELEPHONE NUMBER. PLEASE ENTER IT BELOW.</string>
+    <string name="OTP">-  OTP  -</string>
+    <string name="Login">- Login -</string>
+    <string name="Proceed">Proceed</string>
+    <string name="challengesmsg">Complete Challenges to Earn Additional Credits</string>
+    <string name="submit">Submit</string>
+    <string name="notfound">Business Not Found</string>
+    <string name="takequestions">Take me to Questions</string>
+    <string name="nextquestions">Next Question</string>
+    <string name="WatchVideos">Watch More Videos</string>
+    <string name="WatchVideosagain">Watch Video again</string>
+    <string name="backtohome">Back to Home</string>
+    <string name="Verify">Verify</string>
+    <string name="unauthorizeduser">Unauthorized user.</string>
+    <string name="regaccount">Don\'t have an account?</string>
+    <string name="otpnotreceived">Didn\'t Received OTP?</string>
+    <string name="Resend">Resend</string>
+    <string name="Signup">Sign up</string>
+    <string name="Signuptxt">-  Sign Up  -</string>
+    <string name="logintxt">Login</string>
+    <string name="loginalrttxt">Login</string>
+    <string name="otpalrttxt">OTP</string>
+    <string name="loginalertmsg">Login Message</string>
+    <string name="Signupmsg">LOGIN OR SIGN UP TO BEGIN</string>
+    <string name="firstname">First Name *</string>
+    <string name="lastname">Last Name *</string>
+    <string name="dummy_lastname">Gonzaleia</string>
+    <string name="dummy_firstname">Naria</string>
+    <string name="alreadyaccount">Already have an account?</string>
+    <string name="phonenumber">Phone Number *</string>
+    <string name="dummy_phonenumber">+19512389514</string>
+    <string name="email">Email Address</string>
+    <string name="dummyemail">Naria@gmail.com</string>
+    <string name="date">15/05/1995</string>
+    <string name="dob">DOB</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="doc_msg">Upload and verify document</string>
+    <string name="upload_msg">Please upload government issue document to verify your identity.</string>
+    <string name="upload_doc">Upload Document</string>
+    <string name="upload_selfie">Upload Selfie</string>
+    <string name="Skip">Skip</string>
+    <string name="docmsg">File must be in PDF or JPG</string>
+    <string name="docvalidatemsg">File must be less than 5 MB in size.</string>
+    <string name="Guidelines">-   Guidelines   -</string>
+    <string name="save_expore">Save and Expore</string>
+    <string name="title_activity_home">Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="store_msg">YOUR FEEDBACK MATTERS.
+REDEEM CREDITS FOR GOODS &amp; SERVICES</string>
+
+    <string name="Store">Store</string>
+    <string name="storeitemredeem">Store Item Redeem</string>
+    <string name="level">Level</string>
+    <string name="Prizes">Prizes</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="history">History</string>
+    <string name="leaderboard">Leader Board</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="SpecialEvents">Special Events</string>
+    <string name="Notifications">Notifications</string>
+    <string name="Videos">Videos</string>
+    <string name="Questions">Questions</string>
+    <string name="Result">Results</string>
+    <string name="LuckyDraw">Lucky Draw</string>
+    <string name="LuckyDrawmsg">SPIN TO WIN FREE CREDITS</string>
+    <string name="eventsmsg">YOU’RE INVITED</string>
+    <string name="notify_msg">PERSONALIZED JUST FOR YOU</string>
+    <string name="Videos_msg">ENHANCE YOUR PERSPECTIVE</string>
+    <string name="thankyou_msg">THANK YOU FOR SUBMITTING OUR TECHNICAL TEAM WILL INVESTIGATE</string>
+    <string name="chb_bussiness_1">I am at a different location</string>
+    <string name="chb_bussiness_2">Location is Next Door</string>
+    <string name="chb_bussiness_3">Wrong Location Name</string>
+    <string name="take_picture">Take picture</string>
+    <string name="nonotifications">No Notifications found</string>
+    <string name="noreviews">No Reviews found</string>
+    <string name="noactive">No Active Challenges found</string>
+    <string name="nocomplate">No Complate Challenges found</string>
+    <string name="nochallenges">No Challenges found</string>
+    <string name="noevents">No Events found</string>
+    <string name="novideos">No Videos found</string>
+    <string name="noprizes">No Prizes found</string>
+    <string name="nostore">No Store data found</string>
+    <string name="resultmsg">Our admin will take a look your progress and wining credits will be added to your account shortly.</string>
+    <string name="questionsmsg">Answer <u>Correctly</u> to Earn Credits</string>
+    <string name="videocredit">Watch the Video, then Answer the Questions to Earn Exclusive Credits</string>
+
+    <string name="videodesc">Watch at those amazing videos and <font color='#FC9A1F'>earn credits.</font></string>
+    <string name="chb_helper_1">I am not seeing my CSR</string>
+    <string name="chb_helper_2">I am seeing other employees (Not my CSR)</string>
+    <string name="chb_helper_3">Not seeing Any employees</string>
+    <string name="review_msg">By submitting the reviews you will earn points describe below </string>
+    <string name="editeadditionaldetails">Edit additional details (15 Hours Left)</string>
+    <string name="eventDesc">You’re about to see art in its truest form. This a beautiful way of expressing what is only possible through human ingenuity.You’re about to see art in its truest form. This a beautiful way of expressing what is only possible through human ingenuity.</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_active_challenge">ActiveChallenge</string>
+    <string name="tab_review_1">Pending Reviews</string>
+    <string name="tab_review_2">Completed Reviews</string>
+    <string name="tab_text_1">Active Challenges</string>
+    <string name="tab_text_2">Completed Challenges</string>
+    <string name="pickuplocation">Pick Up From EXPE Store Locations</string>
+    <string name="deliverylocation">Delivery Location</string>
+    <string name="picklocation">Pick Up Location</string>
+
+    <string name="material_calendar_monday">M</string>
+    <string name="material_calendar_tuesday">T</string>
+    <string name="material_calendar_wednesday">W</string>
+    <string name="material_calendar_thursday">T</string>
+    <string name="material_calendar_friday">F</string>
+    <string name="material_calendar_saturday">S</string>
+    <string name="material_calendar_sunday">S</string>
+
+    <array name="material_calendar_months_array">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </array>
+
+    <array name="PosLat">
+        <item>23.068416</item>
+        <item>23.068926</item>
+        <item>23.069706</item>
+        <item>23.070256</item>
+        <item>23.070756</item>
+        <item>23.071459</item>
+        <item>23.072179</item>
+        <item>23.071459</item>
+        <item>23.070756</item>
+        <item>23.070256</item>
+        <item>23.069706</item>
+        <item>23.068926</item>
+        <item>23.069066</item>
+        <item>23.069706</item>
+        <item>23.070256</item>
+        <item>23.070756</item>
+        <item>23.071509</item>
+        <item>23.070756</item>
+        <item>23.070256</item>
+        <item>23.069706</item>
+        <item>23.070166</item>
+        <item>23.070166</item>
+        <item>23.070896</item>
+        <item>23.072879</item>
+        <item>23.072385</item>
+        <item>23.071615</item>
+        <item>23.072385</item>
+        <item>23.071615</item>
+    </array>
+    <array name="PosLng">
+        <item>72.517391</item>
+        <item>72.515901</item>
+        <item>72.515421</item>
+        <item>72.515394</item>
+        <item>72.515404</item>
+        <item>72.515814</item>
+        <item>72.517394</item>
+        <item>72.518891</item>
+        <item>72.519351</item>
+        <item>72.519440</item>
+        <item>72.519351</item>
+        <item>72.518891</item>
+        <item>72.517391</item>
+        <item>72.516204</item>
+        <item>72.516184</item>
+        <item>72.516184</item>
+        <item>72.517394</item>
+        <item>72.518524</item>
+        <item>72.518640</item>
+        <item>72.518524</item>
+        <item>72.517991</item>
+        <item>72.516789</item>
+        <item>72.517391</item>
+        <item>72.517394</item>
+        <item>72.515794</item>
+        <item>72.514994</item>
+        <item>72.519014</item>
+        <item>72.519854</item>
+    </array>
+
+    <string name="material_calendar_today_button" />
+    <string name="material_calendar_positive_button">OK</string>
+    <string name="material_calendar_negative_button">Cancel</string>
+</resources>

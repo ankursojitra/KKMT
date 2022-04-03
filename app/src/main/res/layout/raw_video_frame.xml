@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/id_frameconstraintX"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img_display"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/video1" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_4dp"
+            android:layout_marginTop="@dimen/_8dp"
+            android:layout_marginRight="@dimen/_4dp"
+            android:layout_marginBottom="@dimen/_8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_display">
+
+            <TextView
+                android:id="@+id/txt_videoTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_regular"
+                android:singleLine="true"
+                android:text="My Biggest Lesson"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_10dp"
+                app:layout_constraintEnd_toStartOf="@+id/txt_lbl"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_lbl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_medium"
+                android:text="Earn"
+                android:textColor="@color/appcolor"
+                android:textSize="@dimen/_10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_videoTitle"
+                app:layout_constraintEnd_toStartOf="@+id/img_card"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/txt_videoTitle"
+                app:layout_constraintTop_toTopOf="@+id/txt_videoTitle" />
+
+            <ImageView
+                android:id="@+id/img_card"
+                android:layout_width="@dimen/_15dp"
+                android:layout_height="@dimen/_15dp"
+                android:layout_margin="@dimen/_4dp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_lbl"
+                app:layout_constraintEnd_toStartOf="@+id/txt_points"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/txt_lbl"
+                app:layout_constraintTop_toTopOf="@+id/txt_lbl"
+                app:srcCompat="@drawable/ic_card" />
+
+            <TextView
+                android:id="@+id/txt_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_heavy"
+                android:text="12300"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_lbl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/img_card"
+                app:layout_constraintTop_toTopOf="@+id/txt_videoTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_1dp"
+            android:background="@color/white_20"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView20"
+            android:layout_width="@dimen/_40dp"
+            android:layout_height="@dimen/_40dp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_display"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/img_display"
+            app:srcCompat="@drawable/ic_videoplay" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

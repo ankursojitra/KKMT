@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cnt_bottomback"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bottomround"
+                android:padding="@dimen/_8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout18"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.rishabhharit.roundedimageview.RoundedImageView
+                        android:id="@+id/img_search"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_150dp"
+                        android:layout_marginTop="@dimen/_1dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/backimage"
+                        app:cornerRadius="@dimen/_16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:roundedCorners="all" />
+
+                    <TextView
+                        android:id="@+id/txt_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_8dp"
+                        android:fontFamily="@font/lato_semibold"
+                        android:text="Conrad Place Chicago"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/_14dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/img_search" />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout8"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_margin="@dimen/_6dp"
+                        android:background="@color/bottom_saperator"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="@+id/img_search"
+                        app:layout_constraintStart_toStartOf="@+id/img_search"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_title" />
+
+                    <TextView
+                        android:id="@+id/txt_locationname"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_12dp"
+                        android:layout_marginTop="@dimen/_8dp"
+                        android:fontFamily="@font/lato_regular"
+                        android:padding="@dimen/_6dp"
+                        android:text="963 Madison drive Suite, 679"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/_11dp"
+                        app:layout_constraintEnd_toEndOf="@+id/txt_title"
+                        app:layout_constraintStart_toEndOf="@+id/img_locationpin"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
+
+                    <ImageView
+                        android:id="@+id/img_locationpin"
+                        android:layout_width="@dimen/_24dp"
+                        android:layout_height="@dimen/_24dp"
+                        app:layout_constraintBottom_toBottomOf="@id/txt_locationname"
+                        app:layout_constraintStart_toStartOf="@+id/txt_title"
+                        app:layout_constraintTop_toTopOf="@id/txt_locationname"
+                        app:srcCompat="@drawable/ic_location_pin" />
+
+                    <TextView
+                        android:id="@+id/txt_username"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_12dp"
+                        android:fontFamily="@font/lato_regular"
+                        android:padding="@dimen/_6dp"
+                        android:text="150 Employee"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/_11dp"
+                        app:layout_constraintEnd_toEndOf="@+id/txt_title"
+                        app:layout_constraintStart_toEndOf="@+id/img_locationpin"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_locationname" />
+
+                    <ImageView
+                        android:id="@+id/img_usericon"
+                        android:layout_width="@dimen/_24dp"
+                        android:layout_height="@dimen/_24dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/txt_username"
+                        app:layout_constraintStart_toStartOf="@+id/txt_title"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_locationname"
+                        app:srcCompat="@drawable/ic_user_blue" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cnt_bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_80dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout18" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
