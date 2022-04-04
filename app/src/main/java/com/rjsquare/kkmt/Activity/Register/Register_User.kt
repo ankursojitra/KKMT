@@ -106,12 +106,10 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
     override fun onClick(view: View?) {
         try {
             if (view == DB_RegisterUser.txtSignup) {
-//                GOTOUpload()
-//                if (GetValidationConfirmation()) {
-//                    DB_RegisterUser.cntLoader.visibility = View.VISIBLE
-//                    RegisterNewUser()
-//                }
-                GOTOUpload()
+                if (GetValidationConfirmation()) {
+                    DB_RegisterUser.cntLoader.visibility = View.VISIBLE
+                    RegisterNewUser()
+                }
             } else if (view == DB_RegisterUser.txtLogin) {
                 finish()
                 overridePendingTransition(R.anim.activity_in, R.anim.activity_out)

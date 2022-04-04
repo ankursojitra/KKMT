@@ -31,10 +31,10 @@ import kotlin.collections.ArrayList
 
 
 class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
-//    lateinit var mEventsModel: EventsData
-    lateinit var mEventsModel: EventsModel
-    lateinit var mArray_EventsModel: ArrayList<EventsModel>
-//    lateinit var mArray_EventsModel: ArrayList<EventsData>
+    lateinit var mEventsModel: EventsData
+//    lateinit var mEventsModel: EventsModel
+//    lateinit var mArray_EventsModel: ArrayList<EventsModel>
+    lateinit var mArray_EventsModel: ArrayList<EventsData>
     lateinit var DB_Events: ActivityEventsBinding
     var PageNo = 0
     var dataSize = 0
@@ -111,10 +111,10 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
 
             DB_Events.txtUnauthOk.setOnClickListener(this)
             IsEventCallavailable = false
-//            DB_Events.cntLoader.visibility = View.VISIBLE
-            filldata()
-//            framesAdapter()
-//            GetLatestEvents((++PageNo).toString())
+            DB_Events.cntLoader.visibility = View.VISIBLE
+//            filldata()
+            framesAdapter()
+            GetLatestEvents((++PageNo).toString())
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -222,65 +222,65 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
         return calendar
     }
 
-    private fun filldata() {
-        try {
-            mEventsModel = EventsModel()
-            mEventsModel.EventTitle = "My Biggest Lesson"
-            mEventsModel.EventTime = "Posted 1h ago"
-            mEventsModel.EventDate = "Saturday 1st January 2020"
-            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event1)!!
-            mArray_EventsModel.add(mEventsModel)
-
-            mEventsModel = EventsModel()
-            mEventsModel.EventTitle = "More Than Money"
-            mEventsModel.EventTime = "Posted 3 days ago"
-            mEventsModel.EventDate = "Saturday 8th January 2020"
-            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event2)!!
-            mArray_EventsModel.add(mEventsModel)
-
-            mEventsModel = EventsModel()
-            mEventsModel.EventTitle = "So Fascinating"
-            mEventsModel.EventTime = "Posted 3 days ago"
-            mEventsModel.EventDate = "Saturday 1st January 2020"
-            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event3)!!
-            mArray_EventsModel.add(mEventsModel)
-
-            mEventsModel = EventsModel()
-            mEventsModel.EventTitle = "Shake It Up"
-            mEventsModel.EventTime = "Posted 1h ago"
-            mEventsModel.EventDate = "Sunday 9th January 2020"
-            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event4)!!
-            mArray_EventsModel.add(mEventsModel)
-
-            mEventsModel = EventsModel()
-            mEventsModel.EventTitle = "Old is gold"
-            mEventsModel.EventTime = "Posted 1h ago"
-            mEventsModel.EventDate = "Saturday 1st January 2020"
-            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event5)!!
-            mArray_EventsModel.add(mEventsModel)
-
-            mEventsModel = EventsModel()
-            mEventsModel.EventTitle = "Task Masters"
-            mEventsModel.EventTime = "Posted 3 days ago"
-            mEventsModel.EventDate = "Saturday 15th January 2020"
-            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event6)!!
-            mArray_EventsModel.add(mEventsModel)
-
-            framesAdapter()
-        } catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
-    }
+//    private fun filldata() {
+//        try {
+//            mEventsModel = EventsModel()
+//            mEventsModel.EventTitle = "My Biggest Lesson"
+//            mEventsModel.EventTime = "Posted 1h ago"
+//            mEventsModel.EventDate = "Saturday 1st January 2020"
+//            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event1)!!
+//            mArray_EventsModel.add(mEventsModel)
+//
+//            mEventsModel = EventsModel()
+//            mEventsModel.EventTitle = "More Than Money"
+//            mEventsModel.EventTime = "Posted 3 days ago"
+//            mEventsModel.EventDate = "Saturday 8th January 2020"
+//            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event2)!!
+//            mArray_EventsModel.add(mEventsModel)
+//
+//            mEventsModel = EventsModel()
+//            mEventsModel.EventTitle = "So Fascinating"
+//            mEventsModel.EventTime = "Posted 3 days ago"
+//            mEventsModel.EventDate = "Saturday 1st January 2020"
+//            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event3)!!
+//            mArray_EventsModel.add(mEventsModel)
+//
+//            mEventsModel = EventsModel()
+//            mEventsModel.EventTitle = "Shake It Up"
+//            mEventsModel.EventTime = "Posted 1h ago"
+//            mEventsModel.EventDate = "Sunday 9th January 2020"
+//            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event4)!!
+//            mArray_EventsModel.add(mEventsModel)
+//
+//            mEventsModel = EventsModel()
+//            mEventsModel.EventTitle = "Old is gold"
+//            mEventsModel.EventTime = "Posted 1h ago"
+//            mEventsModel.EventDate = "Saturday 1st January 2020"
+//            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event5)!!
+//            mArray_EventsModel.add(mEventsModel)
+//
+//            mEventsModel = EventsModel()
+//            mEventsModel.EventTitle = "Task Masters"
+//            mEventsModel.EventTime = "Posted 3 days ago"
+//            mEventsModel.EventDate = "Saturday 15th January 2020"
+//            mEventsModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.event6)!!
+//            mArray_EventsModel.add(mEventsModel)
+//
+//            framesAdapter()
+//        } catch (NE: NullPointerException) {
+//            NE.printStackTrace()
+//        } catch (IE: IndexOutOfBoundsException) {
+//            IE.printStackTrace()
+//        } catch (AE: ActivityNotFoundException) {
+//            AE.printStackTrace()
+//        } catch (E: IllegalArgumentException) {
+//            E.printStackTrace()
+//        } catch (RE: RuntimeException) {
+//            RE.printStackTrace()
+//        } catch (E: Exception) {
+//            E.printStackTrace()
+//        }
+//    }
 
 
     fun framesAdapter() {
@@ -303,25 +303,25 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
 //            mRrEvents.setLayoutManager(GridLayoutManager(this, 2))
             DB_Events.rrEvents.adapter = loEventsAdapter
 
-//            DB_Events.rrEvents.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    val layoutManager =
-//                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
-//                    val totalItemCount = layoutManager.itemCount
-//                    val lastVisible = layoutManager.findLastVisibleItemPosition()
-//                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
-//                    Log.e("TAG","POSITION : "+totalItemCount)
-//                    Log.e("TAG","LastPOSITION : "+lastVisible)
-//                    if (totalItemCount > 0 && endHasBeenReached) {
-//                        //you have reached to the bottom of your recycler view
-//                        Log.e("TAG", "RECYCLERVIEWLASTITEM")
-//                    }
-//                    if ((totalItemCount-1) == lastVisible && IsEventCallavailable && dataSize == 10){
-//                        IsEventCallavailable = false
-//                        GetLatestEvents((++PageNo).toString())
-//                    }
-//                }
-//            })
+            DB_Events.rrEvents.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager =
+                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisible = layoutManager.findLastVisibleItemPosition()
+                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
+                    Log.e("TAG","POSITION : "+totalItemCount)
+                    Log.e("TAG","LastPOSITION : "+lastVisible)
+                    if (totalItemCount > 0 && endHasBeenReached) {
+                        //you have reached to the bottom of your recycler view
+                        Log.e("TAG", "RECYCLERVIEWLASTITEM")
+                    }
+                    if ((totalItemCount-1) == lastVisible && IsEventCallavailable && dataSize == 10){
+                        IsEventCallavailable = false
+                        GetLatestEvents((++PageNo).toString())
+                    }
+                }
+            })
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {

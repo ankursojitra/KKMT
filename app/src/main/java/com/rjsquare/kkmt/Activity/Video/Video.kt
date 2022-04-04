@@ -25,8 +25,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class Video : AppCompatActivity(), View.OnClickListener {
-    lateinit var mVideosModel: VideoesModel
-    lateinit var mArray_VideosModel: ArrayList<VideoesModel>
+    lateinit var mVideosModel: Videos_Model.VideoData
+    lateinit var mArray_VideosModel: ArrayList<Videos_Model.VideoData>
     var PageNo = 0
     var dataSize = 0
     var IsVideoCallavailable = false
@@ -63,11 +63,11 @@ class Video : AppCompatActivity(), View.OnClickListener {
             DB_Video.imgBack.setOnClickListener(this)
 
             IsVideoCallavailable = false
-//            DB_Video.cntLoader.visibility = View.VISIBLE
-//            framesAdapter()
-//            GetLatestVideos((++PageNo).toString())
+            DB_Video.cntLoader.visibility = View.VISIBLE
+            framesAdapter()
+            GetLatestVideos((++PageNo).toString())
 
-            filldata()
+//            filldata()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -85,15 +85,15 @@ class Video : AppCompatActivity(), View.OnClickListener {
 
     private fun filldata() {
         try {
-            mVideosModel = VideoesModel()
-            mVideosModel.EarnPoint = "12300"
-            mVideosModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.video1)!!
-            mVideosModel.VideoTitle = "My Biggest Lesson"
-            mArray_VideosModel.add(mVideosModel)
-            mArray_VideosModel.add(mVideosModel)
-            mArray_VideosModel.add(mVideosModel)
-
-            framesAdapter()
+//            mVideosModel = VideoesModel()
+//            mVideosModel.EarnPoint = "12300"
+//            mVideosModel.ImgLink = ContextCompat.getDrawable(this, R.drawable.video1)!!
+//            mVideosModel.VideoTitle = "My Biggest Lesson"
+//            mArray_VideosModel.add(mVideosModel)
+//            mArray_VideosModel.add(mVideosModel)
+//            mArray_VideosModel.add(mVideosModel)
+//
+//            framesAdapter()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -110,70 +110,70 @@ class Video : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun GetLatestVideos(pageNo: String) {
-//        try {
-//
-//            //Here the json data is add to a hash map with key data
-//            val params: MutableMap<String, String> =
-//                HashMap()
-//            params[ApplicationClass.paramKey_Usertype] =
-//                ApplicationClass.userInfoModel.data!!.usertype!!
-//            params[ApplicationClass.paramKey_PageNo] = pageNo
-//            params[ApplicationClass.paramKey_UserId] =
-//                ApplicationClass.userInfoModel.data!!.userid!!
-//
-//            val service =
-//                ApiCallingInstance.retrofitInstance.create<VideosService>(
-//                    VideosService::class.java
-//                )
-//            val call =
-//                service.GetVideosData(
-//                    params, ApplicationClass.userInfoModel.data!!.access_token!!
-//                )
-//
-//            call.enqueue(object : Callback<Videos_Model> {
-//                override fun onFailure(call: Call<Videos_Model>, t: Throwable) {
-//
-//                    DB_Video.cntLoader.visibility = View.GONE
-//                    Log.e("GetResponsesasXASX", "Hell: ")
-//                }
-//
-//                override fun onResponse(
-//                    call: Call<Videos_Model>,
-//                    response: Response<Videos_Model>
-//                ) {
-//                    Log.e("GetResponsesas", "Hell: " + response.body())
-//                    DB_Video.cntLoader.visibility = View.GONE
-//                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
-//                        dataSize = response.body()!!.data!!.size
-//                        mArray_VideosModel.addAll(response.body()!!.data!!)
-//                        DB_Video.rrVideos.adapter!!.notifyDataSetChanged()
-//                        IsVideoCallavailable = true
-//                        Log.e("TAG", "Sizeofdata : " + mArray_VideosModel.size)
-//                        if (mArray_VideosModel.size > 0) {
-//                            DB_Video.txtNoEvents.visibility = View.GONE
-//                        } else {
-//                            DB_Video.txtNoEvents.visibility = View.VISIBLE
-//                        }
-//                    } else {
-//
-//                    }
-//                }
-//            })
-//        } catch (E: Exception) {
-//            print(E)
-//        } catch (NE: NullPointerException) {
-//            print(NE)
-//        } catch (IE: IndexOutOfBoundsException) {
-//            print(IE)
-//        } catch (IE: IllegalStateException) {
-//            print(IE)
-//        } catch (AE: ActivityNotFoundException) {
-//            print(AE)
-//        } catch (KNE: KotlinNullPointerException) {
-//            print(KNE)
-//        } catch (CE: ClassNotFoundException) {
-//            print(CE)
-//        }
+        try {
+
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+            params[ApplicationClass.paramKey_Usertype] =
+                ApplicationClass.userInfoModel.data!!.usertype!!
+            params[ApplicationClass.paramKey_PageNo] = pageNo
+            params[ApplicationClass.paramKey_UserId] =
+                ApplicationClass.userInfoModel.data!!.userid!!
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<VideosService>(
+                    VideosService::class.java
+                )
+            val call =
+                service.GetVideosData(
+                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                )
+
+            call.enqueue(object : Callback<Videos_Model> {
+                override fun onFailure(call: Call<Videos_Model>, t: Throwable) {
+
+                    DB_Video.cntLoader.visibility = View.GONE
+                    Log.e("GetResponsesasXASX", "Hell: ")
+                }
+
+                override fun onResponse(
+                    call: Call<Videos_Model>,
+                    response: Response<Videos_Model>
+                ) {
+                    Log.e("GetResponsesas", "Hell: " + response.body())
+                    DB_Video.cntLoader.visibility = View.GONE
+                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                        dataSize = response.body()!!.data!!.size
+                        mArray_VideosModel.addAll(response.body()!!.data!!)
+                        DB_Video.rrVideos.adapter!!.notifyDataSetChanged()
+                        IsVideoCallavailable = true
+                        Log.e("TAG", "Sizeofdata : " + mArray_VideosModel.size)
+                        if (mArray_VideosModel.size > 0) {
+                            DB_Video.txtNoEvents.visibility = View.GONE
+                        } else {
+                            DB_Video.txtNoEvents.visibility = View.VISIBLE
+                        }
+                    } else {
+
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
     }
 
 

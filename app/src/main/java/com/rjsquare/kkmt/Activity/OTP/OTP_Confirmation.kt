@@ -228,13 +228,11 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         try {
             if (view == DB_OTPConfirmation.txtVerify) {
-                FinalOTPCode ="1234"
-//                FinalOTPCode = GetOTP()
-//                User_OTPConfirmation(
-//                    FinalOTPCode,
-//                    ApplicationClass.mLogInInfo_Model.data!!.userid
-//                )
-                GOTO_HomeScreen()
+                FinalOTPCode = GetOTP()
+                User_OTPConfirmation(
+                    FinalOTPCode,
+                    ApplicationClass.mLogInInfo_Model.data!!.userid
+                )
             } else if (view == DB_OTPConfirmation.txtOtpAlertok) {
                 DB_OTPConfirmation.cntAlert.visibility = View.GONE
             }  else if (view == DB_OTPConfirmation.txtUnauthOk) {
@@ -301,13 +299,11 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                     if (text.length == 1) {
                         ApplicationClass.hideKeyboard(OTPActivity)
                         nextView!!.requestFocus()
-                        FinalOTPCode = "1234"
-//                        FinalOTPCode = GetOTP()
-//                        User_OTPConfirmation(
-//                            FinalOTPCode,
-//                            ApplicationClass.mLogInInfo_Model.data!!.userid
-//                        )
-                        GOTO_HomeScreen()
+                        FinalOTPCode = GetOTP()
+                        User_OTPConfirmation(
+                            FinalOTPCode,
+                            ApplicationClass.mLogInInfo_Model.data!!.userid
+                        )
                     } else {
 
                     }

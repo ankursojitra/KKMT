@@ -135,12 +135,12 @@ class Questions : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun CheckAns(SelectedOption: Int) {
-//        if (!QuistionInfo.answer!!.equals(SelectedOption.toString(),true)) {
-//            DB_Question.cntWrongAns.visibility = View.VISIBLE
-//        } else {
+        if (!QuistionInfo.answer!!.equals(SelectedOption.toString(),true)) {
+            DB_Question.cntWrongAns.visibility = View.VISIBLE
+        } else {
             ResetOptions()
-//            SetUpQuestion(++QuestionNo)
-//        }
+            SetUpQuestion(++QuestionNo)
+        }
     }
 
     private fun DeSelectTextColor() {
@@ -183,29 +183,29 @@ class Questions : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         try {
             if (view == DB_Question.txtNextquestion) {
-//                if (SelectedOption == 0) {
-//                    DB_Question.txtAlertmsg.text = "Please select one option."
-//                    DB_Question.cntAlert.visibility = View.VISIBLE
-//                } else if (TotalQUestions == (QuestionNo + 1)) {
-//                    var ResultIntent = Intent(this, ResultQuestion::class.java)
-//                    startActivity(ResultIntent)
-//                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-//                    VideoPlayer.VideoPlayerActivity.finish()
-//                    finish()
-//                } else {
-//                    CheckAns(SelectedOption)
-//                }
-                if (QuestionNo == 0){
-                    SelectedOption = 1
-                    CheckAns(SelectedOption)
-                    QuestionNo++
-                }else{
+                if (SelectedOption == 0) {
+                    DB_Question.txtAlertmsg.text = "Please select one option."
+                    DB_Question.cntAlert.visibility = View.VISIBLE
+                } else if (TotalQUestions == (QuestionNo + 1)) {
                     var ResultIntent = Intent(this, ResultQuestion::class.java)
                     startActivity(ResultIntent)
                     overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
                     VideoPlayer.VideoPlayerActivity.finish()
                     finish()
+                } else {
+                    CheckAns(SelectedOption)
                 }
+//                if (QuestionNo == 0){
+//                    SelectedOption = 1
+//                    CheckAns(SelectedOption)
+//                    QuestionNo++
+//                }else{
+//                    var ResultIntent = Intent(this, ResultQuestion::class.java)
+//                    startActivity(ResultIntent)
+//                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+//                    VideoPlayer.VideoPlayerActivity.finish()
+//                    finish()
+//                }
 
             } else if (view == DB_Question.cntWatchagain) {
                 finish()

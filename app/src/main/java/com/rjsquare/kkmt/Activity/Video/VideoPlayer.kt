@@ -53,8 +53,8 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
 
             DB_VideoPlayer.imgBack.setOnClickListener(this)
             DB_VideoPlayer.txtQuestions.setOnClickListener(this)
-//            DB_VideoPlayer.cntLoader.visibility = View.VISIBLE
-//            GetVideoDetails()
+            DB_VideoPlayer.cntLoader.visibility = View.VISIBLE
+            GetVideoDetails()
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -72,57 +72,57 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun GetVideoDetails() {
-//        try {
-//
-//            //Here the json data is add to a hash map with key data
-//            val params: MutableMap<String, String> =
-//                HashMap()
-//            params[ApplicationClass.paramKey_VideoId] = ApplicationClass.mVideoesModelSelected!!.id!!
-//            params[ApplicationClass.paramKey_UserId] =
-//                ApplicationClass.userInfoModel.data!!.userid!!
-//            val service =
-//                ApiCallingInstance.retrofitInstance.create<VideosDetailService>(
-//                    VideosDetailService::class.java
-//                )
-//            val call =
-//                service.GetVideosDetail(
-//                    params, ApplicationClass.userInfoModel.data!!.access_token!!
-//                )
-//
-//            call.enqueue(object : Callback<VideoDetail_Model> {
-//                override fun onFailure(call: Call<VideoDetail_Model>, t: Throwable) {
-//                    Log.e("GetResponsesasXASX", "Hell: ")
-//                        DB_VideoPlayer.cntLoader.visibility = View.GONE
-//                }
-//
-//                override fun onResponse(
-//                    call: Call<VideoDetail_Model>,
-//                    response: Response<VideoDetail_Model>
-//                ) {
-//                    Log.e("GetResponsesas", "Hell: " + response.body())
-//                    DB_VideoPlayer.cntLoader.visibility = View.GONE
-//                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
-//                        VideoData = response.body()!!.data!!
-//                    } else {
-//
-//                    }
-//                }
-//            })
-//        } catch (E: Exception) {
-//            print(E)
-//        } catch (NE: NullPointerException) {
-//            print(NE)
-//        } catch (IE: IndexOutOfBoundsException) {
-//            print(IE)
-//        } catch (IE: IllegalStateException) {
-//            print(IE)
-//        } catch (AE: ActivityNotFoundException) {
-//            print(AE)
-//        } catch (KNE: KotlinNullPointerException) {
-//            print(KNE)
-//        } catch (CE: ClassNotFoundException) {
-//            print(CE)
-//        }
+        try {
+
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+            params[ApplicationClass.paramKey_VideoId] = ApplicationClass.mVideoesModelSelected!!.id!!
+            params[ApplicationClass.paramKey_UserId] =
+                ApplicationClass.userInfoModel.data!!.userid!!
+            val service =
+                ApiCallingInstance.retrofitInstance.create<VideosDetailService>(
+                    VideosDetailService::class.java
+                )
+            val call =
+                service.GetVideosDetail(
+                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                )
+
+            call.enqueue(object : Callback<VideoDetail_Model> {
+                override fun onFailure(call: Call<VideoDetail_Model>, t: Throwable) {
+                    Log.e("GetResponsesasXASX", "Hell: ")
+                        DB_VideoPlayer.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<VideoDetail_Model>,
+                    response: Response<VideoDetail_Model>
+                ) {
+                    Log.e("GetResponsesas", "Hell: " + response.body())
+                    DB_VideoPlayer.cntLoader.visibility = View.GONE
+                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                        VideoData = response.body()!!.data!!
+                    } else {
+
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
     }
 
 

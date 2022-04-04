@@ -57,12 +57,11 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
                     // If user press done key
                     if (i == EditorInfo.IME_ACTION_DONE) {
                         DB_Login.cntLoader.visibility = View.VISIBLE
-//                        HiddenKeyBoard(this@Login, DB_Login.imgBack)
-//                        if (GetValidationConfirmation()) {
-//                            DB_Login.cntLoader.visibility = View.VISIBLE
-//                            LogInExistingUser()
-//                        }
-                        GOTO_OTP()
+                        HiddenKeyBoard(this@Login, DB_Login.imgBack)
+                        if (GetValidationConfirmation()) {
+                            DB_Login.cntLoader.visibility = View.VISIBLE
+                            LogInExistingUser()
+                        }
                         return true
                     }
                     return false
@@ -188,11 +187,10 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
     override fun onClick(view: View?) {
         try {
             if (view == DB_Login.txtProceed) {
-//                if (GetValidationConfirmation()) {
-//                    DB_Login.cntLoader.visibility = View.VISIBLE
-//                    LogInExistingUser()
-//                }
-                GOTO_OTP()
+                if (GetValidationConfirmation()) {
+                    DB_Login.cntLoader.visibility = View.VISIBLE
+                    LogInExistingUser()
+                }
             } else if (view == DB_Login.txtSignup) {
                 var otpView = Intent(this, Register_User::class.java)
                 startActivity(otpView)

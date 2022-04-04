@@ -21,7 +21,7 @@ import java.util.*
 
 class VideosAdapter(
     var moContext: Context,
-    var moArrayList: ArrayList<VideoesModel>
+    var moArrayList: ArrayList<Videos_Model.VideoData>
 ) : RecyclerView.Adapter<VideosAdapter.View_holder>() {
 
     var Width = 0
@@ -53,8 +53,8 @@ class VideosAdapter(
 
             holder.lVideoesModelSelected = mVideoesModel
 
-            holder.DB_RawVideoFrameBinding.txtVideoTitle.text = mVideoesModel.VideoTitle
-            holder.DB_RawVideoFrameBinding.txtPoints.text = mVideoesModel.EarnPoint
+            holder.DB_RawVideoFrameBinding.txtVideoTitle.text = mVideoesModel.title
+            holder.DB_RawVideoFrameBinding.txtPoints.text = mVideoesModel.credit
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -76,7 +76,7 @@ class VideosAdapter(
 
     inner class View_holder(itemBinding: RawVideoFrameBinding) : RecyclerView.ViewHolder(itemBinding.root),
         View.OnClickListener {
-        var lVideoesModelSelected: VideoesModel? = null
+        var lVideoesModelSelected: Videos_Model.VideoData? = null
 
         lateinit var DB_RawVideoFrameBinding: RawVideoFrameBinding
         init {

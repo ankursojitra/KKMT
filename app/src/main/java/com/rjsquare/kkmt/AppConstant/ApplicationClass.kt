@@ -92,10 +92,10 @@ class ApplicationClass : Application(), LifecycleObserver {
         var APP_BACKGROUND: Boolean = false
         var UserLogedIn: Boolean = false
         var mSearchModelSelected: SearchModel? = null
-//        var mEventsModelSelected: EventsData? = null
-        var mEventsModelSelected: EventsModel? = null
-        var mVideoesModelSelected: VideoesModel? = null
-//        var mVideoesModelSelected: Videos_Model.VideoData? = null
+        var mEventsModelSelected: EventsData? = null
+//        var mEventsModelSelected: EventsModel? = null
+//        var mVideoesModelSelected: VideoesModel? = null
+        var mVideoesModelSelected: Videos_Model.VideoData? = null
 
         lateinit var SharedPref: SharedPreferences
         lateinit var PrefEditor: SharedPreferences.Editor
@@ -479,7 +479,7 @@ class ApplicationClass : Application(), LifecycleObserver {
             IsUserEmployee = IsEmployee()
         }
 
-//        if (UserLogedIn) updateUserInfo()
+        if (UserLogedIn) updateUserInfo()
 
     }
 }

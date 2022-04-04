@@ -259,16 +259,13 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
                     }
                 })
             } else if (view == DB_UploadSelfie.txtSaveandexplore) {
-//                if (!PDFString.equals("", true)) {
-//                    DB_UploadSelfie.cntLoader.visibility = View.VISIBLE
-//                    UploadSelfie(PDFString)
-//                } else {
-//                    DB_UploadSelfie.txtAlertmsg.text = "Invalid Selfie."
-//                    DB_UploadSelfie.cntAlert.visibility = View.VISIBLE
-//                }
-                var HomeIntent = Intent(this@Upload_Selfie, HomeActivity::class.java)
-                startActivity(HomeIntent)
-                overridePendingTransition(R.anim.activity_in,R.anim.activity_out)
+                if (!PDFString.equals("", true)) {
+                    DB_UploadSelfie.cntLoader.visibility = View.VISIBLE
+                    UploadSelfie(PDFString)
+                } else {
+                    DB_UploadSelfie.txtAlertmsg.text = "Invalid Selfie."
+                    DB_UploadSelfie.cntAlert.visibility = View.VISIBLE
+                }
             } else if (view == DB_UploadSelfie.txtSkip) {
                 var HomeIntent = Intent(this, HomeActivity::class.java)
                 startActivity(HomeIntent)
