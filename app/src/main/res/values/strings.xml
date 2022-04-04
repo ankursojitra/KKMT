@@ -9,6 +9,7 @@
     <string name="OTP">-  OTP  -</string>
     <string name="Login">- Login -</string>
     <string name="Proceed">Proceed</string>
+    <string name="loadmore">Load More</string>
     <string name="challengesmsg">Complete Challenges to Earn Additional Credits</string>
     <string name="submit">Submit</string>
     <string name="notfound">Business Not Found</string>

@@ -24,6 +24,9 @@ class VideoDetail_Model : Serializable {
         @SerializedName("features")
         var features: String? = null
 
+        @SerializedName("usertype")
+        var usertype: String? = null
+
         @SerializedName("tag")
         var tag: String? = null
 
@@ -82,6 +85,12 @@ class VideoDetail_Model : Serializable {
 
             @SerializedName("updated_at")
             var updated_at: String? = null
+
+            @SerializedName("created_timestamp")
+            var created_timestamp: String? = null
+
+            @SerializedName("updated_timestamp")
+            var updated_timestamp: String? = null
 
         }
 

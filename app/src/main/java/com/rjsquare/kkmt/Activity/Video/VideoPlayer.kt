@@ -91,7 +91,6 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<VideoDetail_Model> {
                 override fun onFailure(call: Call<VideoDetail_Model>, t: Throwable) {
-                    Log.e("GetResponsesasXASX", "Hell: ")
                         DB_VideoPlayer.cntLoader.visibility = View.GONE
                 }
 
@@ -99,7 +98,6 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
                     call: Call<VideoDetail_Model>,
                     response: Response<VideoDetail_Model>
                 ) {
-                    Log.e("GetResponsesas", "Hell: " + response.body())
                     DB_VideoPlayer.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
                         VideoData = response.body()!!.data!!

@@ -1,14 +1,18 @@
 package com.rjsquare.kkmt.Activity.Video
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.Events.VideoQuestionCompleteService
+import com.rjsquare.kkmt.RetrofitInstance.Events.VideoQuestionComplete_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.VideosService
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
 import com.rjsquare.kkmt.databinding.ActivityResultQuestionBinding
@@ -82,25 +86,25 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<VideosService>(
-                    VideosService::class.java
+                ApiCallingInstance.retrofitInstance.create<VideoQuestionCompleteService>(
+                    VideoQuestionCompleteService::class.java
                 )
             val call =
-                service.GetVideosData(
+                service.GetVideoQuestionComplete(
                     params, ApplicationClass.userInfoModel.data!!.access_token!!
                 )
 
-            call.enqueue(object : Callback<Videos_Model> {
-                override fun onFailure(call: Call<Videos_Model>, t: Throwable) {
+            call.enqueue(object : Callback<VideoQuestionComplete_Model> {
+                override fun onFailure(call: Call<VideoQuestionComplete_Model>, t: Throwable) {
                     Log.e("GetResponsesasXASX", "Hell: ")
                     DB_ResultQuestion.cntLoader.visibility = View.GONE
                 }
 
                 override fun onResponse(
-                    call: Call<Videos_Model>,
-                    response: Response<Videos_Model>
+                    call: Call<VideoQuestionComplete_Model>,
+                    response: Response<VideoQuestionComplete_Model>
                 ) {
-                    Log.e("GetResponsesas", "Hell: " + response.body())
+                    Log.e("GetResponsesas", "Hell: " + Gson().toJson(response.body()))
                     DB_ResultQuestion.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
 
@@ -132,8 +136,10 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         try {
             if (view == DB_ResultQuestion.imgBack) {
+                Video.thisVideo.finish()
                 onBackPressed()
             } else if (view == DB_ResultQuestion.txtWatchmore) {
+                setResult(Activity.RESULT_OK)
                 onBackPressed()
             } else if (view == DB_ResultQuestion.cntBacktohome) {
                 Video.thisVideo.finish()

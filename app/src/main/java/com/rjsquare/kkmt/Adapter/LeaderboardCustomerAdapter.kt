@@ -14,6 +14,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Model.LeaderBoardModel
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.EmpInfo
+import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.LeaderboardCustomer_Model
 import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.UserData
 import com.rjsquare.kkmt.databinding.RawLeaderboardFrameBinding
 import java.util.*
@@ -50,12 +52,10 @@ class LeaderboardCustomerAdapter(
     override fun onBindViewHolder(holder: View_holder, position: Int) {
         try {
             var mLeaderBoardModel = moArrayList[position]
-            var Per_Value_old = 0.0
-            val mLeaderBoardModel_old: LeaderBoardModel
             holder.CustomerInfoSelected = mLeaderBoardModel
-//            holder.DB_RawLeaderboardFrameBinding.txtName.text = holder.CustomerInfoSelected!!.username
-//            holder.DB_RawLeaderboardFrameBinding.txtCredits.text = holder.CustomerInfoSelected!!.credit
-//            holder.DB_RawLeaderboardFrameBinding.txtRank.text = holder.CustomerInfoSelected!!.rank
+            holder.DB_RawLeaderboardFrameBinding.txtName.text = holder.CustomerInfoSelected!!.username
+            holder.DB_RawLeaderboardFrameBinding.txtCredits.text = holder.CustomerInfoSelected!!.credit
+            holder.DB_RawLeaderboardFrameBinding.txtRank.text = holder.CustomerInfoSelected!!.rank
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

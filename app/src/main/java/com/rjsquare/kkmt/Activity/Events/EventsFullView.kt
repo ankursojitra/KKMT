@@ -35,9 +35,9 @@ class EventsFullView : AppCompatActivity(), View.OnClickListener {
 
 
             val imageList = ArrayList<SlideUIModel>()
-//            for (link in ApplicationClass.mEventsModelSelected!!.image!!){
-                imageList.add(SlideUIModel("https://kkmtapp.com/developing/public/upload/event/16481876030.jpeg", " "))
-//            }
+            for (link in ApplicationClass.mEventsModelSelected!!.image!!){
+                imageList.add(SlideUIModel(link, " "))
+            }
             DB_EventsView.imageSlide.setItemClickListener(object : ItemClickListener {
                 override fun onItemClick(model: SlideUIModel, position: Int) {
 

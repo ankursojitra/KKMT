@@ -91,71 +91,71 @@ class LeaderBoard : Fragment(), View.OnClickListener {
         }
         return DB_LeaderBoard.root
     }
-    private fun FillData() {
-        try {
-            mArray_LeaderBoardModel = ArrayList()
-            mLeaderBoardModel = UserData.CustomerInfo()
-            mArray_LeaderBoardModel.add(mLeaderBoardModel)
-            mArray_LeaderBoardModel.add(mLeaderBoardModel)
-            mArray_LeaderBoardModel.add(mLeaderBoardModel)
-            mArray_LeaderBoardModel.add(mLeaderBoardModel)
-            mArray_LeaderBoardModel.add(mLeaderBoardModel)
-            mArray_LeaderBoardModel.add(mLeaderBoardModel)
-            mArray_LeaderBoardModel.add(mLeaderBoardModel)
-            mArray_LeaderBoardModel.add(mLeaderBoardModel)
-            mArray_LeaderBoardModel.add(mLeaderBoardModel)
-            mArray_LeaderBoardModel.add(mLeaderBoardModel)
-        } catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
-    }
+//    private fun FillData() {
+//        try {
+//            mArray_LeaderBoardModel = ArrayList()
+//            mLeaderBoardModel = UserData.CustomerInfo()
+//            mArray_LeaderBoardModel.add(mLeaderBoardModel)
+//            mArray_LeaderBoardModel.add(mLeaderBoardModel)
+//            mArray_LeaderBoardModel.add(mLeaderBoardModel)
+//            mArray_LeaderBoardModel.add(mLeaderBoardModel)
+//            mArray_LeaderBoardModel.add(mLeaderBoardModel)
+//            mArray_LeaderBoardModel.add(mLeaderBoardModel)
+//            mArray_LeaderBoardModel.add(mLeaderBoardModel)
+//            mArray_LeaderBoardModel.add(mLeaderBoardModel)
+//            mArray_LeaderBoardModel.add(mLeaderBoardModel)
+//            mArray_LeaderBoardModel.add(mLeaderBoardModel)
+//        } catch (NE: NullPointerException) {
+//            NE.printStackTrace()
+//        } catch (IE: IndexOutOfBoundsException) {
+//            IE.printStackTrace()
+//        } catch (AE: ActivityNotFoundException) {
+//            AE.printStackTrace()
+//        } catch (E: IllegalArgumentException) {
+//            E.printStackTrace()
+//        } catch (RE: RuntimeException) {
+//            RE.printStackTrace()
+//        } catch (E: Exception) {
+//            E.printStackTrace()
+//        }
+//    }
 
-    fun framesAdapter() {
-        try {
-
-//            if (mArray_LeaderBoardModel != null && mArray_LeaderBoardModel.size > 0) {
-//                mTxtNoNotifications.visibility = View.GONE
-//            } else {
-//                mTxtNoNotifications.visibility = View.VISIBLE
-//            }
-
-            val loLeaderBoardAdapter: LeaderboardCustomerAdapter
-//                if (mHomeModelArrayList_old == null) {
-            loLeaderBoardAdapter = LeaderboardCustomerAdapter(
-                requireActivity(), mArray_LeaderBoardModel
-            )
-
-//            val linearLayoutManager =
-//                LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-//            mRrLeaderboard.layoutManager = linearLayoutManager
-//            mRrLeaderboard.layoutManager = GridLayoutManager(requireActivity(), 1)
-            DB_LeaderBoard.rrLeaderboard.adapter = loLeaderBoardAdapter
-
-
-        } catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
-    }
+//    fun framesAdapter() {
+//        try {
+//
+////            if (mArray_LeaderBoardModel != null && mArray_LeaderBoardModel.size > 0) {
+////                mTxtNoNotifications.visibility = View.GONE
+////            } else {
+////                mTxtNoNotifications.visibility = View.VISIBLE
+////            }
+//
+//            val loLeaderBoardAdapter: LeaderboardCustomerAdapter
+////                if (mHomeModelArrayList_old == null) {
+//            loLeaderBoardAdapter = LeaderboardCustomerAdapter(
+//                requireActivity(), mLeaderboardCustomer_Model
+//            )
+//
+////            val linearLayoutManager =
+////                LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+////            mRrLeaderboard.layoutManager = linearLayoutManager
+////            mRrLeaderboard.layoutManager = GridLayoutManager(requireActivity(), 1)
+//            DB_LeaderBoard.rrLeaderboard.adapter = loLeaderBoardAdapter
+//
+//
+//        } catch (NE: NullPointerException) {
+//            NE.printStackTrace()
+//        } catch (IE: IndexOutOfBoundsException) {
+//            IE.printStackTrace()
+//        } catch (AE: ActivityNotFoundException) {
+//            AE.printStackTrace()
+//        } catch (E: IllegalArgumentException) {
+//            E.printStackTrace()
+//        } catch (RE: RuntimeException) {
+//            RE.printStackTrace()
+//        } catch (E: Exception) {
+//            E.printStackTrace()
+//        }
+//    }
 
 
     private fun LeaderBoardDataCustomer() {
@@ -268,27 +268,27 @@ class LeaderBoard : Fragment(), View.OnClickListener {
         }
     }
 
-//    private fun FillData() {
-//        try {
-//            mArray_LeaderBoardModel = ArrayList()
-//
-//            mArray_LeaderBoardModel.addAll(mLeaderboardCustomer_Model.data!!.leaderboard!!)
-//
-//            framesAdapter()
-//        } catch (NE: NullPointerException) {
-//            NE.printStackTrace()
-//        } catch (IE: IndexOutOfBoundsException) {
-//            IE.printStackTrace()
-//        } catch (AE: ActivityNotFoundException) {
-//            AE.printStackTrace()
-//        } catch (E: IllegalArgumentException) {
-//            E.printStackTrace()
-//        } catch (RE: RuntimeException) {
-//            RE.printStackTrace()
-//        } catch (E: Exception) {
-//            E.printStackTrace()
-//        }
-//    }
+    private fun FillData() {
+        try {
+            mArray_LeaderBoardModel = ArrayList()
+
+            mArray_LeaderBoardModel.addAll(mLeaderboardCustomer_Model.data!!.leaderboard!!)
+
+            framesAdapter()
+        } catch (NE: NullPointerException) {
+            NE.printStackTrace()
+        } catch (IE: IndexOutOfBoundsException) {
+            IE.printStackTrace()
+        } catch (AE: ActivityNotFoundException) {
+            AE.printStackTrace()
+        } catch (E: IllegalArgumentException) {
+            E.printStackTrace()
+        } catch (RE: RuntimeException) {
+            RE.printStackTrace()
+        } catch (E: Exception) {
+            E.printStackTrace()
+        }
+    }
 
     private fun FillEmpData() {
         try {
@@ -337,44 +337,44 @@ class LeaderBoard : Fragment(), View.OnClickListener {
     }
 
 
-//    fun framesAdapter() {
-//        try {
-//
-////            if (mArray_LeaderBoardModel != null && mArray_LeaderBoardModel.size > 0) {
-////                mTxtNoNotifications.visibility = View.GONE
-////            } else {
-////                mTxtNoNotifications.visibility = View.VISIBLE
-////            }
-//
-//            val loLeaderboardCustomerAdapter: LeaderboardCustomerAdapter
-////                if (mHomeModelArrayList_old == null) {
-//            loLeaderboardCustomerAdapter = LeaderboardCustomerAdapter(
-//                requireActivity(), mArray_LeaderBoardModel
-//            )
-//
-//            DB_LeaderBoard.rrLeaderboard.adapter = loLeaderboardCustomerAdapter
-//
-//            DB_LeaderBoard.txtRankOwnName.text =
-//                mLeaderboardCustomer_Model.data!!.current_customer!![0].username
-//            DB_LeaderBoard.txtRankOwn.text =
-//                mLeaderboardCustomer_Model.data!!.current_customer!![0].rank
-//            DB_LeaderBoard.txtRankOwnAmount.text =
-//                mLeaderboardCustomer_Model.data!!.current_customer!![0].credit
-//
-//        } catch (NE: NullPointerException) {
-//            NE.printStackTrace()
-//        } catch (IE: IndexOutOfBoundsException) {
-//            IE.printStackTrace()
-//        } catch (AE: ActivityNotFoundException) {
-//            AE.printStackTrace()
-//        } catch (E: IllegalArgumentException) {
-//            E.printStackTrace()
-//        } catch (RE: RuntimeException) {
-//            RE.printStackTrace()
-//        } catch (E: Exception) {
-//            E.printStackTrace()
-//        }
-//    }
+    fun framesAdapter() {
+        try {
+
+//            if (mArray_LeaderBoardModel != null && mArray_LeaderBoardModel.size > 0) {
+//                mTxtNoNotifications.visibility = View.GONE
+//            } else {
+//                mTxtNoNotifications.visibility = View.VISIBLE
+//            }
+
+            val loLeaderboardCustomerAdapter: LeaderboardCustomerAdapter
+//                if (mHomeModelArrayList_old == null) {
+            loLeaderboardCustomerAdapter = LeaderboardCustomerAdapter(
+                requireActivity(), mArray_LeaderBoardModel
+            )
+
+            DB_LeaderBoard.rrLeaderboard.adapter = loLeaderboardCustomerAdapter
+
+            DB_LeaderBoard.txtRankOwnName.text =
+                mLeaderboardCustomer_Model.data!!.current_customer!![0].username
+            DB_LeaderBoard.txtRankOwn.text =
+                mLeaderboardCustomer_Model.data!!.current_customer!![0].rank
+            DB_LeaderBoard.txtRankOwnAmount.text =
+                mLeaderboardCustomer_Model.data!!.current_customer!![0].credit
+
+        } catch (NE: NullPointerException) {
+            NE.printStackTrace()
+        } catch (IE: IndexOutOfBoundsException) {
+            IE.printStackTrace()
+        } catch (AE: ActivityNotFoundException) {
+            AE.printStackTrace()
+        } catch (E: IllegalArgumentException) {
+            E.printStackTrace()
+        } catch (RE: RuntimeException) {
+            RE.printStackTrace()
+        } catch (E: Exception) {
+            E.printStackTrace()
+        }
+    }
 
 
     companion object {

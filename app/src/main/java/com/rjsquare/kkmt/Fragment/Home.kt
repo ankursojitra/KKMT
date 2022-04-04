@@ -62,7 +62,7 @@ class Home : Fragment(), View.OnClickListener {
                 DB_FHome.txtVideos.text = "Videos"
             }
 
-//            SetUpHomeUIData()
+            SetUpHomeUIData()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
