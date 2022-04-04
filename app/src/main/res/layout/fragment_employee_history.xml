@@ -3,16 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/blue_dark"
-        tools:context=".Fragment.EmployeeHistory">
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/blue_dark"
+            tools:context=".Fragment.EmployeeHistory">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -58,7 +53,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout11">
 
                 <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                    android:id="@+id/circular_progress1"
+                    android:id="@+id/cp_overall_five_star"
                     android:layout_width="@dimen/_135dp"
                     android:layout_height="@dimen/_135dp"
                     android:layout_gravity="center"
@@ -78,7 +73,7 @@
                     app:textColor="@android:color/transparent" />
 
                 <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                    android:id="@+id/circular_progress2"
+                    android:id="@+id/cp_overall_good"
                     android:layout_width="@dimen/_105dp"
                     android:layout_height="@dimen/_105dp"
                     android:layout_gravity="center"
@@ -97,7 +92,7 @@
                     app:textColor="@android:color/transparent" />
 
                 <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                    android:id="@+id/circular_progress3"
+                    android:id="@+id/cp_overall_one_star"
                     android:layout_width="@dimen/_75dp"
                     android:layout_height="@dimen/_75dp"
                     android:layout_gravity="center"
@@ -116,7 +111,7 @@
                     app:textColor="@android:color/transparent" />
 
                 <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                    android:id="@+id/circular_progress4"
+                    android:id="@+id/cp_overall_bad"
                     android:layout_width="@dimen/_45dp"
                     android:layout_height="@dimen/_45dp"
                     android:layout_gravity="center"
@@ -460,7 +455,7 @@
                         app:layout_constraintVertical_chainStyle="packed">
 
                         <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                            android:id="@+id/circular_pr_bl1"
+                            android:id="@+id/cp_lastweek_five_star"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
@@ -480,18 +475,18 @@
                             app:textColor="@android:color/transparent" />
 
                         <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                            android:id="@+id/circular_pr_bl2"
+                            android:id="@+id/cp_lastweek_good"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_13dp"
                             app:direction="clockwise"
                             app:enableProgressAnimation="true"
-                            app:layout_constraintBottom_toBottomOf="@id/circular_pr_bl1"
-                            app:layout_constraintEnd_toEndOf="@id/circular_pr_bl1"
+                            app:layout_constraintBottom_toBottomOf="@id/cp_lastweek_five_star"
+                            app:layout_constraintEnd_toEndOf="@id/cp_lastweek_five_star"
                             app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="@id/circular_pr_bl1"
-                            app:layout_constraintTop_toTopOf="@id/circular_pr_bl1"
+                            app:layout_constraintStart_toStartOf="@id/cp_lastweek_five_star"
+                            app:layout_constraintTop_toTopOf="@id/cp_lastweek_five_star"
                             app:progressBackgroundColor="@color/second_round_back"
                             app:progressBackgroundStrokeWidth="@dimen/_10dp"
                             app:progressCap="round"
@@ -500,18 +495,18 @@
                             app:textColor="@android:color/transparent" />
 
                         <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                            android:id="@+id/circular_pr_bl3"
+                            android:id="@+id/cp_lastweek_one_star"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_13dp"
                             app:direction="clockwise"
                             app:enableProgressAnimation="true"
-                            app:layout_constraintBottom_toBottomOf="@id/circular_pr_bl2"
-                            app:layout_constraintEnd_toEndOf="@id/circular_pr_bl2"
+                            app:layout_constraintBottom_toBottomOf="@id/cp_lastweek_good"
+                            app:layout_constraintEnd_toEndOf="@id/cp_lastweek_good"
                             app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="@id/circular_pr_bl2"
-                            app:layout_constraintTop_toTopOf="@id/circular_pr_bl2"
+                            app:layout_constraintStart_toStartOf="@id/cp_lastweek_good"
+                            app:layout_constraintTop_toTopOf="@id/cp_lastweek_good"
                             app:progressBackgroundColor="@color/third_round_back"
                             app:progressBackgroundStrokeWidth="@dimen/_10dp"
                             app:progressCap="round"
@@ -520,18 +515,18 @@
                             app:textColor="@android:color/transparent" />
 
                         <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                            android:id="@+id/circular_pr_bl4"
+                            android:id="@+id/cp_lastweek_bad"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_13dp"
                             app:direction="clockwise"
                             app:enableProgressAnimation="true"
-                            app:layout_constraintBottom_toBottomOf="@id/circular_pr_bl3"
-                            app:layout_constraintEnd_toEndOf="@id/circular_pr_bl3"
+                            app:layout_constraintBottom_toBottomOf="@id/cp_lastweek_one_star"
+                            app:layout_constraintEnd_toEndOf="@id/cp_lastweek_one_star"
                             app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="@id/circular_pr_bl3"
-                            app:layout_constraintTop_toTopOf="@id/circular_pr_bl3"
+                            app:layout_constraintStart_toStartOf="@id/cp_lastweek_one_star"
+                            app:layout_constraintTop_toTopOf="@id/cp_lastweek_one_star"
                             app:progressBackgroundColor="@color/forth_round_back"
                             app:progressBackgroundStrokeWidth="@dimen/_10dp"
                             app:progressCap="round"
@@ -569,7 +564,7 @@
                         app:layout_constraintTop_toTopOf="@+id/constraintLayoutx">
 
                         <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                            android:id="@+id/circular_pr_br1"
+                            android:id="@+id/cp_lastmonth_five_star"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
@@ -589,18 +584,18 @@
                             app:textColor="@android:color/transparent" />
 
                         <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                            android:id="@+id/circular_pr_br2"
+                            android:id="@+id/cp_lastmonth_good"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_13dp"
                             app:direction="clockwise"
                             app:enableProgressAnimation="true"
-                            app:layout_constraintBottom_toBottomOf="@id/circular_pr_br1"
-                            app:layout_constraintEnd_toEndOf="@id/circular_pr_br1"
+                            app:layout_constraintBottom_toBottomOf="@id/cp_lastmonth_five_star"
+                            app:layout_constraintEnd_toEndOf="@id/cp_lastmonth_five_star"
                             app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="@id/circular_pr_br1"
-                            app:layout_constraintTop_toTopOf="@id/circular_pr_br1"
+                            app:layout_constraintStart_toStartOf="@id/cp_lastmonth_five_star"
+                            app:layout_constraintTop_toTopOf="@id/cp_lastmonth_five_star"
                             app:progressBackgroundColor="@color/second_round_back"
                             app:progressBackgroundStrokeWidth="@dimen/_10dp"
                             app:progressCap="round"
@@ -609,18 +604,18 @@
                             app:textColor="@android:color/transparent" />
 
                         <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                            android:id="@+id/circular_pr_br3"
+                            android:id="@+id/cp_lastmonth_one_star"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_13dp"
                             app:direction="clockwise"
                             app:enableProgressAnimation="true"
-                            app:layout_constraintBottom_toBottomOf="@id/circular_pr_br2"
-                            app:layout_constraintEnd_toEndOf="@id/circular_pr_br2"
+                            app:layout_constraintBottom_toBottomOf="@id/cp_lastmonth_good"
+                            app:layout_constraintEnd_toEndOf="@id/cp_lastmonth_good"
                             app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="@id/circular_pr_br2"
-                            app:layout_constraintTop_toTopOf="@id/circular_pr_br2"
+                            app:layout_constraintStart_toStartOf="@id/cp_lastmonth_good"
+                            app:layout_constraintTop_toTopOf="@id/cp_lastmonth_good"
                             app:progressBackgroundColor="@color/third_round_back"
                             app:progressBackgroundStrokeWidth="@dimen/_10dp"
                             app:progressCap="round"
@@ -629,18 +624,18 @@
                             app:textColor="@android:color/transparent" />
 
                         <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
-                            android:id="@+id/circular_pr_br4"
+                            android:id="@+id/cp_lastmonth_bad"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_13dp"
                             app:direction="clockwise"
                             app:enableProgressAnimation="true"
-                            app:layout_constraintBottom_toBottomOf="@id/circular_pr_br3"
-                            app:layout_constraintEnd_toEndOf="@id/circular_pr_br3"
+                            app:layout_constraintBottom_toBottomOf="@id/cp_lastmonth_one_star"
+                            app:layout_constraintEnd_toEndOf="@id/cp_lastmonth_one_star"
                             app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="@id/circular_pr_br3"
-                            app:layout_constraintTop_toTopOf="@id/circular_pr_br3"
+                            app:layout_constraintStart_toStartOf="@id/cp_lastmonth_one_star"
+                            app:layout_constraintTop_toTopOf="@id/cp_lastmonth_one_star"
                             app:progressBackgroundColor="@color/forth_round_back"
                             app:progressBackgroundStrokeWidth="@dimen/_10dp"
                             app:progressCap="round"
@@ -978,7 +973,52 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cnt_loader"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/loader_back"
+                android:clickable="true"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/crd_loader"
+                    android:layout_width="@dimen/_80dp"
+                    android:layout_height="@dimen/_80dp"
+                    android:background="@android:color/transparent"
+                    app:cardCornerRadius="@dimen/_12dp"
+                    app:cardElevation="@dimen/_4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/_18dp">
+
+                        <ProgressBar
+                            android:id="@+id/progressBar2"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
+
 </layout>

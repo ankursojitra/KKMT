@@ -2,20 +2,18 @@ package com.rjsquare.kkmt.Activity.Video
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Adapter.VideosAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.Model.VideoesModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.VideosService
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
@@ -28,7 +26,7 @@ class Video : AppCompatActivity(), View.OnClickListener {
     lateinit var mVideosModel: Videos_Model.VideoData
     lateinit var mArray_VideosModel: ArrayList<Videos_Model.VideoData>
     var PageNo = 0
-    var dataSize = 0
+    var PagePerlimit = 1
     var IsVideoCallavailable = false
 
 
@@ -40,6 +38,7 @@ class Video : AppCompatActivity(), View.OnClickListener {
     companion object {
         lateinit var DB_Video: ActivityVideoBinding
         lateinit var thisVideo: Activity
+        var CompleteQuestionCall = 1001
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,11 +60,13 @@ class Video : AppCompatActivity(), View.OnClickListener {
 
             mArray_VideosModel = ArrayList()
             DB_Video.imgBack.setOnClickListener(this)
+            DB_Video.txtUnauthOk.setOnClickListener(this)
+            DB_Video.cntLoadmore.setOnClickListener(this)
 
             IsVideoCallavailable = false
             DB_Video.cntLoader.visibility = View.VISIBLE
             framesAdapter()
-            GetLatestVideos((++PageNo).toString())
+            GetLatestVideos((++PageNo).toString(), PagePerlimit.toString())
 
 //            filldata()
         } catch (NE: NullPointerException) {
@@ -80,6 +81,19 @@ class Video : AppCompatActivity(), View.OnClickListener {
             RE.printStackTrace()
         } catch (E: Exception) {
             E.printStackTrace()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CompleteQuestionCall) {
+            if (resultCode == Activity.RESULT_OK) {
+                Log.e("TAG","GetCallFromComplete : ")
+                PageNo = 0
+                mArray_VideosModel = ArrayList()
+                DB_Video.cntLoader.visibility = View.VISIBLE
+                GetLatestVideos((++PageNo).toString(), PagePerlimit.toString())
+            }
         }
     }
 
@@ -109,15 +123,15 @@ class Video : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun GetLatestVideos(pageNo: String) {
+    private fun GetLatestVideos(pageNo: String, PagePerLimit: String) {
         try {
-
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
             params[ApplicationClass.paramKey_Usertype] =
                 ApplicationClass.userInfoModel.data!!.usertype!!
             params[ApplicationClass.paramKey_PageNo] = pageNo
+            params[ApplicationClass.paramKey_limit] = PagePerLimit
             params[ApplicationClass.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
@@ -132,28 +146,36 @@ class Video : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<Videos_Model> {
                 override fun onFailure(call: Call<Videos_Model>, t: Throwable) {
-
                     DB_Video.cntLoader.visibility = View.GONE
-                    Log.e("GetResponsesasXASX", "Hell: ")
                 }
 
                 override fun onResponse(
                     call: Call<Videos_Model>,
                     response: Response<Videos_Model>
                 ) {
-                    Log.e("GetResponsesas", "Hell: " + response.body())
                     DB_Video.cntLoader.visibility = View.GONE
+                    Log.e("TAG", "VideoResponse : " + Gson().toJson(response.body()!!))
                     if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
-                        dataSize = response.body()!!.data!!.size
+                        if (response.body()!!.data!!.size < this@Video.PagePerlimit) {
+                            DB_Video.cntLoadmore.visibility = View.GONE
+                            IsVideoCallavailable = false
+                        } else {
+                            IsVideoCallavailable = true
+                        }
+
                         mArray_VideosModel.addAll(response.body()!!.data!!)
                         DB_Video.rrVideos.adapter!!.notifyDataSetChanged()
-                        IsVideoCallavailable = true
-                        Log.e("TAG", "Sizeofdata : " + mArray_VideosModel.size)
+
                         if (mArray_VideosModel.size > 0) {
                             DB_Video.txtNoEvents.visibility = View.GONE
                         } else {
                             DB_Video.txtNoEvents.visibility = View.VISIBLE
                         }
+                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                        DB_Video.cntUnAuthorized.visibility = View.VISIBLE
+                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseEmpltyList)) {
+                        DB_Video.cntLoadmore.visibility = View.GONE
+                        IsVideoCallavailable = false
                     } else {
 
                     }
@@ -192,25 +214,24 @@ class Video : AppCompatActivity(), View.OnClickListener {
 
             DB_Video.rrVideos.setAdapter(loVideosAdapter)
 
-            DB_Video.rrVideos.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val layoutManager =
-                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
-                    val totalItemCount = layoutManager.itemCount
-                    val lastVisible = layoutManager.findLastVisibleItemPosition()
-                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
-                    Log.e("TAG", "POSITION : " + totalItemCount)
-                    Log.e("TAG", "LastPOSITION : " + lastVisible)
-                    if (totalItemCount > 0 && endHasBeenReached) {
-                        //you have reached to the bottom of your recycler view
-                        Log.e("TAG", "RECYCLERVIEWLASTITEM")
-                    }
-                    if ((totalItemCount) == lastVisible && IsVideoCallavailable && dataSize == 10) {
-                        IsVideoCallavailable = false
-                        GetLatestVideos((++PageNo).toString())
-                    }
-                }
-            })
+//            DB_Video.rrVideos.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                    val layoutManager =
+//                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
+//                    val totalItemCount = layoutManager.itemCount
+//                    val lastVisible = layoutManager.findLastVisibleItemPosition()
+//                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
+//                    Log.e("TAG", "POSITION : " + totalItemCount)
+//                    Log.e("TAG", "LastPOSITION : " + lastVisible)
+//                    if (totalItemCount > 0 && endHasBeenReached) {
+//                        //you have reached to the bottom of your recycler view
+//                        Log.e("TAG", "RECYCLERVIEWLASTITEM")
+//                    }
+//                    if ((totalItemCount) == lastVisible && IsVideoCallavailable && dataSize == 10) {
+//                        IsVideoCallavailable = false
+//                        GetLatestVideos((++PageNo).toString(), PagePerLimit.toString())//                    }
+//                }
+//            })
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -229,6 +250,14 @@ class Video : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         if (view == DB_Video.imgBack) {
             onBackPressed()
+        } else if (view == DB_Video.txtUnauthOk) {
+            DB_Video.cntUnAuthorized.visibility = View.GONE
+            ApplicationClass.UserLogout(this)
+        } else if (view == DB_Video.cntLoadmore) {
+            if (IsVideoCallavailable) {
+                DB_Video.cntLoader.visibility = View.VISIBLE
+                GetLatestVideos((++PageNo).toString(), PagePerlimit.toString())
+            }
         }
     }
 }

@@ -5,40 +5,36 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.applandeo.materialcalendarview.utils.DateUtils
+import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.Activity.Video.Video
 import com.rjsquare.kkmt.Adapter.EventsAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.Model.EventsModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.EventsData
 import com.rjsquare.kkmt.RetrofitInstance.Events.EventsService
-import com.rjsquare.kkmt.RetrofitInstance.Events.VideosService
 import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.databinding.ActivityEventsBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
     lateinit var mEventsModel: EventsData
-//    lateinit var mEventsModel: EventsModel
+
+    //    lateinit var mEventsModel: EventsModel
 //    lateinit var mArray_EventsModel: ArrayList<EventsModel>
     lateinit var mArray_EventsModel: ArrayList<EventsData>
     lateinit var DB_Events: ActivityEventsBinding
     var PageNo = 0
+    var PagePerlimit = 5
     var dataSize = 0
-    var IsEventCallavailable = false
+    var IsEventCallavailable = true
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -53,6 +49,7 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
             ApplicationClass.StatusTextWhite(this, true)
             mArray_EventsModel = ArrayList()
             DB_Events.imgBack.setOnClickListener(this)
+            DB_Events.cntLoadmore.setOnClickListener(this)
 
 
 //            val events: MutableList<EventDay> = java.util.ArrayList()
@@ -110,11 +107,11 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
 //            }
 
             DB_Events.txtUnauthOk.setOnClickListener(this)
-            IsEventCallavailable = false
+            IsEventCallavailable = true
             DB_Events.cntLoader.visibility = View.VISIBLE
 //            filldata()
             framesAdapter()
-            GetLatestEvents((++PageNo).toString())
+            GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -131,69 +128,79 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
         }
     }
 
-    private fun GetLatestEvents(pageNo: String) {
-//        try {
-//
-//            //Here the json data is add to a hash map with key data
-//            val params: MutableMap<String, String> =
-//                HashMap()
-//            params[ApplicationClass.paramKey_PageNo] = pageNo
-////                ApplicationClass.userInfoModel.data!!.userid.toString()
-////            params[ApplicationClass.paramKey_Selfie] = fileString
-//
-//            val service =
-//                ApiCallingInstance.retrofitInstance.create<EventsService>(
-//                    EventsService::class.java
-//                )
-//            val call =
-//                service.GetEventsData(
-//                    params
-//                )
-//
-//            call.enqueue(object : Callback<Events_Model> {
-//                override fun onFailure(call: Call<Events_Model>, t: Throwable) {
-//                    DB_Events.cntLoader.visibility = View.GONE
-//                    Log.e("GetResponsesasXASX", "Hell: ")
-//                }
-//
-//                override fun onResponse(
-//                    call: Call<Events_Model>,
-//                    response: Response<Events_Model>
-//                ) {
-//                    DB_Events.cntLoader.visibility = View.GONE
-//                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
-//                        dataSize = response.body()!!.data!!.size
-//                        mArray_EventsModel.addAll(response.body()!!.data!!)
-//                        DB_Events.rrEvents.adapter!!.notifyDataSetChanged()
-//                        IsEventCallavailable = true
-//                        Log.e("TAG","Sizeofdata : "+mArray_EventsModel.size)
-//                        if (mArray_EventsModel.size > 0) {
-//                            DB_Events.txtNoEvents.visibility = View.GONE
-//                        } else {
-//                            DB_Events.txtNoEvents.visibility = View.VISIBLE
-//                        }
-//                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
-//                        DB_Events.cntUnAuthorized.visibility = View.VISIBLE
-//                    } else {
-//
-//                    }
-//                }
-//            })
-//        } catch (E: Exception) {
-//            print(E)
-//        } catch (NE: NullPointerException) {
-//            print(NE)
-//        } catch (IE: IndexOutOfBoundsException) {
-//            print(IE)
-//        } catch (IE: IllegalStateException) {
-//            print(IE)
-//        } catch (AE: ActivityNotFoundException) {
-//            print(AE)
-//        } catch (KNE: KotlinNullPointerException) {
-//            print(KNE)
-//        } catch (CE: ClassNotFoundException) {
-//            print(CE)
-//        }
+    private fun GetLatestEvents(pageNo: String, PagePerlimit: String) {
+        try {
+
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+            params[ApplicationClass.paramKey_PageNo] = pageNo
+            params[ApplicationClass.paramKey_limit] = PagePerlimit
+//                ApplicationClass.userInfoModel.data!!.userid.toString()
+//            params[ApplicationClass.paramKey_Selfie] = fileString
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<EventsService>(
+                    EventsService::class.java
+                )
+            val call =
+                service.GetEventsData(
+                    params
+                )
+
+            call.enqueue(object : Callback<Events_Model> {
+                override fun onFailure(call: Call<Events_Model>, t: Throwable) {
+                    DB_Events.cntLoader.visibility = View.GONE
+                    Log.e("GetResponsesasXASX", "Hell: ")
+                }
+
+                override fun onResponse(
+                    call: Call<Events_Model>,
+                    response: Response<Events_Model>
+                ) {
+                    DB_Events.cntLoader.visibility = View.GONE
+                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                        dataSize = response.body()!!.data!!.size
+                        mArray_EventsModel.addAll(response.body()!!.data!!)
+                        DB_Events.rrEvents.adapter!!.notifyDataSetChanged()
+
+                        if (response.body()!!.data!!.size < this@Events.PagePerlimit) {
+                            DB_Events.cntLoadmore.visibility = View.GONE
+                            IsEventCallavailable = false
+                        } else {
+                            IsEventCallavailable = true
+                        }
+
+                        if (mArray_EventsModel.size > 0) {
+                            DB_Events.txtNoEvents.visibility = View.GONE
+                        } else {
+                            DB_Events.txtNoEvents.visibility = View.VISIBLE
+                        }
+                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                        DB_Events.cntUnAuthorized.visibility = View.VISIBLE
+                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseEmpltyList)) {
+                        DB_Events.cntLoadmore.visibility = View.GONE
+                        IsEventCallavailable = false
+                    } else {
+
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
     }
 
 
@@ -286,7 +293,7 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
     fun framesAdapter() {
         try {
 //            mArray_EventsModel = ArrayList()
-            Log.e("TAG","Size of list : "+mArray_EventsModel.size)
+            Log.e("TAG", "Size of list : " + mArray_EventsModel.size)
             if (mArray_EventsModel != null && mArray_EventsModel.size > 0) {
                 DB_Events.txtNoEvents.visibility = View.GONE
             } else {
@@ -303,25 +310,25 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
 //            mRrEvents.setLayoutManager(GridLayoutManager(this, 2))
             DB_Events.rrEvents.adapter = loEventsAdapter
 
-            DB_Events.rrEvents.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val layoutManager =
-                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
-                    val totalItemCount = layoutManager.itemCount
-                    val lastVisible = layoutManager.findLastVisibleItemPosition()
-                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
-                    Log.e("TAG","POSITION : "+totalItemCount)
-                    Log.e("TAG","LastPOSITION : "+lastVisible)
-                    if (totalItemCount > 0 && endHasBeenReached) {
-                        //you have reached to the bottom of your recycler view
-                        Log.e("TAG", "RECYCLERVIEWLASTITEM")
-                    }
-                    if ((totalItemCount-1) == lastVisible && IsEventCallavailable && dataSize == 10){
-                        IsEventCallavailable = false
-                        GetLatestEvents((++PageNo).toString())
-                    }
-                }
-            })
+//            DB_Events.rrEvents.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                    val layoutManager =
+//                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
+//                    val totalItemCount = layoutManager.itemCount
+//                    val lastVisible = layoutManager.findLastVisibleItemPosition()
+//                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
+//                    Log.e("TAG", "POSITION : " + totalItemCount)
+//                    Log.e("TAG", "LastPOSITION : " + lastVisible)
+//                    if (totalItemCount > 0 && endHasBeenReached) {
+//                        //you have reached to the bottom of your recycler view
+//                        Log.e("TAG", "RECYCLERVIEWLASTITEM")
+//                    }
+//                    if ((totalItemCount - 1) == lastVisible && IsEventCallavailable && dataSize == 10) {
+//                        IsEventCallavailable = true
+//                        GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
+//                    }
+//                }
+//            })
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -341,9 +348,15 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
     override fun onClick(view: View?) {
         if (view == DB_Events.imgBack) {
             onBackPressed()
-        }else if (view == DB_Events.txtUnauthOk) {
+        } else if (view == DB_Events.txtUnauthOk) {
             DB_Events.cntUnAuthorized.visibility = View.GONE
             ApplicationClass.UserLogout(this)
+        } else if (view == DB_Events.cntLoadmore) {
+//            IsEventCallavailable = true
+            if (IsEventCallavailable) {
+                DB_Events.cntLoader.visibility = View.VISIBLE
+                GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
+            }
         }
     }
 

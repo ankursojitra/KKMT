@@ -103,7 +103,7 @@ class VideosAdapter(
             if (view == DB_RawVideoFrameBinding.idFrameconstraintX) {
                 ApplicationClass.mVideoesModelSelected = lVideoesModelSelected
                 var ShowVideoIntent = Intent(moContext, VideoPlayer::class.java)
-                moContext.startActivity(ShowVideoIntent)
+                (moContext as Video).startActivityForResult(ShowVideoIntent, Video.CompleteQuestionCall)
                 (moContext as Video).overridePendingTransition(
                     R.anim.activity_in,
                     R.anim.activity_out

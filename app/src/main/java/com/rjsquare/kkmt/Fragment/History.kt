@@ -8,16 +8,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Review.ReviewList
+import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mArray_ReviewModel
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mReviewModel
 import com.rjsquare.kkmt.Model.ReviewModel
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.LogInCall.CustomerHistoryService
+import com.rjsquare.kkmt.RetrofitInstance.LogInCall.EmployeeHistoryService
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.FragmentHistoryBinding
+import com.squareup.picasso.Picasso
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class History : Fragment(), View.OnClickListener {
+
+    lateinit var lArray_ReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewList>
+    lateinit var ReviewModel: CustomerHistoryModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,15 +38,6 @@ class History : Fragment(), View.OnClickListener {
         }
     }
 
-//    private lateinit var mCircularProgress2: CircularProgressIndicator
-//    private lateinit var mCircularProgress3: CircularProgressIndicator
-//    private lateinit var mCircularProgress4: CircularProgressIndicator
-//    private lateinit var mCardViewHistory1: CardView
-//    private lateinit var mCardViewHistory2: CardView
-//    private lateinit var mCardViewHistory3: CardView
-//    private lateinit var mTxtNoReviews: TextView
-//    private lateinit var mCardViewReview: CardView
-
     lateinit var DB_FHistory: FragmentHistoryBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,47 +45,33 @@ class History : Fragment(), View.OnClickListener {
     ): View? {
         // Inflate the layout for this fragment
         DB_FHistory = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
-//        var rootview = inflater.inflate(R.layout.fragment_history, container, false)
+
         try {
-//        var circularProgress =
-//            rootview.findViewById<CircularProgressIndicator>(R.id.circular_progress1);
-//
-//        mCircularProgress2 =
-//            rootview.findViewById<CircularProgressIndicator>(R.id.circular_progress2)
-//        mCircularProgress3 =
-//            rootview.findViewById<CircularProgressIndicator>(R.id.circular_progress3)
-//        mCircularProgress4 =
-//            rootview.findViewById<CircularProgressIndicator>(R.id.circular_progress4)
-//
-//        mCardViewHistory1 = rootview.findViewById<CardView>(R.id.cardView_history1)
-//        mCardViewHistory2 = rootview.findViewById<CardView>(R.id.cardView_history2)
-//        mCardViewHistory3 = rootview.findViewById<CardView>(R.id.cardView_history3)
-//        mTxtNoReviews = rootview.findViewById<TextView>(R.id.txt_no_reviews)
-//        mCardViewReview = rootview.findViewById<CardView>(R.id.cardView_review)
+            DB_FHistory.cpFiveStar.maxProgress = 100.0
+            DB_FHistory.cpFiveStar.setCurrentProgress(0.0)
+//            DB_FHistory.cpFiveStar.setProgress(100.0, 100.0)
+//            DB_FHistory.cpFiveStar.progress // returns 70
+//            DB_FHistory.cpFiveStar.maxProgress // returns 100
 
+            DB_FHistory.cpGood.maxProgress = 100.0
+            DB_FHistory.cpGood.setCurrentProgress(0.0)
 
-            DB_FHistory.circularProgress1.maxProgress = 100.0
-            DB_FHistory.circularProgress1.setCurrentProgress(100.0)
-            DB_FHistory.circularProgress1.setProgress(100.0, 100.0)
-            DB_FHistory.circularProgress1.progress // returns 70
-            DB_FHistory.circularProgress1.maxProgress // returns 100
+            DB_FHistory.cpOneStar.maxProgress = 100.0
+            DB_FHistory.cpOneStar.setCurrentProgress(0.0)
 
-            DB_FHistory.circularProgress2.maxProgress = 100.0
-            DB_FHistory.circularProgress2.setCurrentProgress(50.0)
-
-            DB_FHistory.circularProgress3.maxProgress = 100.0
-            DB_FHistory.circularProgress3.setCurrentProgress(30.0)
-
-            DB_FHistory.circularProgress4.maxProgress = 100.0
-            DB_FHistory.circularProgress4.setCurrentProgress(10.0)
+            DB_FHistory.cpBad.maxProgress = 100.0
+            DB_FHistory.cpBad.setCurrentProgress(0.0)
 
             DB_FHistory.cardViewHistory1.setOnClickListener(this)
             DB_FHistory.cardViewHistory2.setOnClickListener(this)
             DB_FHistory.cardViewHistory3.setOnClickListener(this)
 
-            FillData()
+            lArray_ReviewModel = ArrayList()
 
-            HomeActivity.mCntLoader.visibility = View.GONE
+            DB_FHistory.cntLoader.visibility = View.GONE
+            HistoryReviewData()
+
+            HomeActivity.mCntLoader.visibility = View.VISIBLE
             HistoryView = true
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -98,6 +87,67 @@ class History : Fragment(), View.OnClickListener {
             E.printStackTrace()
         }
         return DB_FHistory.root
+    }
+
+    private fun HistoryReviewData() {
+        try {
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+            params[ApplicationClass.paramKey_UserId] =
+                ApplicationClass.userInfoModel.data!!.userid!!
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<CustomerHistoryService>(
+                    CustomerHistoryService::class.java
+                )
+            val call =
+                service.GetCustomerHistoryData(
+                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                )
+
+            call.enqueue(object : Callback<CustomerHistoryModel> {
+                override fun onFailure(call: Call<CustomerHistoryModel>, t: Throwable) {
+                    DB_FHistory.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<CustomerHistoryModel>,
+                    response: Response<CustomerHistoryModel>
+                ) {
+                    DB_FHistory.cntLoader.visibility = View.GONE
+
+                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                        ReviewModel = response.body()!!
+                        if (response.body()!!.data!!.review_list!! != null && response.body()!!.data!!.review_list!!.size > 0) {
+                            lArray_ReviewModel.addAll(response.body()!!.data!!.review_list!!)
+                        }
+                        FillData()
+                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                        HomeActivity.UnauthorizedUser()
+                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseEmpltyList)) {
+
+                    } else {
+
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
     }
 
     companion object {
@@ -116,32 +166,41 @@ class History : Fragment(), View.OnClickListener {
 
     private fun FillData() {
         try {
-            mArray_ReviewModel = ArrayList()
+            SetRatingData()
+            mArray_ReviewModel = lArray_ReviewModel
             mReviewModel = ReviewModel()
             mReviewModel.Notify_Title = ""
-            mArray_ReviewModel.add(mReviewModel)
-            mArray_ReviewModel.add(mReviewModel)
-            mArray_ReviewModel.add(mReviewModel)
 
             var ReviewCount = mArray_ReviewModel.size
             if (ReviewCount >= 3) {
-               DB_FHistory.cardViewHistory1.visibility = View.VISIBLE
-               DB_FHistory.cardViewHistory2.visibility = View.VISIBLE
-               DB_FHistory.cardViewHistory3.visibility = View.VISIBLE
-               DB_FHistory.cardViewReview.visibility = View.VISIBLE
-               DB_FHistory.txtNoReviews.visibility = View.GONE
+                DB_FHistory.cardViewHistory1.visibility = View.VISIBLE
+                DB_FHistory.cardViewHistory2.visibility = View.VISIBLE
+                DB_FHistory.cardViewHistory3.visibility = View.VISIBLE
+                DB_FHistory.cardViewReview.visibility = View.VISIBLE
+                DB_FHistory.txtNoReviews.visibility = View.GONE
+
+                SetFirstReview(mArray_ReviewModel[0])
+                SetSecondReview(mArray_ReviewModel[1])
+                SetThirdReview(mArray_ReviewModel[2])
+
+
             } else if (ReviewCount == 2) {
                 DB_FHistory.cardViewHistory1.visibility = View.VISIBLE
                 DB_FHistory.cardViewHistory2.visibility = View.VISIBLE
                 DB_FHistory.cardViewHistory3.visibility = View.GONE
                 DB_FHistory.cardViewReview.visibility = View.VISIBLE
                 DB_FHistory.txtNoReviews.visibility = View.GONE
+
+                SetFirstReview(mArray_ReviewModel[0])
+                SetSecondReview(mArray_ReviewModel[1])
             } else if (ReviewCount == 1) {
                 DB_FHistory.cardViewHistory1.visibility = View.VISIBLE
                 DB_FHistory.cardViewHistory2.visibility = View.GONE
                 DB_FHistory.cardViewHistory3.visibility = View.GONE
                 DB_FHistory.cardViewReview.visibility = View.VISIBLE
                 DB_FHistory.txtNoReviews.visibility = View.GONE
+
+                SetFirstReview(mArray_ReviewModel[0])
             } else if (ReviewCount == 0) {
                 DB_FHistory.cardViewHistory1.visibility = View.GONE
                 DB_FHistory.cardViewHistory2.visibility = View.GONE
@@ -162,6 +221,62 @@ class History : Fragment(), View.OnClickListener {
         } catch (E: Exception) {
             E.printStackTrace()
         }
+    }
+
+    private fun SetRatingData() {
+
+        var TotalAmount = ReviewModel.data!!.total_spend_amount.toString().toInt()
+        var TotalReview = ReviewModel.data!!.total_star_count.toString().toInt()
+        var FiveStar = ReviewModel.data!!.total_star_type_wise!!.five_star.toString().toInt()
+        var Good = ReviewModel.data!!.total_star_type_wise!!.Good.toString().toInt()
+        var OneStar = ReviewModel.data!!.total_star_type_wise!!.one_star.toString().toInt()
+        var Bad = ReviewModel.data!!.total_star_type_wise!!.Bad.toString().toInt()
+
+        var FiveStarPer = ((FiveStar * 100.0) / TotalReview)
+        var GoodPer = ((Good * 100.0) / TotalReview)
+        var OneStarPer = ((OneStar * 100.0) / TotalReview)
+        var BadPer = ((Bad * 100.0) / TotalReview)
+
+        if (FiveStar == 0) FiveStarPer = 0.0
+        if (Good == 0) GoodPer = 0.0
+        if (OneStar == 0) OneStarPer = 0.0
+        if (Bad == 0) BadPer = 0.0
+
+        DB_FHistory.txtTotalAmount.text = "Support Total : $$TotalAmount"
+
+        DB_FHistory.cpFiveStar.setCurrentProgress(FiveStarPer)
+        DB_FHistory.cpGood.setCurrentProgress(GoodPer)
+        DB_FHistory.cpOneStar.setCurrentProgress(OneStarPer)
+        DB_FHistory.cpBad.setCurrentProgress(BadPer)
+
+        DB_FHistory.txtFiveStar.text = ("$FiveStarPer%")
+        DB_FHistory.txtGood.text = ("$GoodPer%")
+        DB_FHistory.txtOneStar.text = ("$OneStarPer%")
+        DB_FHistory.txtBad.text = ("$BadPer%")
+    }
+
+    private fun SetThirdReview(reviewListModel: CustomerHistoryModel.reviewData.reviewList) {
+        Picasso.with(requireActivity()).load(reviewListModel.userimage)
+            .into(DB_FHistory.imgEmployeeHistory3)
+        DB_FHistory.txtEmpname1History3.text = reviewListModel.username
+        DB_FHistory.txtEmpratingHistory3.text = reviewListModel.ratings
+        DB_FHistory.txtEmpTotalSupportHistory3.text = reviewListModel.ratings
+    }
+
+    private fun SetSecondReview(reviewListModel: CustomerHistoryModel.reviewData.reviewList) {
+        Picasso.with(requireActivity()).load(reviewListModel.userimage)
+            .into(DB_FHistory.imgEmployeeHistory2)
+        DB_FHistory.txtEmpname1History2.text = reviewListModel.username
+        DB_FHistory.txtEmpratingHistory2.text = reviewListModel.ratings
+        DB_FHistory.txtEmpTotalSupportHistory2.text = reviewListModel.ratings
+    }
+
+    private fun SetFirstReview(reviewListModel: CustomerHistoryModel.reviewData.reviewList) {
+        Picasso.with(requireActivity()).load(reviewListModel.userimage)
+            .into(DB_FHistory.imgEmployee)
+        DB_FHistory.txtEmpname1.text = reviewListModel.username
+        DB_FHistory.txtEmprating.text = reviewListModel.ratings
+        DB_FHistory.txtEmpTotalSupport.text = reviewListModel.ratings
     }
 
     override fun onClick(view: View?) {

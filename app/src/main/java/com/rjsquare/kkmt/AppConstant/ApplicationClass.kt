@@ -28,6 +28,7 @@ import com.rjsquare.kkmt.RetrofitInstance.Events.EventsData
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.AppReopenService
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
 import retrofit2.Call
 import retrofit2.Callback
@@ -84,7 +85,7 @@ class ApplicationClass : Application(), LifecycleObserver {
 
         var mBiconReviewImageX: Bitmap? = null
         lateinit var mReviewModel: ReviewModel
-        lateinit var mArray_ReviewModel: ArrayList<ReviewModel>
+        lateinit var mArray_ReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewList>
         lateinit var mList_StoreListModel: ArrayList<StoreListModel>
         lateinit var mList_StoreItemDetailModel: ArrayList<StoreItemDetailModel>
         var mStoreLevelListModelSelected: StoreListModel? = null
@@ -120,6 +121,7 @@ class ApplicationClass : Application(), LifecycleObserver {
         val paramKey_VideoId = "video_id"
         val paramKey_Credit = "credit"
         val paramKey_Usertype = "usertype"
+        val paramKey_limit = "limit"
         val User = "U"
 
         //User Preference data Store Key
@@ -129,6 +131,7 @@ class ApplicationClass : Application(), LifecycleObserver {
         //Api Status Code
         var ResponseSucess = "200"
         var ResponseUnauthorized = "203"
+        var ResponseEmpltyList = "202"
 
         var UserLevel = 4
 

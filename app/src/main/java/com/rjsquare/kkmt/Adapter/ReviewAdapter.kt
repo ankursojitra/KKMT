@@ -12,11 +12,12 @@ import com.rjsquare.kkmt.Activity.Review.ReviewDisplay
 import com.rjsquare.kkmt.Activity.Review.ReviewList
 import com.rjsquare.kkmt.Model.ReviewModel
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.RawReviewFrameBinding
 
 class ReviewAdapter(
     var moContext: Context,
-    var moArrayList: ArrayList<ReviewModel>
+    var moArrayList: ArrayList<CustomerHistoryModel.reviewData.reviewList>
 ) : RecyclerView.Adapter<ReviewAdapter.View_holder>() {
     var mReviewModel: ReviewModel? = null
     var Width = 0
@@ -77,7 +78,7 @@ class ReviewAdapter(
 
 //        private lateinit var mIdFrameconstraint: ConstraintLayout
 
-        var lReviewModelSelected: ReviewModel? = null
+        var lReviewModelSelected: CustomerHistoryModel.reviewData.reviewList? = null
         lateinit var DB_RawReviewFrameBinding: RawReviewFrameBinding
 
         init {
