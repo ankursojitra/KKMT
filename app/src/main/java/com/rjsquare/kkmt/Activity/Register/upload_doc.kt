@@ -387,16 +387,13 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
             } else if (view == DB_UploadDoc.txtCancel) {
                 DB_UploadDoc.cntUploadDocType.visibility = View.GONE
             } else if (view == DB_UploadDoc.txtSaveandContinue) {
-//                if (!PDFString.equals("", true)) {
-//                    DB_UploadDoc.cntLoader.visibility = View.VISIBLE
-//                    UploadDoc(PDFString)
-//                } else {
-//                    DB_UploadDoc.txtAlertmsg.text = "Invalid Document."
-//                    DB_UploadDoc.cntAlert.visibility = View.VISIBLE
-//                }
-                var HomeIntent = Intent(this@upload_doc, Upload_Selfie::class.java)
-                startActivity(HomeIntent)
-                overridePendingTransition(R.anim.activity_in,R.anim.activity_out)
+                if (!PDFString.equals("", true)) {
+                    DB_UploadDoc.cntLoader.visibility = View.VISIBLE
+                    UploadDoc(PDFString)
+                } else {
+                    DB_UploadDoc.txtAlertmsg.text = "Invalid Document."
+                    DB_UploadDoc.cntAlert.visibility = View.VISIBLE
+                }
             } else if (view == DB_UploadDoc.txtAlertok) {
                 DB_UploadDoc.cntAlert.visibility = View.GONE
             }

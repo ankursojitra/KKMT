@@ -53,14 +53,14 @@ class LeaderBoard : Fragment(), View.OnClickListener {
 //        var rootView = inflater.inflate(R.layout.fragment_leader_board, container, false)
         try {
             Log.e("TAG", "CHECKEMPLOYEE : " + ApplicationClass.IsUserEmployee)
-//            if (ApplicationClass.IsUserEmployee) {
-//                DB_LeaderBoard.cntEmporuser.visibility = View.GONE
-//                IsCurrentBussiness = false
-//                LeaderBoardDataEmployee()
-//            } else {
-//                LeaderBoardDataCustomer()
-//                DB_LeaderBoard.cntEmporuser.visibility = View.GONE
-//            }
+            if (ApplicationClass.IsUserEmployee) {
+                DB_LeaderBoard.cntEmporuser.visibility = View.GONE
+                IsCurrentBussiness = false
+                LeaderBoardDataEmployee()
+            } else {
+                LeaderBoardDataCustomer()
+                DB_LeaderBoard.cntEmporuser.visibility = View.GONE
+            }
 
             DB_LeaderBoard.txtEmployee.setOnClickListener(this)
             DB_LeaderBoard.txtUser.setOnClickListener(this)
@@ -73,8 +73,8 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             leaderBoardView = true
             mLeaderboardCustomer_Model = LeaderboardCustomer_Model()
 
-            FillData()
-            framesAdapter()
+//            FillData()
+//            framesAdapter()
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

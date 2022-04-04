@@ -22,7 +22,7 @@ import com.squareup.picasso.Picasso
 
 class EventsAdapter(
     var moContext: Context,
-    var moArrayList: ArrayList<EventsModel>
+    var moArrayList: ArrayList<EventsData>
 ) : RecyclerView.Adapter<EventsAdapter.View_holder>() {
 
     var Width = 0
@@ -54,15 +54,15 @@ class EventsAdapter(
             var Per_Value_old = 0.0
             val mEventsModel_old: EventsModel
             holder.lEventsModelSelected = mEventsModel
-            holder.DB_RawEventsFrameBinding.imgEvent.setImageDrawable(mEventsModel.ImgLink)
-            holder.DB_RawEventsFrameBinding.txtEventTitle.text = mEventsModel.EventTitle
-            holder.DB_RawEventsFrameBinding.txtEventTime.text = mEventsModel.EventTime
-            holder.DB_RawEventsFrameBinding.txtEventDate.text = mEventsModel.EventDate
-//            holder.DB_RawEventsFrameBinding.txtEventTitle.text = mEventsModel.title
-//            holder.DB_RawEventsFrameBinding.txtEventTime.text = mEventsModel.time
-//            holder.DB_RawEventsFrameBinding.txtEventDate.text = mEventsModel.date
-//            Picasso.with(moContext).load(mEventsModel.image!![0])
-//                .into(holder.DB_RawEventsFrameBinding.imgEvent)
+//            holder.DB_RawEventsFrameBinding.imgEvent.setImageDrawable(mEventsModel.ImgLink)
+//            holder.DB_RawEventsFrameBinding.txtEventTitle.text = mEventsModel.EventTitle
+//            holder.DB_RawEventsFrameBinding.txtEventTime.text = mEventsModel.EventTime
+//            holder.DB_RawEventsFrameBinding.txtEventDate.text = mEventsModel.EventDate
+            holder.DB_RawEventsFrameBinding.txtEventTitle.text = mEventsModel.title
+            holder.DB_RawEventsFrameBinding.txtEventTime.text = mEventsModel.time
+            holder.DB_RawEventsFrameBinding.txtEventDate.text = mEventsModel.date
+            Picasso.with(moContext).load(mEventsModel.image!![0])
+                .into(holder.DB_RawEventsFrameBinding.imgEvent)
 //            Glide
 //                .with(moContext)
 //                .load(mEventsModel.image!![0])
@@ -99,7 +99,7 @@ class EventsAdapter(
 //        private lateinit var mIdMainCnt: ConstraintLayout
 //        lateinit var mTxtEventDate: TextView
 
-        var lEventsModelSelected: EventsModel? = null
+        var lEventsModelSelected: EventsData? = null
 
         lateinit var DB_RawEventsFrameBinding: RawEventsFrameBinding
 

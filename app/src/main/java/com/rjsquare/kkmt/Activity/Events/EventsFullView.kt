@@ -47,14 +47,10 @@ class EventsFullView : AppCompatActivity(), View.OnClickListener {
            DB_EventsView.imageSlide.startSliding(1000) // with new period
            DB_EventsView.imageSlide.startSliding()
 //           DB_EventsView.imageSlide.stopSliding()
-            DB_EventsView.txtEventTitle.text =  ApplicationClass.mEventsModelSelected!!.EventTitle
-//            DB_EventsView.txtEventLocation.text =  ApplicationClass.mEventsModelSelected!!.location
-            DB_EventsView.txtEventTime.text =  ApplicationClass.mEventsModelSelected!!.EventTitle
-//            DB_EventsView.txtEventDesc.text =  ApplicationClass.mEventsModelSelected!!.description
-//            DB_EventsView.txtEventTitle.text =  ApplicationClass.mEventsModelSelected!!.title!!
-//            DB_EventsView.txtEventLocation.text =  ApplicationClass.mEventsModelSelected!!.location
-//            DB_EventsView.txtEventTime.text =  ApplicationClass.mEventsModelSelected!!.time
-//            DB_EventsView.txtEventDesc.text =  ApplicationClass.mEventsModelSelected!!.description
+            DB_EventsView.txtEventTitle.text =  ApplicationClass.mEventsModelSelected!!.title!!
+            DB_EventsView.txtEventLocation.text =  ApplicationClass.mEventsModelSelected!!.location
+            DB_EventsView.txtEventTime.text =  ApplicationClass.mEventsModelSelected!!.time
+            DB_EventsView.txtEventDesc.text =  ApplicationClass.mEventsModelSelected!!.description
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {

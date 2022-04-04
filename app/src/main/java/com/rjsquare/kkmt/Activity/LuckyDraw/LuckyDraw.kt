@@ -60,11 +60,11 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
 //                    Log.e("TAG", "Check Item Selected : " + data.get(index).topText)
 //                    Log.e("TAG", "Check Item Selected : " + GetCredit(data.get(index).topText))
 
-//                    LuckyDrawCreditAdd(GetCredit(data.get(index).topText))
+                    LuckyDrawCreditAdd(GetCredit(data.get(index).topText))
                 }
             })
-//            DB_LuckyDraw.cntLoader.visibility = View.VISIBLE
-//            CheckLuckyDrawAvailable()
+            DB_LuckyDraw.cntLoader.visibility = View.VISIBLE
+            CheckLuckyDrawAvailable()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
