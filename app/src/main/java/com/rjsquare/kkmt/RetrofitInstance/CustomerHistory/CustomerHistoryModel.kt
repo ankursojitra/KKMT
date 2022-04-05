@@ -38,9 +38,9 @@ class CustomerHistoryModel {
         var total_spend_amount: String? = null
 
         @SerializedName("review_list")
-        var review_list: ArrayList<reviewList>? = null
+        var review_itemInfo: ArrayList<reviewItemInfo>? = null
 
-        class reviewList {
+        class reviewItemInfo {
             @SerializedName("id")
             var id: String? = null
 

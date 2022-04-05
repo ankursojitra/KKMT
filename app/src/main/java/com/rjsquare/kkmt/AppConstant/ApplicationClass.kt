@@ -24,7 +24,7 @@ import com.rjsquare.kkmt.Activity.Login.Login
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.Model.*
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.EventsData
+import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.AppReopenService
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
@@ -85,17 +85,17 @@ class ApplicationClass : Application(), LifecycleObserver {
 
         var mBiconReviewImageX: Bitmap? = null
         lateinit var mReviewModel: ReviewModel
-        lateinit var mArray_ReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewList>
+        lateinit var mArray_ReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
         lateinit var mList_StoreListModel: ArrayList<StoreListModel>
         lateinit var mList_StoreItemDetailModel: ArrayList<StoreItemDetailModel>
         var mStoreLevelListModelSelected: StoreListModel? = null
         var IsUserEmployee: Boolean = false
         var APP_BACKGROUND: Boolean = false
         var UserLogedIn: Boolean = false
+        var IsNewReview = true
+        var empReviewModelSelected: CustomerHistoryModel.reviewData.reviewItemInfo? = null
         var mSearchModelSelected: SearchModel? = null
-        var mEventsModelSelected: EventsData? = null
-//        var mEventsModelSelected: EventsModel? = null
-//        var mVideoesModelSelected: VideoesModel? = null
+        var mEventsModelSelected: Events_Model.EventsData? = null
         var mVideoesModelSelected: Videos_Model.VideoData? = null
 
         lateinit var SharedPref: SharedPreferences
@@ -103,6 +103,8 @@ class ApplicationClass : Application(), LifecycleObserver {
 
         //-----------------------Constant ids-------------------------------------
 
+        val Pending = "panding"
+        val Approve = "approve"
         val paramKey_MobileNo = "phoneno"
         val paramKey_FirstName = "firstname"
         val paramKey_LastName = "lastname"
@@ -117,6 +119,7 @@ class ApplicationClass : Application(), LifecycleObserver {
         val paramKey_Document = "document"
         val paramKey_Selfie = "selfie"
         val paramKey_PageNo = "pageno"
+        val paramKey_ReviewId = "review_id"
         val paramKey_UserId = "user_id"
         val paramKey_VideoId = "video_id"
         val paramKey_Credit = "credit"
@@ -393,7 +396,7 @@ class ApplicationClass : Application(), LifecycleObserver {
                         call: Call<UserInfoData_Model>,
                         response: retrofit2.Response<UserInfoData_Model>
                     ) {
-                        Log.e("GetResponsesas", ": " + Gson().toJson(response.body()!!))
+//                        Log.e("GetResponsesas", ": " + Gson().toJson(response.body()!!))
 
                         if (response.body()!!.status.equals(ResponseSucess, true)) {
 
@@ -478,11 +481,14 @@ class ApplicationClass : Application(), LifecycleObserver {
         userInfoModel = UserInfoData_Model()
         userInfoModel = GetUserPrefData()
 
-        if (userInfoModel != UserInfoData_Model()) {
+//        if (userInfoModel != UserInfoData_Model()) {
+//            IsUserEmployee = IsEmployee()
+//        }
+
+        if (UserLogedIn) {
+//            updateUserInfo()
             IsUserEmployee = IsEmployee()
         }
-
-        if (UserLogedIn) updateUserInfo()
 
     }
 }

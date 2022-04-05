@@ -106,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_8dp"
                     tools:itemCount="2"
+                    android:overScrollMode="never"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:layout_constraintBottom_toTopOf="@id/cnt_loadmore"
                     app:layout_constraintEnd_toEndOf="parent"

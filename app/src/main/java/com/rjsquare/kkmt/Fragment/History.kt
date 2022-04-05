@@ -17,7 +17,6 @@ import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mReviewModel
 import com.rjsquare.kkmt.Model.ReviewModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.CustomerHistoryService
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.EmployeeHistoryService
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.FragmentHistoryBinding
 import com.squareup.picasso.Picasso
@@ -28,7 +27,7 @@ import retrofit2.Response
 
 class History : Fragment(), View.OnClickListener {
 
-    lateinit var lArray_ReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewList>
+    lateinit var lArray_ReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
     lateinit var ReviewModel: CustomerHistoryModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,8 +119,8 @@ class History : Fragment(), View.OnClickListener {
 
                     if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
                         ReviewModel = response.body()!!
-                        if (response.body()!!.data!!.review_list!! != null && response.body()!!.data!!.review_list!!.size > 0) {
-                            lArray_ReviewModel.addAll(response.body()!!.data!!.review_list!!)
+                        if (response.body()!!.data!!.review_itemInfo!! != null && response.body()!!.data!!.review_itemInfo!!.size > 0) {
+                            lArray_ReviewModel.addAll(response.body()!!.data!!.review_itemInfo!!)
                         }
                         FillData()
                     } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
@@ -255,28 +254,28 @@ class History : Fragment(), View.OnClickListener {
         DB_FHistory.txtBad.text = ("$BadPer%")
     }
 
-    private fun SetThirdReview(reviewListModel: CustomerHistoryModel.reviewData.reviewList) {
-        Picasso.with(requireActivity()).load(reviewListModel.userimage)
+    private fun SetThirdReview(reviewItemInfoModel: CustomerHistoryModel.reviewData.reviewItemInfo) {
+        Picasso.with(requireActivity()).load(reviewItemInfoModel.userimage)
             .into(DB_FHistory.imgEmployeeHistory3)
-        DB_FHistory.txtEmpname1History3.text = reviewListModel.username
-        DB_FHistory.txtEmpratingHistory3.text = reviewListModel.ratings
-        DB_FHistory.txtEmpTotalSupportHistory3.text = reviewListModel.ratings
+        DB_FHistory.txtEmpname1History3.text = reviewItemInfoModel.username
+        DB_FHistory.txtEmpratingHistory3.text = reviewItemInfoModel.ratings
+        DB_FHistory.txtEmpTotalSupportHistory3.text = ("$${reviewItemInfoModel.spend_amount}")
     }
 
-    private fun SetSecondReview(reviewListModel: CustomerHistoryModel.reviewData.reviewList) {
-        Picasso.with(requireActivity()).load(reviewListModel.userimage)
+    private fun SetSecondReview(reviewItemInfoModel: CustomerHistoryModel.reviewData.reviewItemInfo) {
+        Picasso.with(requireActivity()).load(reviewItemInfoModel.userimage)
             .into(DB_FHistory.imgEmployeeHistory2)
-        DB_FHistory.txtEmpname1History2.text = reviewListModel.username
-        DB_FHistory.txtEmpratingHistory2.text = reviewListModel.ratings
-        DB_FHistory.txtEmpTotalSupportHistory2.text = reviewListModel.ratings
+        DB_FHistory.txtEmpname1History2.text = reviewItemInfoModel.username
+        DB_FHistory.txtEmpratingHistory2.text = reviewItemInfoModel.ratings
+        DB_FHistory.txtEmpTotalSupportHistory2.text = ("$${reviewItemInfoModel.spend_amount}")
     }
 
-    private fun SetFirstReview(reviewListModel: CustomerHistoryModel.reviewData.reviewList) {
-        Picasso.with(requireActivity()).load(reviewListModel.userimage)
+    private fun SetFirstReview(reviewItemInfoModel: CustomerHistoryModel.reviewData.reviewItemInfo) {
+        Picasso.with(requireActivity()).load(reviewItemInfoModel.userimage)
             .into(DB_FHistory.imgEmployee)
-        DB_FHistory.txtEmpname1.text = reviewListModel.username
-        DB_FHistory.txtEmprating.text = reviewListModel.ratings
-        DB_FHistory.txtEmpTotalSupport.text = reviewListModel.ratings
+        DB_FHistory.txtEmpname1.text = reviewItemInfoModel.username
+        DB_FHistory.txtEmprating.text = reviewItemInfoModel.ratings
+        DB_FHistory.txtEmpTotalSupport.text = ("$${reviewItemInfoModel.spend_amount}")
     }
 
     override fun onClick(view: View?) {

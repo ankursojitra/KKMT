@@ -3,7 +3,6 @@ package com.rjsquare.kkmt.Adapter
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +15,13 @@ import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mEventsModelSelected
 import com.rjsquare.kkmt.Model.EventsModel
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.EventsData
+import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.databinding.RawEventsFrameBinding
 import com.squareup.picasso.Picasso
 
 class EventsAdapter(
     var moContext: Context,
-    var moArrayList: ArrayList<EventsData>
+    var moArrayList: ArrayList<Events_Model.EventsData>
 ) : RecyclerView.Adapter<EventsAdapter.View_holder>() {
 
     var Width = 0
@@ -99,7 +98,7 @@ class EventsAdapter(
 //        private lateinit var mIdMainCnt: ConstraintLayout
 //        lateinit var mTxtEventDate: TextView
 
-        var lEventsModelSelected: EventsData? = null
+        var lEventsModelSelected: Events_Model.EventsData? = null
 
         lateinit var DB_RawEventsFrameBinding: RawEventsFrameBinding
 

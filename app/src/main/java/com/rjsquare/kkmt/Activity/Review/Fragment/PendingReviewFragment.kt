@@ -7,15 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.rjsquare.kkmt.Activity.Review.ReviewList
 import com.rjsquare.kkmt.Adapter.ReviewAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.Model.ReviewModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.FragmentPendingReviewBinding
 
 class PendingReviewFragment : Fragment() {
-    lateinit var arrayCompleteReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewList>
+    lateinit var arrayCompleteReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -31,7 +30,7 @@ class PendingReviewFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_pending_review, container, false)
         var rootView = DB_PendingReviewFragment.root
 
-        arrayCompleteReviewModel = ApplicationClass.mArray_ReviewModel
+        arrayCompleteReviewModel = ReviewList.pendingReviewItemInfo
         framesAdapter()
         return rootView
     }

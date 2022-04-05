@@ -49,5 +49,17 @@ class Videos_Model : Serializable {
         @SerializedName("updated_at")
         var updated_at: String? = null
 
+        @SerializedName("created_timestamp")
+        var created_timestamp: String? = null
+
+        @SerializedName("updated_timestamp")
+        var updated_timestamp: String? = null
+
+        @SerializedName("is_completed")
+        var is_completed: String? = null
+
+        @SerializedName("usertype")
+        var usertype: String? = null
+
     }
 }

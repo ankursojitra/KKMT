@@ -2,6 +2,7 @@ package com.rjsquare.kkmt.Activity.Store
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -9,12 +10,22 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.Events.EventsService
+import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
+import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.PickUpLocationService
+import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.PickUpLocation_Model
 import com.rjsquare.kkmt.databinding.ActivityStoreItemRedeemConfirmBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.HashMap
 
 class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
 
+    lateinit var LocationList : ArrayList<PickUpLocation_Model.LocationData>
     override fun onBackPressed() {
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
@@ -135,6 +146,9 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             DB_StoreItemRedeemConfirm.cntRedeemConfirm.setOnClickListener(this)
             DB_StoreItemRedeemConfirm.cntRedeemCancel.setOnClickListener(this)
             DB_StoreItemRedeemConfirm.imgBack.setOnClickListener(this)
+
+            LocationList = ArrayList()
+            GetPickUpLocation()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -148,6 +162,63 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
         } catch (E: Exception) {
             E.printStackTrace()
         }
+    }
+
+    private fun GetPickUpLocation() {
+        try {
+
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+//            params[ApplicationClass.paramKey_PageNo] = pageNo
+//            params[ApplicationClass.paramKey_limit] = PagePerlimit
+//                ApplicationClass.userInfoModel.data!!.userid.toString()
+//            params[ApplicationClass.paramKey_Selfie] = fileString
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<PickUpLocationService>(
+                    PickUpLocationService::class.java
+                )
+            val call =
+                service.GetPickUpLocationData()
+
+            call.enqueue(object : Callback<PickUpLocation_Model> {
+                override fun onFailure(call: Call<PickUpLocation_Model>, t: Throwable) {
+                    DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
+                    Log.e("GetResponsesasXASX", "Hell: ")
+                }
+
+                override fun onResponse(
+                    call: Call<PickUpLocation_Model>,
+                    response: Response<PickUpLocation_Model>
+                ) {
+                    DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
+                    LocationList.addAll(response.body()!!.data!!)
+                    SetUpDataUI()
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+    }
+
+    private fun SetUpDataUI() {
+        DB_StoreItemRedeemConfirm.chPickUp1.text = LocationList[0].location
+        DB_StoreItemRedeemConfirm.chPickUp2.text = LocationList[1].location
+        DB_StoreItemRedeemConfirm.chPickUp3.text = LocationList[2].location
+
     }
 
     private fun SetUi() {
