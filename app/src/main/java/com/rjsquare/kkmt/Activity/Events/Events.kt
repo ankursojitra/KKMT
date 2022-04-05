@@ -9,12 +9,10 @@ import androidx.databinding.DataBindingUtil
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.applandeo.materialcalendarview.utils.DateUtils
-import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Adapter.EventsAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.EventsData
 import com.rjsquare.kkmt.RetrofitInstance.Events.EventsService
 import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.databinding.ActivityEventsBinding
@@ -25,11 +23,11 @@ import java.util.*
 
 
 class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
-    lateinit var mEventsModel: EventsData
+    lateinit var mEventsModel: Events_Model.EventsData
 
     //    lateinit var mEventsModel: EventsModel
 //    lateinit var mArray_EventsModel: ArrayList<EventsModel>
-    lateinit var mArray_EventsModel: ArrayList<EventsData>
+    lateinit var mArray_EventsModel: ArrayList<Events_Model.EventsData>
     lateinit var DB_Events: ActivityEventsBinding
     var PageNo = 0
     var PagePerlimit = 5

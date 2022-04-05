@@ -2,11 +2,13 @@ package com.rjsquare.kkmt.Fragment
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
@@ -21,7 +23,7 @@ import retrofit2.Response
 
 class EmployeeHistory : Fragment() {
 
-    lateinit var EmpHistory : EmployeeHistoryModel
+    lateinit var EmpHistory: EmployeeHistoryModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +84,7 @@ class EmployeeHistory : Fragment() {
             val params: MutableMap<String, String> =
                 HashMap()
 
-            params[ApplicationClass.paramKey_UserId] =
+            params[ApplicationClass.paramKey_EmployeeId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
@@ -91,12 +93,14 @@ class EmployeeHistory : Fragment() {
                 )
             val call =
                 service.GetEmployeeHistoryData(
-                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                    params,
+                    ApplicationClass.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<EmployeeHistoryModel> {
                 override fun onFailure(call: Call<EmployeeHistoryModel>, t: Throwable) {
                     DB_FEmployeeHistory.cntLoader.visibility = View.GONE
+                    Log.e("TAG", "EMPHistoryDataError : "+t)
                 }
 
                 override fun onResponse(
@@ -104,6 +108,7 @@ class EmployeeHistory : Fragment() {
                     response: Response<EmployeeHistoryModel>
                 ) {
                     DB_FEmployeeHistory.cntLoader.visibility = View.GONE
+                    Log.e("TAG", "EMPHistoryData : " + Gson().toJson(response.body()!!))
 
                     if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
                         EmpHistory = response.body()!!
@@ -135,35 +140,91 @@ class EmployeeHistory : Fragment() {
     }
 
     private fun SetOverallRatingData() {
-        var TotalAmount = EmpHistory.data!!.overall!!.toal_sales.toString().toInt()
-        var TotalReview = EmpHistory.data!!.overall!!.total_star_count.toString().toInt()
-        var FiveStar = EmpHistory.data!!.overall!!.total_star_type_wise!!.five_star.toString().toInt()
-        var Good = EmpHistory.data!!.overall!!.total_star_type_wise!!.Good.toString().toInt()
-        var OneStar = EmpHistory.data!!.overall!!.total_star_type_wise!!.one_star.toString().toInt()
-        var Bad = EmpHistory.data!!.overall!!.total_star_type_wise!!.Bad.toString().toInt()
+        var OverallTotalAmount = EmpHistory.data!!.overall!!.toal_sales.toString().toInt()
+        var OverallTotalReview = EmpHistory.data!!.overall!!.total_star_count.toString().toInt()
+        var OverallFiveStar =
+            EmpHistory.data!!.overall!!.total_star_type_wise!!.five_star.toString().toInt()
+        var OverallGood = EmpHistory.data!!.overall!!.total_star_type_wise!!.Good.toString().toInt()
+        var OverallOneStar =
+            EmpHistory.data!!.overall!!.total_star_type_wise!!.one_star.toString().toInt()
+        var OverallBad = EmpHistory.data!!.overall!!.total_star_type_wise!!.Bad.toString().toInt()
 
-        var FiveStarPer = ((FiveStar * 100.0) / TotalReview)
-        var GoodPer = ((Good * 100.0) / TotalReview)
-        var OneStarPer = ((OneStar * 100.0) / TotalReview)
-        var BadPer = ((Bad * 100.0) / TotalReview)
+        var OverallFiveStarPer = ((OverallFiveStar * 100.0) / OverallTotalReview)
+        var OverallGoodPer = ((OverallGood * 100.0) / OverallTotalReview)
+        var OverallOneStarPer = ((OverallOneStar * 100.0) / OverallTotalReview)
+        var OverallBadPer = ((OverallBad * 100.0) / OverallTotalReview)
 
-        if (FiveStar == 0) FiveStarPer = 0.0
-        if (Good == 0) GoodPer = 0.0
-        if (OneStar == 0) OneStarPer = 0.0
-        if (Bad == 0) BadPer = 0.0
+        if (OverallFiveStar == 0) OverallFiveStarPer = 0.0
+        if (OverallGood == 0) OverallGoodPer = 0.0
+        if (OverallOneStar == 0) OverallOneStarPer = 0.0
+        if (OverallBad == 0) OverallBadPer = 0.0
 
-        DB_FEmployeeHistory.txtTotalAmount.text = "Sales Total : $$TotalAmount"
+        DB_FEmployeeHistory.txtTotalAmount.text = "Sales Total : $$OverallTotalAmount"
 
-        DB_FEmployeeHistory.cpOverallFiveStar.setCurrentProgress(FiveStarPer)
-        DB_FEmployeeHistory.cpOverallGood.setCurrentProgress(GoodPer)
-        DB_FEmployeeHistory.cpOverallOneStar.setCurrentProgress(OneStarPer)
-        DB_FEmployeeHistory.cpOverallBad.setCurrentProgress(BadPer)
+        DB_FEmployeeHistory.cpOverallFiveStar.setCurrentProgress(OverallFiveStarPer)
+        DB_FEmployeeHistory.cpOverallGood.setCurrentProgress(OverallGoodPer)
+        DB_FEmployeeHistory.cpOverallOneStar.setCurrentProgress(OverallOneStarPer)
+        DB_FEmployeeHistory.cpOverallBad.setCurrentProgress(OverallBadPer)
 
-//        DB_FEmployeeHistory.txtFiveStar.text = ("$FiveStarPer%")
-//        DB_FEmployeeHistory.txtGood.text = ("$GoodPer%")
-//        DB_FEmployeeHistory.txtOneStar.text = ("$OneStarPer%")
-//        DB_FEmployeeHistory.txtBad.text = ("$BadPer%")
+        DB_FEmployeeHistory.txtFiveStar.text = String.format("%.1f",OverallFiveStarPer)+"%"
+        DB_FEmployeeHistory.txtGood.text = String.format("%.1f",OverallGoodPer)+"%"
+        DB_FEmployeeHistory.txtOneStar.text = String.format("%.1f",OverallOneStarPer)+"%"
+        DB_FEmployeeHistory.txtBad.text = String.format("%.1f",OverallBadPer)+"%"
+
+        //----Set Last week Data----
+        var LastWeekTotalReview = EmpHistory.data!!.last_week!!.total_star_count.toString().toInt()
+        var LastWeekFiveStar =
+            EmpHistory.data!!.last_week!!.total_star_type_wise!!.five_star.toString().toInt()
+        var LastWeekGood =
+            EmpHistory.data!!.last_week!!.total_star_type_wise!!.Good.toString().toInt()
+        var LastWeekOneStar =
+            EmpHistory.data!!.last_week!!.total_star_type_wise!!.one_star.toString().toInt()
+        var LastWeekBad =
+            EmpHistory.data!!.last_week!!.total_star_type_wise!!.Bad.toString().toInt()
+
+        var LastWeekFiveStarPer = ((LastWeekFiveStar * 100.0) / LastWeekTotalReview)
+        var LastWeekGoodPer = ((LastWeekGood * 100.0) / LastWeekTotalReview)
+        var LastWeekOneStarPer = ((LastWeekOneStar * 100.0) / LastWeekTotalReview)
+        var LastWeekBadPer = ((LastWeekBad * 100.0) / LastWeekTotalReview)
+
+        if (LastWeekFiveStar == 0) LastWeekFiveStarPer = 0.0
+        if (LastWeekGood == 0) LastWeekGoodPer = 0.0
+        if (LastWeekOneStar == 0) LastWeekOneStarPer = 0.0
+        if (LastWeekBad == 0) LastWeekBadPer = 0.0
+
+        DB_FEmployeeHistory.cpLastweekFiveStar.setCurrentProgress(LastWeekFiveStarPer)
+        DB_FEmployeeHistory.cpLastweekGood.setCurrentProgress(LastWeekGoodPer)
+        DB_FEmployeeHistory.cpLastweekOneStar.setCurrentProgress(LastWeekOneStarPer)
+        DB_FEmployeeHistory.cpLastweekBad.setCurrentProgress(LastWeekBadPer)
+
+        //----Set Monthly Data----
+        var MonthlyTotalReview = EmpHistory.data!!.last_month!!.total_star_count.toString().toInt()
+        var MonthlyFiveStar =
+            EmpHistory.data!!.last_month!!.total_star_type_wise!!.five_star.toString().toInt()
+        var MonthlyGood =
+            EmpHistory.data!!.last_month!!.total_star_type_wise!!.Good.toString().toInt()
+        var MonthlyOneStar =
+            EmpHistory.data!!.last_month!!.total_star_type_wise!!.one_star.toString().toInt()
+        var MonthlyBad =
+            EmpHistory.data!!.last_month!!.total_star_type_wise!!.Bad.toString().toInt()
+
+        var MonthlyFiveStarPer = ((MonthlyFiveStar * 100.0) / MonthlyTotalReview)
+        var MonthlyGoodPer = ((MonthlyGood * 100.0) / MonthlyTotalReview)
+        var MonthlyOneStarPer = ((MonthlyOneStar * 100.0) / MonthlyTotalReview)
+        var MonthlyBadPer = ((MonthlyBad * 100.0) / MonthlyTotalReview)
+
+        if (MonthlyFiveStar == 0) MonthlyFiveStarPer = 0.0
+        if (MonthlyGood == 0) MonthlyGoodPer = 0.0
+        if (MonthlyOneStar == 0) MonthlyOneStarPer = 0.0
+        if (MonthlyBad == 0) MonthlyBadPer = 0.0
+
+        DB_FEmployeeHistory.cpLastmonthFiveStar.setCurrentProgress(MonthlyFiveStarPer)
+        DB_FEmployeeHistory.cpLastmonthGood.setCurrentProgress(MonthlyGoodPer)
+        DB_FEmployeeHistory.cpLastmonthOneStar.setCurrentProgress(MonthlyOneStarPer)
+        DB_FEmployeeHistory.cpLastmonthBad.setCurrentProgress(MonthlyBadPer)
+
     }
+
     companion object {
         var EmpHistoryView = false
 

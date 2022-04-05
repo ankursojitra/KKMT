@@ -51,7 +51,7 @@
                             android:layout_height="match_parent">
 
                             <ImageView
-                                android:id="@+id/imageView6_history2"
+                                android:id="@+id/img_empProfile"
                                 android:layout_width="@dimen/_40dp"
                                 android:layout_height="@dimen/_40dp"
                                 android:src="@drawable/image"
@@ -62,7 +62,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <TextView
-                        android:id="@+id/textView16_history2"
+                        android:id="@+id/txt_empamount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_12dp"
@@ -75,7 +75,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textView17_history2"
+                        android:id="@+id/txt_empName"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_10dp"
@@ -84,15 +84,15 @@
                         android:text="The Stone Range"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_12dp"
-                        app:layout_constraintBottom_toTopOf="@+id/textView18_history2"
-                        app:layout_constraintEnd_toStartOf="@+id/textView16_history2"
+                        app:layout_constraintBottom_toTopOf="@+id/txt_emprating"
+                        app:layout_constraintEnd_toStartOf="@+id/txt_empamount"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/cardView_img_history2"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_chainStyle="packed" />
 
                     <TextView
-                        android:id="@+id/textView18_history2"
+                        android:id="@+id/txt_emprating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lato_medium"
@@ -101,8 +101,8 @@
                         android:textColor="@color/gray"
                         android:textSize="@dimen/_10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/textView17_history2"
-                        app:layout_constraintTop_toBottomOf="@+id/textView17_history2" />
+                        app:layout_constraintStart_toStartOf="@+id/txt_empName"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_empName" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

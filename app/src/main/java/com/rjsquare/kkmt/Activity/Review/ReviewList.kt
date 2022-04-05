@@ -1,23 +1,20 @@
 package com.rjsquare.kkmt.Activity.Review
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.ActivityReviewListBinding
 
 class ReviewList : AppCompatActivity(), View.OnClickListener {
-    private lateinit var mImgBack: ImageView
-    private lateinit var mRrReviewlist: RecyclerView
-    private lateinit var mTxtNoReviews: TextView
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -25,7 +22,10 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
     }
 
     companion object{
+        lateinit var reviewListActivity : Activity
         lateinit var DB_ReviewList: ActivityReviewListBinding
+        lateinit var pendingReviewItemInfo: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+        lateinit var completeReviewItemInfo: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +33,19 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
         DB_ReviewList = DataBindingUtil.setContentView(this,R.layout.activity_review_list)
 
         try {
+            reviewListActivity = this
             ApplicationClass.StatusTextWhite(this, true)
             val sectionsPagerReviewAdapter =
                 SectionsPagerReviewAdapter(this, supportFragmentManager)
+            pendingReviewItemInfo = ArrayList()
+            completeReviewItemInfo = ArrayList()
+            for (model in ApplicationClass.mArray_ReviewModel){
+                if (model.review_status!!.equals(ApplicationClass.Pending,true)){
+                    pendingReviewItemInfo.add(model)
+                }else if (model.review_status!!.equals(ApplicationClass.Approve,true)){
+                    completeReviewItemInfo.add(model)
+                }
+            }
 
             DB_ReviewList.viewPager.adapter = sectionsPagerReviewAdapter
             DB_ReviewList.viewPager.addOnPageChangeListener(object :
@@ -93,17 +103,10 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
                 }
             })
 
-
             DB_ReviewList.txtPendingReview.setOnClickListener(this)
             DB_ReviewList.txtCompleteReview.setOnClickListener(this)
             DB_ReviewList.imgBack.setOnClickListener(this)
 
-//            mImgBack = findViewById<ImageView>(R.id.img_back)
-//            mRrReviewlist = findViewById<RecyclerView>(R.id.rr_reviewlist)
-//            mTxtNoReviews = findViewById<TextView>(R.id.txt_no_reviews)
-
-
-//            framesAdapter()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -159,9 +162,10 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (view == mImgBack) {
+            if (view == DB_ReviewList.imgBack) {
                 onBackPressed()
             }else if (view == DB_ReviewList.txtPendingReview) {
+                Log.e("TAG","CHECKItemclick")
                 DB_ReviewList.viewPager.currentItem = 0
                 DB_ReviewList.txtPendingReview.background =
                     ContextCompat.getDrawable(this, R.drawable.tab_selection)
