@@ -1,11 +1,15 @@
 package com.rjsquare.kkmt.Activity.Bussiness
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -17,6 +21,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -24,6 +30,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.minew.beaconplus.sdk.MTCentralManager
+import com.minew.beaconplus.sdk.enums.BluetoothState
+import com.minew.beaconplus.sdk.interfaces.OnBluetoothStateChangedListener
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.ActivityLocationBinding
@@ -52,6 +61,15 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
     lateinit var DB_BusinessLocation: ActivityLocationBinding
 
+    private val BLE_DEVICE_INFO_CALL = 2500L
+    private val REQUEST_ENABLE_BT = 3
+    private val PERMISSION_COARSE_LOCATION = 2
+    private var mMtCentralManager: MTCentralManager? = null
+    lateinit var BeaconMACList: ArrayList<String>
+    lateinit var handler: Handler
+    lateinit var runnable: Runnable
+    var HandlerCallavailable = false
+
     override fun onBackPressed() {
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
@@ -69,6 +87,17 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
             DB_BusinessLocation.rippleback.startRippleAnimation()
             thisBussiness_Activity = this
+            BeaconMACList = ArrayList()
+            handler = Handler()
+            HandlerCallavailable = true
+            if (!ensureBleExists()) finish()
+
+            if (!isBLEEnabled()) {
+                showBLEDialog()
+            }
+            initManager()
+            getRequiredPermissions()
+            initListener()
 
 //            ReportView = DB_BusinessLocation.layoutBussinessReport as View
 //            ConfirmView = DB_BusinessLocation.layoutBussinessConfirm as View
@@ -128,11 +157,17 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
             DB_BusinessLocation.cntCompany.visibility = View.GONE
 
-            val handler = Handler()
-            val runnable = Runnable {
-                foundDevice()
+//            val handler = Handler()
+//            val runnable = Runnable {
+//                foundDevice()
+//            }
+//            handler.postDelayed(runnable, 3000)
+
+            runnable = Runnable {
+//                foundDevice()
+                MasterBleDeviceInfo()
             }
-            handler.postDelayed(runnable, 3000)
+
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -146,6 +181,106 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         } catch (E: Exception) {
             E.printStackTrace()
         }
+    }
+
+    private fun MasterBleDeviceInfo() {
+        for (peripheral in BeaconMACList) {
+            Log.e("TAG : ","MacList : "+peripheral)
+        }
+    }
+
+    private fun getRequiredPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                PERMISSION_COARSE_LOCATION
+            )
+        } else {
+            initData()
+        }
+    }
+
+    private fun initListener() {
+        mMtCentralManager!!.setMTCentralManagerListener { peripherals ->
+            Log.e("demo", "scan size is: " + peripherals.size)
+//            Log.d("demo", "scan peripherals is: " + peripherals)
+            Log.e("demo", "scan peripherals is: " + peripherals[0].mMTFrameHandler.mac)
+            for (peripheral in peripherals) {
+                if (!BeaconMACList.contains(peripheral.mMTFrameHandler.mac)) {
+                    BeaconMACList.add(peripheral.mMTFrameHandler.mac)
+                }
+            }
+            if (HandlerCallavailable) {
+                HandlerCallavailable = false
+                handler.postDelayed(runnable, BLE_DEVICE_INFO_CALL)
+            }
+//            mAdapter.setData(peripherals)
+        }
+//        mAdapter.setOnItemClickListener(object : OnItemClickListener() {
+//            fun onItemClick(view: View?, position: Int) {
+//                val mtPeripheral: MTPeripheral = mAdapter.getData(position)
+//                mMtCentralManager!!.connect(mtPeripheral, connectionStatueListener)
+//            }
+//            fun onItemLongClick(view: View?, position: Int) {}
+//        })
+    }
+
+    private fun initData() {
+        //三星手机系统可能会限制息屏下扫描，导致息屏后无法获取到广播数据
+        mMtCentralManager!!.startScan()
+    }
+
+    private fun initManager() {
+        mMtCentralManager = MTCentralManager.getInstance(this)
+        //startservice
+        mMtCentralManager!!.startService()
+        val bluetoothState: BluetoothState = mMtCentralManager!!.getBluetoothState(this)
+        when (bluetoothState) {
+            BluetoothState.BluetoothStateNotSupported -> Log.e("tag", "BluetoothStateNotSupported")
+            BluetoothState.BluetoothStatePowerOff -> Log.e("tag", "BluetoothStatePowerOff")
+            BluetoothState.BluetoothStatePowerOn -> Log.e("tag", "BluetoothStatePowerOn")
+        }
+        mMtCentralManager!!.setBluetoothChangedListener(OnBluetoothStateChangedListener { state ->
+            when (state) {
+                BluetoothState.BluetoothStateNotSupported -> Log.e(
+                    "tag",
+                    "BluetoothStateNotSupported"
+                )
+                BluetoothState.BluetoothStatePowerOff -> Log.e("tag", "BluetoothStatePowerOff")
+                BluetoothState.BluetoothStatePowerOn -> Log.e("tag", "BluetoothStatePowerOn")
+            }
+        })
+    }
+
+    private fun showBLEDialog() {
+        val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            //Check Bluetooth is Enable or not
+
+            return
+        }
+        startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
+    }
+
+    protected fun isBLEEnabled(): Boolean {
+        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
+        val adapter = bluetoothManager.adapter
+        return adapter != null && adapter.isEnabled
+    }
+
+    private fun ensureBleExists(): Boolean {
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, "Phone does not support BLE", Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
     }
 
     fun foundDevice() {
