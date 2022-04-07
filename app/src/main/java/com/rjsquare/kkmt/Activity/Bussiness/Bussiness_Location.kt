@@ -4,15 +4,21 @@ import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.CheckBox
@@ -28,14 +34,25 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.gson.Gson
 import com.minew.beaconplus.sdk.MTCentralManager
 import com.minew.beaconplus.sdk.enums.BluetoothState
 import com.minew.beaconplus.sdk.interfaces.OnBluetoothStateChangedListener
+import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.LogInCall.BusinessBeaconService
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.BusinessBeaconModel
 import com.rjsquare.kkmt.databinding.ActivityLocationBinding
+import org.json.JSONArray
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 
@@ -61,7 +78,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
     lateinit var DB_BusinessLocation: ActivityLocationBinding
 
-    private val BLE_DEVICE_INFO_CALL = 2500L
+    private val BLE_DEVICE_INFO_CALL = 3000L
     private val REQUEST_ENABLE_BT = 3
     private val PERMISSION_COARSE_LOCATION = 2
     private var mMtCentralManager: MTCentralManager? = null
@@ -69,6 +86,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     lateinit var handler: Handler
     lateinit var runnable: Runnable
     var HandlerCallavailable = false
+    lateinit var BusinessList: ArrayList<BusinessBeaconModel.BusinessBescon>
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -85,11 +103,13 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                 .findFragmentById(R.id.map) as SupportMapFragment?
             mapFragment?.getMapAsync(this)
 
+            DB_BusinessLocation.cntLoader.visibility = View.VISIBLE
             DB_BusinessLocation.rippleback.startRippleAnimation()
             thisBussiness_Activity = this
             BeaconMACList = ArrayList()
             handler = Handler()
             HandlerCallavailable = true
+            BusinessList = ArrayList()
             if (!ensureBleExists()) finish()
 
             if (!isBLEEnabled()) {
@@ -154,7 +174,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             mCntNotfind.setOnClickListener(this)
             mImgClose.setOnClickListener(this)
             mImgBusRepClose.setOnClickListener(this)
-
+            DB_BusinessLocation.txtUnauthOk.setOnClickListener(this)
             DB_BusinessLocation.cntCompany.visibility = View.GONE
 
 //            val handler = Handler()
@@ -165,6 +185,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
             runnable = Runnable {
 //                foundDevice()
+                mMtCentralManager!!.stopScan()
                 MasterBleDeviceInfo()
             }
 
@@ -184,8 +205,174 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     }
 
     private fun MasterBleDeviceInfo() {
-        for (peripheral in BeaconMACList) {
-            Log.e("TAG : ","MacList : "+peripheral)
+        var beaconOBJ = JSONObject()
+        var arrayJ = JSONArray()
+        for (Mac in BeaconMACList) {
+            arrayJ.put(Mac)
+        }
+        beaconOBJ.put("becon_list", arrayJ)
+        try {
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+
+            params[ApplicationClass.paramKey_UserId] =
+                ApplicationClass.userInfoModel.data!!.userid!!
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<BusinessBeaconService>(
+                    BusinessBeaconService::class.java
+                )
+            val call =
+                service.GetBusinessBeaconData(
+                    params, BeaconMACList, ApplicationClass.userInfoModel.data!!.access_token!!
+                )
+
+            call.enqueue(object : Callback<BusinessBeaconModel> {
+                override fun onFailure(call: Call<BusinessBeaconModel>, t: Throwable) {
+                    DB_BusinessLocation.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<BusinessBeaconModel>,
+                    response: Response<BusinessBeaconModel>
+                ) {
+                    DB_BusinessLocation.cntLoader.visibility = View.GONE
+                    Log.e("TAG", "CHECKRESPONSE : " + Gson().toJson(response.body()))
+
+                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                        BusinessList = response.body()!!.data!!
+                        SetBusinessViews()
+                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                        DB_BusinessLocation.cntUnAuthorized.visibility = View.VISIBLE
+                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseEmpltyList)) {
+
+                    } else {
+
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+
+    }
+
+    fun getARGB(hex: Int): IntArray? {
+        val a = hex and -0x1000000 shr 24
+        val r = hex and 0xFF0000 shr 16
+        val g = hex and 0xFF00 shr 8
+        val b = hex and 0xFF
+        return intArrayOf(a, r, g, b)
+    }
+
+    fun hexToIntColor(hex: String): IntArray {
+//        var Alpha = Integer.valueOf(hex.substring(0, 2), 16)
+        var Red = Integer.valueOf(hex.substring(0, 2), 16)
+        var Green = Integer.valueOf(hex.substring(2, 4), 16)
+        var Blue = Integer.valueOf(hex.substring(4, 6), 16)
+//        Alpha = Alpha shl 24 and -0x1000000
+        Red = Red shl 16 and 0x00FF0000
+        Green = Green shl 8 and 0x0000FF00
+        Blue = Blue and 0x000000FF
+//        return Alpha or Red or Green or Blue
+        return intArrayOf(Red, Green, Blue)
+    }
+
+    private fun getMarkerBitmapFromView(businessBeaconInfo: BusinessBeaconModel.BusinessBescon): Bitmap {
+        //HERE YOU CAN ADD YOUR CUSTOM VIEW
+
+        val customMarkerView: View =
+            (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
+                R.layout.map_marker,
+                null
+            )
+        val textView = customMarkerView.findViewById<View>(R.id.txt_name) as TextView
+        val imageViewPin = customMarkerView.findViewById<ImageView>(R.id.img_pin) as ImageView
+//        var Code = hexToIntColor((businessBeaconInfo.mappin!!.replace("#", "")))
+//        imageViewPin.setColorFilter(Color.rgb(Code[0], Code[1], Code[2]))
+
+        imageViewPin.setImageResource(GetPin(businessBeaconInfo.mappin!!))
+
+        textView.setText(businessBeaconInfo.bussiness_name);
+        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        customMarkerView.layout(
+            0,
+            0,
+            customMarkerView.getMeasuredWidth(),
+            customMarkerView.getMeasuredHeight()
+        );
+        customMarkerView.buildDrawingCache();
+        val returnedBitmap = Bitmap.createBitmap(
+            customMarkerView.measuredWidth,
+            customMarkerView.measuredHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(returnedBitmap)
+        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        val drawable = customMarkerView.background
+        if (drawable != null)
+            drawable.draw(canvas);
+        customMarkerView.draw(canvas);
+        return returnedBitmap;
+    }
+
+    @SuppressLint("ResourceType")
+    private fun GetPin(pinColor: String): Int {
+        Log.e("TAG", "COLORXXX :" + pinColor)
+        if (getResources().getString(R.color.gray_pin).equals(pinColor, true)) {
+            return R.drawable.ic_pin_gray
+        } else if (getResources().getString(R.color.orange_pin).equals(pinColor, true)) {
+            return R.drawable.ic_pin_orange
+        } else if (getResources().getString(R.color.green_pin).equals(pinColor, true)) {
+            return R.drawable.ic_pin_green
+        } else if (getResources().getString(R.color.pink_pin).equals(pinColor, true)) {
+            return R.drawable.ic_pin_pink
+        } else if (getResources().getString(R.color.blue_pin).equals(pinColor, true)) {
+            return R.drawable.ic_pin_blue
+        } else if (getResources().getString(R.color.red_pin).equals(pinColor, true)) {
+            return R.drawable.ic_pin_red
+        } else if (getResources().getString(R.color.yellow_pin).equals(pinColor, true)) {
+            return R.drawable.ic_pin_yellow
+        } else if (getResources().getString(R.color.purple_pin).equals(pinColor, true)) {
+            return R.drawable.ic_pin_purple
+        } else if (getResources().getString(R.color.black_pin).equals(pinColor, true)) {
+            return R.drawable.ic_pin_black
+        } else {
+            return R.drawable.ic_pin_red
+        }
+    }
+
+    private fun SetBusinessViews() {
+
+        Log.e("TAG","COLORLIST: "+BusinessList.size)
+        for (Business in BusinessList) {
+
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(
+                        LatLng(
+                            Business.latitude!!.toDouble(),
+                            Business.longitude!!.toDouble()
+                        )
+                    )
+                    .title(Business.bussiness_name)
+//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin))
+                    .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(Business)))
+            )
         }
     }
 
@@ -209,8 +396,9 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 //            Log.d("demo", "scan peripherals is: " + peripherals)
             Log.e("demo", "scan peripherals is: " + peripherals[0].mMTFrameHandler.mac)
             for (peripheral in peripherals) {
-                if (!BeaconMACList.contains(peripheral.mMTFrameHandler.mac)) {
-                    BeaconMACList.add(peripheral.mMTFrameHandler.mac)
+                val Mac = peripheral.mMTFrameHandler.mac.replace(":", "")
+                if (!BeaconMACList.contains(Mac)) {
+                    BeaconMACList.add(Mac)
                 }
             }
             if (HandlerCallavailable) {
@@ -439,6 +627,9 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                 var HelperIntent = Intent(this, BussinessCheckIn::class.java)
                 startActivity(HelperIntent)
                 overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+            } else if (view == DB_BusinessLocation.txtUnauthOk) {
+                DB_BusinessLocation.cntUnAuthorized.visibility = View.GONE
+                ApplicationClass.UserLogout(this)
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -480,7 +671,19 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             mMap.uiSettings.isCompassEnabled = false
             mMap.uiSettings.isMapToolbarEnabled = false
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Trinidad, 10.0f))
+            mMap.setOnMarkerClickListener { marker -> // on marker click we are getting the title of our marker
+                // which is clicked and displaying it in a toast message.
+                val markerName = marker.title
+                Toast.makeText(
+                    this@Bussiness_Location,
+                    "Clicked location is $markerName",
+                    Toast.LENGTH_SHORT
+                ).show()
+                marker.id
+                BusinessCheckInFlow()
 
+                false
+            }
             try {
                 val success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
@@ -509,5 +712,9 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         } catch (E: Exception) {
             E.printStackTrace()
         }
+    }
+
+    private fun BusinessCheckInFlow() {
+
     }
 }

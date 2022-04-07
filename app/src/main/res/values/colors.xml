@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#FC9A1F</color>
     <color name="colorAccent">#FC9A1F</color>
     <color name="blue_dark">#21223B</color>
+    <color name="sample">#38a4f8</color>
     <color name="blue_dark_saperator">#3321223B</color>
     <color name="appcolor">#FC9A1F</color>
     <color name="pressed">#BFFC9A1F</color>
@@ -78,5 +79,15 @@
     <color name="third_round_back">#33FDB738</color>
     <color name="forth_round">#FF4F74</color>
     <color name="forth_round_back">#33FF4F74</color>
+
+    <color name="gray_pin">#808080</color>
+    <color name="orange_pin">#FFA500</color>
+    <color name="green_pin">#008000</color>
+    <color name="pink_pin">#FE019A</color>
+    <color name="blue_pin">#38a4f8</color>
+    <color name="red_pin">#ec4561</color>
+    <color name="yellow_pin">#f8b425</color>
+    <color name="purple_pin">#800080</color>
+    <color name="black_pin">#343a40</color>
 
 </resources>
