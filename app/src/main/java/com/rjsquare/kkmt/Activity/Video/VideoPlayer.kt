@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.VideoDetail_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.VideosDetailService
@@ -77,8 +78,8 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_VideoId] = ApplicationClass.mVideoesModelSelected!!.id!!
-            params[ApplicationClass.paramKey_UserId] =
+            params[Constants.paramKey_VideoId] = ApplicationClass.mVideoesModelSelected!!.id!!
+            params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
             val service =
                 ApiCallingInstance.retrofitInstance.create<VideosDetailService>(
@@ -99,7 +100,7 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
                     response: Response<VideoDetail_Model>
                 ) {
                     DB_VideoPlayer.cntLoader.visibility = View.GONE
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         VideoData = response.body()!!.data!!
                     } else {
 

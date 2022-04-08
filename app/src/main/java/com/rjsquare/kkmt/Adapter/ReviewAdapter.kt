@@ -95,7 +95,7 @@ class ReviewAdapter(
             try {
                 if (view == DB_RawReviewFrameBinding.idFrameconstraint) {
                     ApplicationClass.empReviewModelSelected = lReviewModelSelected
-                    ApplicationClass.IsNewReview = false
+                    ApplicationClass.isNewReview = false
                     var HistoryReviewIntent = Intent(moContext, ReviewDisplay::class.java)
                     moContext.startActivity(HistoryReviewIntent)
                     (moContext as ReviewList).overridePendingTransition(

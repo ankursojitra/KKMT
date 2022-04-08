@@ -6,12 +6,15 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.applandeo.materialcalendarview.utils.DateUtils
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Adapter.EventsAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.EventsService
 import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
@@ -30,7 +33,7 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
     lateinit var mArray_EventsModel: ArrayList<Events_Model.EventsData>
     lateinit var DB_Events: ActivityEventsBinding
     var PageNo = 0
-    var PagePerlimit = 5
+    var PagePerlimit = 10
     var dataSize = 0
     var IsEventCallavailable = true
 
@@ -47,7 +50,7 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
             ApplicationClass.StatusTextWhite(this, true)
             mArray_EventsModel = ArrayList()
             DB_Events.imgBack.setOnClickListener(this)
-            DB_Events.cntLoadmore.setOnClickListener(this)
+//            DB_Events.cntLoadmore.setOnClickListener(this)
 
 
 //            val events: MutableList<EventDay> = java.util.ArrayList()
@@ -132,8 +135,8 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_PageNo] = pageNo
-            params[ApplicationClass.paramKey_limit] = PagePerlimit
+            params[Constants.paramKey_PageNo] = pageNo
+            params[Constants.paramKey_limit] = PagePerlimit
 //                ApplicationClass.userInfoModel.data!!.userid.toString()
 //            params[ApplicationClass.paramKey_Selfie] = fileString
 
@@ -157,13 +160,13 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
                     response: Response<Events_Model>
                 ) {
                     DB_Events.cntLoader.visibility = View.GONE
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         dataSize = response.body()!!.data!!.size
                         mArray_EventsModel.addAll(response.body()!!.data!!)
                         DB_Events.rrEvents.adapter!!.notifyDataSetChanged()
 
                         if (response.body()!!.data!!.size < this@Events.PagePerlimit) {
-                            DB_Events.cntLoadmore.visibility = View.GONE
+//                            DB_Events.cntLoadmore.visibility = View.GONE
                             IsEventCallavailable = false
                         } else {
                             IsEventCallavailable = true
@@ -174,10 +177,10 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
                         } else {
                             DB_Events.txtNoEvents.visibility = View.VISIBLE
                         }
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_Events.cntUnAuthorized.visibility = View.VISIBLE
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseEmpltyList)) {
-                        DB_Events.cntLoadmore.visibility = View.GONE
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+//                        DB_Events.cntLoadmore.visibility = View.GONE
                         IsEventCallavailable = false
                     } else {
 
@@ -308,25 +311,25 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
 //            mRrEvents.setLayoutManager(GridLayoutManager(this, 2))
             DB_Events.rrEvents.adapter = loEventsAdapter
 
-//            DB_Events.rrEvents.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    val layoutManager =
-//                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
-//                    val totalItemCount = layoutManager.itemCount
-//                    val lastVisible = layoutManager.findLastVisibleItemPosition()
-//                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
-//                    Log.e("TAG", "POSITION : " + totalItemCount)
-//                    Log.e("TAG", "LastPOSITION : " + lastVisible)
-//                    if (totalItemCount > 0 && endHasBeenReached) {
-//                        //you have reached to the bottom of your recycler view
-//                        Log.e("TAG", "RECYCLERVIEWLASTITEM")
-//                    }
-//                    if ((totalItemCount - 1) == lastVisible && IsEventCallavailable && dataSize == 10) {
-//                        IsEventCallavailable = true
-//                        GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
-//                    }
-//                }
-//            })
+            DB_Events.rrEvents.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager =
+                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisible = layoutManager.findLastVisibleItemPosition()
+                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
+                    Log.e("TAG", "POSITION : " + totalItemCount)
+                    Log.e("TAG", "LastPOSITION : " + lastVisible)
+                    if (totalItemCount > 0 && endHasBeenReached) {
+                        //you have reached to the bottom of your recycler view
+                        Log.e("TAG", "RECYCLERVIEWLASTITEM")
+                    }
+                    if ((totalItemCount - 1) == lastVisible && IsEventCallavailable && dataSize == PagePerlimit) {
+                        IsEventCallavailable = true
+                        GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
+                    }
+                }
+            })
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -349,13 +352,14 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
         } else if (view == DB_Events.txtUnauthOk) {
             DB_Events.cntUnAuthorized.visibility = View.GONE
             ApplicationClass.UserLogout(this)
-        } else if (view == DB_Events.cntLoadmore) {
-//            IsEventCallavailable = true
-            if (IsEventCallavailable) {
-                DB_Events.cntLoader.visibility = View.VISIBLE
-                GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
-            }
         }
+//        else if (view == DB_Events.cntLoadmore) {
+////            IsEventCallavailable = true
+//            if (IsEventCallavailable) {
+//                DB_Events.cntLoader.visibility = View.VISIBLE
+//                GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
+//            }
+//        }
     }
 
     override fun onDayClick(eventDay: EventDay?) {

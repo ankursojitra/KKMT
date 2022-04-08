@@ -14,6 +14,7 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Adapter.VideosAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.VideosService
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
@@ -128,11 +129,11 @@ class Video : AppCompatActivity(), View.OnClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_Usertype] =
+            params[Constants.paramKey_Usertype] =
                 ApplicationClass.userInfoModel.data!!.usertype!!
-            params[ApplicationClass.paramKey_PageNo] = pageNo
-            params[ApplicationClass.paramKey_limit] = PagePerLimit
-            params[ApplicationClass.paramKey_UserId] =
+            params[Constants.paramKey_PageNo] = pageNo
+            params[Constants.paramKey_limit] = PagePerLimit
+            params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
@@ -155,7 +156,7 @@ class Video : AppCompatActivity(), View.OnClickListener {
                 ) {
                     DB_Video.cntLoader.visibility = View.GONE
                     Log.e("TAG", "VideoResponse : " + Gson().toJson(response.body()!!))
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         if (response.body()!!.data!!.size < this@Video.PagePerlimit) {
                             DB_Video.cntLoadmore.visibility = View.GONE
                             IsVideoCallavailable = false
@@ -171,9 +172,9 @@ class Video : AppCompatActivity(), View.OnClickListener {
                         } else {
                             DB_Video.txtNoEvents.visibility = View.VISIBLE
                         }
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_Video.cntUnAuthorized.visibility = View.VISIBLE
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseEmpltyList)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
                         DB_Video.cntLoadmore.visibility = View.GONE
                         IsVideoCallavailable = false
                     } else {

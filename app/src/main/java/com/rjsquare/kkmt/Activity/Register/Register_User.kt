@@ -17,8 +17,9 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.GenderParam
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.IsUserEmployee
+import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.isUserEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.userInfoModel
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.RegisterUserService
@@ -203,7 +204,7 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
 
     private fun CheckEmailValidation(): Boolean {
         if (EmailAddress.equals("", true) &&
-            !ApplicationClass.Email_Pattern.matcher(EmailAddress).matches()
+            !ApplicationClass.email_Pattern.matcher(EmailAddress).matches()
         ) {
             ShowErrorMessage("Enter Email address proper format")
             Toast.makeText(
@@ -223,12 +224,12 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_MobileNo] = MobileNo
-            params[ApplicationClass.paramKey_FirstName] = FirstName
-            params[ApplicationClass.paramKey_LastName] = LastName
-            params[ApplicationClass.paramKey_EmailAddress] = EmailAddress
-            params[ApplicationClass.paramKey_DOB] = DOB
-            params[ApplicationClass.paramKey_Gender] = Gender
+            params[Constants.paramKey_MobileNo] = MobileNo
+            params[Constants.paramKey_FirstName] = FirstName
+            params[Constants.paramKey_LastName] = LastName
+            params[Constants.paramKey_EmailAddress] = EmailAddress
+            params[Constants.paramKey_DOB] = DOB
+            params[Constants.paramKey_Gender] = Gender
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<RegisterUserService>(
@@ -249,21 +250,21 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
                     Log.e("GetResponsesas", ": " + Gson().toJson(response.body()!!))
                     userInfoModel = UserInfoData_Model()
                     userInfoModel = response.body()!!
-                    if (userInfoModel.status.equals(ApplicationClass.ResponseSucess, true)) {
-                        ApplicationClass.PrefEditor.putString(
-                            ApplicationClass.Pref_UserDataModel,
+                    if (userInfoModel.status.equals(Constants.ResponseSucess, true)) {
+                        ApplicationClass.prefEditor.putString(
+                            Constants.Pref_UserDataModel,
                             Gson().toJson(userInfoModel)
                         )
-                        ApplicationClass.PrefEditor.commit()
-                        Preferences.StoreBoolean(ApplicationClass.Pref_UserLogedIn, true)
+                        ApplicationClass.prefEditor.commit()
+                        Preferences.StoreBoolean(Constants.Pref_UserLogedIn, true)
                         Log.e(
                             "TAG",
                             "LoginX" + Preferences.ReadBoolean(
-                                ApplicationClass.Pref_UserLogedIn,
+                                Constants.Pref_UserLogedIn,
                                 false
                             )
                         )
-                        IsUserEmployee = ApplicationClass.IsEmployee()
+                        isUserEmployee = ApplicationClass.IsEmployee()
 
                         GOTOUpload()
                     } else {

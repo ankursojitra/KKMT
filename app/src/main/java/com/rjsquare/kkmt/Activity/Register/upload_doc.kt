@@ -24,6 +24,7 @@ import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UploadDocService
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UploadDoc_Model
@@ -222,9 +223,9 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_UserId] =
+            params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid.toString()
-            params[ApplicationClass.paramKey_Document] = fileString
+            params[Constants.paramKey_Document] = fileString
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<UploadDocService>(
@@ -248,11 +249,11 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
                 ) {
                     DB_UploadDoc.cntLoader.visibility = View.GONE
 
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         var HomeIntent = Intent(this@upload_doc, Upload_Selfie::class.java)
                         startActivity(HomeIntent)
                         overridePendingTransition(R.anim.activity_in,R.anim.activity_out)
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_UploadDoc.cntUnAuthorized.visibility = View.VISIBLE
                     } else {
                         DB_UploadDoc.txtAlertmsg.text = response.body()!!.message

@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.ActivityReviewListBinding
@@ -40,9 +41,9 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
             pendingReviewItemInfo = ArrayList()
             completeReviewItemInfo = ArrayList()
             for (model in ApplicationClass.mArray_ReviewModel){
-                if (model.review_status!!.equals(ApplicationClass.Pending,true)){
+                if (model.review_status!!.equals(Constants.Pending,true)){
                     pendingReviewItemInfo.add(model)
-                }else if (model.review_status!!.equals(ApplicationClass.Approve,true)){
+                }else if (model.review_status!!.equals(Constants.Approve,true)){
                     completeReviewItemInfo.add(model)
                 }
             }

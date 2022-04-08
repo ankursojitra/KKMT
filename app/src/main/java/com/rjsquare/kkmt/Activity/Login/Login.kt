@@ -19,8 +19,9 @@ import com.rjsquare.kkmt.Activity.OTP.OTP_Confirmation
 import com.rjsquare.kkmt.Activity.Register.Register_User
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.HiddenKeyBoard
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.IsUserEmployee
+import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.isUserEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mLogInInfo_Model
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.LogInCallService
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
@@ -92,7 +93,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_MobileNo] = DB_Login.edtPhoneNum.text.toString()
+            params[Constants.paramKey_MobileNo] = DB_Login.edtPhoneNum.text.toString()
 //            params[ApplicationClass.paramKey_DeviceType] = "A"
             val service =
                 ApiCallingInstance.retrofitInstance.create<LogInCallService>(
@@ -118,7 +119,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
                         mLogInInfo_Model =
                             UserLogIn_Model()
                         mLogInInfo_Model = response.body()!!
-                        if (mLogInInfo_Model.status.equals(ApplicationClass.ResponseSucess, true)) {
+                        if (mLogInInfo_Model.status.equals(Constants.ResponseSucess, true)) {
                             GOTO_OTP()
                         } else {
                             Toast.makeText(this@Login, mLogInInfo_Model.message, Toast.LENGTH_SHORT)
@@ -215,7 +216,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
 
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         if (buttonView == DB_Login.swEmp) {
-            IsUserEmployee = isChecked
+            isUserEmployee = isChecked
         }
     }
 

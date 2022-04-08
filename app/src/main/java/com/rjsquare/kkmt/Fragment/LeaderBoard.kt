@@ -17,7 +17,7 @@ import com.rjsquare.kkmt.Activity.PrizesList.Prizes
 import com.rjsquare.kkmt.Adapter.LeaderboardCustomerAdapter
 import com.rjsquare.kkmt.Adapter.LeaderboardEmployeeAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.Model.LeaderBoardModel
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.*
 import com.rjsquare.kkmt.databinding.FragmentLeaderBoardBinding
@@ -52,8 +52,8 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             DataBindingUtil.inflate(inflater, R.layout.fragment_leader_board, container, false)
 //        var rootView = inflater.inflate(R.layout.fragment_leader_board, container, false)
         try {
-            Log.e("TAG", "CHECKEMPLOYEE : " + ApplicationClass.IsUserEmployee)
-            if (ApplicationClass.IsUserEmployee) {
+            Log.e("TAG", "CHECKEMPLOYEE : " + ApplicationClass.isUserEmployee)
+            if (ApplicationClass.isUserEmployee) {
                 DB_LeaderBoard.cntEmporuser.visibility = View.GONE
                 IsCurrentBussiness = false
                 LeaderBoardDataEmployee()
@@ -163,7 +163,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_CustomerId] =
+            params[Constants.paramKey_CustomerId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
@@ -183,10 +183,10 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                     call: Call<LeaderboardCustomer_Model>,
                     response: Response<LeaderboardCustomer_Model>
                 ) {
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         mLeaderboardCustomer_Model = response.body()!!
                         FillData()
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         HomeActivity.UnauthorizedUser()
                     } else {
 
@@ -217,9 +217,9 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_BussinessId] =
+            params[Constants.paramKey_BussinessId] =
                 ApplicationClass.userInfoModel.data!!.bussiness!!
-            params[ApplicationClass.paramKey_EmployeeId] =
+            params[Constants.paramKey_EmployeeId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
@@ -241,10 +241,10 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                     response: Response<LeaderboardEmployee_Model>
                 ) {
                     Log.e("TAG","CHECKRESEMPLOYEEDATA : "+response.body())
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         mLeaderboardEmployee_Model = response.body()!!
                         FillEmpData()
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         HomeActivity.UnauthorizedUser()
                     } else {
 

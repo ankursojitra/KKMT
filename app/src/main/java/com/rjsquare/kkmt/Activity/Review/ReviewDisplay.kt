@@ -12,6 +12,7 @@ import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Location
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.ReviewDetailService
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewDetailModel
@@ -65,7 +66,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun SetUpUI() {
-        if (ApplicationClass.IsNewReview) {
+        if (ApplicationClass.isNewReview) {
             //Employee search Screen Call
             DB_ReviewDisplay.txtReviewName.text = ApplicationClass.Selected_ReviewEmp_Model.EmpName
 
@@ -89,10 +90,10 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             val params: MutableMap<String, String> =
                 HashMap()
 
-            params[ApplicationClass.paramKey_UserId] =
+            params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
-            params[ApplicationClass.paramKey_ReviewId] =
+            params[Constants.paramKey_ReviewId] =
                 ApplicationClass.empReviewModelSelected!!.id!!
 
             val service =
@@ -115,13 +116,13 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                 ) {
                     DB_ReviewDisplay.cntLoader.visibility = View.GONE
 
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         Log.e("TAG", "ResponseReview : " + Gson().toJson(response.body()!!))
                         ReviewInfo = response.body()!!.data!!
                         SetUIData()
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_ReviewDisplay.cntUnAuthorized.visibility = View.VISIBLE
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseEmpltyList)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
 
@@ -169,15 +170,15 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
         DB_ReviewDisplay.txtDetailCredit.text = ReviewInfo.credit!!.additional_details
         DB_ReviewDisplay.txtBonusCredit.text = ReviewInfo.credit!!.bonus
 
-        if (ReviewInfo.receipt_status!!.equals(ApplicationClass.Pending, true)) {
+        if (ReviewInfo.receipt_status!!.equals(Constants.Pending, true)) {
             DB_ReviewDisplay.imgProofofpurchase.setImageResource(R.drawable.ic_sand_clock)
-        } else if (ReviewInfo.receipt_status!!.equals(ApplicationClass.Approve, true)) {
+        } else if (ReviewInfo.receipt_status!!.equals(Constants.Approve, true)) {
             DB_ReviewDisplay.imgProofofpurchase.setImageResource(R.drawable.ic_verified)
         }
 
-        if (ReviewInfo.receipt_status!!.equals(ApplicationClass.Pending, true)) {
+        if (ReviewInfo.receipt_status!!.equals(Constants.Pending, true)) {
             DB_ReviewDisplay.imgProofofpurchase.setImageResource(R.drawable.ic_sand_clock)
-        } else if (ReviewInfo.receipt_status!!.equals(ApplicationClass.Approve, true)) {
+        } else if (ReviewInfo.receipt_status!!.equals(Constants.Approve, true)) {
             DB_ReviewDisplay.imgProofofpurchase.setImageResource(R.drawable.ic_verified)
         }
 
@@ -190,7 +191,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             if (v == DB_ReviewDisplay.imgBack) {
                 onBackPressed()
             } else if (v == DB_ReviewDisplay.cntBacktohome) {
-                if (ApplicationClass.IsNewReview) {
+                if (ApplicationClass.isNewReview) {
                     Bussiness_Location.thisBussiness_Activity.finish()
                     BussinessCheckIn.thisBusinessCheckIn.finish()
                     SearchEmployee.thisSearchEmployee.finish()

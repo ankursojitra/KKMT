@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDrawCheckService
 import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDrawCheck_Model
@@ -108,7 +109,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_UserId] =
+            params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
@@ -129,14 +130,14 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                     response: retrofit2.Response<LuckyDrawCheck_Model>
                 ) {
                     DB_LuckyDraw.cntLoader.visibility = View.GONE
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         if (response.body()!!.data!!.is_eligible.equals("No", true)) {
                             DB_LuckyDraw.txtAlertmsg.text = response.body()!!.message
                             DB_LuckyDraw.cntAlert.visibility = View.VISIBLE
                         } else {
                             Log.e("TAG", "Spin available")
                         }
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_LuckyDraw.cntUnAuthorized.visibility = View.VISIBLE
                     } else {
 
@@ -166,10 +167,10 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_UserId] =
+            params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
-            params[ApplicationClass.paramKey_Credit] = getCredit
+            params[Constants.paramKey_Credit] = getCredit
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<LuckyDrawService>(
@@ -189,10 +190,10 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                     response: retrofit2.Response<LuckyDraw_Model>
                 ) {
                     DB_LuckyDraw.cntLoader.visibility = View.GONE
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         DB_LuckyDraw.txtCreditEarn.text = getCredit
                         DB_LuckyDraw.cntConfirmation.visibility = View.VISIBLE
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_LuckyDraw.cntUnAuthorized.visibility = View.VISIBLE
                     } else {
                         DB_LuckyDraw.txtAlertmsg.text = response.body()!!.message
@@ -276,11 +277,11 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             if (view == DB_LuckyDraw.txtSpin) {
                 if (!Spinning) {
                     var SpinTimeL =
-                        ApplicationClass.SharedPref.getLong(ApplicationClass.SpinTime, 0)
+                        ApplicationClass.sharedPref.getLong(Constants.SpinTime, 0)
                     Log.e("TAG", "SpinTimeL : " + SpinTimeL)
                     var lSpinTime = System.currentTimeMillis() + (1000 * 60 * 60 * 24)
-                    ApplicationClass.PrefEditor.putLong(ApplicationClass.SpinTime, lSpinTime)
-                    ApplicationClass.PrefEditor.commit()
+                    ApplicationClass.prefEditor.putLong(Constants.SpinTime, lSpinTime)
+                    ApplicationClass.prefEditor.commit()
                     Spinning = true
                 }
                 DB_LuckyDraw.luckyWheel.startLuckyWheelWithRandomTarget()

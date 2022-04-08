@@ -27,7 +27,7 @@ class Profile : AppCompatActivity(), View.OnClickListener {
             ApplicationClass.StatusTextWhite(this, true)
             DB_Profile.imgBack.setOnClickListener(this)
 
-            if (!ApplicationClass.IsUserEmployee) {
+            if (!ApplicationClass.isUserEmployee) {
                 DB_Profile.cntEmpProfile.visibility = View.VISIBLE
             } else {
                 DB_Profile.cntEmpProfile.visibility = View.GONE

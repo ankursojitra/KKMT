@@ -27,7 +27,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Location
 import com.rjsquare.kkmt.Activity.Challenges.ActiveChallenge
-import com.rjsquare.kkmt.Activity.Login.Login
 import com.rjsquare.kkmt.Activity.Notifications.NotificationList
 import com.rjsquare.kkmt.Activity.Profile.Profile
 import com.rjsquare.kkmt.Activity.Register.upload_doc
@@ -81,7 +80,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         var LeaderBoardFr: Fragment? = null
 
         fun SetUpEmployeeUI() {
-            if (ApplicationClass.IsUserEmployee) {
+            if (ApplicationClass.isUserEmployee) {
                 HistoryFr = EmployeeHistory()
             } else {
                 HistoryFr = History()
@@ -154,7 +153,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 DefaultKeyboardDP + if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) 48f else 0f
 
             DB_HomeActivity.txtUnauthOk.setOnClickListener(this)
-            if (!ApplicationClass.AutorisedUser){
+            if (!ApplicationClass.autorisedUser){
                 DB_HomeActivity.cntUnAuthorized.visibility = View.VISIBLE
             }
 
@@ -197,16 +196,16 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             DB_HomeActivity.HomeScreen.ContentView.cntSelHome.visibility = View.VISIBLE
             mCntLoader.visibility = View.VISIBLE
 
-            Log.e("TAG", "CheckEmployeeUser : " + ApplicationClass.IsUserEmployee)
+            Log.e("TAG", "CheckEmployeeUser : " + ApplicationClass.isUserEmployee)
             //setup Employee new Review
             DB_HomeActivity.HomeScreen.ContentView.cntNewreview.visibility =
-                if (ApplicationClass.IsUserEmployee) View.GONE else View.VISIBLE
+                if (ApplicationClass.isUserEmployee) View.GONE else View.VISIBLE
             DB_HomeActivity.HomeScreen.ContentView.cntSelStar.visibility =
-                if (ApplicationClass.IsUserEmployee) View.GONE else View.VISIBLE
+                if (ApplicationClass.isUserEmployee) View.GONE else View.VISIBLE
             DB_HomeActivity.nevigationMenuview.cntReviewsMenu.visibility =
-                if (ApplicationClass.IsUserEmployee) View.GONE else View.VISIBLE
+                if (ApplicationClass.isUserEmployee) View.GONE else View.VISIBLE
             DB_HomeActivity.nevigationMenuview.cntUploadMenu.visibility =
-                if (ApplicationClass.IsUserEmployee) View.GONE else View.VISIBLE
+                if (ApplicationClass.isUserEmployee) View.GONE else View.VISIBLE
 
             LoadFragmentsPages().execute()
 
@@ -327,7 +326,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 DB_HomeActivity.HomeScreen.ContentView.navHistoryFragment.visibility = View.VISIBLE
 
                 var LoadView = false
-                if (ApplicationClass.IsUserEmployee) {
+                if (ApplicationClass.isUserEmployee) {
                     LoadView = EmployeeHistory.EmpHistoryView
                 } else {
                     LoadView = History.HistoryView
@@ -449,7 +448,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 R.id.nav_leader_fragment,
                 LeaderBoardFr as LeaderBoard
             )
-            if (ApplicationClass.IsUserEmployee) {
+            if (ApplicationClass.isUserEmployee) {
                 HistoryfragmentTransaction.replace(
                     R.id.nav_history_fragment,
                     HistoryFr as EmployeeHistory

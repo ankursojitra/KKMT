@@ -1,9 +1,6 @@
 package com.rjsquare.kkmt.Activity.Bussiness
 
 import android.Manifest
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -20,7 +17,6 @@ import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
@@ -43,24 +39,22 @@ import com.minew.beaconplus.sdk.MTCentralManager
 import com.minew.beaconplus.sdk.enums.BluetoothState
 import com.minew.beaconplus.sdk.interfaces.OnBluetoothStateChangedListener
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Review.SearchEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.BusinessBeaconService
-import com.rjsquare.kkmt.RetrofitInstance.OTPCall.BusinessBeaconModel
+import com.rjsquare.kkmt.RetrofitInstance.LogInCall.MasterBeaconService
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
 import com.rjsquare.kkmt.databinding.ActivityLocationBinding
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 
 class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReadyCallback {
 
-    //    lateinit var ReportView: View
-//    lateinit var ConfirmView: View
-//    lateinit var ReportThankYouView: View
     private lateinit var mCh1: CheckBox
     private lateinit var mCh2: CheckBox
     private lateinit var mCh3: CheckBox
@@ -78,7 +72,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
     lateinit var DB_BusinessLocation: ActivityLocationBinding
 
-    private val BLE_DEVICE_INFO_CALL = 3000L
+    private val BLE_DEVICE_INFO_CALL = 10000L
     private val REQUEST_ENABLE_BT = 3
     private val PERMISSION_COARSE_LOCATION = 2
     private var mMtCentralManager: MTCentralManager? = null
@@ -86,7 +80,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     lateinit var handler: Handler
     lateinit var runnable: Runnable
     var HandlerCallavailable = false
-    lateinit var BusinessList: ArrayList<BusinessBeaconModel.BusinessBescon>
+    lateinit var masterList: ArrayList<MasterBeaconModel.BusinessBescon>
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -96,20 +90,18 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DB_BusinessLocation = DataBindingUtil.setContentView(this, R.layout.activity_location)
-//        setContentView(R.layout.activity_location)
         try {
             ApplicationClass.StatusTextWhite(this, false)
             val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment?
             mapFragment?.getMapAsync(this)
 
-            DB_BusinessLocation.cntLoader.visibility = View.VISIBLE
             DB_BusinessLocation.rippleback.startRippleAnimation()
             thisBussiness_Activity = this
             BeaconMACList = ArrayList()
             handler = Handler()
             HandlerCallavailable = true
-            BusinessList = ArrayList()
+            masterList = ArrayList()
             if (!ensureBleExists()) finish()
 
             if (!isBLEEnabled()) {
@@ -118,10 +110,6 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             initManager()
             getRequiredPermissions()
             initListener()
-
-//            ReportView = DB_BusinessLocation.layoutBussinessReport as View
-//            ConfirmView = DB_BusinessLocation.layoutBussinessConfirm as View
-//            ReportThankYouView = DB_BusinessLocation.layoutBussinessThankyou as View
 
             mCntBussinessname = DB_BusinessLocation.layoutBussinessReport.cntBussinessname
             mImgLogo = DB_BusinessLocation.layoutBussinessConfirm.imgLogo
@@ -186,6 +174,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             runnable = Runnable {
 //                foundDevice()
                 mMtCentralManager!!.stopScan()
+                DB_BusinessLocation.cntLoader.visibility = View.VISIBLE
                 MasterBleDeviceInfo()
             }
 
@@ -209,6 +198,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         var arrayJ = JSONArray()
         for (Mac in BeaconMACList) {
             arrayJ.put(Mac)
+            Log.e("TAG","CheckMac : "+Mac)
         }
         beaconOBJ.put("becon_list", arrayJ)
         try {
@@ -216,37 +206,36 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             val params: MutableMap<String, String> =
                 HashMap()
 
-
-            params[ApplicationClass.paramKey_UserId] =
+            params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<BusinessBeaconService>(
-                    BusinessBeaconService::class.java
+                ApiCallingInstance.retrofitInstance.create<MasterBeaconService>(
+                    MasterBeaconService::class.java
                 )
             val call =
                 service.GetBusinessBeaconData(
                     params, BeaconMACList, ApplicationClass.userInfoModel.data!!.access_token!!
                 )
 
-            call.enqueue(object : Callback<BusinessBeaconModel> {
-                override fun onFailure(call: Call<BusinessBeaconModel>, t: Throwable) {
+            call.enqueue(object : Callback<MasterBeaconModel> {
+                override fun onFailure(call: Call<MasterBeaconModel>, t: Throwable) {
                     DB_BusinessLocation.cntLoader.visibility = View.GONE
                 }
 
                 override fun onResponse(
-                    call: Call<BusinessBeaconModel>,
-                    response: Response<BusinessBeaconModel>
+                    call: Call<MasterBeaconModel>,
+                    response: Response<MasterBeaconModel>
                 ) {
                     DB_BusinessLocation.cntLoader.visibility = View.GONE
                     Log.e("TAG", "CHECKRESPONSE : " + Gson().toJson(response.body()))
 
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
-                        BusinessList = response.body()!!.data!!
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        masterList = response.body()!!.data!!
                         SetBusinessViews()
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_BusinessLocation.cntUnAuthorized.visibility = View.VISIBLE
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseEmpltyList)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
 
@@ -271,28 +260,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
     }
 
-    fun getARGB(hex: Int): IntArray? {
-        val a = hex and -0x1000000 shr 24
-        val r = hex and 0xFF0000 shr 16
-        val g = hex and 0xFF00 shr 8
-        val b = hex and 0xFF
-        return intArrayOf(a, r, g, b)
-    }
-
-    fun hexToIntColor(hex: String): IntArray {
-//        var Alpha = Integer.valueOf(hex.substring(0, 2), 16)
-        var Red = Integer.valueOf(hex.substring(0, 2), 16)
-        var Green = Integer.valueOf(hex.substring(2, 4), 16)
-        var Blue = Integer.valueOf(hex.substring(4, 6), 16)
-//        Alpha = Alpha shl 24 and -0x1000000
-        Red = Red shl 16 and 0x00FF0000
-        Green = Green shl 8 and 0x0000FF00
-        Blue = Blue and 0x000000FF
-//        return Alpha or Red or Green or Blue
-        return intArrayOf(Red, Green, Blue)
-    }
-
-    private fun getMarkerBitmapFromView(businessBeaconInfo: BusinessBeaconModel.BusinessBescon): Bitmap {
+    private fun getMarkerBitmapFromView(masterBeaconInfo: MasterBeaconModel.BusinessBescon): Bitmap {
         //HERE YOU CAN ADD YOUR CUSTOM VIEW
 
         val customMarkerView: View =
@@ -300,78 +268,111 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                 R.layout.map_marker,
                 null
             )
-        val textView = customMarkerView.findViewById<View>(R.id.txt_name) as TextView
+        val textView = customMarkerView.findViewById<TextView>(R.id.txt_busname) as TextView
         val imageViewPin = customMarkerView.findViewById<ImageView>(R.id.img_pin) as ImageView
-//        var Code = hexToIntColor((businessBeaconInfo.mappin!!.replace("#", "")))
-//        imageViewPin.setColorFilter(Color.rgb(Code[0], Code[1], Code[2]))
+        val imageViewBusiness =
+            customMarkerView.findViewById<ImageView>(R.id.img_business) as ImageView
+        val CntView =
+            customMarkerView.findViewById<ConstraintLayout>(R.id.cnt_view) as ConstraintLayout
 
-        imageViewPin.setImageResource(GetPin(businessBeaconInfo.mappin!!))
+        imageViewPin.setImageResource(GetPin(masterBeaconInfo.mappin!!))
+        CntView.setBackgroundResource(GetPinView(masterBeaconInfo.mappin!!))
 
-        textView.setText(businessBeaconInfo.bussiness_name);
-        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        //Business Image showen
+//        Picasso.with(this).load(businessBeaconInfo.bussiness_name).into(imageViewBusiness)
+
+        textView.text = masterBeaconInfo.bussiness_name
+        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         customMarkerView.layout(
             0,
             0,
-            customMarkerView.getMeasuredWidth(),
-            customMarkerView.getMeasuredHeight()
-        );
-        customMarkerView.buildDrawingCache();
+            customMarkerView.measuredWidth,
+            customMarkerView.measuredHeight
+        )
+        customMarkerView.buildDrawingCache()
         val returnedBitmap = Bitmap.createBitmap(
             customMarkerView.measuredWidth,
             customMarkerView.measuredHeight,
             Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(returnedBitmap)
-        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN)
         val drawable = customMarkerView.background
         if (drawable != null)
-            drawable.draw(canvas);
-        customMarkerView.draw(canvas);
-        return returnedBitmap;
+            drawable.draw(canvas)
+        customMarkerView.draw(canvas)
+        return returnedBitmap
     }
 
     @SuppressLint("ResourceType")
-    private fun GetPin(pinColor: String): Int {
-        Log.e("TAG", "COLORXXX :" + pinColor)
-        if (getResources().getString(R.color.gray_pin).equals(pinColor, true)) {
+    private fun GetPin(pinColors: String): Int {
+        val pinColor = "#ff" + pinColors.replace("#", "")
+        if (resources.getString(R.color.gray_pin).equals(pinColor, true)) {
             return R.drawable.ic_pin_gray
-        } else if (getResources().getString(R.color.orange_pin).equals(pinColor, true)) {
+        } else if (resources.getString(R.color.orange_pin).equals(pinColor, true)) {
             return R.drawable.ic_pin_orange
-        } else if (getResources().getString(R.color.green_pin).equals(pinColor, true)) {
+        } else if (resources.getString(R.color.green_pin).equals(pinColor, true)) {
             return R.drawable.ic_pin_green
-        } else if (getResources().getString(R.color.pink_pin).equals(pinColor, true)) {
+        } else if (resources.getString(R.color.pink_pin).equals(pinColor, true)) {
             return R.drawable.ic_pin_pink
-        } else if (getResources().getString(R.color.blue_pin).equals(pinColor, true)) {
+        } else if (resources.getString(R.color.blue_pin).equals(pinColor, true)) {
             return R.drawable.ic_pin_blue
-        } else if (getResources().getString(R.color.red_pin).equals(pinColor, true)) {
+        } else if (resources.getString(R.color.red_pin).equals(pinColor, true)) {
             return R.drawable.ic_pin_red
-        } else if (getResources().getString(R.color.yellow_pin).equals(pinColor, true)) {
+        } else if (resources.getString(R.color.yellow_pin).equals(pinColor, true)) {
             return R.drawable.ic_pin_yellow
-        } else if (getResources().getString(R.color.purple_pin).equals(pinColor, true)) {
+        } else if (resources.getString(R.color.purple_pin).equals(pinColor, true)) {
             return R.drawable.ic_pin_purple
-        } else if (getResources().getString(R.color.black_pin).equals(pinColor, true)) {
+        } else if (resources.getString(R.color.black_pin).equals(pinColor, true)) {
             return R.drawable.ic_pin_black
         } else {
             return R.drawable.ic_pin_red
         }
     }
 
+    @SuppressLint("ResourceType")
+    private fun GetPinView(pinColors: String): Int {
+        val pinColor = "#ff" + pinColors.replace("#", "")
+        if (resources.getString(R.color.gray_pin).equals(pinColor, true)) {
+            return R.drawable.map_pin_back_gray
+        } else if (resources.getString(R.color.orange_pin).equals(pinColor, true)) {
+            return R.drawable.map_pin_back_orange
+        } else if (resources.getString(R.color.green_pin).equals(pinColor, true)) {
+            return R.drawable.map_pin_back_green
+        } else if (resources.getString(R.color.pink_pin).equals(pinColor, true)) {
+            return R.drawable.map_pin_back_pink
+        } else if (resources.getString(R.color.blue_pin).equals(pinColor, true)) {
+            return R.drawable.map_pin_back_blue
+        } else if (resources.getString(R.color.red_pin).equals(pinColor, true)) {
+            return R.drawable.map_pin_back_red
+        } else if (resources.getString(R.color.yellow_pin).equals(pinColor, true)) {
+            return R.drawable.map_pin_back_yellow
+        } else if (resources.getString(R.color.purple_pin).equals(pinColor, true)) {
+            return R.drawable.map_pin_back_purple
+        } else if (resources.getString(R.color.black_pin).equals(pinColor, true)) {
+            return R.drawable.map_pin_back_black
+        } else {
+            return R.drawable.map_pin_back_red
+        }
+    }
+
     private fun SetBusinessViews() {
 
-        Log.e("TAG","COLORLIST: "+BusinessList.size)
-        for (Business in BusinessList) {
+        Log.e("TAG", "COLORLIST: " + masterList.size)
+        for (BusinessPos in 0..masterList.size - 1) {
+            Log.e("TAG", "COLORLIST: " + BusinessPos)
 
             mMap.addMarker(
                 MarkerOptions()
                     .position(
                         LatLng(
-                            Business.latitude!!.toDouble(),
-                            Business.longitude!!.toDouble()
+                            masterList[BusinessPos].latitude!!.toDouble(),
+                            masterList[BusinessPos].longitude!!.toDouble()
                         )
                     )
-                    .title(Business.bussiness_name)
-//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin))
-                    .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(Business)))
+                    .zIndex(BusinessPos.toFloat())
+//                    .title(Business.bussiness_name)
+                    .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(masterList[BusinessPos])))
             )
         }
     }
@@ -392,32 +393,22 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
     private fun initListener() {
         mMtCentralManager!!.setMTCentralManagerListener { peripherals ->
-            Log.e("demo", "scan size is: " + peripherals.size)
-//            Log.d("demo", "scan peripherals is: " + peripherals)
-            Log.e("demo", "scan peripherals is: " + peripherals[0].mMTFrameHandler.mac)
             for (peripheral in peripherals) {
                 val Mac = peripheral.mMTFrameHandler.mac.replace(":", "")
-                if (!BeaconMACList.contains(Mac)) {
-                    BeaconMACList.add(Mac)
+                if (peripheral.mMTFrameHandler.name.contains(Constants.masterBeacon)) {
+                    if (!BeaconMACList.contains(Mac)) {
+                        BeaconMACList.add(Mac)
+                    }
                 }
             }
             if (HandlerCallavailable) {
                 HandlerCallavailable = false
                 handler.postDelayed(runnable, BLE_DEVICE_INFO_CALL)
             }
-//            mAdapter.setData(peripherals)
         }
-//        mAdapter.setOnItemClickListener(object : OnItemClickListener() {
-//            fun onItemClick(view: View?, position: Int) {
-//                val mtPeripheral: MTPeripheral = mAdapter.getData(position)
-//                mMtCentralManager!!.connect(mtPeripheral, connectionStatueListener)
-//            }
-//            fun onItemLongClick(view: View?, position: Int) {}
-//        })
     }
 
     private fun initData() {
-        //三星手机系统可能会限制息屏下扫描，导致息屏后无法获取到广播数据
         mMtCentralManager!!.startScan()
     }
 
@@ -470,127 +461,6 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         }
         return true
     }
-
-    fun foundDevice() {
-        try {
-            val R = Random()
-
-            val dx: Float = R.nextFloat()
-            val dy: Float = R.nextFloat()
-
-//            var xPosition = (10..200).random().toFloat()
-//            var yPosition = (10..500).random().toFloat()
-//
-//            Log.e("TAG", "XPOSITION : " + xPosition)
-//            Log.e("TAG", "YPOSITION : " + yPosition)
-//
-//
-//            val textView = TextView(this)
-//            textView.text = "your text Random"
-//
-//
-//            val insertPoint: ViewGroup = DynamicViewChild as ViewGroup
-//            insertPoint.addView(
-//                mDynamicViewChild,
-//                0,
-//                ViewGroup.LayoutParams(
-//                    ViewGroup.LayoutParams.WRAP_CONTENT,
-//                    ViewGroup.LayoutParams.WRAP_CONTENT
-//                )
-//            )
-
-//            val parentLayout = DynamicViewChild as ConstraintLayout
-//            val set = ConstraintSet()
-//            val textView = TextView(this)
-//            textView.text = "your text Random"
-//            val childView = ImageView(this)
-//            // set view id, else getId() returns -1
-//            // set view id, else getId() returns -1
-//            textView.id = View.generateViewId()
-//
-//            mCntCompany.x = 500f
-//            mCntCompany.y = 500f
-//
-//            parentLayout.addView(mCntCompany, 0)
-//
-//            mCntCompany.x = 300f
-//            mCntCompany.y = 400f
-//
-//            parentLayout.addView(mCntCompany, 1)
-//
-//
-////            parentLayout.addView(textView, 1)
-////            parentLayout.addView(textView, 2)
-//
-//            set.clone(parentLayout)
-//            // connect start and end point of views, in this case top of child to top of parent.
-//            // connect start and end point of views, in this case top of child to top of parent.
-//            set.connect(
-//                mCntCompany.id,
-//                ConstraintSet.TOP,
-//                parentLayout.id,
-//                ConstraintSet.TOP
-//            )
-//
-//
-//            set.applyTo(parentLayout)
-//
-//
-//            mCntCompany.setVisibility(View.VISIBLE)
-//            val timer = Timer()
-//            mCntCompany.animate()
-//                .x(dx)
-//                .y(dy)
-//                .setDuration(0)
-//                .start()
-//            val animatorSet = AnimatorSet()
-//            animatorSet.duration = 400
-//            animatorSet.interpolator = AccelerateDecelerateInterpolator()
-//            val animatorList = ArrayList<Animator>()
-//            val scaleXAnimator = ObjectAnimator.ofFloat(mCntCompany, "ScaleX", 0f, 1.2f, 1f)
-//            animatorList.add(scaleXAnimator)
-//            val scaleYAnimator = ObjectAnimator.ofFloat(mCntCompany, "ScaleY", 0f, 1.2f, 1f)
-//            animatorList.add(scaleYAnimator)
-//            animatorSet.playTogether(animatorList)
-//            animatorSet.start()
-
-            DB_BusinessLocation.cntCompany.visibility = View.VISIBLE
-            val timer = Timer()
-            DB_BusinessLocation.cntCompany.animate()
-                .x(dx)
-                .y(dy)
-                .setDuration(0)
-                .start()
-            val animatorSet = AnimatorSet()
-            animatorSet.duration = 400
-            animatorSet.interpolator = AccelerateDecelerateInterpolator()
-            val animatorList = ArrayList<Animator>()
-            val scaleXAnimator =
-                ObjectAnimator.ofFloat(DB_BusinessLocation.cntCompany, "ScaleX", 0f, 1.2f, 1f)
-            animatorList.add(scaleXAnimator)
-            val scaleYAnimator =
-                ObjectAnimator.ofFloat(DB_BusinessLocation.cntCompany, "ScaleY", 0f, 1.2f, 1f)
-            animatorList.add(scaleYAnimator)
-            animatorSet.playTogether(animatorList)
-
-            animatorSet.start()
-
-        } catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
-
-    }
-
 
     override fun onClick(view: View?) {
         try {
@@ -668,19 +538,20 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 //        mMap.uiSettings.isRotateGesturesEnabled = false
 //        mMap.uiSettings.isScrollGesturesEnabled = false
 //        mMap.uiSettings.isZoomGesturesEnabled = false
+
             mMap.uiSettings.isCompassEnabled = false
             mMap.uiSettings.isMapToolbarEnabled = false
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Trinidad, 10.0f))
             mMap.setOnMarkerClickListener { marker -> // on marker click we are getting the title of our marker
                 // which is clicked and displaying it in a toast message.
                 val markerName = marker.title
-                Toast.makeText(
-                    this@Bussiness_Location,
-                    "Clicked location is $markerName",
-                    Toast.LENGTH_SHORT
-                ).show()
-                marker.id
-                BusinessCheckInFlow()
+//                Toast.makeText(
+//                    this@Bussiness_Location,
+//                    "Clicked location is ${marker.zIndex}",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+
+                BusinessCheckInFlow(marker.zIndex.toInt())
 
                 false
             }
@@ -714,7 +585,16 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         }
     }
 
-    private fun BusinessCheckInFlow() {
-
+    private fun BusinessCheckInFlow(Index: Int) {
+        ApplicationClass.selectedMasterModel = masterList[Index]
+        if (ApplicationClass.selectedMasterModel.check_in!!.equals("Yes", true)) {
+            var ReviewIntent = Intent(this, SearchEmployee::class.java)
+            startActivity(ReviewIntent)
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+        } else {
+            var BusinessCheckInIntent = Intent(this, BussinessCheckIn::class.java)
+            startActivity(BusinessCheckInIntent)
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+        }
     }
 }

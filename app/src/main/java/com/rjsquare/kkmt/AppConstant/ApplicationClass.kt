@@ -28,7 +28,9 @@ import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.AppReopenService
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.SlaveBeaconModel
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,14 +42,14 @@ class ApplicationClass : Application(), LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onAppBackgrounded() {
         //App in background
-        APP_BACKGROUND = true
+        appBackground = true
 //        Log.e("Applicationxx", " On Background")
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onAppForegrounded() {
         // App in foreground
-        APP_BACKGROUND = false
+        appBackground = false
 //        Log.e("Applicationxx", " On Foreground")
     }
 
@@ -56,18 +58,18 @@ class ApplicationClass : Application(), LifecycleObserver {
         lateinit var ApplicationContext: Application
         var IsRegisterFlow = false
         var HomeScreenLoad = false
-        var UserSpineTime = 0L
+
         lateinit var mReviewEmp_Model: ReviewEmp_Model
         lateinit var Selected_ReviewEmp_Model: ReviewEmp_Model
         lateinit var ArrayList_mReviewEmp_Model: ArrayList<ReviewEmp_Model>
         lateinit var mUserLoginInfo_Model: UserLoginInfo_Model
         lateinit var mLogInInfo_Model: UserLogIn_Model
         lateinit var userInfoModel: UserInfoData_Model
-        var AutorisedUser = true
+        lateinit var selectedMasterModel: MasterBeaconModel.BusinessBescon
+        lateinit var slaveModellist: ArrayList<SlaveBeaconModel.SlaveBescon>
+        var autorisedUser = true
 
-        var BASE_URL: String = "https://kkmtapp.com/developing/api/"
-        var BaseUrl = "https://kkmtapp.com/developing/api/"
-        val Email_Pattern: Pattern = Pattern.compile(
+        val email_Pattern: Pattern = Pattern.compile(
             "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
                     "\\@" +
                     "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
@@ -76,11 +78,11 @@ class ApplicationClass : Application(), LifecycleObserver {
                     "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
                     ")+"
         )
-        val Password_Pattern: Pattern =
+        val password_Pattern: Pattern =
             Pattern.compile("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$%]).{6,20})")
-        val FirstName__Pattern: Pattern =
+        val firstName__Pattern: Pattern =
             Pattern.compile("(.[^A-Za-z ].)")
-        val MobileNo__Pattern: Pattern =
+        val mobileNo__Pattern: Pattern =
             Pattern.compile(" ^[0-9+]{0,1}+[0-9]{5,16}\$")
 
         var mBiconReviewImageX: Bitmap? = null
@@ -89,60 +91,18 @@ class ApplicationClass : Application(), LifecycleObserver {
         lateinit var mList_StoreListModel: ArrayList<StoreListModel>
         lateinit var mList_StoreItemDetailModel: ArrayList<StoreItemDetailModel>
         var mStoreLevelListModelSelected: StoreListModel? = null
-        var IsUserEmployee: Boolean = false
-        var APP_BACKGROUND: Boolean = false
-        var UserLogedIn: Boolean = false
-        var IsNewReview = true
+        var isUserEmployee: Boolean = false
+        var appBackground: Boolean = false
+        var userLogedIn: Boolean = false
+        var isNewReview = true
         var empReviewModelSelected: CustomerHistoryModel.reviewData.reviewItemInfo? = null
         var mSearchModelSelected: SearchModel? = null
         var mEventsModelSelected: Events_Model.EventsData? = null
         var mVideoesModelSelected: Videos_Model.VideoData? = null
 
-        lateinit var SharedPref: SharedPreferences
-        lateinit var PrefEditor: SharedPreferences.Editor
+        lateinit var sharedPref: SharedPreferences
+        lateinit var prefEditor: SharedPreferences.Editor
 
-        //-----------------------Constant ids-------------------------------------
-
-        val Pending = "panding"
-        val Approve = "approve"
-        val paramKey_MobileNo = "phoneno"
-        val paramKey_FirstName = "firstname"
-        val paramKey_LastName = "lastname"
-        val paramKey_EmailAddress = "email"
-        val paramKey_DOB = "dob"
-        val paramKey_Gender = "gender"
-        val paramKey_Userid = "userid"
-        val paramKey_OPT = "otp"
-        val paramKey_CustomerId = "customer_id"
-        val paramKey_BussinessId = "business_id"
-        val paramKey_EmployeeId = "employee_id"
-        val paramKey_Document = "document"
-        val paramKey_Selfie = "selfie"
-        val paramKey_PageNo = "pageno"
-        val paramKey_ReviewId = "review_id"
-        val paramKey_UserId = "user_id"
-        val paramKey_VideoId = "video_id"
-        val paramKey_Credit = "credit"
-        val paramKey_Usertype = "usertype"
-        val paramKey_limit = "limit"
-        val paramKey_BeconList = "becon_list[]"
-        val User = "U"
-
-        //User Preference data Store Key
-        val Pref_UserDataModel: String = "userDataModel"
-        val Pref_UserLogedIn: String = "user_logedin"
-
-        //Api Status Code
-        var ResponseSucess = "200"
-        var ResponseUnauthorized = "203"
-        var ResponseEmpltyList = "202"
-
-        var UserLevel = 4
-
-        var PrefName = "KKMTDATA"
-        var SpinTime = "SpinTime"
-
-        //-----------------------------END---------------------------------------
 
         fun Gender(gender: String): String {
             if (gender.equals("M", true)) {
@@ -170,9 +130,9 @@ class ApplicationClass : Application(), LifecycleObserver {
 
         private fun GetUserPrefData(): UserInfoData_Model {
             var mUserInfoData_Model = UserInfoData_Model()
-            if (!SharedPref.getString(Pref_UserDataModel, "").equals("", true)) {
+            if (!sharedPref.getString(Constants.Pref_UserDataModel, "").equals("", true)) {
                 mUserInfoData_Model = Gson().fromJson(
-                    SharedPref.getString(Pref_UserDataModel, ""),
+                    sharedPref.getString(Constants.Pref_UserDataModel, ""),
                     UserInfoData_Model::class.java
                 )
                 Log.e("TAG", "ModelCHECK")
@@ -187,7 +147,7 @@ class ApplicationClass : Application(), LifecycleObserver {
             Selected_ReviewEmp_Model = ReviewEmp_Model()
             ArrayList_mReviewEmp_Model = ArrayList()
             userInfoModel = UserInfoData_Model()
-            UserLogedIn = false
+            userLogedIn = false
         }
 
         fun UserLogout(activity:Activity) {
@@ -200,7 +160,7 @@ class ApplicationClass : Application(), LifecycleObserver {
         }
 
         fun IsEmployee(): Boolean {
-            return !userInfoModel.data!!.usertype.equals(User, true)
+            return !userInfoModel.data!!.usertype.equals(Constants.User, true)
         }
 
         fun StatusTextWhite(activity: Activity, StatusWhite: Boolean) {
@@ -377,7 +337,7 @@ class ApplicationClass : Application(), LifecycleObserver {
                 val params: MutableMap<String, String> =
                     HashMap()
 
-                params[paramKey_UserId] =
+                params[Constants.paramKey_UserId] =
                     userInfoModel.data!!.userid.toString()
 
                 val service =
@@ -399,18 +359,18 @@ class ApplicationClass : Application(), LifecycleObserver {
                     ) {
 //                        Log.e("GetResponsesas", ": " + Gson().toJson(response.body()!!))
 
-                        if (response.body()!!.status.equals(ResponseSucess, true)) {
+                        if (response.body()!!.status.equals(Constants.ResponseSucess, true)) {
 
                             userInfoModel = response.body()!!
                             Preferences.StoreString(
-                                Pref_UserDataModel,
+                                Constants.Pref_UserDataModel,
                                 Gson().toJson(userInfoModel)
                             )
 
-                            IsUserEmployee = IsEmployee()
-                            AutorisedUser = true
-                        } else if (response.body()!!.status.equals(ResponseUnauthorized, true)) {
-                            AutorisedUser = false
+                            isUserEmployee = IsEmployee()
+                            autorisedUser = true
+                        } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized, true)) {
+                            autorisedUser = false
                         } else {
                             ShowToast(ApplicationContext, response.body()!!.message)
                         }
@@ -451,10 +411,10 @@ class ApplicationClass : Application(), LifecycleObserver {
             ApplicationContext = this
 
             ProcessLifecycleOwner.get().lifecycle.addObserver(this)
-            SharedPref = getSharedPreferences(PrefName, 0)
-            PrefEditor = SharedPref.edit()
-            UserLogedIn = Preferences.ReadBoolean(Pref_UserLogedIn, false)
-            Log.e("TAG", "Login" + UserLogedIn)
+            sharedPref = getSharedPreferences(Constants.PrefName, 0)
+            prefEditor = sharedPref.edit()
+            userLogedIn = Preferences.ReadBoolean(Constants.Pref_UserLogedIn, false)
+            Log.e("TAG", "Login" + userLogedIn)
             InitModels()
 
 
@@ -486,9 +446,9 @@ class ApplicationClass : Application(), LifecycleObserver {
 //            IsUserEmployee = IsEmployee()
 //        }
 
-        if (UserLogedIn) {
+        if (userLogedIn) {
 //            updateUserInfo()
-            IsUserEmployee = IsEmployee()
+            isUserEmployee = IsEmployee()
         }
 
     }
