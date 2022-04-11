@@ -67,7 +67,9 @@ class ApplicationClass : Application(), LifecycleObserver {
         lateinit var userInfoModel: UserInfoData_Model
         lateinit var selectedMasterModel: MasterBeaconModel.BusinessBescon
         lateinit var slaveModellist: ArrayList<SlaveBeaconModel.SlaveBescon>
+        lateinit var empSlaveModel: SlaveBeaconModel.SlaveBescon
         var autorisedUser = true
+        var isReviewNew = true
 
         val email_Pattern: Pattern = Pattern.compile(
             "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +

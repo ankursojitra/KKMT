@@ -17,23 +17,18 @@ import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.drawToBitmap
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import com.minew.beaconplus.sdk.MTCentralManager
 import com.minew.beaconplus.sdk.enums.BluetoothState
@@ -43,9 +38,13 @@ import com.rjsquare.kkmt.Activity.Review.SearchEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.LogInCall.BusinessNotFoundService
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.MasterBeaconService
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.BusinessNotFoundModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
 import com.rjsquare.kkmt.databinding.ActivityLocationBinding
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.layout_bussiness_report.view.*
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
@@ -58,8 +57,9 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     private lateinit var mCh1: CheckBox
     private lateinit var mCh2: CheckBox
     private lateinit var mCh3: CheckBox
+    private lateinit var edtBussinessName: EditText
     private lateinit var mTxtSubmit: TextView
-    private lateinit var mTxtBacktohome: TextView
+    private lateinit var mCntBackToHome: ConstraintLayout
     private lateinit var mMap: GoogleMap
     private lateinit var mCntBussinessname: ConstraintLayout
     private lateinit var mTxtLeave: TextView
@@ -72,6 +72,9 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
     lateinit var DB_BusinessLocation: ActivityLocationBinding
 
+    private var notFoundBusinessName = ""
+    private var notFoundBusinessReason = ""
+    private val CHECK_IN_CODE = 100
     private val BLE_DEVICE_INFO_CALL = 10000L
     private val REQUEST_ENABLE_BT = 3
     private val PERMISSION_COARSE_LOCATION = 2
@@ -102,14 +105,6 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             handler = Handler()
             HandlerCallavailable = true
             masterList = ArrayList()
-            if (!ensureBleExists()) finish()
-
-            if (!isBLEEnabled()) {
-                showBLEDialog()
-            }
-            initManager()
-            getRequiredPermissions()
-            initListener()
 
             mCntBussinessname = DB_BusinessLocation.layoutBussinessReport.cntBussinessname
             mImgLogo = DB_BusinessLocation.layoutBussinessConfirm.imgLogo
@@ -122,7 +117,9 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             mCh2 = DB_BusinessLocation.layoutBussinessReport.ch2
             mCh3 = DB_BusinessLocation.layoutBussinessReport.ch3
             mTxtSubmit = DB_BusinessLocation.layoutBussinessReport.txtSubmit
-            mTxtBacktohome = DB_BusinessLocation.layoutBussinessThankyou.txtBacktohome
+            edtBussinessName =
+                DB_BusinessLocation.layoutBussinessReport.cntBussinessname.edt_bussinessname
+            mCntBackToHome = DB_BusinessLocation.layoutBussinessThankyou.cntBacktohome
             mTxtLeave = DB_BusinessLocation.layoutBussinessReport.txtLeave
 
             mCh1.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -153,7 +150,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             }
 
 
-            mTxtBacktohome.setOnClickListener(this)
+            mCntBackToHome.setOnClickListener(this)
             mTxtSubmit.setOnClickListener(this)
             DB_BusinessLocation.cntCompany.setOnClickListener(this)
             DB_BusinessLocation.cntNotfound.setOnClickListener(this)
@@ -163,21 +160,15 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             mImgClose.setOnClickListener(this)
             mImgBusRepClose.setOnClickListener(this)
             DB_BusinessLocation.txtUnauthOk.setOnClickListener(this)
+            DB_BusinessLocation.txtAlertok.setOnClickListener(this)
+            DB_BusinessLocation.layoutBussinessConfirm.cntNotfind.setOnClickListener(this)
             DB_BusinessLocation.cntCompany.visibility = View.GONE
 
-//            val handler = Handler()
-//            val runnable = Runnable {
-//                foundDevice()
-//            }
-//            handler.postDelayed(runnable, 3000)
-
             runnable = Runnable {
-//                foundDevice()
                 mMtCentralManager!!.stopScan()
-                DB_BusinessLocation.cntLoader.visibility = View.VISIBLE
                 MasterBleDeviceInfo()
             }
-
+            BleScan()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -193,12 +184,25 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         }
     }
 
+    private fun BleScan() {
+        HandlerCallavailable = true
+        if (!ensureBleExists()) finish()
+
+        if (!isBLEEnabled()) {
+            showBLEDialog()
+        }
+        initManager()
+        getRequiredPermissions()
+        initListener()
+    }
+
     private fun MasterBleDeviceInfo() {
+        DB_BusinessLocation.cntLoader.visibility = View.VISIBLE
         var beaconOBJ = JSONObject()
         var arrayJ = JSONArray()
         for (Mac in BeaconMACList) {
             arrayJ.put(Mac)
-            Log.e("TAG","CheckMac : "+Mac)
+            Log.e("TAG", "CheckMac : " + Mac)
         }
         beaconOBJ.put("becon_list", arrayJ)
         try {
@@ -234,11 +238,11 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                         masterList = response.body()!!.data!!
                         SetBusinessViews()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_BusinessLocation.cntUnAuthorized.visibility = View.VISIBLE
+                        ShowUnauthorization()
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-
+                        ShowAlert(response.body()!!.message)
                     }
                 }
             })
@@ -260,9 +264,93 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
     }
 
+    private fun ShowUnauthorization() {
+        CloseViews()
+        DB_BusinessLocation.cntUnAuthorized.visibility = View.VISIBLE
+    }
+
+    private fun BusinessNotFound() {
+        DB_BusinessLocation.cntLoader.visibility = View.VISIBLE
+        var beaconOBJ = JSONObject()
+        var arrayJ = JSONArray()
+        for (Mac in BeaconMACList) {
+            arrayJ.put(Mac)
+            Log.e("TAG", "CheckMac : " + Mac)
+        }
+        beaconOBJ.put("becon_list", arrayJ)
+        try {
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+            params[Constants.paramKey_UserId] =
+                ApplicationClass.userInfoModel.data!!.userid!!
+
+            params[Constants.paramKey_Reason] = notFoundBusinessReason
+            params[Constants.paramKey_BusinessName] = notFoundBusinessName
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<BusinessNotFoundService>(
+                    BusinessNotFoundService::class.java
+                )
+            val call =
+                service.GetBusinessNotFoundData(
+                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                )
+
+            call.enqueue(object : Callback<BusinessNotFoundModel> {
+                override fun onFailure(call: Call<BusinessNotFoundModel>, t: Throwable) {
+                    DB_BusinessLocation.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<BusinessNotFoundModel>,
+                    response: Response<BusinessNotFoundModel>
+                ) {
+                    DB_BusinessLocation.cntLoader.visibility = View.GONE
+                    Log.e("TAG", "CHECKRESPONSE : " + Gson().toJson(response.body()))
+
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        ShowThankyouPopup()
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        ShowUnauthorization()
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+
+                    } else {
+                        ShowAlert(response.body()!!.message)
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+
+    }
+
+    private fun ShowThankyouPopup() {
+        CloseViews()
+        DB_BusinessLocation.layoutBussinessThankyou.BusinessThankyou.visibility = View.VISIBLE
+    }
+
+    private fun ShowAlert(message: String?) {
+        DB_BusinessLocation.txtAlertmsg.text = message
+        DB_BusinessLocation.cntAlert.visibility = View.VISIBLE
+    }
+
     private fun getMarkerBitmapFromView(masterBeaconInfo: MasterBeaconModel.BusinessBescon): Bitmap {
         //HERE YOU CAN ADD YOUR CUSTOM VIEW
-
         val customMarkerView: View =
             (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
                 R.layout.map_marker,
@@ -279,9 +367,26 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         CntView.setBackgroundResource(GetPinView(masterBeaconInfo.mappin!!))
 
         //Business Image showen
-//        Picasso.with(this).load(businessBeaconInfo.bussiness_name).into(imageViewBusiness)
+        Log.e("TAG", "IMAGEBUSINESS")
+        Picasso.with(this).load(masterBeaconInfo.businesstreadetype).into(imageViewBusiness,
+            object : com.squareup.picasso.Callback {
+                override fun onSuccess() {
+
+                }
+
+                override fun onError() {
+                }
+            })
+
 
         textView.text = masterBeaconInfo.bussiness_name
+        textView.setTextColor(
+            ContextCompat.getColor(
+                this@Bussiness_Location,
+                R.color.white
+            )
+        )
+
         customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         customMarkerView.layout(
             0,
@@ -357,7 +462,6 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     }
 
     private fun SetBusinessViews() {
-
         Log.e("TAG", "COLORLIST: " + masterList.size)
         for (BusinessPos in 0..masterList.size - 1) {
             Log.e("TAG", "COLORLIST: " + BusinessPos)
@@ -373,8 +477,24 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                     .zIndex(BusinessPos.toFloat())
 //                    .title(Business.bussiness_name)
                     .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(masterList[BusinessPos])))
+//                    .icon(BitmapDescriptorFactory.fromBitmap(GetMarkerPin(masterList[BusinessPos])))
             )
         }
+    }
+
+    private fun GetMarkerPin(businessBescon: MasterBeaconModel.BusinessBescon): Bitmap {
+//        BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(masterList[BusinessPos]))
+        val customMarkerView: View =
+            (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
+                R.layout.map_marker,
+                null
+            )
+
+        var mainMarkerView = customMarkerView.findViewById<ConstraintLayout>(R.id.cnt_marker)
+        mainMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        mainMarkerView.layout(0, 0, mainMarkerView.measuredWidth, mainMarkerView.measuredHeight)
+        val bitmap = mainMarkerView.drawToBitmap(Bitmap.Config.ARGB_8888)
+        return bitmap
     }
 
     private fun getRequiredPermissions() {
@@ -465,13 +585,26 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     override fun onClick(view: View?) {
         try {
             if (view == DB_BusinessLocation.cntNotfound) {
-                CloseViews()
-                DB_BusinessLocation.layoutBussinessReport.BusinessReport.visibility = View.VISIBLE
+                ShowBusinessReport()
             } else if (view == mTxtSubmit) {
-                if (mCh1.isChecked || mCh2.isChecked || mCh3.isChecked) {
+                if (mCh1.isChecked) {
+                    notFoundBusinessName = edtBussinessName.text.toString()
+                    if (!notFoundBusinessName.equals("".trim(), true)) {
+                        CloseViews()
+                        notFoundBusinessReason = getString(R.string.businessrason1)
+                        BusinessNotFound()
+                    } else {
+                        // Business Name is mendatory
+                        ShowAlert("Business name is require.")
+                    }
+                } else if (mCh2.isChecked) {
                     CloseViews()
-                    DB_BusinessLocation.layoutBussinessThankyou.BusinessThankyou.visibility =
-                        View.VISIBLE
+                    notFoundBusinessReason = getString(R.string.businessrason2)
+                    BusinessNotFound()
+                } else if (mCh3.isChecked) {
+                    CloseViews()
+                    notFoundBusinessReason = getString(R.string.businessrason3)
+                    BusinessNotFound()
                 } else {
                     Toast.makeText(
                         this,
@@ -479,27 +612,25 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-            } else if (view == mTxtBacktohome) {
-                finish()
-                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+            } else if (view == mCntBackToHome) {
+                onBackPressed()
             } else if (view == DB_BusinessLocation.cntCompany) {
-                CloseViews()
-                DB_BusinessLocation.layoutBussinessConfirm.BusinessConfirm.visibility = View.VISIBLE
+                ShowBusniessConfirmation()
             } else if (view == mImgClose) {
-                CloseViews()
-                DB_BusinessLocation.cntBusMainView.visibility = View.VISIBLE
+                ShowBusniessMainView()
             } else if (view == mImgBusRepClose) {
-                CloseViews()
-                DB_BusinessLocation.cntBusMainView.visibility = View.VISIBLE
+                ShowBusniessMainView()
             } else if (view == mCntConfirm) {
-                CloseViews()
-                DB_BusinessLocation.cntBusMainView.visibility = View.VISIBLE
-                var HelperIntent = Intent(this, BussinessCheckIn::class.java)
-                startActivity(HelperIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                ShowBusniessMainView()
+                BusinessCheckInFlow()
             } else if (view == DB_BusinessLocation.txtUnauthOk) {
-                DB_BusinessLocation.cntUnAuthorized.visibility = View.GONE
+                HideUnauthorization()
                 ApplicationClass.UserLogout(this)
+            } else if (view == DB_BusinessLocation.txtAlertok) {
+                HideAlert()
+            } else if (view == DB_BusinessLocation.layoutBussinessConfirm.cntNotfind) {
+                HideBusinessConfiramation()
+                ShowBusinessReport()
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -514,6 +645,28 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         } catch (E: Exception) {
             E.printStackTrace()
         }
+    }
+
+    private fun ShowBusniessMainView() {
+        CloseViews()
+        DB_BusinessLocation.cntBusMainView.visibility = View.VISIBLE
+    }
+
+    private fun HideBusinessConfiramation() {
+        DB_BusinessLocation.layoutBussinessConfirm.BusinessConfirm.visibility = View.GONE
+    }
+
+    private fun ShowBusinessReport() {
+        CloseViews()
+        DB_BusinessLocation.layoutBussinessReport.BusinessReport.visibility = View.VISIBLE
+    }
+
+    private fun HideUnauthorization() {
+        DB_BusinessLocation.cntUnAuthorized.visibility = View.GONE
+    }
+
+    private fun HideAlert() {
+        DB_BusinessLocation.cntAlert.visibility = View.GONE
     }
 
     private fun CloseViews() {
@@ -551,7 +704,11 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 //                    Toast.LENGTH_SHORT
 //                ).show()
 
-                BusinessCheckInFlow(marker.zIndex.toInt())
+
+                ShowBusniessConfirmation()
+                ApplicationClass.selectedMasterModel = masterList[marker.zIndex.toInt()]
+
+//                BusinessCheckInFlow(marker.zIndex.toInt())
 
                 false
             }
@@ -585,15 +742,34 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         }
     }
 
-    private fun BusinessCheckInFlow(Index: Int) {
-        ApplicationClass.selectedMasterModel = masterList[Index]
+    private fun ShowBusniessConfirmation() {
+        CloseViews()
+        DB_BusinessLocation.layoutBussinessConfirm.BusinessConfirm.visibility = View.VISIBLE
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CHECK_IN_CODE && resultCode == Activity.RESULT_OK) {
+            //Rescan Here
+            mMap.clear()
+            BleScan()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mMtCentralManager!!.stopScan()
+        handler.removeCallbacks(runnable);
+    }
+
+    private fun BusinessCheckInFlow() {
         if (ApplicationClass.selectedMasterModel.check_in!!.equals("Yes", true)) {
             var ReviewIntent = Intent(this, SearchEmployee::class.java)
-            startActivity(ReviewIntent)
+            startActivityForResult(ReviewIntent, CHECK_IN_CODE)
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
         } else {
             var BusinessCheckInIntent = Intent(this, BussinessCheckIn::class.java)
-            startActivity(BusinessCheckInIntent)
+            startActivityForResult(BusinessCheckInIntent, CHECK_IN_CODE)
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
         }
     }

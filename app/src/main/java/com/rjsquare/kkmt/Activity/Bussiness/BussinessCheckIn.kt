@@ -22,6 +22,7 @@ import retrofit2.Response
 class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
 
     override fun onBackPressed() {
+        setResult(Activity.RESULT_OK)
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
     }
@@ -55,7 +56,7 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
             params[Constants.paramKey_BussinessId] =
-                ApplicationClass.selectedMasterModel.businessid_db.toString()
+                ApplicationClass.selectedMasterModel.businessid.toString()
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<BusinessCheckInService>(
@@ -112,13 +113,11 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
             startActivity(ReviewIntent)
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
         } else if (v == DB_BussinessCheckIn.cntCheckout) {
-            finish()
-//            Bussiness_Location.Bussiness_Activity.finish()
-            overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+            onBackPressed()
         } else if (v == DB_BussinessCheckIn.txtUnauthOk) {
             ApplicationClass.UserLogout(this)
         } else if (v == DB_BussinessCheckIn.txtAlert) {
-            ApplicationClass.UserLogout(this)
+//            ApplicationClass.UserLogout(this)
         }
     }
 }

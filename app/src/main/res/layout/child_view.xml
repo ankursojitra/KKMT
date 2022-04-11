@@ -2,35 +2,62 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cnt_helper"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
+    android:id="@+id/cnt_employee"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img_found"
-        android:layout_width="@dimen/_40dp"
-        android:layout_height="@dimen/_28dp"
+        android:id="@+id/img_emp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:src="@drawable/rp"
-        app:layout_constraintBottom_toTopOf="@+id/txt_name"
+        app:layout_constraintBottom_toTopOf="@+id/txt_employeename"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.62" />
 
     <TextView
-        android:id="@+id/txt_name"
-        android:layout_width="@dimen/_54dp"
+        android:id="@+id/txt_employeename"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/lato_medium"
-        android:padding="@dimen/_1dp"
-        android:text="Alexa Jinaou"
         android:gravity="center"
         android:maxLines="2"
+        android:padding="@dimen/_1dp"
+        android:text="Alexa JinaouAlexa JinaouAlexa Jinaou"
         android:textColor="@color/blue_green"
         android:textSize="@dimen/_9dp"
-        app:layout_constraintBottom_toTopOf="@+id/img_found"
+        app:layout_constraintBottom_toTopOf="@+id/img_emp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_found" />
+        app:layout_constraintTop_toBottomOf="@+id/img_emp" />
+<!--    <de.hdodenhof.circleimageview.CircleImageView-->
+<!--        android:id="@+id/img_found"-->
+<!--        android:layout_width="@dimen/_40dp"-->
+<!--        android:layout_height="@dimen/_28dp"-->
+<!--        android:src="@drawable/rp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/txt_empname"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/txt_empname"-->
+<!--        android:layout_width="@dimen/_54dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:fontFamily="@font/lato_medium"-->
+<!--        android:padding="@dimen/_1dp"-->
+<!--        android:text="Alexa Jinaou"-->
+<!--        android:gravity="center"-->
+<!--        android:maxLines="2"-->
+<!--        android:textColor="@color/blue_green"-->
+<!--        android:textSize="@dimen/_9dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/img_found"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/img_found" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

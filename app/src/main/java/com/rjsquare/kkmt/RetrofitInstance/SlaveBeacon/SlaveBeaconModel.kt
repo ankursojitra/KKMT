@@ -53,8 +53,8 @@ class SlaveBeaconModel {
         @SerializedName("mappin")
         var mappin: String? = null
 
-        @SerializedName("bussinesid")
-        var bussinesid: String? = null
+        @SerializedName("kkmt_businessid")
+        var kkmt_businessid: String? = null
 
         @SerializedName("kkmtid")
         var kkmtid: String? = null
@@ -68,8 +68,8 @@ class SlaveBeaconModel {
         @SerializedName("firstname")
         var firstname: String? = null
 
-        @SerializedName("employeeid_db")
-        var employeeid_db: String? = null
+        @SerializedName("employeeid")
+        var employeeid: String? = null
 
         @SerializedName("lastname")
         var lastname: String? = null
@@ -95,8 +95,11 @@ class SlaveBeaconModel {
         @SerializedName("city")
         var city: String? = null
 
-        @SerializedName("bussinesid_db")
-        var bussinesid_db: String? = null
+        @SerializedName("businessid")
+        var businessid: String? = null
+
+        @SerializedName("employeeimage")
+        var employeeimage: String? = null
 
     }
 }

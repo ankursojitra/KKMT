@@ -8,7 +8,6 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -17,10 +16,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -35,14 +31,16 @@ import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Location
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
-import com.rjsquare.kkmt.Model.LatLngModel
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.LogInCall.EmployeeNotFoundService
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.SlaveBeaconService
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.EmployeeNotFoundModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.SlaveBeaconModel
 import com.rjsquare.kkmt.databinding.ActivitySearchEmployeeBinding
-import com.tristate.radarview.LatLongCs
-import com.tristate.radarview.ObjectModel
-import com.tristate.radarview.RadarViewC.IRadarCallBack
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_search_employee.view.*
+import kotlinx.android.synthetic.main.child_view.view.*
+import kotlinx.android.synthetic.main.layout_helper_report.view.*
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
@@ -56,49 +54,98 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     private lateinit var mCh1: CheckBox
     private lateinit var mCh2: CheckBox
     private lateinit var mCh3: CheckBox
+    private lateinit var mCntEmployeekkmtID: ConstraintLayout
     private lateinit var mTxtSubmit: TextView
-    private lateinit var mTxtView: TextView
     private lateinit var mTxtBacktohome: TextView
-    private lateinit var mCntBussinessname: ConstraintLayout
-    var posx = 50f
-    var latlngList = ArrayList<LatLngModel>()
-
     private val BLE_DEVICE_INFO_CALL = 10000L
     private val REQUEST_ENABLE_BT = 3
+    private lateinit var edtEmployeekkmtID: EditText
 
     private var mMtCentralManager: MTCentralManager? = null
     lateinit var BeaconMACList: ArrayList<String>
+    lateinit var EmpViewList: ArrayList<ConstraintLayout>
+    lateinit var SlaveViewList: ArrayList<ConstraintLayout>
     var HandlerCallavailable = false
 
-    //    private lateinit var mTxtLeave: TextView
-    private lateinit var mCntConfirm: ConstraintLayout
-    private lateinit var mCntNotfind: ConstraintLayout
     private lateinit var mImgClose: ImageView
     private lateinit var mImgCamera: ImageView
     private val PERMISSION_COARSE_LOCATION = 2
     lateinit var handler: Handler
     lateinit var runnable: Runnable
-    var PosList = ArrayList<Int>()
     val size = 100
+    var notFoundEmployeeReason = ""
+    var notFoundEmployeekkmtid = ""
 
-    var PositionLat = ArrayList<Double>()
-    var SelPositionLat = ArrayList<Double>()
-    var SelPositionLng = ArrayList<Double>()
-    var SelPositionImg = ArrayList<Int>()
-    var PositionLng = ArrayList<Double>()
-    val mDataSet: ArrayList<ObjectModel> = ArrayList()
-    lateinit var mCenterView: View
 
-    lateinit var latLongCs: LatLongCs
-
-    lateinit var latList: ArrayList<Double>
-    lateinit var lngList: ArrayList<Double>
-
+    override fun onBackPressed() {
+        setResult(Activity.RESULT_OK)
+        super.onBackPressed()
+        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+    }
 
     companion object {
         lateinit var thisSearchEmployee: Activity
         lateinit var DB_SearchEmployee: ActivitySearchEmployeeBinding
         lateinit var inflater: LayoutInflater
+        private lateinit var mTxtView: TextView
+        var PosList = ArrayList<Int>()
+
+        private fun AnimateDevice(mView: ConstraintLayout) {
+            try {
+                val dx: Float = mView.x
+                val dy: Float = mView.y
+//
+                mView.setVisibility(View.VISIBLE)
+                mView.animate()
+                    .x(dx)
+                    .y(dy)
+                    .setDuration(500)
+                    .start()
+                val animatorSet = AnimatorSet()
+                animatorSet.duration = 500
+                animatorSet.interpolator = AccelerateDecelerateInterpolator()
+                val animatorList = ArrayList<Animator>()
+                val scaleXAnimator =
+                    ObjectAnimator.ofFloat(mView, "ScaleX", 0f, 1.2f, 1f)
+                animatorList.add(scaleXAnimator)
+                val scaleYAnimator =
+                    ObjectAnimator.ofFloat(mView, "ScaleY", 0f, 1.2f, 1f)
+                animatorList.add(scaleYAnimator)
+                animatorSet.playTogether(animatorList)
+
+                animatorSet.start()
+            } catch (NE: NullPointerException) {
+                NE.printStackTrace()
+            } catch (IE: IndexOutOfBoundsException) {
+                IE.printStackTrace()
+            } catch (AE: ActivityNotFoundException) {
+                AE.printStackTrace()
+            } catch (E: IllegalArgumentException) {
+                E.printStackTrace()
+            } catch (RE: RuntimeException) {
+                RE.printStackTrace()
+            } catch (E: Exception) {
+                E.printStackTrace()
+            }
+        }
+
+        private fun GetNumber(): Int {
+            return Random().nextInt(12)
+        }
+
+        private fun GenerateRandomPos(TotalViews: Int) {
+            var counter = 0
+            PosList = ArrayList()
+            while (counter <= TotalViews) {
+                var RNo = GetNumber()
+                Collections.shuffle(PosList)
+                if (!PosList.contains(RNo)) {
+                    PosList.add(RNo)
+                    counter++
+                }
+            }
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,16 +155,59 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
         ApplicationClass.StatusTextWhite(this, false)
         DB_SearchEmployee.rippleBack.startRippleAnimation()
+        EmpViewList = ArrayList()
+        SlaveViewList = ArrayList()
 
+        SetUpEmpView()
         mCh1 = DB_SearchEmployee.layoutHelperReport.ch1
         mCh2 = DB_SearchEmployee.layoutHelperReport.ch2
         mCh3 = DB_SearchEmployee.layoutHelperReport.ch3
+        mCntEmployeekkmtID =
+            DB_SearchEmployee.layoutHelperReport.cntReportview.crd_reportemp.cnt_csrpic
+        edtEmployeekkmtID =
+            DB_SearchEmployee.layoutHelperReport.cntReportview.edt_csr
+
+        mCh1.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mCh1.isChecked = true
+                mCh2.isChecked = false
+                mCh3.isChecked = false
+                mCntEmployeekkmtID.visibility = View.VISIBLE
+            }
+        }
+
+        mCh2.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mCh1.isChecked = false
+                mCh2.isChecked = true
+                mCh3.isChecked = false
+                mCntEmployeekkmtID.visibility = View.GONE
+            }
+        }
+
+        mCh3.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mCh1.isChecked = false
+                mCh2.isChecked = false
+                mCh3.isChecked = true
+                mCntEmployeekkmtID.visibility = View.GONE
+            }
+        }
+
+
 
         mTxtBacktohome = DB_SearchEmployee.layoutHelperThankyou.txtBacktohome
         mTxtSubmit = DB_SearchEmployee.layoutHelperReport.txtSubmit
-//        mTxtLeave = DB_SearchEmployee.layoutHelperReport.txtLeave
         mImgCamera = DB_SearchEmployee.layoutHelperReport.imgCamera
         mImgClose = DB_SearchEmployee.layoutHelperReport.imgClose
+
+        DB_SearchEmployee.cntNotfound.setOnClickListener(this)
+        mImgCamera.setOnClickListener(this)
+        mTxtBacktohome.setOnClickListener(this)
+        mTxtSubmit.setOnClickListener(this)
+        mImgClose.setOnClickListener(this)
+        DB_SearchEmployee.txtUnauthOk.setOnClickListener(this)
+        DB_SearchEmployee.txtAlertok.setOnClickListener(this)
 
         BeaconMACList = ArrayList()
         handler = Handler()
@@ -132,186 +222,40 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         getRequiredPermissions()
         initListener()
 
-        //------------------------------------
 
-
-//        var TotalViews = ApplicationClass.slaveModellist.size
-
-
-
-        FillPos()
-
-        DB_SearchEmployee.cntNotfound.setOnClickListener(this)
-        mImgCamera.setOnClickListener(this)
-        mTxtBacktohome.setOnClickListener(this)
-        mTxtSubmit.setOnClickListener(this)
-//        mTxtLeave.setOnClickListener(this)
-        mImgClose.setOnClickListener(this)
-        DB_SearchEmployee.txtUnauthOk.setOnClickListener(this)
         runnable = Runnable {
-//                foundDevice()
             mMtCentralManager!!.stopScan()
             SlaveBleDeviceInfo()
         }
-
     }
 
-    private fun FillPos() {
+    private fun SetUpEmpView() {
+        EmpViewList.add(DB_SearchEmployee.cntView1)
+        EmpViewList.add(DB_SearchEmployee.cntView2)
+        EmpViewList.add(DB_SearchEmployee.cntView3)
+        EmpViewList.add(DB_SearchEmployee.cntView4)
+        EmpViewList.add(DB_SearchEmployee.cntView5)
+        EmpViewList.add(DB_SearchEmployee.cntView6)
+        EmpViewList.add(DB_SearchEmployee.cntView7)
+        EmpViewList.add(DB_SearchEmployee.cntView8)
+        EmpViewList.add(DB_SearchEmployee.cntView9)
+        EmpViewList.add(DB_SearchEmployee.cntView10)
+        EmpViewList.add(DB_SearchEmployee.cntView11)
+        EmpViewList.add(DB_SearchEmployee.cntView12)
 
-        latList = ArrayList()
-        latList.add(23.068416)
-        latList.add(23.068926)
-        latList.add(23.069706)
-        latList.add(23.070256)
-        latList.add(23.070756)
-        latList.add(23.071459)
-        latList.add(23.072179)
-        latList.add(23.071459)
-        latList.add(23.070756)
-        latList.add(23.070256)
-        latList.add(23.069706)
-        latList.add(23.068926)
-        latList.add(23.069066)
-        latList.add(23.069706)
-        latList.add(23.070256)
-        latList.add(23.070756)
-        latList.add(23.071509)
-        latList.add(23.070756)
-        latList.add(23.070256)
-        latList.add(23.069706)
-        latList.add(23.070166)
-        latList.add(23.070166)
-        latList.add(23.070896)
-        latList.add(23.072879)
-        latList.add(23.072385)
-        latList.add(23.071615)
-        latList.add(23.072385)
-        latList.add(23.071615)
-
-        lngList = ArrayList()
-        lngList.add(72.517391)
-        lngList.add(72.515901)
-        lngList.add(72.515421)
-        lngList.add(72.515394)
-        lngList.add(72.515404)
-        lngList.add(72.515814)
-        lngList.add(72.517394)
-        lngList.add(72.518891)
-        lngList.add(72.519351)
-        lngList.add(72.519440)
-        lngList.add(72.519351)
-        lngList.add(72.518891)
-        lngList.add(72.517391)
-        lngList.add(72.516204)
-        lngList.add(72.516184)
-        lngList.add(72.516184)
-        lngList.add(72.517394)
-        lngList.add(72.518524)
-        lngList.add(72.518640)
-        lngList.add(72.518524)
-        lngList.add(72.517991)
-        lngList.add(72.516789)
-        lngList.add(72.517391)
-        lngList.add(72.517394)
-        lngList.add(72.515794)
-        lngList.add(72.514994)
-        lngList.add(72.519014)
-        lngList.add(72.519854)
-
-        for (pos in 0..latList.size - 1) {
-            var latlngModel = LatLngModel()
-            latlngModel.poslat = latList.get(pos)
-            latlngModel.poslng = lngList.get(pos)
-            latlngList.add(latlngModel)
+        for (empView in EmpViewList) {
+            empView.visibility = View.INVISIBLE
         }
-        Log.e("ATG", "CHECKLATLNG SIZE  : " + latlngList.size)
-        inflater =
-            baseContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-        mCenterView = inflater.inflate(R.layout.layout_center, null)
-        mTxtView = mCenterView.findViewById<TextView>(R.id.mTVText)
-        mTxtView.setOnClickListener(this)
-        latLongCs = LatLongCs(23.070301, 72.517406)
-
-        var TotalViews = 12
-
-        GenerateRandomPos(TotalViews)
-
-        for (pos in 0..TotalViews - 1) {
-            Log.e("ATG", "CheckViewCreate :")
-            var view = inflater.inflate(R.layout.child_view, null)
-            var tView = view.findViewById<TextView>(R.id.txt_name)
-//            tView.text = ApplicationClass.slaveModellist[pos].username
-            tView.text = "Name : " + pos
-            view.tag = pos
-
-//            ApplicationClass.mReviewEmp_Model = ReviewEmp_Model()
-//            ApplicationClass.mReviewEmp_Model.EmpName = "Name : " + pos
-//            ApplicationClass.mReviewEmp_Model.EmpImage = R.drawable.rp!!
-//
-//            ApplicationClass.ArrayList_mReviewEmp_Model.add(ApplicationClass.mReviewEmp_Model)
-
-            view.setOnClickListener(object : View.OnClickListener {
-                override fun onClick(p0: View?) {
-                    Log.e("TAG", "RANDOMCLCIK : " + pos)
-                }
-            })
-            mDataSet.add(
-                ObjectModel(
-                    latlngList.get(PosList.get(pos)).poslat,
-                    latlngList.get(PosList.get(pos)).poslng,
-                    100.0,
-                    view
-                )
-            )
-        }
-        for (pos in 0..TotalViews - 1) {
-            mDataSet.get(pos).getmView().visibility = View.INVISIBLE
-        }
-        var latecounter = 150L
-        val handler = Handler()
-        val runnablex = Runnable {
-            for (pos in 0..TotalViews - 1) {
-                Log.e("ATGX", "CheckViewCreatea :")
-                val handler = Handler()
-                val runnablex = Runnable {
-//                    AnimateDevice(mDataSet.get(pos))
-                }
-                handler.postDelayed(runnablex, latecounter)
-                latecounter += 100
-            }
-        }
-        handler.postDelayed(runnablex, 200)
-
-//        latLongCs = LatLongCs(23.070301, 72.517406)
-        DB_SearchEmployee.radarView.setupData(
-            250.0,
-            mDataSet,
-            latLongCs,
-            mCenterView
-        )
-        //Here 250 is the radar radious you can set as per your choice or set
-
-        //You can get callback of your view click
-        DB_SearchEmployee.radarView.setUpCallBack(IRadarCallBack { objectModel, view ->
-            Log.e("TAG", "Clicks of Radarview. : " + view.transitionName)
-            Log.e("TAG", "Clicks of RadarviewZX. : " + view.tag)
-            Log.e("TAG", "Clicks of RadarviewXX. : " + objectModel.toString())
-            ApplicationClass.Selected_ReviewEmp_Model =
-                ApplicationClass.ArrayList_mReviewEmp_Model.get(view.tag.toString().toInt())
-            var HelperIntent = Intent(this, ReviewEdit::class.java)
-            startActivity(HelperIntent)
-            overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-        })
     }
+
 
     private fun SlaveBleDeviceInfo() {
-
+        DB_SearchEmployee.cntLoader.visibility = View.VISIBLE
         var beaconOBJ = JSONObject()
         var arrayJ = JSONArray()
         for (Mac in BeaconMACList) {
             arrayJ.put(Mac)
-            Log.e("TAG", "CheckSlaveMac : " + Mac)
+//            Log.e("TAG", "CheckSlaveMac : " + Mac)
         }
         beaconOBJ.put("becon_list", arrayJ)
         try {
@@ -323,7 +267,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             params[Constants.paramKey_BussinessId] =
-                ApplicationClass.selectedMasterModel.businessid_db.toString()
+                ApplicationClass.selectedMasterModel.businessid.toString()
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<SlaveBeaconService>(
@@ -331,7 +275,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 )
             val call =
                 service.GetSlaveBeaconData(
-                    params, BeaconMACList, ApplicationClass.userInfoModel.data!!.access_token!!
+                    params, BeaconMACList,
+                    ApplicationClass.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<SlaveBeaconModel> {
@@ -347,8 +292,10 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     Log.e("TAG", "CHECKRESPONSESlave : " + Gson().toJson(response.body()))
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        ApplicationClass.slaveModellist = ArrayList()
                         ApplicationClass.slaveModellist = response.body()!!.data!!
                         ShowEmployees()
+
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_SearchEmployee.cntUnAuthorized.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
@@ -377,84 +324,249 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun ShowEmployees() {
-        inflater =
-            baseContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-        mCenterView = inflater.inflate(R.layout.layout_center, null)
-        mTxtView = mCenterView.findViewById<TextView>(R.id.mTVText)
-        mTxtView.setOnClickListener(this)
-        latLongCs = LatLongCs(23.070301, 72.517406)
 
         var TotalViews = ApplicationClass.slaveModellist.size
 
         GenerateRandomPos(TotalViews)
-
         for (pos in 0..TotalViews - 1) {
-            Log.e("ATG", "CheckViewCreate :")
-            var view = inflater.inflate(R.layout.child_view, null)
-            var tView = view.findViewById<TextView>(R.id.txt_name)
-            tView.text = ApplicationClass.slaveModellist[pos].username
-//            tView.text = "Name : " + pos
-            view.tag = pos
-
-//            ApplicationClass.mReviewEmp_Model = ReviewEmp_Model()
-//            ApplicationClass.mReviewEmp_Model.EmpName = "Name : " + pos
-//            ApplicationClass.mReviewEmp_Model.EmpImage = R.drawable.rp!!
-//
-//            ApplicationClass.ArrayList_mReviewEmp_Model.add(ApplicationClass.mReviewEmp_Model)
-
-            view.setOnClickListener(object : View.OnClickListener {
-                override fun onClick(p0: View?) {
-                    Log.e("TAG", "RANDOMCLCIK : " + pos)
-                }
-            })
-            mDataSet.add(
-                ObjectModel(
-                    latlngList.get(PosList.get(pos)).poslat,
-                    latlngList.get(PosList.get(pos)).poslng,
-                    100.0,
-                    view
-                )
-            )
+            SetUpDataInView(ApplicationClass.slaveModellist[pos], PosList[pos])
         }
-        for (pos in 0..TotalViews - 1) {
-            mDataSet.get(pos).getmView().visibility = View.INVISIBLE
-        }
-        var latecounter = 150L
-        val handler = Handler()
-        val runnablex = Runnable {
-            for (pos in 0..TotalViews - 1) {
-                Log.e("ATGX", "CheckViewCreatea :")
-                val handler = Handler()
-                val runnablex = Runnable {
-                    AnimateDevice(mDataSet.get(pos))
-                }
-                handler.postDelayed(runnablex, latecounter)
-                latecounter += 100
+    }
+
+    private fun SetUpDataInView(slaveBescon: SlaveBeaconModel.SlaveBescon, Position: Int) {
+
+        when (Position) {
+            0 -> {
+                DB_SearchEmployee.cntView1.ly_emp1.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView1.ly_emp1.img_emp)
+                DB_SearchEmployee.cntView1.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView1.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView1)
+            }
+            1 -> {
+                DB_SearchEmployee.cntView2.ly_emp2.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView2.ly_emp2.img_emp)
+                DB_SearchEmployee.cntView2.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView2.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView2)
+            }
+            2 -> {
+                DB_SearchEmployee.cntView3.ly_emp3.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView3.ly_emp3.img_emp)
+                DB_SearchEmployee.cntView3.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView3.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView3)
+            }
+            3 -> {
+                DB_SearchEmployee.cntView4.ly_emp4.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView4.ly_emp4.img_emp)
+                DB_SearchEmployee.cntView4.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView4.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView4)
+            }
+            4 -> {
+                DB_SearchEmployee.cntView5.ly_emp5.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView5.ly_emp5.img_emp)
+                DB_SearchEmployee.cntView5.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView5.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView5)
+            }
+            5 -> {
+                DB_SearchEmployee.cntView6.ly_emp6.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView6.ly_emp6.img_emp)
+                DB_SearchEmployee.cntView6.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView6.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView6)
+            }
+            6 -> {
+                DB_SearchEmployee.cntView7.ly_emp7.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView7.ly_emp7.img_emp)
+                DB_SearchEmployee.cntView7.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView7.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView7)
+            }
+            7 -> {
+                DB_SearchEmployee.cntView8.ly_emp8.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView8.ly_emp8.img_emp)
+                DB_SearchEmployee.cntView8.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView8.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView8)
+            }
+            8 -> {
+                DB_SearchEmployee.cntView9.ly_emp9.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView9.ly_emp9.img_emp)
+                DB_SearchEmployee.cntView9.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView9.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView9)
+            }
+            9 -> {
+                DB_SearchEmployee.cntView10.ly_emp10.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView10.ly_emp10.img_emp)
+                DB_SearchEmployee.cntView10.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView10.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView10)
+            }
+            10 -> {
+                DB_SearchEmployee.cntView11.ly_emp11.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView11.ly_emp11.img_emp)
+                DB_SearchEmployee.cntView11.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView11.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView11)
+            }
+            11 -> {
+                DB_SearchEmployee.cntView12.ly_emp12.txt_employeename.text = slaveBescon.username
+                Picasso.with(this).load(slaveBescon.employeeimage)
+                    .into(DB_SearchEmployee.cntView12.ly_emp12.img_emp)
+                DB_SearchEmployee.cntView12.visibility = View.VISIBLE
+                DB_SearchEmployee.cntView12.setOnClickListener(View.OnClickListener {
+                    ApplicationClass.empSlaveModel = slaveBescon
+                    ReviewScreen()
+                })
+                AnimateDevice(DB_SearchEmployee.cntView12)
+            }
+            else -> { // Note the block
+
             }
         }
-        handler.postDelayed(runnablex, 200)
+    }
 
-//        latLongCs = LatLongCs(23.070301, 72.517406)
-        DB_SearchEmployee.radarView.setupData(
-            250.0,
-            mDataSet,
-            latLongCs,
-            mCenterView
-        )
-        //Here 250 is the radar radious you can set as per your choice or set
+    private fun EmployeeNotFound() {
+        DB_SearchEmployee.cntLoader.visibility = View.VISIBLE
+        var beaconOBJ = JSONObject()
+        var arrayJ = JSONArray()
+        for (Mac in BeaconMACList) {
+            arrayJ.put(Mac)
+            Log.e("TAG", "CheckMac : " + Mac)
+        }
+        beaconOBJ.put("becon_list", arrayJ)
+        try {
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
 
-        //You can get callback of your view click
-        DB_SearchEmployee.radarView.setUpCallBack(IRadarCallBack { objectModel, view ->
-            Log.e("TAG", "Clicks of Radarview. : " + view.transitionName)
-            Log.e("TAG", "Clicks of RadarviewZX. : " + view.tag)
-            Log.e("TAG", "Clicks of RadarviewXX. : " + objectModel.toString())
-            ApplicationClass.Selected_ReviewEmp_Model =
-                ApplicationClass.ArrayList_mReviewEmp_Model.get(view.tag.toString().toInt())
-            var HelperIntent = Intent(this, ReviewEdit::class.java)
-            startActivity(HelperIntent)
-            overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-        })
+            params[Constants.paramKey_UserId] =
+                ApplicationClass.userInfoModel.data!!.userid!!
+
+            params[Constants.paramKey_BussinessId] =
+                ApplicationClass.selectedMasterModel.businessid.toString()
+
+            params[Constants.paramKey_Reason] = notFoundEmployeeReason
+            params[Constants.paramKey_BusinessName] = notFoundEmployeekkmtid
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<EmployeeNotFoundService>(
+                    EmployeeNotFoundService::class.java
+                )
+            val call =
+                service.GetEmployeeNotFoundData(
+                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                )
+
+            call.enqueue(object : Callback<EmployeeNotFoundModel> {
+                override fun onFailure(call: Call<EmployeeNotFoundModel>, t: Throwable) {
+                    DB_SearchEmployee.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<EmployeeNotFoundModel>,
+                    response: Response<EmployeeNotFoundModel>
+                ) {
+                    DB_SearchEmployee.cntLoader.visibility = View.GONE
+                    Log.e("TAG", "CHECKRESPONSE : " + Gson().toJson(response.body()))
+
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        ShowThankyouPopup()
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        ShowUnauthorization()
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+
+                    } else {
+                        ShowAlert(response.body()!!.message)
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+
+    }
+
+    private fun ShowAlert(message: String?) {
+        DB_SearchEmployee.txtAlertmsg.text = message
+        DB_SearchEmployee.cntAlert.visibility = View.VISIBLE
+    }
+
+    private fun ShowThankyouPopup() {
+        CloseViews()
+        DB_SearchEmployee.layoutHelperThankyou.cntReportThankYouView.visibility = View.VISIBLE
+    }
+
+    private fun ShowUnauthorization() {
+        CloseViews()
+        DB_SearchEmployee.cntUnAuthorized.visibility = View.VISIBLE
+    }
+
+    private fun ReviewScreen() {
+        ApplicationClass.isReviewNew = true
+        var HelperIntent = Intent(this, ReviewEdit::class.java)
+        startActivity(HelperIntent)
+        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
     }
 
     private fun ensureBleExists(): Boolean {
@@ -542,100 +654,40 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         return adapter != null && adapter.isEnabled
     }
 
-    private fun AnimateDevice(mView: ObjectModel) {
-        try {
-            val R = Random()
-
-            val dx: Float = mView.getmView().x
-            val dy: Float = mView.getmView().y
-//
-//            val dx: Float = R.nextFloat()
-//            val dy: Float = R.nextFloat()
-
-            mView.getmView().setVisibility(View.VISIBLE)
-//            mCntHelper2.setVisibility(View.VISIBLE)
-            val timer = Timer()
-            mView.getmView().animate()
-                .x(dx)
-                .y(dy)
-                .setDuration(500)
-                .start()
-//            mCntHelper2.animate()
-//                .x(dx)
-//                .y(dy)
-//                .setDuration(0)
-//                .start()
-            val animatorSet = AnimatorSet()
-            animatorSet.duration = 500
-            animatorSet.interpolator = AccelerateDecelerateInterpolator()
-            val animatorList = ArrayList<Animator>()
-            val scaleXAnimator = ObjectAnimator.ofFloat(mView.getmView(), "ScaleX", 0f, 1.2f, 1f)
-            animatorList.add(scaleXAnimator)
-            val scaleYAnimator = ObjectAnimator.ofFloat(mView.getmView(), "ScaleY", 0f, 1.2f, 1f)
-            animatorList.add(scaleYAnimator)
-            animatorSet.playTogether(animatorList)
-
-//            animatorSet.duration = 400
-//            animatorSet.interpolator = AccelerateDecelerateInterpolator()
-//            val scaleXAnimator2 = ObjectAnimator.ofFloat(mCntHelper2, "ScaleX", 0f, 1.2f, 1f)
-//            animatorList.add(scaleXAnimator2)
-//            val scaleYAnimator2 = ObjectAnimator.ofFloat(mCntHelper2, "ScaleY", 0f, 1.2f, 1f)
-//            animatorList.add(scaleYAnimator2)
-//            animatorSet.playTogether(animatorList)
-
-            animatorSet.start()
-        } catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
-    }
-
-    private fun GenerateRandomPos(TotalViews: Int) {
-        var counter = 0
-        PosList = ArrayList()
-        while (counter <= TotalViews) {
-            var RNo = GetNumber()
-            Collections.shuffle(PosList)
-            if (!PosList.contains(RNo)) {
-                PosList.add(RNo)
-                counter++
-            }
-        }
-    }
-
-    private fun GetNumber(): Int {
-        return Random().nextInt(20)
+    private fun HideAlert() {
+        Log.e("TAG", "CHECKALERT")
+        DB_SearchEmployee.cntAlert.visibility = View.GONE
     }
 
     override fun onClick(view: View?) {
-//        try {
         if (view == DB_SearchEmployee.cntNotfound) {
             CloseViews()
             DB_SearchEmployee.layoutHelperReport.cntReportview.visibility = View.VISIBLE
         } else if (view == mTxtSubmit) {
-            if (mCh1.isChecked || mCh2.isChecked || mCh3.isChecked) {
-                CloseViews()
-                DB_SearchEmployee.layoutHelperThankyou.cntReportThankYouView.visibility =
-                    View.VISIBLE
-            } else {
-                Toast.makeText(
-                    this,
-                    "Please select atleast one option from above.",
-                    Toast.LENGTH_SHORT
-                ).show()
+            if (mCh1.isChecked) {
+                notFoundEmployeekkmtid = edtEmployeekkmtID.text.toString()
+                notFoundEmployeeReason = getString(R.string.empreson1)
+                if (!notFoundEmployeeReason.equals("".trim(), true)) {
+                    EmployeeNotFound()
+                } else {
+                    ShowAlert("KKMT ID required.")
+                }
+            } else if (mCh2.isChecked) {
+                notFoundEmployeeReason = getString(R.string.empreson2)
+                EmployeeNotFound()
+
+            } else if (mCh3.isChecked) {
+                notFoundEmployeeReason = getString(R.string.empreson3)
+                EmployeeNotFound()
             }
+        } else if (view == DB_SearchEmployee.txtAlertok) {
+            Log.e("TAG", "AlertOk")
+            HideAlert()
         } else if (view == mTxtBacktohome) {
+            if (!ApplicationClass.selectedMasterModel.check_in!!.equals("Yes", true)) {
+                BussinessCheckIn.thisBusinessCheckIn.finish()
+            }
             Bussiness_Location.thisBussiness_Activity.finish()
-            BussinessCheckIn.thisBusinessCheckIn.finish()
             finish()
             overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
         } else if (view == mImgCamera) {
@@ -643,11 +695,15 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         } else if (view == mImgClose) {
             CloseViews()
             DB_SearchEmployee.cntEmpmainView.visibility = View.VISIBLE
-        } else if (view == mTxtView) {
-
         } else if (view == DB_SearchEmployee.txtUnauthOk) {
             ApplicationClass.UserLogout(this)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mMtCentralManager!!.stopScan()
+        handler.removeCallbacks(runnable);
     }
 
     private fun CloseViews() {

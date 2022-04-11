@@ -37,7 +37,7 @@
             app:layout_constraintTop_toTopOf="@+id/imageView12" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView5"
+            android:id="@+id/crd_reportemp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_36dp"

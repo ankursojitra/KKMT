@@ -50,8 +50,8 @@ class MasterBeaconModel {
         @SerializedName("signdate")
         var signdate: String? = null
 
-        @SerializedName("bussinesid")
-        var bussinesid: String? = null
+        @SerializedName("kkmt_businessid")
+        var kkmt_businessid: String? = null
 
         @SerializedName("kkmtid")
         var kkmtid: String? = null
@@ -77,11 +77,14 @@ class MasterBeaconModel {
         @SerializedName("bussiness_name")
         var bussiness_name: String? = null
 
-        @SerializedName("businessid_db")
-        var businessid_db: String? = null
+        @SerializedName("businessid")
+        var businessid: String? = null
 
         @SerializedName("check_in")
         var check_in: String? = null
+
+        @SerializedName("businessimage")
+        var businessimage: String? = null
 
         @SerializedName("updated_timestamp")
         var updated_timestamp: String? = null

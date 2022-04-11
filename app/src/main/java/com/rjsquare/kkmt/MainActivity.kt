@@ -37,14 +37,14 @@ class MainActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
 
-        if (!ensureBleExists()) finish()
-        if (!isBLEEnabled()) {
-            showBLEDialog()
-        }
-        initView()
-        initManager()
-        getRequiredPermissions()
-        initListener()
+//        if (!ensureBleExists()) finish()
+//        if (!isBLEEnabled()) {
+//            showBLEDialog()
+//        }
+//        initView()
+//        initManager()
+//        getRequiredPermissions()
+//        initListener()
     }
 
     private fun initListener() {

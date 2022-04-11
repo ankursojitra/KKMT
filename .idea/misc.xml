@@ -18,21 +18,29 @@
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_home.xml" value="0.2" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_location.xml" value="0.19464882943143813" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_login.xml" value="0.15752508361204012" />
+        <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_lucky_draw.xml" value="0.225" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_o_t_p__confirmation.xml" value="0.1862876254180602" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_result_question.xml" value="0.23445945945945945" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_review_list.xml" value="0.22" />
+        <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_review_screen.xml" value="0.225" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_review_show.xml" value="0.23479729729729729" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_search_company_list.xml" value="0.23479729729729729" />
-        <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_search_employee.xml" value="0.225" />
+        <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_search_employee.xml" value="0.18" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_splash.xml" value="0.15912162162162163" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_store_item_redeem_confirm.xml" value="0.18929765886287625" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/activity_video.xml" value="0.17364864864864865" />
+        <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/child_view.xml" value="0.225" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/fragment_complete_review.xml" value="0.23445945945945945" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/fragment_employee_history.xml" value="0.15236486486486486" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/fragment_history.xml" value="0.1879598662207358" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/fragment_home.xml" value="0.23209459459459458" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/fragment_pending_review.xml" value="0.19305555555555556" />
+        <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/layout_bussiness_confirm.xml" value="0.23513513513513515" />
+        <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/layout_bussiness_report.xml" value="0.19594594594594594" />
+        <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/layout_bussiness_thankyou.xml" value="0.19594594594594594" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/layout_center.xml" value="0.19054054054054054" />
+        <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/layout_helper_report.xml" value="0.23513513513513515" />
+        <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/layout_helper_thankyou.xml" value="0.225" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/layout_review_employee_search.xml" value="0.23513513513513515" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/map_marker.xml" value="0.2" />
         <entry key="..\:/RJSQUARE ANDROID/Client/Working/KKMT/Git Projects/KKMT/app/src/main/res/layout/raw_review_frame.xml" value="0.23445945945945945" />
@@ -399,7 +407,7 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

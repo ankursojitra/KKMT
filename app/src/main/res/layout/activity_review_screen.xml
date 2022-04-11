@@ -123,12 +123,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/txt_review_name">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/cnt_1"
+                        android:id="@+id/cnt_1star"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:padding="@dimen/_8dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/cnt_2"
+                        app:layout_constraintEnd_toStartOf="@+id/cnt_bad"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -162,16 +162,16 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/cnt_2"
+                        android:id="@+id/cnt_bad"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="@drawable/review_selection"
                         android:padding="@dimen/_8dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/cnt_1"
-                        app:layout_constraintEnd_toStartOf="@+id/cnt_3"
+                        app:layout_constraintBottom_toBottomOf="@+id/cnt_1star"
+                        app:layout_constraintEnd_toStartOf="@+id/cnt_good"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/cnt_1"
-                        app:layout_constraintTop_toTopOf="@+id/cnt_1">
+                        app:layout_constraintStart_toEndOf="@+id/cnt_1star"
+                        app:layout_constraintTop_toTopOf="@+id/cnt_1star">
 
                         <ImageView
                             android:id="@+id/img_2"
@@ -202,15 +202,15 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/cnt_3"
+                        android:id="@+id/cnt_good"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:padding="@dimen/_8dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/cnt_1"
-                        app:layout_constraintEnd_toStartOf="@+id/cnt_4"
+                        app:layout_constraintBottom_toBottomOf="@+id/cnt_1star"
+                        app:layout_constraintEnd_toStartOf="@+id/cnt_5star"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/cnt_2"
-                        app:layout_constraintTop_toTopOf="@+id/cnt_1">
+                        app:layout_constraintStart_toEndOf="@+id/cnt_bad"
+                        app:layout_constraintTop_toTopOf="@+id/cnt_1star">
 
                         <ImageView
                             android:id="@+id/img_3"
@@ -241,15 +241,15 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/cnt_4"
+                        android:id="@+id/cnt_5star"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:padding="@dimen/_8dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/cnt_1"
+                        app:layout_constraintBottom_toBottomOf="@+id/cnt_1star"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/cnt_3"
-                        app:layout_constraintTop_toTopOf="@+id/cnt_1">
+                        app:layout_constraintStart_toEndOf="@+id/cnt_good"
+                        app:layout_constraintTop_toTopOf="@+id/cnt_1star">
 
                         <ImageView
                             android:id="@+id/img_4"
