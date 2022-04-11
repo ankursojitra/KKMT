@@ -15,6 +15,7 @@ import com.rjsquare.kkmt.Activity.Review.ReviewList
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mArray_ReviewModel
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mReviewModel
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Model.ReviewModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.CustomerHistoryService
@@ -95,7 +96,7 @@ class History : Fragment(), View.OnClickListener {
             val params: MutableMap<String, String> =
                 HashMap()
 
-            params[ApplicationClass.paramKey_UserId] =
+            params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
@@ -118,15 +119,15 @@ class History : Fragment(), View.OnClickListener {
                 ) {
                     DB_FHistory.cntLoader.visibility = View.GONE
 
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         ReviewModel = response.body()!!
                         if (response.body()!!.data!!.review_itemInfo!! != null && response.body()!!.data!!.review_itemInfo!!.size > 0) {
                             lArray_ReviewModel.addAll(response.body()!!.data!!.review_itemInfo!!)
                         }
                         FillData()
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         HomeActivity.UnauthorizedUser()
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseEmpltyList)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
 

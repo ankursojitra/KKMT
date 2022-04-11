@@ -7,37 +7,37 @@ class Preferences {
     companion object {
         //Store Preferences Clear
         fun Cleardata() {
-            ApplicationClass.PrefEditor.clear()
-            ApplicationClass.PrefEditor.commit()
+            ApplicationClass.prefEditor.clear()
+            ApplicationClass.prefEditor.commit()
         }
 
         //Store Preferences
         fun StoreString(Key: String, Value: String) {
-            ApplicationClass.PrefEditor.putString(Key, Value)
-            ApplicationClass.PrefEditor.commit()
+            ApplicationClass.prefEditor.putString(Key, Value)
+            ApplicationClass.prefEditor.commit()
         }
 
         fun StoreBoolean(Key: String, Value: Boolean) {
-            ApplicationClass.PrefEditor.putBoolean(Key, Value)
-            ApplicationClass.PrefEditor.commit()
+            ApplicationClass.prefEditor.putBoolean(Key, Value)
+            ApplicationClass.prefEditor.commit()
         }
 
         fun StoreInt(Key: String, Value: Int) {
-            ApplicationClass.PrefEditor.putInt(Key, Value)
-            ApplicationClass.PrefEditor.commit()
+            ApplicationClass.prefEditor.putInt(Key, Value)
+            ApplicationClass.prefEditor.commit()
         }
 
         //Read Preferences
         fun ReadString(Key: String, Value: String): String {
-            return ApplicationClass.SharedPref.getString(Key, Value) as String
+            return ApplicationClass.sharedPref.getString(Key, Value) as String
         }
 
         fun ReadBoolean(Key: String, Value: Boolean): Boolean {
-            return ApplicationClass.SharedPref.getBoolean(Key, Value)
+            return ApplicationClass.sharedPref.getBoolean(Key, Value)
         }
 
         fun ReadInt(Key: String, Value: Int): Int {
-            return ApplicationClass.SharedPref.getInt(Key, Value)
+            return ApplicationClass.sharedPref.getInt(Key, Value)
 
         }
     }

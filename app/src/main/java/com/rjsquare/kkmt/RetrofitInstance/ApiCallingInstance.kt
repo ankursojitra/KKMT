@@ -1,6 +1,7 @@
 package com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable
 
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.RetrofitInstance.UnsafeOkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -15,7 +16,7 @@ object ApiCallingInstance {
 //            ApplicationClass.DecodeData(BASE_URL)
             if (retrofit == null) {
                 retrofit = Retrofit.Builder()
-                    .baseUrl(ApplicationClass.BASE_URL)
+                    .baseUrl(Constants.BASE_URL)
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()

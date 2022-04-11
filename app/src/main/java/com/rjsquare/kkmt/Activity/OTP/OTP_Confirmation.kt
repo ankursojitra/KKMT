@@ -20,10 +20,11 @@ import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.IsEmployee
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.IsUserEmployee
+import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.isUserEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.ShowToast
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.UserLogout
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.userInfoModel
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.OTPCallService
@@ -50,7 +51,7 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
         }
 
         fun GOTO_HomeScreen() {
-            Preferences.StoreBoolean(ApplicationClass.Pref_UserLogedIn, true)
+            Preferences.StoreBoolean(Constants.Pref_UserLogedIn, true)
             var HomeIntent = Intent(OTPActivity, HomeActivity::class.java)
             OTPActivity.startActivity(HomeIntent)
             Login.LoginActivity.finish()
@@ -64,8 +65,8 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                 //Here the json data is add to a hash map with key data
                 val params: MutableMap<String, String> =
                     HashMap()
-                params[ApplicationClass.paramKey_OPT] = FinalOTPCode
-                params[ApplicationClass.paramKey_UserId] = UserId
+                params[Constants.paramKey_OPT] = FinalOTPCode
+                params[Constants.paramKey_UserId] = UserId
                 val service =
                     ApiCallingInstance.retrofitInstance.create<OTPCallService>(
                         OTPCallService::class.java
@@ -86,20 +87,20 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                         response: retrofit2.Response<UserInfoData_Model>
                     ) {
                         if (response.body()!!.status.equals(
-                                ApplicationClass.ResponseSucess, true
+                                Constants.ResponseSucess, true
                             )
                         ) {
                             userInfoModel = UserInfoData_Model()
                             userInfoModel = response.body()!!
                             Preferences.StoreString(
-                                ApplicationClass.Pref_UserDataModel,
+                                Constants.Pref_UserDataModel,
                                 Gson().toJson(userInfoModel)
                             )
-                            IsUserEmployee = IsEmployee()
+                            isUserEmployee = IsEmployee()
 
                             GOTO_HomeScreen()
                         } else if (response.body()!!.status.equals(
-                                ApplicationClass.ResponseUnauthorized, true
+                                Constants.ResponseUnauthorized, true
                             )
                         ) {
                             DB_OTPConfirmation.cntUnAuthorized.visibility = View.VISIBLE
@@ -110,7 +111,7 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
 
                         LoaderVisible(false)
 
-//                        if (userInfoModel.status.equals(ApplicationClass.ResponseSucess, true)) {
+//                        if (userInfoModel.status.equals(Constants.ResponseSucess, true)) {
 //
 //                        } else {
 //                            ShowToast(OTPActivity, userInfoModel.message)

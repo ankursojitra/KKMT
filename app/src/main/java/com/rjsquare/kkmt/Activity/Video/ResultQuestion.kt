@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.VideoQuestionCompleteService
 import com.rjsquare.kkmt.RetrofitInstance.Events.VideoQuestionComplete_Model
@@ -78,11 +79,11 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[ApplicationClass.paramKey_VideoId] = VideoPlayer.VideoData.id!!
-            params[ApplicationClass.paramKey_Credit] = VideoPlayer.VideoData.credit!!
-            params[ApplicationClass.paramKey_Usertype] =
+            params[Constants.paramKey_VideoId] = VideoPlayer.VideoData.id!!
+            params[Constants.paramKey_Credit] = VideoPlayer.VideoData.credit!!
+            params[Constants.paramKey_Usertype] =
                 ApplicationClass.userInfoModel.data!!.usertype!!
-            params[ApplicationClass.paramKey_UserId] =
+            params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
@@ -106,9 +107,9 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
                 ) {
                     Log.e("GetResponsesas", "Hell: " + Gson().toJson(response.body()))
                     DB_ResultQuestion.cntLoader.visibility = View.GONE
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
 
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         ApplicationClass.UserLogout(this@ResultQuestion)
                     } else {
                         DB_ResultQuestion.txtAlertmsg.text = response.body()!!.message

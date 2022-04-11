@@ -1,12 +1,16 @@
 package com.rjsquare.kkmt.Activity.Review
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -19,17 +23,31 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.google.gson.Gson
+import com.minew.beaconplus.sdk.MTCentralManager
+import com.minew.beaconplus.sdk.enums.BluetoothState
+import com.minew.beaconplus.sdk.interfaces.OnBluetoothStateChangedListener
+import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Location
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Model.LatLngModel
-import com.rjsquare.kkmt.Model.ReviewEmp_Model
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.LogInCall.SlaveBeaconService
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.SlaveBeaconModel
 import com.rjsquare.kkmt.databinding.ActivitySearchEmployeeBinding
 import com.tristate.radarview.LatLongCs
 import com.tristate.radarview.ObjectModel
 import com.tristate.radarview.RadarViewC.IRadarCallBack
+import org.json.JSONArray
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 
@@ -45,11 +63,21 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     var posx = 50f
     var latlngList = ArrayList<LatLngModel>()
 
+    private val BLE_DEVICE_INFO_CALL = 10000L
+    private val REQUEST_ENABLE_BT = 3
+
+    private var mMtCentralManager: MTCentralManager? = null
+    lateinit var BeaconMACList: ArrayList<String>
+    var HandlerCallavailable = false
+
     //    private lateinit var mTxtLeave: TextView
     private lateinit var mCntConfirm: ConstraintLayout
     private lateinit var mCntNotfind: ConstraintLayout
     private lateinit var mImgClose: ImageView
     private lateinit var mImgCamera: ImageView
+    private val PERMISSION_COARSE_LOCATION = 2
+    lateinit var handler: Handler
+    lateinit var runnable: Runnable
     var PosList = ArrayList<Int>()
     val size = 100
 
@@ -63,9 +91,14 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
     lateinit var latLongCs: LatLongCs
 
+    lateinit var latList: ArrayList<Double>
+    lateinit var lngList: ArrayList<Double>
+
+
     companion object {
         lateinit var thisSearchEmployee: Activity
         lateinit var DB_SearchEmployee: ActivitySearchEmployeeBinding
+        lateinit var inflater: LayoutInflater
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,162 +119,46 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         mImgCamera = DB_SearchEmployee.layoutHelperReport.imgCamera
         mImgClose = DB_SearchEmployee.layoutHelperReport.imgClose
 
-        //Radar View Setup
+        BeaconMACList = ArrayList()
+        handler = Handler()
+        HandlerCallavailable = true
 
+        if (!ensureBleExists()) finish()
 
-//        val tempIView1 = ImageView(this)
-//        val tempView1 = ConstraintLayout(this)
-//        tempIView1.setImageResource(R.drawable.ic_email)
-//        tempView1.addView(tempIView1)
-//        val rlp1 = ConstraintLayout.LayoutParams(size, size)
-//        tempIView1.layoutParams = rlp1
-
-//        posx += 50f
-//
-//        tempView.x = 100f
-//        tempView.y = 150f
-//        DB_SearchEmployee.rippleBack.addView(tempView)
-
+        if (!isBLEEnabled()) {
+            showBLEDialog()
+        }
+        initManager()
+        getRequiredPermissions()
+        initListener()
 
         //------------------------------------
 
-        val inflater =
-            baseContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        mCenterView = inflater.inflate(R.layout.layout_center, null)
-        mTxtView = mCenterView.findViewById<TextView>(R.id.mTVText)
-        mTxtView.setOnClickListener(this)
-        latLongCs = LatLongCs(23.070301, 72.517406)
+//        var TotalViews = ApplicationClass.slaveModellist.size
 
-//        val view1 = DB_SearchEmployee.cntHelper as View
-//        val view2 = DB_SearchEmployee.cntHelper2 as View
 
-        val t1 = TextView(this)
-        t1.text = "A"
 
-        val t2 = TextView(this)
-        t2.text = "B"
+        FillPos()
 
-        val t3 = TextView(this)
-        t3.text = "C"
-
-        PositionLat.add(23.070390)
-        PositionLat.add(23.072059)
-        PositionLat.add(23.066806)
-        PositionLat.add(23.067906)
-        PositionLat.add(23.064656)
-
-        PositionLng.add(72.519376)
-        PositionLng.add(72.515294)
-        PositionLng.add(72.515854)
-        PositionLng.add(72.517004)
-        PositionLng.add(72.518504)
-
-        var TotalSize = (PositionLat.size * PositionLng.size)
-        for (i in 0..100 - 1) {
-            val lat = PositionLat.get(Random().nextInt(PositionLat.size))
-            val lng = PositionLng.get(Random().nextInt(PositionLng.size))
-
-            var SameValueMatched = false
-            for (tempValue in 0..SelPositionLat.size - 1) {
-                if (SelPositionLat.get(tempValue) == lat && SelPositionLng.get(tempValue) == lng) {
-                    SameValueMatched = true
-                    break
-                }
-            }
-
-            if (!SameValueMatched) {
-                SelPositionLat.add(lat)
-                SelPositionLng.add(lng)
-            }
+        DB_SearchEmployee.cntNotfound.setOnClickListener(this)
+        mImgCamera.setOnClickListener(this)
+        mTxtBacktohome.setOnClickListener(this)
+        mTxtSubmit.setOnClickListener(this)
+//        mTxtLeave.setOnClickListener(this)
+        mImgClose.setOnClickListener(this)
+        DB_SearchEmployee.txtUnauthOk.setOnClickListener(this)
+        runnable = Runnable {
+//                foundDevice()
+            mMtCentralManager!!.stopScan()
+            SlaveBleDeviceInfo()
         }
 
-        val tempIView = ImageView(this)
-        val tempView = ConstraintLayout(this)
-        tempIView.setImageResource(R.drawable.arrow)
-//        tempView.removeAllViews()
-        tempView.addView(tempIView)
-        val rlp = ConstraintLayout.LayoutParams(size, size)
-        tempIView.layoutParams = rlp
+    }
 
+    private fun FillPos() {
 
-        val tempIView1 = ImageView(this)
-        val tempView1 = ConstraintLayout(this)
-        tempIView1.setImageResource(R.drawable.ic_email)
-        tempView1.addView(tempIView1)
-        val rlp1 = ConstraintLayout.LayoutParams(size, size)
-        tempIView1.layoutParams = rlp1
-
-        val tempIView2 = ImageView(this)
-        val tempView2 = ConstraintLayout(this)
-        tempIView2.setImageResource(R.drawable.ic_challenge)
-//        tempView2.removeAllViews()
-        tempView2.addView(tempIView2)
-        val rlp2 = ConstraintLayout.LayoutParams(size, size)
-        tempIView2.layoutParams = rlp2
-
-
-        val tempIView3 = ImageView(this)
-        val tempView3 = ConstraintLayout(this)
-        tempIView3.setImageResource(R.drawable.ic_amount)
-        tempView3.addView(tempIView3)
-        val rlp3 = ConstraintLayout.LayoutParams(size, size)
-        tempIView3.layoutParams = rlp3
-
-        val tempImageView = ImageView(this)
-        val tempTextView = TextView(this)
-        val mTempView = ConstraintLayout(this)
-//        tempImageView.setImageResource(R.drawable.ic_ads)
-//        tempTextView.setText("Abcd")
-//        var TextParam = ConstraintLayout.LayoutParams(0, 0)
-//        TextParam.setMargins(0, 100, 0, 0)
-//        tempTextView.layoutParams = TextParam
-//        mTempView.addView(tempImageView)
-//        mTempView.addView(tempTextView)
-////        mTempView.orientation = LinearLayout.VERTICAL
-//        val rlp4 = ConstraintLayout.LayoutParams(size, size)
-//        mTempView.layoutParams = rlp4
-
-//        DB_SearchEmployee.cntHelper.parent.
-//        mTempView.removeAllViews()
-//        mTempView.addView(DB_SearchEmployee.cntHelper)
-
-        var view1 = inflater.inflate(R.layout.child_view, null)
-        var view2 = inflater.inflate(R.layout.child_view, null)
-        var view3 = inflater.inflate(R.layout.child_view, null)
-        var view4 = inflater.inflate(R.layout.child_view, null)
-        var view5 = inflater.inflate(R.layout.child_view, null)
-        var view6 = inflater.inflate(R.layout.child_view, null)
-        var view7 = inflater.inflate(R.layout.child_view, null)
-        var view8 = inflater.inflate(R.layout.child_view, null)
-        var view9 = inflater.inflate(R.layout.child_view, null)
-        var view10 = inflater.inflate(R.layout.child_view, null)
-        var view11 = inflater.inflate(R.layout.child_view, null)
-        var view12 = inflater.inflate(R.layout.child_view, null)
-        var view13 = inflater.inflate(R.layout.child_view, null)
-        var view14 = inflater.inflate(R.layout.child_view, null)
-        var view15 = inflater.inflate(R.layout.child_view, null)
-        var view16 = inflater.inflate(R.layout.child_view, null)
-        var view17 = inflater.inflate(R.layout.child_view, null)
-        var view18 = inflater.inflate(R.layout.child_view, null)
-        var view19 = inflater.inflate(R.layout.child_view, null)
-        var view20 = inflater.inflate(R.layout.child_view, null)
-        var view21 = inflater.inflate(R.layout.child_view, null)
-        var view22 = inflater.inflate(R.layout.child_view, null)
-        var view23 = inflater.inflate(R.layout.child_view, null)
-        var view24 = inflater.inflate(R.layout.child_view, null)
-        var view25 = inflater.inflate(R.layout.child_view, null)
-        var view26 = inflater.inflate(R.layout.child_view, null)
-        var view27 = inflater.inflate(R.layout.child_view, null)
-        var view28 = inflater.inflate(R.layout.child_view, null)
-//                                          ubhu                aadu
-        //Add custom data with a view, you can also add this view by looping
-
-
-        var latList = ArrayList<Double>()
-
-        var lngList = ArrayList<Double>()
-
+        latList = ArrayList()
         latList.add(23.068416)
         latList.add(23.068926)
         latList.add(23.069706)
@@ -271,6 +188,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         latList.add(23.072385)
         latList.add(23.071615)
 
+        lngList = ArrayList()
         lngList.add(72.517391)
         lngList.add(72.515901)
         lngList.add(72.515421)
@@ -306,22 +224,32 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             latlngModel.poslng = lngList.get(pos)
             latlngList.add(latlngModel)
         }
+        Log.e("ATG", "CHECKLATLNG SIZE  : " + latlngList.size)
+        inflater =
+            baseContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        var TotalViews = 5
+        mCenterView = inflater.inflate(R.layout.layout_center, null)
+        mTxtView = mCenterView.findViewById<TextView>(R.id.mTVText)
+        mTxtView.setOnClickListener(this)
+        latLongCs = LatLongCs(23.070301, 72.517406)
+
+        var TotalViews = 12
 
         GenerateRandomPos(TotalViews)
 
         for (pos in 0..TotalViews - 1) {
+            Log.e("ATG", "CheckViewCreate :")
             var view = inflater.inflate(R.layout.child_view, null)
             var tView = view.findViewById<TextView>(R.id.txt_name)
+//            tView.text = ApplicationClass.slaveModellist[pos].username
             tView.text = "Name : " + pos
             view.tag = pos
 
-            ApplicationClass.mReviewEmp_Model = ReviewEmp_Model()
-            ApplicationClass.mReviewEmp_Model.EmpName = "Name : " + pos
-            ApplicationClass.mReviewEmp_Model.EmpImage = R.drawable.rp!!
-
-            ApplicationClass.ArrayList_mReviewEmp_Model.add(ApplicationClass.mReviewEmp_Model)
+//            ApplicationClass.mReviewEmp_Model = ReviewEmp_Model()
+//            ApplicationClass.mReviewEmp_Model.EmpName = "Name : " + pos
+//            ApplicationClass.mReviewEmp_Model.EmpImage = R.drawable.rp!!
+//
+//            ApplicationClass.ArrayList_mReviewEmp_Model.add(ApplicationClass.mReviewEmp_Model)
 
             view.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(p0: View?) {
@@ -340,105 +268,278 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         for (pos in 0..TotalViews - 1) {
             mDataSet.get(pos).getmView().visibility = View.INVISIBLE
         }
-
         var latecounter = 150L
         val handler = Handler()
-        val runnable = Runnable {
+        val runnablex = Runnable {
             for (pos in 0..TotalViews - 1) {
+                Log.e("ATGX", "CheckViewCreatea :")
                 val handler = Handler()
-                val runnable = Runnable {
-                    AnimateDevice(mDataSet.get(pos))
+                val runnablex = Runnable {
+//                    AnimateDevice(mDataSet.get(pos))
                 }
-                handler.postDelayed(runnable, latecounter)
+                handler.postDelayed(runnablex, latecounter)
                 latecounter += 100
             }
         }
-        handler.postDelayed(runnable, 2000)
+        handler.postDelayed(runnablex, 200)
 
-
-//        mDataSet.add(ObjectModel(latlngList.get(0).poslat, latlngList.get(0).poslng, 100.0, view1))
-//        mDataSet.add(ObjectModel(latlngList.get(1).poslat, latlngList.get(1).poslng, 100.0, view2))
-//        mDataSet.add(ObjectModel(latlngList.get(2).poslat, latlngList.get(2).poslng, 100.0, view3))
-//        mDataSet.add(ObjectModel(latlngList.get(3).poslat, latlngList.get(3).poslng, 100.0, view4))
-//        mDataSet.add(ObjectModel(latlngList.get(4).poslat, latlngList.get(4).poslng, 100.0, view5))
-//        mDataSet.add(ObjectModel(latlngList.get(5).poslat, latlngList.get(5).poslng, 100.0, view6))
-//        mDataSet.add(ObjectModel(latlngList.get(6).poslat, latlngList.get(6).poslng, 100.0, view7))
-//        mDataSet.add(ObjectModel(latlngList.get(7).poslat, latlngList.get(7).poslng, 100.0, view8))
-//        mDataSet.add(ObjectModel(latlngList.get(8).poslat, latlngList.get(8).poslng, 100.0, view9))
-//        mDataSet.add(ObjectModel(latlngList.get(9).poslat, latlngList.get(9).poslng, 100.0, view10))
-//        mDataSet.add(ObjectModel(latlngList.get(10).poslat, latlngList.get(10).poslng, 100.0, view11))
-//        mDataSet.add(ObjectModel(latlngList.get(11).poslat, latlngList.get(11).poslng, 100.0, view12))
-//        mDataSet.add(ObjectModel(latlngList.get(12).poslat, latlngList.get(12).poslng, 100.0, view13))
-//        mDataSet.add(ObjectModel(latlngList.get(13).poslat, latlngList.get(13).poslng, 100.0, view14))
-//        mDataSet.add(ObjectModel(latlngList.get(14).poslat, latlngList.get(14).poslng, 100.0, view15))
-//        mDataSet.add(ObjectModel(latlngList.get(15).poslat, latlngList.get(15).poslng, 100.0, view16))
-//        mDataSet.add(ObjectModel(latlngList.get(16).poslat, latlngList.get(16).poslng, 100.0, view17))
-//        mDataSet.add(ObjectModel(latlngList.get(17).poslat, latlngList.get(17).poslng, 100.0, view18))
-//        mDataSet.add(ObjectModel(latlngList.get(18).poslat, latlngList.get(18).poslng, 100.0, view19))
-//        mDataSet.add(ObjectModel(latlngList.get(19).poslat, latlngList.get(19).poslng, 100.0, view20))
-//        mDataSet.add(ObjectModel(latlngList.get(20).poslat, latlngList.get(20).poslng, 100.0, view21))
-//        mDataSet.add(ObjectModel(latlngList.get(21).poslat, latlngList.get(21).poslng, 100.0, view22))
-//        mDataSet.add(ObjectModel(latlngList.get(22).poslat, latlngList.get(22).poslng, 100.0, view23))
-//        mDataSet.add(ObjectModel(latlngList.get(23).poslat, latlngList.get(23).poslng, 100.0, view24))
-//        mDataSet.add(ObjectModel(latlngList.get(24).poslat, latlngList.get(24).poslng, 100.0, view25))
-//        mDataSet.add(ObjectModel(latlngList.get(25).poslat, latlngList.get(25).poslng, 100.0, view26))
-//        mDataSet.add(ObjectModel(latlngList.get(26).poslat, latlngList.get(26).poslng, 100.0, view27))
-//        mDataSet.add(ObjectModel(latlngList.get(27).poslat, latlngList.get(27).poslng, 100.0, view28))
-
-
-        //Final Positions
-
-//        mDataSet.add(ObjectModel(23.068416, 72.517391, 100.0, view4))
-//        mDataSet.add(ObjectModel(23.070256, 72.515404, 100.0, view4))
-//        mDataSet.add(ObjectModel(23.072179, 72.517404, 100.0, view4))
-//        mDataSet.add(ObjectModel(23.070256, 72.519440, 100.0, view4))
-//        mDataSet.add(ObjectModel(23.069006, 72.518831, 100.0, view4))
-
-
-//        for (i in 0..SelPositionLng.size-1){
-//            val tempIView1 = ImageView(this)
-//            val tempView1 = ConstraintLayout(this)
-//            tempIView1.setImageResource(R.drawable.ic_email)
-//            tempView1.addView(tempIView1)
-//            val rlp1 = ConstraintLayout.LayoutParams(size, size)
-//            tempIView1.layoutParams = rlp1
-//
-//            mDataSet.add(ObjectModel(SelPositionLat.get(i), SelPositionLng.get(i), 50.0, tempView1))
-//        }
-
-        for (iPos in 0..SelPositionLat.size - 1) {
-            Log.e(
-                "TAG",
-                "PositionValues Lat: " + SelPositionLat.get(iPos) + ", Lng : " + SelPositionLng.get(
-                    iPos
-                )
-            )
-        }
+//        latLongCs = LatLongCs(23.070301, 72.517406)
         DB_SearchEmployee.radarView.setupData(
             250.0,
             mDataSet,
             latLongCs,
             mCenterView
-        ) //Here 250 is the radar radious you can set as per your choice or set
+        )
+        //Here 250 is the radar radious you can set as per your choice or set
 
         //You can get callback of your view click
         DB_SearchEmployee.radarView.setUpCallBack(IRadarCallBack { objectModel, view ->
             Log.e("TAG", "Clicks of Radarview. : " + view.transitionName)
             Log.e("TAG", "Clicks of RadarviewZX. : " + view.tag)
             Log.e("TAG", "Clicks of RadarviewXX. : " + objectModel.toString())
-            ApplicationClass.Selected_ReviewEmp_Model = ApplicationClass.ArrayList_mReviewEmp_Model.get(view.tag.toString().toInt())
+            ApplicationClass.Selected_ReviewEmp_Model =
+                ApplicationClass.ArrayList_mReviewEmp_Model.get(view.tag.toString().toInt())
             var HelperIntent = Intent(this, ReviewEdit::class.java)
             startActivity(HelperIntent)
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-
         })
+    }
 
-        DB_SearchEmployee.cntNotfound.setOnClickListener(this)
-        mImgCamera.setOnClickListener(this)
-        mTxtBacktohome.setOnClickListener(this)
-        mTxtSubmit.setOnClickListener(this)
-//        mTxtLeave.setOnClickListener(this)
-        mImgClose.setOnClickListener(this)
+    private fun SlaveBleDeviceInfo() {
+
+        var beaconOBJ = JSONObject()
+        var arrayJ = JSONArray()
+        for (Mac in BeaconMACList) {
+            arrayJ.put(Mac)
+            Log.e("TAG", "CheckSlaveMac : " + Mac)
+        }
+        beaconOBJ.put("becon_list", arrayJ)
+        try {
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+            params[Constants.paramKey_UserId] =
+                ApplicationClass.userInfoModel.data!!.userid!!
+
+            params[Constants.paramKey_BussinessId] =
+                ApplicationClass.selectedMasterModel.businessid_db.toString()
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<SlaveBeaconService>(
+                    SlaveBeaconService::class.java
+                )
+            val call =
+                service.GetSlaveBeaconData(
+                    params, BeaconMACList, ApplicationClass.userInfoModel.data!!.access_token!!
+                )
+
+            call.enqueue(object : Callback<SlaveBeaconModel> {
+                override fun onFailure(call: Call<SlaveBeaconModel>, t: Throwable) {
+                    DB_SearchEmployee.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<SlaveBeaconModel>,
+                    response: Response<SlaveBeaconModel>
+                ) {
+                    DB_SearchEmployee.cntLoader.visibility = View.GONE
+                    Log.e("TAG", "CHECKRESPONSESlave : " + Gson().toJson(response.body()))
+
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        ApplicationClass.slaveModellist = response.body()!!.data!!
+                        ShowEmployees()
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        DB_SearchEmployee.cntUnAuthorized.visibility = View.VISIBLE
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+
+                    } else {
+
+                    }
+                }
+            })
+
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+    }
+
+    private fun ShowEmployees() {
+        inflater =
+            baseContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        mCenterView = inflater.inflate(R.layout.layout_center, null)
+        mTxtView = mCenterView.findViewById<TextView>(R.id.mTVText)
+        mTxtView.setOnClickListener(this)
+        latLongCs = LatLongCs(23.070301, 72.517406)
+
+        var TotalViews = ApplicationClass.slaveModellist.size
+
+        GenerateRandomPos(TotalViews)
+
+        for (pos in 0..TotalViews - 1) {
+            Log.e("ATG", "CheckViewCreate :")
+            var view = inflater.inflate(R.layout.child_view, null)
+            var tView = view.findViewById<TextView>(R.id.txt_name)
+            tView.text = ApplicationClass.slaveModellist[pos].username
+//            tView.text = "Name : " + pos
+            view.tag = pos
+
+//            ApplicationClass.mReviewEmp_Model = ReviewEmp_Model()
+//            ApplicationClass.mReviewEmp_Model.EmpName = "Name : " + pos
+//            ApplicationClass.mReviewEmp_Model.EmpImage = R.drawable.rp!!
+//
+//            ApplicationClass.ArrayList_mReviewEmp_Model.add(ApplicationClass.mReviewEmp_Model)
+
+            view.setOnClickListener(object : View.OnClickListener {
+                override fun onClick(p0: View?) {
+                    Log.e("TAG", "RANDOMCLCIK : " + pos)
+                }
+            })
+            mDataSet.add(
+                ObjectModel(
+                    latlngList.get(PosList.get(pos)).poslat,
+                    latlngList.get(PosList.get(pos)).poslng,
+                    100.0,
+                    view
+                )
+            )
+        }
+        for (pos in 0..TotalViews - 1) {
+            mDataSet.get(pos).getmView().visibility = View.INVISIBLE
+        }
+        var latecounter = 150L
+        val handler = Handler()
+        val runnablex = Runnable {
+            for (pos in 0..TotalViews - 1) {
+                Log.e("ATGX", "CheckViewCreatea :")
+                val handler = Handler()
+                val runnablex = Runnable {
+                    AnimateDevice(mDataSet.get(pos))
+                }
+                handler.postDelayed(runnablex, latecounter)
+                latecounter += 100
+            }
+        }
+        handler.postDelayed(runnablex, 200)
+
+//        latLongCs = LatLongCs(23.070301, 72.517406)
+        DB_SearchEmployee.radarView.setupData(
+            250.0,
+            mDataSet,
+            latLongCs,
+            mCenterView
+        )
+        //Here 250 is the radar radious you can set as per your choice or set
+
+        //You can get callback of your view click
+        DB_SearchEmployee.radarView.setUpCallBack(IRadarCallBack { objectModel, view ->
+            Log.e("TAG", "Clicks of Radarview. : " + view.transitionName)
+            Log.e("TAG", "Clicks of RadarviewZX. : " + view.tag)
+            Log.e("TAG", "Clicks of RadarviewXX. : " + objectModel.toString())
+            ApplicationClass.Selected_ReviewEmp_Model =
+                ApplicationClass.ArrayList_mReviewEmp_Model.get(view.tag.toString().toInt())
+            var HelperIntent = Intent(this, ReviewEdit::class.java)
+            startActivity(HelperIntent)
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+        })
+    }
+
+    private fun ensureBleExists(): Boolean {
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, "Phone does not support BLE", Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
+    }
+
+    private fun initListener() {
+        mMtCentralManager!!.setMTCentralManagerListener { peripherals ->
+            for (peripheral in peripherals) {
+                val Mac = peripheral.mMTFrameHandler.mac.replace(":", "")
+                if (peripheral.mMTFrameHandler.name.contains(Constants.Companion.slaveBeacon)) {
+                    if (!BeaconMACList.contains(Mac)) {
+                        BeaconMACList.add(Mac)
+                    }
+                }
+            }
+            if (HandlerCallavailable) {
+                HandlerCallavailable = false
+                handler.postDelayed(runnable, BLE_DEVICE_INFO_CALL)
+            }
+        }
+    }
+
+    private fun getRequiredPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                PERMISSION_COARSE_LOCATION
+            )
+        } else {
+            initData()
+        }
+    }
+
+    private fun initData() {
+        mMtCentralManager!!.startScan()
+    }
+
+    private fun initManager() {
+        mMtCentralManager = MTCentralManager.getInstance(this)
+        //startservice
+        mMtCentralManager!!.startService()
+        val bluetoothState: BluetoothState = mMtCentralManager!!.getBluetoothState(this)
+        when (bluetoothState) {
+            BluetoothState.BluetoothStateNotSupported -> Log.e("tag", "BluetoothStateNotSupported")
+            BluetoothState.BluetoothStatePowerOff -> Log.e("tag", "BluetoothStatePowerOff")
+            BluetoothState.BluetoothStatePowerOn -> Log.e("tag", "BluetoothStatePowerOn")
+        }
+        mMtCentralManager!!.setBluetoothChangedListener(OnBluetoothStateChangedListener { state ->
+            when (state) {
+                BluetoothState.BluetoothStateNotSupported -> Log.e(
+                    "tag",
+                    "BluetoothStateNotSupported"
+                )
+                BluetoothState.BluetoothStatePowerOff -> Log.e("tag", "BluetoothStatePowerOff")
+                BluetoothState.BluetoothStatePowerOn -> Log.e("tag", "BluetoothStatePowerOn")
+            }
+        })
+    }
+
+    private fun showBLEDialog() {
+        val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            //Check Bluetooth is Enable or not
+
+            return
+        }
+        startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
+    }
+
+    protected fun isBLEEnabled(): Boolean {
+        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
+        val adapter = bluetoothManager.adapter
+        return adapter != null && adapter.isEnabled
     }
 
     private fun AnimateDevice(mView: ObjectModel) {
@@ -500,6 +601,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
     private fun GenerateRandomPos(TotalViews: Int) {
         var counter = 0
+        PosList = ArrayList()
         while (counter <= TotalViews) {
             var RNo = GetNumber()
             Collections.shuffle(PosList)
@@ -542,45 +644,10 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             CloseViews()
             DB_SearchEmployee.cntEmpmainView.visibility = View.VISIBLE
         } else if (view == mTxtView) {
-            Log.e("TAG", "valuePos : ")
-//            val tempIViewx = ImageView(this)
-//            val tempViewx = ConstraintLayout(this)
-//            tempIViewx.setImageResource(R.drawable.arrow)
-////        tempView2.removeAllViews()
-//            tempViewx.addView(tempIViewx)
-//            val rlpx = ConstraintLayout.LayoutParams(size, size)
-//            tempIViewx.layoutParams = rlpx
-//
-//            mDataSet.add(
-//                ObjectModel(
-//                    SelPositionLat.get(mDataSet.size - 1),
-//                    SelPositionLng.get(mDataSet.size - 1),
-//                    50.0,
-//                    tempViewx
-//                )
-//            )
 
-//            DB_SearchEmployee.radarView.setupData(
-//                250.0,
-//                mDataSet,
-//                latLongCs,
-//                mCenterView
-//            ) //Here 250 is the radar radious you can set as per your choice or set
-
+        } else if (view == DB_SearchEmployee.txtUnauthOk) {
+            ApplicationClass.UserLogout(this)
         }
-//        } catch (NE: NullPointerException) {
-//            NE.printStackTrace()
-//        } catch (IE: IndexOutOfBoundsException) {
-//            IE.printStackTrace()
-//        } catch (AE: ActivityNotFoundException) {
-//            AE.printStackTrace()
-//        } catch (E: IllegalArgumentException) {
-//            E.printStackTrace()
-//        } catch (RE: RuntimeException) {
-//            RE.printStackTrace()
-//        } catch (E: Exception) {
-//            E.printStackTrace()
-//        }
     }
 
     private fun CloseViews() {

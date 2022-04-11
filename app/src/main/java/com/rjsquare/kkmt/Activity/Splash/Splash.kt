@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.ActivitySplashBinding
@@ -23,15 +23,14 @@ class Splash : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DB_Splash = DataBindingUtil.setContentView(this, R.layout.activity_splash)
-//        setContentView(R.layout.activity_splash)
         try {
             ApplicationClass.StatusTextWhite(this, true)
-            ApplicationClass.UserLogedIn = Preferences.ReadBoolean(ApplicationClass.Pref_UserLogedIn, false)
+            ApplicationClass.userLogedIn = Preferences.ReadBoolean(Constants.Pref_UserLogedIn, false)
 
             val handler = Handler()
             val runnable = Runnable {
                 var AppStart = Intent()
-                if (ApplicationClass.UserLogedIn) {
+                if (ApplicationClass.userLogedIn) {
                     AppStart = Intent(this@Splash, HomeActivity::class.java)
                 } else {
                     AppStart = Intent(this@Splash, Login::class.java)

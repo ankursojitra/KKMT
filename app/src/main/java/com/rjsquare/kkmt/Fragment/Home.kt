@@ -44,7 +44,7 @@ class Home : Fragment(), View.OnClickListener {
 
             HomeActivity.mCntLoader.visibility = View.GONE
 
-            if (ApplicationClass.IsUserEmployee) {
+            if (ApplicationClass.isUserEmployee) {
                 DB_FHome.txtStoreLbl.text = "GREAT SERVICE DESERVES REWARDS.\n" +
                         "REDEEM CREDITS FOR GOODS & SERVICES"
                 DB_FHome.txtEventMsg.text = "YOU’RE INVITED"

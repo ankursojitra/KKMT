@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.EmployeeHistoryService
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.EmployeeHistoryModel
@@ -84,7 +85,7 @@ class EmployeeHistory : Fragment() {
             val params: MutableMap<String, String> =
                 HashMap()
 
-            params[ApplicationClass.paramKey_EmployeeId] =
+            params[Constants.paramKey_EmployeeId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
@@ -110,12 +111,12 @@ class EmployeeHistory : Fragment() {
                     DB_FEmployeeHistory.cntLoader.visibility = View.GONE
                     Log.e("TAG", "EMPHistoryData : " + Gson().toJson(response.body()!!))
 
-                    if (response.body()!!.status.equals(ApplicationClass.ResponseSucess)) {
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         EmpHistory = response.body()!!
                         SetOverallRatingData()
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseUnauthorized)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         HomeActivity.UnauthorizedUser()
-                    } else if (response.body()!!.status.equals(ApplicationClass.ResponseEmpltyList)) {
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
 

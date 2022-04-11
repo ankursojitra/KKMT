@@ -2,7 +2,7 @@ package com.rjsquare.kkmt.RetrofitInstance.OTPCall
 
 import com.google.gson.annotations.SerializedName
 
-class BusinessBeaconModel {
+class MasterBeaconModel {
 
     @SerializedName("status")
     var status: String? = null
