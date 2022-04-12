@@ -1,5 +1,6 @@
 package com.rjsquare.kkmt.AppConstant
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.ActivityNotFoundException
@@ -20,17 +21,21 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Location
+import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
+import com.rjsquare.kkmt.Fragment.Home
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.Model.*
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.AppReopenService
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
-import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.SlaveBeaconModel
+import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
 import retrofit2.Call
 import retrofit2.Callback
@@ -70,6 +75,7 @@ class ApplicationClass : Application(), LifecycleObserver {
         lateinit var empSlaveModel: SlaveBeaconModel.SlaveBescon
         var autorisedUser = true
         var isReviewNew = true
+        var isApprove = true
 
         val email_Pattern: Pattern = Pattern.compile(
             "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
@@ -90,9 +96,9 @@ class ApplicationClass : Application(), LifecycleObserver {
         var mBiconReviewImageX: Bitmap? = null
         lateinit var mReviewModel: ReviewModel
         lateinit var mArray_ReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
-        lateinit var mList_StoreListModel: ArrayList<StoreListModel>
+        lateinit var mList_StoreListModel: ArrayList<StoreList_Model.StoreItemData>
         lateinit var mList_StoreItemDetailModel: ArrayList<StoreItemDetailModel>
-        var mStoreLevelListModelSelected: StoreListModel? = null
+        var mStoreLevelListModelSelected: StoreList_Model.StoreItemData? = null
         var isUserEmployee: Boolean = false
         var appBackground: Boolean = false
         var userLogedIn: Boolean = false
@@ -104,6 +110,63 @@ class ApplicationClass : Application(), LifecycleObserver {
 
         lateinit var sharedPref: SharedPreferences
         lateinit var prefEditor: SharedPreferences.Editor
+
+        fun NextScreen(activity: Activity, NextScreenIntent: Intent) {
+            activity.startActivity(NextScreenIntent)
+            activity.overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+        }
+
+        @SuppressLint("ResourceType")
+        fun GetPin(activity: Activity, pinColors: String): Int {
+            val pinColor = "#ff" + pinColors.replace("#", "")
+            if (activity.resources.getString(R.color.gray_pin).equals(pinColor, true)) {
+                return R.drawable.ic_pin_gray
+            } else if (activity.resources.getString(R.color.orange_pin).equals(pinColor, true)) {
+                return R.drawable.ic_pin_orange
+            } else if (activity.resources.getString(R.color.green_pin).equals(pinColor, true)) {
+                return R.drawable.ic_pin_green
+            } else if (activity.resources.getString(R.color.pink_pin).equals(pinColor, true)) {
+                return R.drawable.ic_pin_pink
+            } else if (activity.resources.getString(R.color.blue_pin).equals(pinColor, true)) {
+                return R.drawable.ic_pin_blue
+            } else if (activity.resources.getString(R.color.red_pin).equals(pinColor, true)) {
+                return R.drawable.ic_pin_red
+            } else if (activity.resources.getString(R.color.yellow_pin).equals(pinColor, true)) {
+                return R.drawable.ic_pin_yellow
+            } else if (activity.resources.getString(R.color.purple_pin).equals(pinColor, true)) {
+                return R.drawable.ic_pin_purple
+            } else if (activity.resources.getString(R.color.black_pin).equals(pinColor, true)) {
+                return R.drawable.ic_pin_black
+            } else {
+                return R.drawable.ic_pin_red
+            }
+        }
+
+        @SuppressLint("ResourceType")
+        fun GetPinView(activity: Activity, pinColors: String): Int {
+            val pinColor = "#ff" + pinColors.replace("#", "")
+            if (activity.resources.getString(R.color.gray_pin).equals(pinColor, true)) {
+                return R.drawable.map_pin_back_gray
+            } else if (activity.resources.getString(R.color.orange_pin).equals(pinColor, true)) {
+                return R.drawable.map_pin_back_orange
+            } else if (activity.resources.getString(R.color.green_pin).equals(pinColor, true)) {
+                return R.drawable.map_pin_back_green
+            } else if (activity.resources.getString(R.color.pink_pin).equals(pinColor, true)) {
+                return R.drawable.map_pin_back_pink
+            } else if (activity.resources.getString(R.color.blue_pin).equals(pinColor, true)) {
+                return R.drawable.map_pin_back_blue
+            } else if (activity.resources.getString(R.color.red_pin).equals(pinColor, true)) {
+                return R.drawable.map_pin_back_red
+            } else if (activity.resources.getString(R.color.yellow_pin).equals(pinColor, true)) {
+                return R.drawable.map_pin_back_yellow
+            } else if (activity.resources.getString(R.color.purple_pin).equals(pinColor, true)) {
+                return R.drawable.map_pin_back_purple
+            } else if (activity.resources.getString(R.color.black_pin).equals(pinColor, true)) {
+                return R.drawable.map_pin_back_black
+            } else {
+                return R.drawable.map_pin_back_red
+            }
+        }
 
 
         fun Gender(gender: String): String {
@@ -152,13 +215,21 @@ class ApplicationClass : Application(), LifecycleObserver {
             userLogedIn = false
         }
 
-        fun UserLogout(activity:Activity) {
+        fun UserLogout(activity: Activity) {
             Preferences.Cleardata()
             ResetAllData()
-            var LogInIntent = Intent(activity, Login::class.java)
+            var LogInIntent = Intent(activity, HomeActivity::class.java)
+            LogInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             activity.startActivity(LogInIntent)
             activity.finish()
-            activity.overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+//            activity.overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+        }
+
+        fun UserLogIn(activity: Activity) {
+            var LogInIntent = Intent(activity, Login::class.java)
+            activity.startActivity(LogInIntent)
+//            activity.finish()
+            activity.overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
         }
 
         fun IsEmployee(): Boolean {
@@ -343,8 +414,8 @@ class ApplicationClass : Application(), LifecycleObserver {
                     userInfoModel.data!!.userid.toString()
 
                 val service =
-                    ApiCallingInstance.retrofitInstance.create<AppReopenService>(
-                        AppReopenService::class.java
+                    ApiCallingInstance.retrofitInstance.create<NetworkServices.AppReopenService>(
+                        NetworkServices.AppReopenService::class.java
                     )
                 val call = service.GetUserData(
                     params,
@@ -371,11 +442,21 @@ class ApplicationClass : Application(), LifecycleObserver {
 
                             isUserEmployee = IsEmployee()
                             autorisedUser = true
-                        } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized, true)) {
+                            if (userInfoModel.data!!.approve.equals(Constants.YES, true)) {
+                                isApprove = true
+                            } else {
+                                isApprove = false
+                            }
+                        } else if (response.body()!!.status.equals(
+                                Constants.ResponseUnauthorized,
+                                true
+                            )
+                        ) {
                             autorisedUser = false
                         } else {
                             ShowToast(ApplicationContext, response.body()!!.message)
                         }
+
 
                     }
 
@@ -449,7 +530,7 @@ class ApplicationClass : Application(), LifecycleObserver {
 //        }
 
         if (userLogedIn) {
-//            updateUserInfo()
+            updateUserInfo()
             isUserEmployee = IsEmployee()
         }
 

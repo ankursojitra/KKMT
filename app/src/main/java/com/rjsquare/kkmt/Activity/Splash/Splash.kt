@@ -30,11 +30,11 @@ class Splash : AppCompatActivity() {
             val handler = Handler()
             val runnable = Runnable {
                 var AppStart = Intent()
-                if (ApplicationClass.userLogedIn) {
+//                if (ApplicationClass.userLogedIn) {
                     AppStart = Intent(this@Splash, HomeActivity::class.java)
-                } else {
-                    AppStart = Intent(this@Splash, Login::class.java)
-                }
+//                } else {
+//                    AppStart = Intent(this@Splash, Login::class.java)
+//                }
                 startActivity(AppStart)
                 finish()
                 overridePendingTransition(R.anim.activity_in, R.anim.activity_out)

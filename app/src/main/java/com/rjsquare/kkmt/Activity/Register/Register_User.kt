@@ -22,7 +22,7 @@ import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.userInfoModel
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.RegisterUserService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
 import com.rjsquare.kkmt.databinding.ActivityRegisterUserBinding
 import kotlinx.android.synthetic.main.layout_gender_list.view.*
@@ -232,8 +232,8 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
             params[Constants.paramKey_Gender] = Gender
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<RegisterUserService>(
-                    RegisterUserService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.RegisterUserService>(
+                    NetworkServices.RegisterUserService::class.java
                 )
             val call = service.GetRegisterUserData(params)
             call.enqueue(object : Callback<UserInfoData_Model> {

@@ -32,7 +32,9 @@ import com.rjsquare.kkmt.Activity.Profile.Profile
 import com.rjsquare.kkmt.Activity.Register.upload_doc
 import com.rjsquare.kkmt.Activity.Setting.Settings
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Fragment.*
+import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.IMMResult
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.ActivityHomeBinding
@@ -87,7 +89,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-        fun UnauthorizedUser(){
+        fun UnauthorizedUser() {
             DB_HomeActivity.cntUnAuthorized.visibility = View.VISIBLE
         }
 
@@ -146,6 +148,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_HomeActivity = DataBindingUtil.setContentView(this, R.layout.activity_home)
         try {
+            ApplicationClass.userLogedIn =
+                Preferences.ReadBoolean(Constants.Pref_UserLogedIn, false)
             thisHomeActivity = this
             mFragmentManager = supportFragmentManager
             ApplicationClass.IsRegisterFlow = false
@@ -153,7 +157,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 DefaultKeyboardDP + if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) 48f else 0f
 
             DB_HomeActivity.txtUnauthOk.setOnClickListener(this)
-            if (!ApplicationClass.autorisedUser){
+            if (!ApplicationClass.autorisedUser) {
                 DB_HomeActivity.cntUnAuthorized.visibility = View.VISIBLE
             }
 
@@ -173,6 +177,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             mTxtTitle = findViewById<TextView>(R.id.txt_title)
             mImgHomeback = findViewById<ImageView>(R.id.img_homeback)
 
+            UserLogInViewSetup()
+            SetUpUserVerifiedAndData()
 
             mCntLoader.setOnClickListener(this)
             DB_HomeActivity.HomeScreen.ContentView.cntHome.setOnClickListener(this)
@@ -190,6 +196,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             DB_HomeActivity.nevigationMenuview.cntSettingMenu.setOnClickListener(this)
             DB_HomeActivity.nevigationMenuview.cntUploadMenu.setOnClickListener(this)
             DB_HomeActivity.nevigationMenuview.cntLogoutMenu.setOnClickListener(this)
+            DB_HomeActivity.nevigationMenuview.cntLogin.setOnClickListener(this)
             DB_HomeActivity.HomeScreen.ContentView.imgMenu.setOnClickListener(this)
 
             DB_HomeActivity.HomeScreen.ContentView.imgHome.visibility = View.INVISIBLE
@@ -224,6 +231,24 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun SetUpUserVerifiedAndData() {
+        if (ApplicationClass.isApprove) {
+            DB_HomeActivity.nevigationMenuview.cntUploadMenu.visibility = View.GONE
+        } else {
+            DB_HomeActivity.nevigationMenuview.cntUploadMenu.visibility = View.VISIBLE
+        }
+    }
+
+    private fun UserLogInViewSetup() {
+        if (ApplicationClass.userLogedIn) {
+            DB_HomeActivity.nevigationMenuview.nstMenu.visibility = View.VISIBLE
+            DB_HomeActivity.nevigationMenuview.cntLoginView.visibility = View.GONE
+        } else {
+            DB_HomeActivity.nevigationMenuview.nstMenu.visibility = View.GONE
+            DB_HomeActivity.nevigationMenuview.cntLoginView.visibility = View.VISIBLE
+        }
+    }
+
     private fun SelectBottomTabImage() {
         DB_HomeActivity.HomeScreen.ContentView.imgHome.visibility = View.VISIBLE
         DB_HomeActivity.HomeScreen.ContentView.imgSearch.visibility = View.VISIBLE
@@ -246,143 +271,73 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (view == DB_HomeActivity.HomeScreen.ContentView.cntHome || view == DB_HomeActivity.nevigationMenuview.cntHomeMenu) {
-                ApplicationClass.StatusTextWhite(this, true)
-
-                SelectBottomTabImage()
-                DB_HomeActivity.HomeScreen.ContentView.imgHome.visibility = View.INVISIBLE
-
-                UncheckedAll()
-                DB_HomeActivity.HomeScreen.ContentView.cntSelHome.visibility = View.VISIBLE
-
-                HideAllFragment()
-                DB_HomeActivity.HomeScreen.ContentView.navHomeFragment.visibility = View.VISIBLE
-
-                if (Home.HomeView) {
-                    mCntLoader.visibility = View.GONE
-                } else {
-                    mCntLoader.visibility = View.VISIBLE
-                }
-
-                SetTitleBarView(false, resources.getString(R.string.home))
-                mImgHomeback.visibility = View.VISIBLE
-
-                if (DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
+            if (ApplicationClass.userLogedIn) {
+                if (view == DB_HomeActivity.HomeScreen.ContentView.cntHome || view == DB_HomeActivity.nevigationMenuview.cntHomeMenu) {
+                    HomeClick()
+                } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
+                    SearchClick()
+                } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntLeaderboard) {
+                    LeaderBoardClick()
+                } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntHistory ||
+                    view == DB_HomeActivity.nevigationMenuview.cntMyhistoryMenu
+                ) {
+                    HistoryClick()
+                } else if (view == DB_HomeActivity.HomeScreen.ContentView.imgMenu) {
+                    if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
+                        DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
+                } else if (view == DB_HomeActivity.nevigationMenuview.cntProfileMenu) {
+                    var ProfileIntent = Intent(this, Profile::class.java)
+                    startActivity(ProfileIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
                     DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-
-            } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
-
-                ApplicationClass.StatusTextWhite(this, false)
-
-                SelectBottomTabImage()
-                DB_HomeActivity.HomeScreen.ContentView.imgSearch.visibility = View.INVISIBLE
-
-                UncheckedAll()
-                DB_HomeActivity.HomeScreen.ContentView.cntSelSearch.visibility = View.VISIBLE
-
-                HideAllFragment()
-                DB_HomeActivity.HomeScreen.ContentView.navSearchFragment.visibility = View.VISIBLE
-
-                if (search.searchView) {
-                    mCntLoader.visibility = View.GONE
-                } else {
-                    mCntLoader.visibility = View.VISIBLE
-                }
-
-                SetTitleBarView(true, resources.getString(R.string.search))
-
-                mImgHomeback.visibility = View.VISIBLE
-            } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntLeaderboard) {
-                ApplicationClass.StatusTextWhite(this, true)
-
-                SelectBottomTabImage()
-                DB_HomeActivity.HomeScreen.ContentView.imgLeader.visibility = View.INVISIBLE
-
-                UncheckedAll()
-                DB_HomeActivity.HomeScreen.ContentView.cntSelLeader.visibility = View.VISIBLE
-
-                HideAllFragment()
-                DB_HomeActivity.HomeScreen.ContentView.navLeaderFragment.visibility = View.VISIBLE
-
-                if (LeaderBoard.leaderBoardView) {
-                    mCntLoader.visibility = View.GONE
-                } else {
-                    mCntLoader.visibility = View.VISIBLE
-                }
-
-                SetTitleBarView(false, resources.getString(R.string.leaderboard))
-                mImgHomeback.visibility = View.VISIBLE
-            } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntHistory ||
-                view == DB_HomeActivity.nevigationMenuview.cntMyhistoryMenu
-            ) {
-                ApplicationClass.StatusTextWhite(this, true)
-                SelectBottomTabImage()
-                DB_HomeActivity.HomeScreen.ContentView.imgHistory.visibility = View.INVISIBLE
-
-                UncheckedAll()
-                DB_HomeActivity.HomeScreen.ContentView.cntSelHistory.visibility = View.VISIBLE
-
-                HideAllFragment()
-                DB_HomeActivity.HomeScreen.ContentView.navHistoryFragment.visibility = View.VISIBLE
-
-                var LoadView = false
-                if (ApplicationClass.isUserEmployee) {
-                    LoadView = EmployeeHistory.EmpHistoryView
-                } else {
-                    LoadView = History.HistoryView
-                }
-
-                if (LoadView) {
-                    mCntLoader.visibility = View.GONE
-                } else {
-                    mCntLoader.visibility = View.VISIBLE
-                }
-                SetTitleBarView(false, resources.getString(R.string.history))
-
-                mImgHomeback.visibility = View.INVISIBLE
-
-                if (DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
+                } else if (view == DB_HomeActivity.nevigationMenuview.cntNotificationMenu) {
+                    var NotifyIntent = Intent(this, NotificationList::class.java)
+                    startActivity(NotifyIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
                     DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-
-            } else if (view == DB_HomeActivity.HomeScreen.ContentView.imgMenu) {
-                if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
-                    DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
-            } else if (view == DB_HomeActivity.nevigationMenuview.cntProfileMenu) {
-                var ProfileIntent = Intent(this, Profile::class.java)
-                startActivity(ProfileIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-            } else if (view == DB_HomeActivity.nevigationMenuview.cntNotificationMenu) {
-                var NotifyIntent = Intent(this, NotificationList::class.java)
-                startActivity(NotifyIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-            } else if (view == DB_HomeActivity.nevigationMenuview.cntChallangesMenu) {
-                var NotifyIntent = Intent(this, ActiveChallenge::class.java)
-                startActivity(NotifyIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-            } else if (view == DB_HomeActivity.nevigationMenuview.cntSettingMenu) {
-                var SettingIntent = Intent(this, Settings::class.java)
-                startActivity(SettingIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-            } else if (view == DB_HomeActivity.nevigationMenuview.cntUploadMenu) {
-                var SettingIntent = Intent(this, upload_doc::class.java)
-                startActivity(SettingIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-            } else if (view == DB_HomeActivity.nevigationMenuview.cntLogoutMenu) {
-                DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                ApplicationClass.UserLogout(this)
-            } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntNewreview || view == DB_HomeActivity.nevigationMenuview.cntReviewsMenu) {
-                var StarIntent = Intent(this, Bussiness_Location::class.java)
-                startActivity(StarIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_HomeActivity.txtUnauthOk) {
-                DB_HomeActivity.cntUnAuthorized.visibility = View.GONE
-                ApplicationClass.UserLogout(this)
+                } else if (view == DB_HomeActivity.nevigationMenuview.cntChallangesMenu) {
+                    var NotifyIntent = Intent(this, ActiveChallenge::class.java)
+                    startActivity(NotifyIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                } else if (view == DB_HomeActivity.nevigationMenuview.cntSettingMenu) {
+                    var SettingIntent = Intent(this, Settings::class.java)
+                    startActivity(SettingIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                } else if (view == DB_HomeActivity.nevigationMenuview.cntUploadMenu) {
+                    var SettingIntent = Intent(this, upload_doc::class.java)
+                    startActivity(SettingIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                } else if (view == DB_HomeActivity.nevigationMenuview.cntLogoutMenu) {
+                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                    ApplicationClass.UserLogout(this)
+                } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntNewreview ||
+                    view == DB_HomeActivity.nevigationMenuview.cntReviewsMenu
+                ) {
+                    var StarIntent = Intent(this, Bussiness_Location::class.java)
+                    startActivity(StarIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                } else if (view == DB_HomeActivity.txtUnauthOk) {
+                    DB_HomeActivity.cntUnAuthorized.visibility = View.GONE
+                    ApplicationClass.UserLogout(this)
+                }
+            } else {
+                if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
+                    SearchClick()
+                } else if (view == DB_HomeActivity.HomeScreen.ContentView.imgMenu) {
+                    if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
+                        DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
+                } else if (view == DB_HomeActivity.nevigationMenuview.cntLogin) {
+                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                    ApplicationClass.UserLogIn(this)
+                } else {
+                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                    ApplicationClass.UserLogIn(this)
+                }
             }
+
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -396,6 +351,109 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         } catch (E: Exception) {
             E.printStackTrace()
         }
+    }
+
+    private fun HomeClick() {
+        ApplicationClass.StatusTextWhite(this, true)
+
+        SelectBottomTabImage()
+        DB_HomeActivity.HomeScreen.ContentView.imgHome.visibility = View.INVISIBLE
+
+        UncheckedAll()
+        DB_HomeActivity.HomeScreen.ContentView.cntSelHome.visibility = View.VISIBLE
+
+        HideAllFragment()
+        DB_HomeActivity.HomeScreen.ContentView.navHomeFragment.visibility = View.VISIBLE
+
+        if (Home.HomeView) {
+            mCntLoader.visibility = View.GONE
+        } else {
+            mCntLoader.visibility = View.VISIBLE
+        }
+
+        SetTitleBarView(false, resources.getString(R.string.home))
+        mImgHomeback.visibility = View.VISIBLE
+
+        if (DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
+            DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+
+    }
+
+    private fun LeaderBoardClick() {
+        ApplicationClass.StatusTextWhite(this, true)
+
+        SelectBottomTabImage()
+        DB_HomeActivity.HomeScreen.ContentView.imgLeader.visibility = View.INVISIBLE
+
+        UncheckedAll()
+        DB_HomeActivity.HomeScreen.ContentView.cntSelLeader.visibility = View.VISIBLE
+
+        HideAllFragment()
+        DB_HomeActivity.HomeScreen.ContentView.navLeaderFragment.visibility = View.VISIBLE
+
+        if (LeaderBoard.leaderBoardView) {
+            mCntLoader.visibility = View.GONE
+        } else {
+            mCntLoader.visibility = View.VISIBLE
+        }
+
+        SetTitleBarView(false, resources.getString(R.string.leaderboard))
+        mImgHomeback.visibility = View.VISIBLE
+    }
+
+    private fun SearchClick() {
+        ApplicationClass.StatusTextWhite(this, false)
+
+        SelectBottomTabImage()
+        DB_HomeActivity.HomeScreen.ContentView.imgSearch.visibility = View.INVISIBLE
+
+        UncheckedAll()
+        DB_HomeActivity.HomeScreen.ContentView.cntSelSearch.visibility = View.VISIBLE
+
+        HideAllFragment()
+        DB_HomeActivity.HomeScreen.ContentView.navSearchFragment.visibility = View.VISIBLE
+
+        if (search.searchView) {
+            mCntLoader.visibility = View.GONE
+        } else {
+            mCntLoader.visibility = View.VISIBLE
+        }
+
+        SetTitleBarView(true, resources.getString(R.string.search))
+
+        mImgHomeback.visibility = View.VISIBLE
+    }
+
+    private fun HistoryClick() {
+        ApplicationClass.StatusTextWhite(this, true)
+        SelectBottomTabImage()
+        DB_HomeActivity.HomeScreen.ContentView.imgHistory.visibility = View.INVISIBLE
+
+        UncheckedAll()
+        DB_HomeActivity.HomeScreen.ContentView.cntSelHistory.visibility = View.VISIBLE
+
+        HideAllFragment()
+        DB_HomeActivity.HomeScreen.ContentView.navHistoryFragment.visibility = View.VISIBLE
+
+        var LoadView = false
+        if (ApplicationClass.isUserEmployee) {
+            LoadView = EmployeeHistory.EmpHistoryView
+        } else {
+            LoadView = History.HistoryView
+        }
+
+        if (LoadView) {
+            mCntLoader.visibility = View.GONE
+        } else {
+            mCntLoader.visibility = View.VISIBLE
+        }
+        SetTitleBarView(false, resources.getString(R.string.history))
+
+        mImgHomeback.visibility = View.INVISIBLE
+
+        if (DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
+            DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+
     }
 
     private fun HideAllFragment() {

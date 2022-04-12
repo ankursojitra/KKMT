@@ -12,7 +12,7 @@ import com.rjsquare.kkmt.Activity.Review.SearchEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.BusinessCheckInService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.BusinessCheckInModel
 import com.rjsquare.kkmt.databinding.ActivityBussinessCheckInBinding
 import retrofit2.Call
@@ -59,8 +59,8 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
                 ApplicationClass.selectedMasterModel.businessid.toString()
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<BusinessCheckInService>(
-                    BusinessCheckInService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.BusinessCheckInService>(
+                    NetworkServices.BusinessCheckInService::class.java
                 )
             val call =
                 service.GetBusinessCheckInData(

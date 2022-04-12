@@ -16,8 +16,8 @@ import com.rjsquare.kkmt.Adapter.EventsAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.EventsService
 import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.databinding.ActivityEventsBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -109,7 +109,7 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
 
             DB_Events.txtUnauthOk.setOnClickListener(this)
             IsEventCallavailable = true
-            DB_Events.cntLoader.visibility = View.VISIBLE
+//            DB_Events.cntLoader.visibility = View.VISIBLE
 //            filldata()
             framesAdapter()
             GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
@@ -131,7 +131,7 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
 
     private fun GetLatestEvents(pageNo: String, PagePerlimit: String) {
         try {
-
+            DB_Events.gifLoader.visibility = View.VISIBLE
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -141,8 +141,8 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
 //            params[ApplicationClass.paramKey_Selfie] = fileString
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<EventsService>(
-                    EventsService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.EventsService>(
+                    NetworkServices.EventsService::class.java
                 )
             val call =
                 service.GetEventsData(
@@ -151,7 +151,7 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
 
             call.enqueue(object : Callback<Events_Model> {
                 override fun onFailure(call: Call<Events_Model>, t: Throwable) {
-                    DB_Events.cntLoader.visibility = View.GONE
+                    DB_Events.gifLoader.visibility = View.GONE
                     Log.e("GetResponsesasXASX", "Hell: ")
                 }
 
@@ -159,7 +159,7 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
                     call: Call<Events_Model>,
                     response: Response<Events_Model>
                 ) {
-                    DB_Events.cntLoader.visibility = View.GONE
+                    DB_Events.gifLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         dataSize = response.body()!!.data!!.size
                         mArray_EventsModel.addAll(response.body()!!.data!!)

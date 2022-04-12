@@ -14,10 +14,7 @@ import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingIns
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.VideoDetail_Model
-import com.rjsquare.kkmt.RetrofitInstance.Events.VideosDetailService
-import com.rjsquare.kkmt.RetrofitInstance.Events.VideosService
-import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
+import com.rjsquare.kkmt.RetrofitInstance.Events.*
 import com.rjsquare.kkmt.databinding.ActivityVideoPlayerBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -82,8 +79,8 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!
             val service =
-                ApiCallingInstance.retrofitInstance.create<VideosDetailService>(
-                    VideosDetailService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.VideosDetailService>(
+                    NetworkServices.VideosDetailService::class.java
                 )
             val call =
                 service.GetVideosDetail(

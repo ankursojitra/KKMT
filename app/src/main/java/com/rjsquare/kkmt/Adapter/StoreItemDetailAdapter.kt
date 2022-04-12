@@ -8,15 +8,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.Model.StoreItemDetailModel
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
 import com.rjsquare.kkmt.databinding.RawStoreFrameBinding
+import com.squareup.picasso.Picasso
 
 class StoreItemDetailAdapter(
     var moContext: Context,
-    var moArrayList: ArrayList<StoreItemDetailModel>
+    var moArrayList: ArrayList<StoreList_Model.StoreItemData.StoreItem>
 ) : RecyclerView.Adapter<StoreItemDetailAdapter.View_holder>() {
-    var mStoreItemDetailModel: StoreItemDetailModel? = null
     var Width = 0
     private var layoutInflater: LayoutInflater? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): View_holder {
@@ -34,11 +34,12 @@ class StoreItemDetailAdapter(
     override fun onBindViewHolder(holder: View_holder, position: Int) {
         try {
             var mStoreItemDetailModel = moArrayList[position]
-            var Per_Value_old = 0.0
-            val mStoreItemDetailModel_old: StoreItemDetailModel
             holder.lStoreItemDetailModelSelected = mStoreItemDetailModel
-            holder.DB_RawStoreFrameBinding.txtItemName.text = mStoreItemDetailModel.ItemName
-            holder.DB_RawStoreFrameBinding.imgStoreitem.setImageDrawable(mStoreItemDetailModel.ImgLink)
+            holder.DB_RawStoreFrameBinding.txtItemName.text = mStoreItemDetailModel.title
+            holder.DB_RawStoreFrameBinding.txtItemcredit.text = mStoreItemDetailModel.credit_required
+            Picasso.with(moContext).load(mStoreItemDetailModel.image!![0])
+                .into(holder.DB_RawStoreFrameBinding.imgStoreitem)
+
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -56,14 +57,19 @@ class StoreItemDetailAdapter(
     }
 
     override fun getItemCount(): Int {
-        return moArrayList.size
+        if (moArrayList.size > 3) {
+            return 3
+        } else {
+            return moArrayList.size
+        }
+//        return moArrayList.size
     }
 
     inner class View_holder(itemBinding: RawStoreFrameBinding) :
         RecyclerView.ViewHolder(itemBinding.root),
         View.OnClickListener {
 
-        var lStoreItemDetailModelSelected: StoreItemDetailModel? = null
+        var lStoreItemDetailModelSelected: StoreList_Model.StoreItemData.StoreItem? = null
 
         lateinit var DB_RawStoreFrameBinding: RawStoreFrameBinding
 
@@ -77,7 +83,6 @@ class StoreItemDetailAdapter(
                     ((Width / 12) * 5)
                 )
 
-//                DB_RawStoreFrameBinding.cntStoreItem.setOnClickListener(this)
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()
             } catch (IE: IndexOutOfBoundsException) {
@@ -94,9 +99,6 @@ class StoreItemDetailAdapter(
         }
 
         override fun onClick(view: View?) {
-//            if (view == DB_RawStoreFrameBinding.cntStoreItem) {
-//                Store.DB_Store.cntConfirmation.visibility = View.VISIBLE
-//            }
         }
     }
 

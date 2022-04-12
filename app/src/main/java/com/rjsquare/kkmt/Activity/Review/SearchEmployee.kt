@@ -8,10 +8,15 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
+import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,19 +26,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.minew.beaconplus.sdk.MTCentralManager
 import com.minew.beaconplus.sdk.enums.BluetoothState
 import com.minew.beaconplus.sdk.interfaces.OnBluetoothStateChangedListener
+import com.nabinbhandari.android.permissions.PermissionHandler
+import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Location
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.EmployeeNotFoundService
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.SlaveBeaconService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.EmployeeNotFoundModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.SlaveBeaconModel
 import com.rjsquare.kkmt.databinding.ActivitySearchEmployeeBinding
@@ -46,6 +53,10 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
 import java.util.*
 
 
@@ -61,6 +72,9 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     private val REQUEST_ENABLE_BT = 3
     private lateinit var edtEmployeekkmtID: EditText
 
+    var PDFString: String = ""
+    var photoFileName = "photo.jpg"
+    var photoFile: File? = null
     private var mMtCentralManager: MTCentralManager? = null
     lateinit var BeaconMACList: ArrayList<String>
     lateinit var EmpViewList: ArrayList<ConstraintLayout>
@@ -68,7 +82,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     var HandlerCallavailable = false
 
     private lateinit var mImgClose: ImageView
-    private lateinit var mImgCamera: ImageView
+    private lateinit var imgCamera: ImageView
     private val PERMISSION_COARSE_LOCATION = 2
     lateinit var handler: Handler
     lateinit var runnable: Runnable
@@ -158,6 +172,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         EmpViewList = ArrayList()
         SlaveViewList = ArrayList()
 
+
         SetUpEmpView()
         mCh1 = DB_SearchEmployee.layoutHelperReport.ch1
         mCh2 = DB_SearchEmployee.layoutHelperReport.ch2
@@ -198,11 +213,11 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
         mTxtBacktohome = DB_SearchEmployee.layoutHelperThankyou.txtBacktohome
         mTxtSubmit = DB_SearchEmployee.layoutHelperReport.txtSubmit
-        mImgCamera = DB_SearchEmployee.layoutHelperReport.imgCamera
+        this.imgCamera = DB_SearchEmployee.layoutHelperReport.imgCamera
         mImgClose = DB_SearchEmployee.layoutHelperReport.imgClose
 
         DB_SearchEmployee.cntNotfound.setOnClickListener(this)
-        mImgCamera.setOnClickListener(this)
+        this.imgCamera.setOnClickListener(this)
         mTxtBacktohome.setOnClickListener(this)
         mTxtSubmit.setOnClickListener(this)
         mImgClose.setOnClickListener(this)
@@ -246,6 +261,19 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         for (empView in EmpViewList) {
             empView.visibility = View.INVISIBLE
         }
+
+        DB_SearchEmployee.cntBusinessView.setBackgroundResource(
+            ApplicationClass.GetPinView(
+                this@SearchEmployee,
+                ApplicationClass.selectedMasterModel.mappin!!
+            )
+        )
+
+        Picasso.with(this).load(ApplicationClass.selectedMasterModel.businessimage)
+            .into(DB_SearchEmployee.imgBusiness)
+
+        DB_SearchEmployee.txtBusname.text = ApplicationClass.selectedMasterModel.bussiness_name
+
     }
 
 
@@ -270,8 +298,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 ApplicationClass.selectedMasterModel.businessid.toString()
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<SlaveBeaconService>(
-                    SlaveBeaconService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.SlaveBeaconService>(
+                    NetworkServices.SlaveBeaconService::class.java
                 )
             val call =
                 service.GetSlaveBeaconData(
@@ -495,11 +523,12 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 ApplicationClass.selectedMasterModel.businessid.toString()
 
             params[Constants.paramKey_Reason] = notFoundEmployeeReason
-            params[Constants.paramKey_BusinessName] = notFoundEmployeekkmtid
+            params[Constants.paramKey_KKMTID] = notFoundEmployeekkmtid
+            params[Constants.paramKey_Image] = PDFString
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<EmployeeNotFoundService>(
-                    EmployeeNotFoundService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.EmployeeNotFoundService>(
+                    NetworkServices.EmployeeNotFoundService::class.java
                 )
             val call =
                 service.GetEmployeeNotFoundData(
@@ -690,14 +719,121 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             Bussiness_Location.thisBussiness_Activity.finish()
             finish()
             overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
-        } else if (view == mImgCamera) {
-            Toast.makeText(this, "Employee image capture Comingsoon...", Toast.LENGTH_SHORT).show()
+        } else if (view == this.imgCamera) {
+            TakeCameraPicture()
+
         } else if (view == mImgClose) {
             CloseViews()
             DB_SearchEmployee.cntEmpmainView.visibility = View.VISIBLE
         } else if (view == DB_SearchEmployee.txtUnauthOk) {
             ApplicationClass.UserLogout(this)
         }
+    }
+
+    private fun TakeCameraPicture() {
+        val permissions =
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        Permissions.check(this, permissions, null, null, object : PermissionHandler() {
+            override fun onGranted() {
+                // do your task.
+                selectImageCam()
+            }
+
+            override fun onDenied(
+                context: Context?,
+                deniedPermissions: java.util.ArrayList<String>?
+            ) {
+                super.onDenied(context, deniedPermissions)
+            }
+
+            override fun onBlocked(
+                context: Context?,
+                blockedList: java.util.ArrayList<String>?
+            ): Boolean {
+                return super.onBlocked(context, blockedList)
+            }
+
+            override fun onJustBlocked(
+                context: Context?,
+                justBlockedList: java.util.ArrayList<String>?,
+                deniedPermissions: java.util.ArrayList<String>?
+            ) {
+                super.onJustBlocked(context, justBlockedList, deniedPermissions)
+            }
+        })
+    }
+
+    // Returns the File for a photo stored on disk given the fileName
+    fun getPhotoFileUri(fileName: String): File {
+        val mediaStorageDir =
+            File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "KKMT")
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+            Log.d("KKMT", "failed to create directory")
+        }
+
+        // Return the file target for the photo based on filename
+        return File(mediaStorageDir.path + File.separator + fileName)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode === 1 && resultCode === RESULT_OK) {
+            DB_SearchEmployee.cntLoader.visibility = View.VISIBLE
+            ConvertFileOrImageToString(Uri.fromFile(photoFile))
+        }
+    }
+
+    private fun selectImageCam() {
+        // Initialize intent
+        photoFile = getPhotoFileUri(photoFileName)
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (intent.resolveActivity(packageManager) != null) {
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                val photoURI = FileProvider.getUriForFile(
+                    this,
+                    "com.rjsquare.kkmt.fileprovider",
+                    photoFile!!
+                )
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(intent, 1)
+            }
+        } else {
+            Log.e("TAG", "ActivityNotFound")
+        }
+    }
+
+    fun ConvertFileOrImageToString(sUri: Uri) {
+        //Convert File to Base64String
+        try {
+            val baos = ByteArrayOutputStream()
+            val `in` = contentResolver.openInputStream(sUri)
+            val bytes: ByteArray = getBytes(`in`!!)!!
+
+            PDFString = Base64.encodeToString(bytes, Base64.DEFAULT)
+
+            Log.e("TAG", "ActivityResult: " + PDFString)
+            DB_SearchEmployee.cntLoader.visibility = View.GONE
+        } catch (e: java.lang.Exception) {
+            // TODO: handle exception
+            e.printStackTrace()
+            Log.d("error", "onActivityResult: $e")
+            DB_SearchEmployee.cntLoader.visibility = View.GONE
+        }
+    }
+
+    @Throws(IOException::class)
+    fun getBytes(inputStream: InputStream): ByteArray? {
+        val byteBuffer = ByteArrayOutputStream()
+        val bufferSize = 1024
+        val buffer = ByteArray(bufferSize)
+        var len = 0
+        while (inputStream.read(buffer).also { len = it } != -1) {
+            byteBuffer.write(buffer, 0, len)
+        }
+        return byteBuffer.toByteArray()
     }
 
     override fun onDestroy() {

@@ -31,6 +31,7 @@
                 <include
                     android:id="@+id/nevigation_menuview"
                     layout="@layout/nevigation_menu" />
+
             </LinearLayout>
         </com.google.android.material.navigation.NavigationView>
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -26,7 +26,7 @@ import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingIns
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UploadDocService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UploadDoc_Model
 import com.rjsquare.kkmt.databinding.ActivityUploadDocBinding
 import retrofit2.Call
@@ -228,8 +228,8 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_Document] = fileString
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<UploadDocService>(
-                    UploadDocService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.UploadDocService>(
+                    NetworkServices.UploadDocService::class.java
                 )
             val call =
                 service.UploadDoc(

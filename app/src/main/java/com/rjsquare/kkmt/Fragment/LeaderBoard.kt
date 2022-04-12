@@ -19,6 +19,7 @@ import com.rjsquare.kkmt.Adapter.LeaderboardEmployeeAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.*
 import com.rjsquare.kkmt.databinding.FragmentLeaderBoardBinding
 import retrofit2.Call
@@ -53,14 +54,17 @@ class LeaderBoard : Fragment(), View.OnClickListener {
 //        var rootView = inflater.inflate(R.layout.fragment_leader_board, container, false)
         try {
             Log.e("TAG", "CHECKEMPLOYEE : " + ApplicationClass.isUserEmployee)
-            if (ApplicationClass.isUserEmployee) {
-                DB_LeaderBoard.cntEmporuser.visibility = View.GONE
-                IsCurrentBussiness = false
-                LeaderBoardDataEmployee()
-            } else {
-                LeaderBoardDataCustomer()
-                DB_LeaderBoard.cntEmporuser.visibility = View.GONE
+            if (ApplicationClass.userLogedIn) {
+                if (ApplicationClass.isUserEmployee) {
+                    DB_LeaderBoard.cntEmporuser.visibility = View.GONE
+                    IsCurrentBussiness = false
+                    LeaderBoardDataEmployee()
+                } else {
+                    LeaderBoardDataCustomer()
+                    DB_LeaderBoard.cntEmporuser.visibility = View.GONE
+                }
             }
+
 
             DB_LeaderBoard.txtEmployee.setOnClickListener(this)
             DB_LeaderBoard.txtUser.setOnClickListener(this)
@@ -160,6 +164,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
 
     private fun LeaderBoardDataCustomer() {
         try {
+            DB_LeaderBoard.cntLoader.visibility = View.VISIBLE
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -167,8 +172,8 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<LeaderboardCustomerService>(
-                    LeaderboardCustomerService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.LeaderboardCustomerService>(
+                    NetworkServices.LeaderboardCustomerService::class.java
                 )
             val call = service.GetLeaderBoardData(
                 params,
@@ -176,13 +181,14 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             )
             call.enqueue(object : Callback<LeaderboardCustomer_Model> {
                 override fun onFailure(call: Call<LeaderboardCustomer_Model>, t: Throwable) {
-//                    DB_LeaderBoard.cntLoader.visibility = View.GONE
+                    DB_LeaderBoard.cntLoader.visibility = View.GONE
                 }
 
                 override fun onResponse(
                     call: Call<LeaderboardCustomer_Model>,
                     response: Response<LeaderboardCustomer_Model>
                 ) {
+                    DB_LeaderBoard.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         mLeaderboardCustomer_Model = response.body()!!
                         FillData()
@@ -212,7 +218,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
 
     private fun LeaderBoardDataEmployee() {
         try {
-
+            DB_LeaderBoard.cntLoader.visibility = View.VISIBLE
             Log.e("TAG","CHECKRESEMPLOYEEDATA : ")
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
@@ -223,8 +229,8 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<LeaderboardEmployeeService>(
-                    LeaderboardEmployeeService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.LeaderboardEmployeeService>(
+                    NetworkServices.LeaderboardEmployeeService::class.java
                 )
             val call = service.GetLeaderBoardEmpData(
                 params,
@@ -232,7 +238,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             )
             call.enqueue(object : Callback<LeaderboardEmployee_Model> {
                 override fun onFailure(call: Call<LeaderboardEmployee_Model>, t: Throwable) {
-
+                    DB_LeaderBoard.cntLoader.visibility = View.GONE
                     Log.e("TAG","CHECKRESEMPLOYEEDATA : "+t)
                 }
 
@@ -240,6 +246,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                     call: Call<LeaderboardEmployee_Model>,
                     response: Response<LeaderboardEmployee_Model>
                 ) {
+                    DB_LeaderBoard.cntLoader.visibility = View.GONE
                     Log.e("TAG","CHECKRESEMPLOYEEDATA : "+response.body())
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         mLeaderboardEmployee_Model = response.body()!!

@@ -1,7 +1,6 @@
 package com.rjsquare.kkmt.Activity.Bussiness
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -38,8 +37,7 @@ import com.rjsquare.kkmt.Activity.Review.SearchEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.BusinessNotFoundService
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.MasterBeaconService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.BusinessNotFoundModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
 import com.rjsquare.kkmt.databinding.ActivityLocationBinding
@@ -63,6 +61,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     private lateinit var mMap: GoogleMap
     private lateinit var mCntBussinessname: ConstraintLayout
     private lateinit var mTxtLeave: TextView
+    private lateinit var mTxtBusinessName: TextView
 
     private lateinit var mImgLogo: ImageView
     private lateinit var mCntConfirm: ConstraintLayout
@@ -107,7 +106,8 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             masterList = ArrayList()
 
             mCntBussinessname = DB_BusinessLocation.layoutBussinessReport.cntBussinessname
-            mImgLogo = DB_BusinessLocation.layoutBussinessConfirm.imgLogo
+            mImgLogo = DB_BusinessLocation.layoutBussinessConfirm.imgBusprofile
+            mTxtBusinessName = DB_BusinessLocation.layoutBussinessConfirm.txtBusname
             mCntConfirm = DB_BusinessLocation.layoutBussinessConfirm.cntConfirm
             mCntNotfind = DB_BusinessLocation.layoutBussinessConfirm.cntNotfind
             mImgClose = DB_BusinessLocation.layoutBussinessConfirm.imgClose
@@ -214,8 +214,8 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<MasterBeaconService>(
-                    MasterBeaconService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.MasterBeaconService>(
+                    NetworkServices.MasterBeaconService::class.java
                 )
             val call =
                 service.GetBusinessBeaconData(
@@ -290,8 +290,8 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             params[Constants.paramKey_BusinessName] = notFoundBusinessName
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<BusinessNotFoundService>(
-                    BusinessNotFoundService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.BusinessNotFoundService>(
+                    NetworkServices.BusinessNotFoundService::class.java
                 )
             val call =
                 service.GetBusinessNotFoundData(
@@ -363,8 +363,8 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         val CntView =
             customMarkerView.findViewById<ConstraintLayout>(R.id.cnt_view) as ConstraintLayout
 
-        imageViewPin.setImageResource(GetPin(masterBeaconInfo.mappin!!))
-        CntView.setBackgroundResource(GetPinView(masterBeaconInfo.mappin!!))
+        imageViewPin.setImageResource(ApplicationClass.GetPin(this@Bussiness_Location,masterBeaconInfo.mappin!!))
+        CntView.setBackgroundResource(ApplicationClass.GetPinView(this@Bussiness_Location,masterBeaconInfo.mappin!!))
 
         //Business Image showen
         Log.e("TAG", "IMAGEBUSINESS")
@@ -408,59 +408,6 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         customMarkerView.draw(canvas)
         return returnedBitmap
     }
-
-    @SuppressLint("ResourceType")
-    private fun GetPin(pinColors: String): Int {
-        val pinColor = "#ff" + pinColors.replace("#", "")
-        if (resources.getString(R.color.gray_pin).equals(pinColor, true)) {
-            return R.drawable.ic_pin_gray
-        } else if (resources.getString(R.color.orange_pin).equals(pinColor, true)) {
-            return R.drawable.ic_pin_orange
-        } else if (resources.getString(R.color.green_pin).equals(pinColor, true)) {
-            return R.drawable.ic_pin_green
-        } else if (resources.getString(R.color.pink_pin).equals(pinColor, true)) {
-            return R.drawable.ic_pin_pink
-        } else if (resources.getString(R.color.blue_pin).equals(pinColor, true)) {
-            return R.drawable.ic_pin_blue
-        } else if (resources.getString(R.color.red_pin).equals(pinColor, true)) {
-            return R.drawable.ic_pin_red
-        } else if (resources.getString(R.color.yellow_pin).equals(pinColor, true)) {
-            return R.drawable.ic_pin_yellow
-        } else if (resources.getString(R.color.purple_pin).equals(pinColor, true)) {
-            return R.drawable.ic_pin_purple
-        } else if (resources.getString(R.color.black_pin).equals(pinColor, true)) {
-            return R.drawable.ic_pin_black
-        } else {
-            return R.drawable.ic_pin_red
-        }
-    }
-
-    @SuppressLint("ResourceType")
-    private fun GetPinView(pinColors: String): Int {
-        val pinColor = "#ff" + pinColors.replace("#", "")
-        if (resources.getString(R.color.gray_pin).equals(pinColor, true)) {
-            return R.drawable.map_pin_back_gray
-        } else if (resources.getString(R.color.orange_pin).equals(pinColor, true)) {
-            return R.drawable.map_pin_back_orange
-        } else if (resources.getString(R.color.green_pin).equals(pinColor, true)) {
-            return R.drawable.map_pin_back_green
-        } else if (resources.getString(R.color.pink_pin).equals(pinColor, true)) {
-            return R.drawable.map_pin_back_pink
-        } else if (resources.getString(R.color.blue_pin).equals(pinColor, true)) {
-            return R.drawable.map_pin_back_blue
-        } else if (resources.getString(R.color.red_pin).equals(pinColor, true)) {
-            return R.drawable.map_pin_back_red
-        } else if (resources.getString(R.color.yellow_pin).equals(pinColor, true)) {
-            return R.drawable.map_pin_back_yellow
-        } else if (resources.getString(R.color.purple_pin).equals(pinColor, true)) {
-            return R.drawable.map_pin_back_purple
-        } else if (resources.getString(R.color.black_pin).equals(pinColor, true)) {
-            return R.drawable.map_pin_back_black
-        } else {
-            return R.drawable.map_pin_back_red
-        }
-    }
-
     private fun SetBusinessViews() {
         Log.e("TAG", "COLORLIST: " + masterList.size)
         for (BusinessPos in 0..masterList.size - 1) {
@@ -615,7 +562,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             } else if (view == mCntBackToHome) {
                 onBackPressed()
             } else if (view == DB_BusinessLocation.cntCompany) {
-                ShowBusniessConfirmation()
+//                ShowBusniessConfirmation()
             } else if (view == mImgClose) {
                 ShowBusniessMainView()
             } else if (view == mImgBusRepClose) {
@@ -704,9 +651,13 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 //                    Toast.LENGTH_SHORT
 //                ).show()
 
-
-                ShowBusniessConfirmation()
                 ApplicationClass.selectedMasterModel = masterList[marker.zIndex.toInt()]
+
+                Picasso.with(this)
+                    .load(ApplicationClass.selectedMasterModel.businessimage)
+                    .into(mImgLogo)
+                mTxtBusinessName.text = ApplicationClass.selectedMasterModel.bussiness_name
+                ShowBusniessConfirmation()
 
 //                BusinessCheckInFlow(marker.zIndex.toInt())
 

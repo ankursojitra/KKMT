@@ -12,10 +12,7 @@ import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingIns
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.VideoQuestionCompleteService
-import com.rjsquare.kkmt.RetrofitInstance.Events.VideoQuestionComplete_Model
-import com.rjsquare.kkmt.RetrofitInstance.Events.VideosService
-import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
+import com.rjsquare.kkmt.RetrofitInstance.Events.*
 import com.rjsquare.kkmt.databinding.ActivityResultQuestionBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -87,8 +84,8 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<VideoQuestionCompleteService>(
-                    VideoQuestionCompleteService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.VideoQuestionCompleteService>(
+                    NetworkServices.VideoQuestionCompleteService::class.java
                 )
             val call =
                 service.GetVideoQuestionComplete(
