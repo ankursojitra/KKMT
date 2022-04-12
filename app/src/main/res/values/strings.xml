@@ -60,6 +60,14 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="businessscan">Business Search</string>
+    <string name="employeescan">Employee Search</string>
+    <string name="businessrason1">I am at diffrent location</string>
+    <string name="businessrason2">Location is Next Door</string>
+    <string name="businessrason3">Wrong Location Name</string>
+    <string name="empreson1">I am not seeing my CSR</string>
+    <string name="empreson2">I am seeing other employees</string>
+    <string name="empreson3">Wrong Location Name</string>
     <string name="store_msg">YOUR FEEDBACK MATTERS.
 REDEEM CREDITS FOR GOODS &amp; SERVICES</string>
 

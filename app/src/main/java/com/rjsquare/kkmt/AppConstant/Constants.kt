@@ -27,6 +27,8 @@ class Constants {
         val paramKey_Credit = "credit"
         val paramKey_Usertype = "usertype"
         val paramKey_limit = "limit"
+        val paramKey_Reason = "reason"
+        val paramKey_BusinessName = "busssines_name"
         val paramKey_BeconList = "becon_list[]"
         val User = "U"
 
