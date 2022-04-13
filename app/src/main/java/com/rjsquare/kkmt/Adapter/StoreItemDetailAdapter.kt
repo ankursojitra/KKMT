@@ -38,7 +38,7 @@ class StoreItemDetailAdapter(
             holder.DB_RawStoreFrameBinding.txtItemName.text = mStoreItemDetailModel.title
             holder.DB_RawStoreFrameBinding.txtItemcredit.text = mStoreItemDetailModel.credit_required
             Picasso.with(moContext).load(mStoreItemDetailModel.image!![0])
-                .into(holder.DB_RawStoreFrameBinding.imgStoreitem)
+                .placeholder(R.drawable.ic_expe_logo).into(holder.DB_RawStoreFrameBinding.imgStoreitem)
 
 
         } catch (NE: NullPointerException) {

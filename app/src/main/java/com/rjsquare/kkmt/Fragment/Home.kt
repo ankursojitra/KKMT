@@ -18,9 +18,11 @@ import com.rjsquare.kkmt.Activity.Notifications.NotificationList
 import com.rjsquare.kkmt.Activity.Profile.Profile
 import com.rjsquare.kkmt.Activity.Store.Store
 import com.rjsquare.kkmt.Activity.Video.Video
+import com.rjsquare.kkmt.Activity.function
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.FragmentHomeBinding
+import com.squareup.picasso.Picasso
 
 class Home : Fragment(), View.OnClickListener {
     lateinit var DB_FHome: FragmentHomeBinding
@@ -35,12 +37,12 @@ class Home : Fragment(), View.OnClickListener {
             DB_FHome.cntLogin.visibility = View.GONE
             DB_FHome.cntProfileView.visibility = View.VISIBLE
 
-            var userImage = ""
-//            + ApplicationClass.userInfoModel.data!!.userimage!!.toString()
+            var userImage = ApplicationClass.userInfoModel.data!!.userimage
             //Set User Data
             val handler = Handler()
             val runnable = Runnable {
 //                Picasso.with(requireActivity()).load(userImage)
+//                    .placeholder(R.drawable.ic_expe_logo)
 //                    .into(DB_FHome.imgProfile)
             }
             handler.postDelayed(runnable, 1500)
@@ -150,23 +152,23 @@ class Home : Fragment(), View.OnClickListener {
         try {
             if (ApplicationClass.userLogedIn) {
                 if (view == DB_FHome.cardViewStore) {
-                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Store::class.java))
+                    function.NextScreen(requireActivity(),Intent(requireActivity(), Store::class.java))
                 } else if (view == DB_FHome.cardViewEvent) {
-                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Events::class.java))
+                    function.NextScreen(requireActivity(),Intent(requireActivity(), Events::class.java))
                 } else if (view == DB_FHome.cardViewNotify) {
                     ApplicationClass. NextScreen(requireActivity(),Intent(requireActivity(), NotificationList::class.java))
                 } else if (view == DB_FHome.cardViewLuckydraw) {
-                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), LuckyDraw::class.java))
+                    function.NextScreen(requireActivity(),Intent(requireActivity(), LuckyDraw::class.java))
                 } else if (view == DB_FHome.cardViewVideos) {
-                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Video::class.java))
+                    function.NextScreen(requireActivity(),Intent(requireActivity(), Video::class.java))
                 } else if (view == DB_FHome.crdProfile) {
-                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Profile::class.java))
+                    function.NextScreen(requireActivity(),Intent(requireActivity(), Profile::class.java))
                 }
             } else {
                 if (view == DB_FHome.cardViewEvent) {
-                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Events::class.java))
+                    function.NextScreen(requireActivity(),Intent(requireActivity(), Events::class.java))
                 } else if (view == DB_FHome.cardViewStore) {
-                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Store::class.java))
+                    function.NextScreen(requireActivity(),Intent(requireActivity(), Store::class.java))
                 } else {
                     HomeActivity.DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
                     ApplicationClass.UserLogIn(requireActivity())

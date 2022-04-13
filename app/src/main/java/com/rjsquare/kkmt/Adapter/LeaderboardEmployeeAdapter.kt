@@ -16,6 +16,7 @@ import com.rjsquare.kkmt.Model.LeaderBoardModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.EmpInfo
 import com.rjsquare.kkmt.databinding.RawLeaderboardFrameBinding
+import com.squareup.picasso.Picasso
 
 class LeaderboardEmployeeAdapter(
     var moContext: Context,
@@ -58,6 +59,7 @@ class LeaderboardEmployeeAdapter(
                 holder.employeeInfoSelected!!.credit
             holder.DB_RawLeaderboardFrameBinding.txtRank.text = holder.employeeInfoSelected!!.rank
 
+            Picasso.with(moContext).load(holder.employeeInfoSelected!!.userimage).placeholder(R.drawable.ic_expe_logo).into( holder.DB_RawLeaderboardFrameBinding.imgProfile)
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -74,7 +76,7 @@ class LeaderboardEmployeeAdapter(
     }
 
     override fun getItemCount(): Int {
-        Log.e("TAG", "SizeOfLeaderBoard : " + moArrayList.size)
+//        Log.e("TAG", "SizeOfLeaderBoard : " + moArrayList.size)
         return moArrayList.size
     }
 

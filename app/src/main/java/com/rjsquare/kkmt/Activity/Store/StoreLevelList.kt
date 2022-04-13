@@ -1,11 +1,13 @@
 package com.rjsquare.kkmt.Activity.Store
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.rjsquare.kkmt.Activity.function
 import com.rjsquare.kkmt.Adapter.StoreLevelItemDetailAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mStoreLevelListModelSelected
@@ -22,6 +24,7 @@ class StoreLevelList : AppCompatActivity(), View.OnClickListener {
 
 
     companion object {
+        lateinit var thisStoreLevelActivity: Activity
         lateinit var DB_StoreLevelList: ActivityStoreLevelListBinding
         lateinit var selectedStoreItemModel: StoreList_Model.StoreItemData.StoreItem
     }
@@ -31,6 +34,7 @@ class StoreLevelList : AppCompatActivity(), View.OnClickListener {
         DB_StoreLevelList = DataBindingUtil.setContentView(this, R.layout.activity_store_level_list)
 
         try {
+            thisStoreLevelActivity = this
             ApplicationClass.StatusTextWhite(this, true)
 
             DB_StoreLevelList.imgBack.setOnClickListener(this)
@@ -99,7 +103,7 @@ class StoreLevelList : AppCompatActivity(), View.OnClickListener {
                 DB_StoreLevelList.cntConfirmation.visibility = View.GONE
             } else if (view == DB_StoreLevelList.cntRedeemConfirm) {
                 DB_StoreLevelList.cntConfirmation.visibility = View.GONE
-                ApplicationClass.NextScreen(this, Intent(this, StoreItemRedeemConfirm::class.java))
+                function.NextScreen(this, Intent(this, StoreItemRedeemConfirm::class.java))
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

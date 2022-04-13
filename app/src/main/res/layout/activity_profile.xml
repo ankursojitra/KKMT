@@ -99,10 +99,10 @@
                         app:layout_constraintStart_toStartOf="parent">
 
                         <ImageView
-                            android:id="@+id/imageView6"
+                            android:id="@+id/img_userProfile"
                             android:layout_width="@dimen/_75dp"
                             android:layout_height="@dimen/_75dp"
-                            android:scaleType="centerCrop"
+                            android:scaleType="fitCenter"
                             android:src="@drawable/image"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -125,7 +125,7 @@
             app:layout_constraintStart_toStartOf="@+id/cardView_main" />
 
         <ImageView
-            android:id="@+id/imageView11"
+            android:id="@+id/img_userverified"
             android:layout_width="@dimen/_25dp"
             android:layout_height="@dimen/_25dp"
             android:elevation="@dimen/_8dp"

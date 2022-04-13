@@ -37,7 +37,7 @@ class PrizesDetailAdapter(
             holder.lStoreDetailModelSelected = mPrizeDetailModel
             holder.DB_RawPrizeFrameBinding.txtPrizeName.text = mPrizeDetailModel.title
             Picasso.with(moContext).load(mPrizeDetailModel.image!![0])
-                .into(holder.DB_RawPrizeFrameBinding.imgPrize)
+                .placeholder(R.drawable.ic_expe_logo).into(holder.DB_RawPrizeFrameBinding.imgPrize)
 
 
         } catch (NE: NullPointerException) {

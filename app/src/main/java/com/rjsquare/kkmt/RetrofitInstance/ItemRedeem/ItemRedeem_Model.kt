@@ -12,7 +12,7 @@ class ItemRedeem_Model : Serializable {
     var message: String? = null
 
     @SerializedName("data")
-    var data: ArrayList<StoreItemRedeem>? = null
+    var data: StoreItemRedeem? = null
 
     class StoreItemRedeem {
 

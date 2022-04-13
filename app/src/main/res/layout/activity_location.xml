@@ -282,7 +282,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lato_heavy"
                         android:gravity="center"
-                        android:text="@string/businessscan"
+                        android:text="@string/attention"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_14dp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -377,7 +377,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lato_heavy"
                         android:gravity="center"
-                        android:text="@string/app_name"
+                        android:text="@string/attention"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_14dp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -433,5 +433,17 @@
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/img_founds"
+            android:layout_width="@dimen/_100dp"
+            android:layout_height="@dimen/_100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/comp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

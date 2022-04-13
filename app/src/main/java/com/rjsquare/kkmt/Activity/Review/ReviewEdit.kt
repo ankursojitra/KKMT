@@ -36,7 +36,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             DB_ReviewEdit.txtReviewName.text = ApplicationClass.Selected_ReviewEmp_Model.EmpName
 
             Picasso.with(this).load(ApplicationClass.Selected_ReviewEmp_Model.EmpImage)
-                .into(DB_ReviewEdit.imgProfile)
+                .placeholder(R.drawable.ic_expe_logo).into(DB_ReviewEdit.imgProfile)
 
             DB_ReviewEdit.txtSubmit.setOnClickListener(this)
             DB_ReviewEdit.imgBack.setOnClickListener(this)

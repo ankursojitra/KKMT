@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -35,6 +36,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
         lateinit var DB_StoreItemRedeemConfirm: ActivityStoreItemRedeemConfirmBinding
         var DeliveryAddress = ""
         var IsPickUpStore = false
+        var ItemRedeemed = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,15 +139,14 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
 
             })
             DB_StoreItemRedeemConfirm.chPickupLocation.isChecked = true
-            IsPickUpStore = true
-
-            DeliveryAddress = DB_StoreItemRedeemConfirm.chPickUp1.text.toString()
+            DB_StoreItemRedeemConfirm.chPickUp1.isChecked = true
 
             DB_StoreItemRedeemConfirm.cntItemredeemSubmit.setOnClickListener(this)
             DB_StoreItemRedeemConfirm.cntRedeemConfirm.setOnClickListener(this)
             DB_StoreItemRedeemConfirm.cntRedeemCancel.setOnClickListener(this)
             DB_StoreItemRedeemConfirm.imgBack.setOnClickListener(this)
-
+            DB_StoreItemRedeemConfirm.txtAlertok.setOnClickListener(this)
+            DB_StoreItemRedeemConfirm.txtUnauthOk.setOnClickListener(this)
             SetUpItemData()
             LocationList = ArrayList()
             GetPickUpLocation()
@@ -166,9 +167,10 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
 
     private fun SetUpItemData() {
         StoreLevelList.selectedStoreItemModel
-        Picasso.with(this).load(StoreLevelList.selectedStoreItemModel.image!![0]).into(
-            DB_StoreItemRedeemConfirm.imgRedeemItem
-        )
+        Picasso.with(this).load(StoreLevelList.selectedStoreItemModel.image!![0])
+            .placeholder(R.drawable.ic_expe_logo).into(
+                DB_StoreItemRedeemConfirm.imgRedeemItem
+            )
         DB_StoreItemRedeemConfirm.txtRedeemItemName.text =
             StoreLevelList.selectedStoreItemModel.title
         DB_StoreItemRedeemConfirm.txtRedeemItemCredit.text =
@@ -238,6 +240,12 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!.toString()
 
+            params[Constants.paramKey_ItemId] = StoreLevelList.selectedStoreItemModel.id!!
+            params[Constants.paramKey_ItemCredit] =
+                StoreLevelList.selectedStoreItemModel.credit_required!!
+            params[Constants.paramKey_LocationType] = GetLocation()
+            params[Constants.paramKey_Location] = DeliveryAddress
+
             DB_StoreItemRedeemConfirm.cntLoader.visibility = View.VISIBLE
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.ItemRedeemService>(
@@ -252,18 +260,19 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             call.enqueue(object : Callback<ItemRedeem_Model> {
                 override fun onFailure(call: Call<ItemRedeem_Model>, t: Throwable) {
                     DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
-                    Log.e("GetResponsesasXASX", "Hell: ")
+                    Log.e("GetResponsesasXASX", "Hell: " + t)
                 }
 
                 override fun onResponse(
                     call: Call<ItemRedeem_Model>,
                     response: Response<ItemRedeem_Model>
                 ) {
+                    Log.e("GetResponsesasXASX", "Hell: " + Gson().toJson(response.body()!!))
                     DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        Store.thisStoreActivity.finish()
-                        finish()
-                        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+                        ItemRedeemed = true
+                        DB_StoreItemRedeemConfirm.txtAlertmsg.text = response.body()!!.message
+                        DB_StoreItemRedeemConfirm.cntAlert.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_StoreItemRedeemConfirm.cntUnAuthorized.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
@@ -291,10 +300,21 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun GetLocation(): String {
+        if (IsPickUpStore) {
+            return "P"
+        } else {
+            return "D"
+        }
+    }
+
     private fun SetUpDataUI() {
         DB_StoreItemRedeemConfirm.chPickUp1.setText(LocationList[0].location)
         DB_StoreItemRedeemConfirm.chPickUp2.setText(LocationList[1].location)
         DB_StoreItemRedeemConfirm.chPickUp3.setText(LocationList[2].location)
+
+        IsPickUpStore = true
+        DeliveryAddress = DB_StoreItemRedeemConfirm.chPickUp1.text.toString()
 
     }
 
@@ -337,9 +357,9 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
                 return
             }
             SetUpConfirmUI()
-            DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
             DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.VISIBLE
         } else if (view == DB_StoreItemRedeemConfirm.cntRedeemConfirm) {
+            DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
             ItemRedeemRequest()
         } else if (view == DB_StoreItemRedeemConfirm.cntRedeemCancel) {
             DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
@@ -348,7 +368,14 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
         } else if (view == DB_StoreItemRedeemConfirm.txtUnauthOk) {
             ApplicationClass.UserLogout(this)
         } else if (view == DB_StoreItemRedeemConfirm.txtAlertok) {
-            DB_StoreItemRedeemConfirm.cntAlert.visibility = View.GONE
+            if (ItemRedeemed) {
+//                Store.thisStoreActivity.finish()
+//                StoreLevelList.thisStoreLevelActivity.finish()
+                finish()
+                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+            } else {
+                DB_StoreItemRedeemConfirm.cntAlert.visibility = View.GONE
+            }
         }
     }
 
@@ -361,5 +388,15 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
                 DB_StoreItemRedeemConfirm.chDeliveryLocation.text.toString()
         }
         DB_StoreItemRedeemConfirm.txtRedeemaddressLbl.text = DeliveryAddress
+
+        Picasso.with(this).load(StoreLevelList.selectedStoreItemModel.image!![0]).into(
+            DB_StoreItemRedeemConfirm.imgRedeemItemConfirm
+        )
+        DB_StoreItemRedeemConfirm.txtRedeemItemNameConfirm.text =
+            StoreLevelList.selectedStoreItemModel.title!!
+        DB_StoreItemRedeemConfirm.txtRedeemItemCreditConfirm.text =
+            StoreLevelList.selectedStoreItemModel.credit_required
+
+
     }
 }

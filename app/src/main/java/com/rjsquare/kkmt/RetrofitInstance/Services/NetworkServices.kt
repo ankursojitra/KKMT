@@ -198,8 +198,7 @@ object NetworkServices  {
 
         //PickUp Location Service
         interface PickUpLocationService {
-            @POST("api-peckup-location")
-            @FormUrlEncoded
+            @GET("api-peckup-location")
             fun GetPickUpLocationData(): Call<PickUpLocation_Model>
         }
 

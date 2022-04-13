@@ -61,7 +61,7 @@ class EventsAdapter(
             holder.DB_RawEventsFrameBinding.txtEventTime.text = mEventsModel.time
             holder.DB_RawEventsFrameBinding.txtEventDate.text = mEventsModel.date
             Picasso.with(moContext).load(mEventsModel.image!![0])
-                .into(holder.DB_RawEventsFrameBinding.imgEvent)
+                .placeholder(R.drawable.ic_expe_logo).into(holder.DB_RawEventsFrameBinding.imgEvent)
 //            Glide
 //                .with(moContext)
 //                .load(mEventsModel.image!![0])

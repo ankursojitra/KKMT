@@ -71,14 +71,14 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             DB_ReviewDisplay.txtReviewName.text = ApplicationClass.Selected_ReviewEmp_Model.EmpName
 
             Picasso.with(this).load(ApplicationClass.Selected_ReviewEmp_Model.EmpImage)
-                .into(DB_ReviewDisplay.imgProfile)
+                .placeholder(R.drawable.ic_expe_logo).into(DB_ReviewDisplay.imgProfile)
         } else {
             Log.e("TAG", "CHECKEditFlow")
             //Customer History Screen Call
             val SelectedEmpInfo = ApplicationClass.empReviewModelSelected
             DB_ReviewDisplay.txtReviewName.text = SelectedEmpInfo!!.username
             Picasso.with(this).load(SelectedEmpInfo.userimage)
-                .into(DB_ReviewDisplay.imgProfile)
+                .placeholder(R.drawable.ic_expe_logo).into(DB_ReviewDisplay.imgProfile)
             DB_ReviewDisplay.cntLoader.visibility = View.VISIBLE
             GetLatestReviewInfo()
         }

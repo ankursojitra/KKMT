@@ -142,7 +142,7 @@ class EmployeeHistory : Fragment() {
     }
 
     private fun SetOverallRatingData() {
-        var OverallTotalAmount = EmpHistory.data!!.overall!!.toal_sales.toString().toInt()
+        var OverallTotalAmount = EmpHistory.data!!.overall!!.total_sales.toString().toInt()
         var OverallTotalReview = EmpHistory.data!!.overall!!.total_star_count.toString().toInt()
         var OverallFiveStar =
             EmpHistory.data!!.overall!!.total_star_type_wise!!.five_star.toString().toInt()
