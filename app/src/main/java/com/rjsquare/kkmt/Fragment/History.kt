@@ -3,7 +3,6 @@ package com.rjsquare.kkmt.Fragment
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +14,11 @@ import com.rjsquare.kkmt.Activity.Review.ReviewList
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mArray_ReviewModel
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mReviewModel
+import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.userLogedIn
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Model.ReviewModel
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.CustomerHistoryService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.FragmentHistoryBinding
 import com.squareup.picasso.Picasso
@@ -69,8 +69,10 @@ class History : Fragment(), View.OnClickListener {
 
             lArray_ReviewModel = ArrayList()
 
-            DB_FHistory.cntLoader.visibility = View.GONE
-            HistoryReviewData()
+
+            if (userLogedIn) {
+                HistoryReviewData()
+            }
 
             HomeActivity.mCntLoader.visibility = View.VISIBLE
             HistoryView = true
@@ -92,6 +94,7 @@ class History : Fragment(), View.OnClickListener {
 
     private fun HistoryReviewData() {
         try {
+            DB_FHistory.cntLoader.visibility = View.VISIBLE
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -100,8 +103,8 @@ class History : Fragment(), View.OnClickListener {
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<CustomerHistoryService>(
-                    CustomerHistoryService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.CustomerHistoryService>(
+                    NetworkServices.CustomerHistoryService::class.java
                 )
             val call =
                 service.GetCustomerHistoryData(

@@ -14,13 +14,12 @@ import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.EmployeeHistoryService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.EmployeeHistoryModel
 import com.rjsquare.kkmt.databinding.FragmentEmployeeHistoryBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 
 class EmployeeHistory : Fragment() {
 
@@ -61,8 +60,9 @@ class EmployeeHistory : Fragment() {
             EmpHistoryView = true
 
             EmpHistory = EmployeeHistoryModel()
-            DB_FEmployeeHistory.cntLoader.visibility = View.VISIBLE
-            HistoryEmpReviewData()
+            if (ApplicationClass.userLogedIn) {
+                HistoryEmpReviewData()
+            }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -81,6 +81,7 @@ class EmployeeHistory : Fragment() {
 
     private fun HistoryEmpReviewData() {
         try {
+            DB_FEmployeeHistory.cntLoader.visibility = View.VISIBLE
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -89,8 +90,8 @@ class EmployeeHistory : Fragment() {
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<EmployeeHistoryService>(
-                    EmployeeHistoryService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.EmployeeHistoryService>(
+                    NetworkServices.EmployeeHistoryService::class.java
                 )
             val call =
                 service.GetEmployeeHistoryData(

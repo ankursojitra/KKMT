@@ -14,7 +14,7 @@ import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.ReviewDetailService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewDetailModel
 import com.rjsquare.kkmt.databinding.ActivityReviewShowBinding
 import com.squareup.picasso.Picasso
@@ -97,8 +97,8 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                 ApplicationClass.empReviewModelSelected!!.id!!
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<ReviewDetailService>(
-                    ReviewDetailService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.ReviewDetailService>(
+                    NetworkServices.ReviewDetailService::class.java
                 )
             val call =
                 service.GetReviewDetailData(

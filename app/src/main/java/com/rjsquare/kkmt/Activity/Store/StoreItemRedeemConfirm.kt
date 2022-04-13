@@ -12,20 +12,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.EventsService
-import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
-import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.PickUpLocationService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
+import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.ItemRedeem_Model
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.PickUpLocation_Model
 import com.rjsquare.kkmt.databinding.ActivityStoreItemRedeemConfirmBinding
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.HashMap
 
 class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
 
-    lateinit var LocationList : ArrayList<PickUpLocation_Model.LocationData>
+    lateinit var LocationList: ArrayList<PickUpLocation_Model.LocationData>
     override fun onBackPressed() {
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
@@ -41,7 +41,6 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_StoreItemRedeemConfirm =
             DataBindingUtil.setContentView(this, R.layout.activity_store_item_redeem_confirm)
-//        setContentView(R.layout.activity_store_item_redeem_confirm)
         try {
             ApplicationClass.StatusTextWhite(this, true)
 
@@ -131,9 +130,9 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
                             this@StoreItemRedeemConfirm,
                             DB_StoreItemRedeemConfirm.cntTopView
                         )
-                        return true;
+                        return true
                     }
-                    return false;
+                    return false
                 }
 
             })
@@ -147,6 +146,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             DB_StoreItemRedeemConfirm.cntRedeemCancel.setOnClickListener(this)
             DB_StoreItemRedeemConfirm.imgBack.setOnClickListener(this)
 
+            SetUpItemData()
             LocationList = ArrayList()
             GetPickUpLocation()
         } catch (NE: NullPointerException) {
@@ -164,20 +164,23 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun SetUpItemData() {
+        StoreLevelList.selectedStoreItemModel
+        Picasso.with(this).load(StoreLevelList.selectedStoreItemModel.image!![0]).into(
+            DB_StoreItemRedeemConfirm.imgRedeemItem
+        )
+        DB_StoreItemRedeemConfirm.txtRedeemItemName.text =
+            StoreLevelList.selectedStoreItemModel.title
+        DB_StoreItemRedeemConfirm.txtRedeemItemCredit.text =
+            StoreLevelList.selectedStoreItemModel.credit_required
+    }
+
     private fun GetPickUpLocation() {
         try {
-
-            //Here the json data is add to a hash map with key data
-            val params: MutableMap<String, String> =
-                HashMap()
-//            params[ApplicationClass.paramKey_PageNo] = pageNo
-//            params[ApplicationClass.paramKey_limit] = PagePerlimit
-//                ApplicationClass.userInfoModel.data!!.userid.toString()
-//            params[ApplicationClass.paramKey_Selfie] = fileString
-
+            DB_StoreItemRedeemConfirm.cntLoader.visibility = View.VISIBLE
             val service =
-                ApiCallingInstance.retrofitInstance.create<PickUpLocationService>(
-                    PickUpLocationService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.PickUpLocationService>(
+                    NetworkServices.PickUpLocationService::class.java
                 )
             val call =
                 service.GetPickUpLocationData()
@@ -193,8 +196,82 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
                     response: Response<PickUpLocation_Model>
                 ) {
                     DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
-                    LocationList.addAll(response.body()!!.data!!)
-                    SetUpDataUI()
+
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        LocationList.addAll(response.body()!!.data!!)
+                        SetUpDataUI()
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        DB_StoreItemRedeemConfirm.cntUnAuthorized.visibility = View.VISIBLE
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+
+                    } else {
+                        DB_StoreItemRedeemConfirm.txtAlertmsg.text = response.body()!!.message
+                        DB_StoreItemRedeemConfirm.cntAlert.visibility = View.VISIBLE
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+    }
+
+    private fun ItemRedeemRequest() {
+        try {
+            DB_StoreItemRedeemConfirm.cntLoader.visibility = View.VISIBLE
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+
+            params[Constants.paramKey_UserId] =
+                ApplicationClass.userInfoModel.data!!.userid!!.toString()
+
+            DB_StoreItemRedeemConfirm.cntLoader.visibility = View.VISIBLE
+            val service =
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.ItemRedeemService>(
+                    NetworkServices.ItemRedeemService::class.java
+                )
+            val call =
+                service.ItemRedeemData(
+                    params,
+                    ApplicationClass.userInfoModel.data!!.access_token!!.toString()
+                )
+
+            call.enqueue(object : Callback<ItemRedeem_Model> {
+                override fun onFailure(call: Call<ItemRedeem_Model>, t: Throwable) {
+                    DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
+                    Log.e("GetResponsesasXASX", "Hell: ")
+                }
+
+                override fun onResponse(
+                    call: Call<ItemRedeem_Model>,
+                    response: Response<ItemRedeem_Model>
+                ) {
+                    DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        Store.thisStoreActivity.finish()
+                        finish()
+                        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        DB_StoreItemRedeemConfirm.cntUnAuthorized.visibility = View.VISIBLE
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+
+                    } else {
+                        DB_StoreItemRedeemConfirm.txtAlertmsg.text = response.body()!!.message
+                        DB_StoreItemRedeemConfirm.cntAlert.visibility = View.VISIBLE
+                    }
                 }
             })
         } catch (E: Exception) {
@@ -215,9 +292,9 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun SetUpDataUI() {
-        DB_StoreItemRedeemConfirm.chPickUp1.text = LocationList[0].location
-        DB_StoreItemRedeemConfirm.chPickUp2.text = LocationList[1].location
-        DB_StoreItemRedeemConfirm.chPickUp3.text = LocationList[2].location
+        DB_StoreItemRedeemConfirm.chPickUp1.setText(LocationList[0].location)
+        DB_StoreItemRedeemConfirm.chPickUp2.setText(LocationList[1].location)
+        DB_StoreItemRedeemConfirm.chPickUp3.setText(LocationList[2].location)
 
     }
 
@@ -263,13 +340,15 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
             DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.VISIBLE
         } else if (view == DB_StoreItemRedeemConfirm.cntRedeemConfirm) {
-            Store.thisStoreActivity.finish()
-            finish()
-            overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+            ItemRedeemRequest()
         } else if (view == DB_StoreItemRedeemConfirm.cntRedeemCancel) {
             DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
-        }else if (view == DB_StoreItemRedeemConfirm.imgBack) {
+        } else if (view == DB_StoreItemRedeemConfirm.imgBack) {
             onBackPressed()
+        } else if (view == DB_StoreItemRedeemConfirm.txtUnauthOk) {
+            ApplicationClass.UserLogout(this)
+        } else if (view == DB_StoreItemRedeemConfirm.txtAlertok) {
+            DB_StoreItemRedeemConfirm.cntAlert.visibility = View.GONE
         }
     }
 

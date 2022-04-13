@@ -3,9 +3,12 @@ package com.rjsquare.kkmt.Fragment
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.rjsquare.kkmt.Activity.Events.Events
@@ -27,6 +30,34 @@ class Home : Fragment(), View.OnClickListener {
         }
     }
 
+    private fun SetupUserLogInViewAndData() {
+        if (ApplicationClass.userLogedIn) {
+            DB_FHome.cntLogin.visibility = View.GONE
+            DB_FHome.cntProfileView.visibility = View.VISIBLE
+
+            var userImage = ""
+//            + ApplicationClass.userInfoModel.data!!.userimage!!.toString()
+            //Set User Data
+            val handler = Handler()
+            val runnable = Runnable {
+//                Picasso.with(requireActivity()).load(userImage)
+//                    .into(DB_FHome.imgProfile)
+            }
+            handler.postDelayed(runnable, 1500)
+
+            DB_FHome.txtProfName.text = ApplicationClass.userInfoModel.data!!.username
+
+            DB_FHome.txtLevel.text =
+                "Level : " + ApplicationClass.userInfoModel.data!!.credit_details!!.level
+
+            DB_FHome.txtTotalCredits.text =
+                ApplicationClass.userInfoModel.data!!.credit_details!!.credit
+        } else {
+            DB_FHome.cntLogin.visibility = View.VISIBLE
+            DB_FHome.cntProfileView.visibility = View.GONE
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,6 +72,9 @@ class Home : Fragment(), View.OnClickListener {
             DB_FHome.cardViewLuckydraw.setOnClickListener(this)
             DB_FHome.cardViewVideos.setOnClickListener(this)
             DB_FHome.crdProfile.setOnClickListener(this)
+
+            SetupUserLogInViewAndData()
+            SetUpUserVerified()
 
             HomeActivity.mCntLoader.visibility = View.GONE
 
@@ -62,7 +96,6 @@ class Home : Fragment(), View.OnClickListener {
                 DB_FHome.txtVideos.text = "Videos"
             }
 
-            SetUpHomeUIData()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -80,11 +113,25 @@ class Home : Fragment(), View.OnClickListener {
         return DB_FHome.root
     }
 
-    private fun SetUpHomeUIData() {
-        DB_FHome.txtLevel.text = "Level : "+ ApplicationClass.userInfoModel.data!!.credit_details!!.level
-        DB_FHome.txtTotalCredits.text = ApplicationClass.userInfoModel.data!!.credit_details!!.credit
-        DB_FHome.txtVerified.text = if (ApplicationClass.userInfoModel.data!!.approve.equals("yes",true)) "Verified" else "Unverified"
-        DB_FHome.txtProfName.text = ApplicationClass.userInfoModel.data!!.username
+    private fun SetUpUserVerified() {
+        if (ApplicationClass.isApprove) {
+            DB_FHome.imgVerified.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireActivity(),
+                    R.drawable.ic_verified
+                )
+            )
+            DB_FHome.txtVerified.text = getString(R.string.verified)
+
+        } else {
+            DB_FHome.imgVerified.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireActivity(),
+                    R.drawable.ic_nonverified
+                )
+            )
+            DB_FHome.txtVerified.text = getString(R.string.unverified)
+        }
     }
 
     companion object {
@@ -101,30 +148,29 @@ class Home : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (view == DB_FHome.cardViewStore) {
-                var StoreIntent = Intent(requireActivity(), Store::class.java)
-                startActivity(StoreIntent)
-                requireActivity().overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_FHome.cardViewEvent) {
-                var EventIntent = Intent(requireActivity(), Events::class.java)
-                startActivity(EventIntent)
-                requireActivity().overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_FHome.cardViewNotify) {
-                var NotifyIntent = Intent(requireActivity(), NotificationList::class.java)
-                startActivity(NotifyIntent)
-                requireActivity().overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_FHome.cardViewLuckydraw) {
-                var LuckyDrawIntent = Intent(requireActivity(), LuckyDraw::class.java)
-                startActivity(LuckyDrawIntent)
-                requireActivity().overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_FHome.cardViewVideos) {
-                var VideosIntent = Intent(requireActivity(), Video::class.java)
-                startActivity(VideosIntent)
-                requireActivity().overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_FHome.crdProfile) {
-                var VideosIntent = Intent(requireActivity(), Profile::class.java)
-                startActivity(VideosIntent)
-                requireActivity().overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+            if (ApplicationClass.userLogedIn) {
+                if (view == DB_FHome.cardViewStore) {
+                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Store::class.java))
+                } else if (view == DB_FHome.cardViewEvent) {
+                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Events::class.java))
+                } else if (view == DB_FHome.cardViewNotify) {
+                    ApplicationClass. NextScreen(requireActivity(),Intent(requireActivity(), NotificationList::class.java))
+                } else if (view == DB_FHome.cardViewLuckydraw) {
+                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), LuckyDraw::class.java))
+                } else if (view == DB_FHome.cardViewVideos) {
+                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Video::class.java))
+                } else if (view == DB_FHome.crdProfile) {
+                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Profile::class.java))
+                }
+            } else {
+                if (view == DB_FHome.cardViewEvent) {
+                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Events::class.java))
+                } else if (view == DB_FHome.cardViewStore) {
+                    ApplicationClass.NextScreen(requireActivity(),Intent(requireActivity(), Store::class.java))
+                } else {
+                    HomeActivity.DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                    ApplicationClass.UserLogIn(requireActivity())
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -141,4 +187,6 @@ class Home : Fragment(), View.OnClickListener {
         }
 
     }
+
+
 }

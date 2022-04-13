@@ -23,7 +23,7 @@ import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.isUserEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mLogInInfo_Model
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.LogInCallService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
 import com.rjsquare.kkmt.databinding.ActivityLoginBinding
 import retrofit2.Call
@@ -96,8 +96,8 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
             params[Constants.paramKey_MobileNo] = DB_Login.edtPhoneNum.text.toString()
 //            params[ApplicationClass.paramKey_DeviceType] = "A"
             val service =
-                ApiCallingInstance.retrofitInstance.create<LogInCallService>(
-                    LogInCallService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.LogInCallService>(
+                    NetworkServices.LogInCallService::class.java
                 )
             val call = service.GetLoginData(params)
             call.enqueue(object : Callback<UserLogIn_Model> {

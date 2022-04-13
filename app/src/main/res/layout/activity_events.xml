@@ -72,8 +72,8 @@
             android:layout_marginLeft="@dimen/_8dp"
             android:layout_marginRight="@dimen/_8dp"
             android:layout_weight="1"
-            android:visibility="gone"
             android:overScrollMode="never"
+            android:visibility="gone"
             app:eventsEnabled="true"
             app:headerColor="@color/appcolor"
             app:selectionColor="@color/appcolor"
@@ -113,7 +113,7 @@
                 android:layout_marginBottom="@dimen/_8dp"
                 android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/gif_loader"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -121,82 +121,17 @@
                 app:spanCount="2"
                 tools:itemCount="5"
                 tools:listitem="@layout/raw_events_frame" />
-<!--            <androidx.core.widget.NestedScrollView-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="0dp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.5"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent">-->
-
-<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintHorizontal_bias="0.5"-->
-<!--                    app:layout_constraintTop_toTopOf="parent">-->
 
 
-<!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                        android:id="@+id/cnt_loadmore"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="@dimen/_16dp"-->
-<!--                        android:layout_marginRight="@dimen/_16dp"-->
-<!--                        android:visibility="gone"-->
-<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintHorizontal_bias="0.5"-->
-<!--                        app:layout_constraintStart_toStartOf="parent">-->
-
-<!--                        <TextView-->
-<!--                            android:id="@+id/txt_proceed"-->
-<!--                            android:layout_width="0dp"-->
-<!--                            android:layout_height="@dimen/_46dp"-->
-<!--                            android:background="@drawable/proceedback"-->
-<!--                            android:fontFamily="@font/lato_bold"-->
-<!--                            android:gravity="center"-->
-<!--                            android:paddingTop="@dimen/_10dp"-->
-<!--                            android:paddingBottom="@dimen/_10dp"-->
-<!--                            android:text="@string/loadmore"-->
-<!--                            android:textColor="@android:color/white"-->
-<!--                            android:textSize="@dimen/_15dp"-->
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            app:layout_constraintEnd_toEndOf="parent"-->
-<!--                            app:layout_constraintHorizontal_bias="0.5"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--&lt;!&ndash;                        <ImageView&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:id="@+id/imageView3"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:layout_width="@dimen/_16dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:layout_height="@dimen/_16dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:layout_marginTop="@dimen/_12dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:layout_marginRight="@dimen/_14dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:layout_marginBottom="@dimen/_12dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:padding="@dimen/_2dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:src="@drawable/ic_preceed"&ndash;&gt;-->
-<!--&lt;!&ndash;                            app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                            app:layout_constraintEnd_toEndOf="@+id/txt_proceed"&ndash;&gt;-->
-<!--&lt;!&ndash;                            app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
-
-<!--&lt;!&ndash;                        <LinearLayout&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:layout_width="@dimen/_1dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:layout_height="0dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:layout_marginTop="@dimen/_8dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:layout_marginRight="@dimen/_14dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:layout_marginBottom="@dimen/_8dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:background="@drawable/saperator"&ndash;&gt;-->
-<!--&lt;!&ndash;                            android:orientation="vertical"&ndash;&gt;-->
-<!--&lt;!&ndash;                            app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                            app:layout_constraintEnd_toStartOf="@+id/imageView3"&ndash;&gt;-->
-<!--&lt;!&ndash;                            app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
-<!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-
-<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--            </androidx.core.widget.NestedScrollView>-->
+            <com.cunoraz.gifview.library.GifView
+                android:id="@+id/gif_loader"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_30dp"
+                android:visibility="gone"
+                app:gif="@mipmap/loading"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -245,14 +180,15 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cnt_unAuthorized"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="gone"
+            android:background="@color/loader_back"
             android:clickable="true"
             android:elevation="@dimen/_20dp"
-            android:background="@color/loader_back"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -296,9 +232,9 @@
                         android:id="@+id/view_sapunauth"
                         android:layout_width="@dimen/_24dp"
                         android:layout_height="@dimen/_2dp"
+                        android:layout_marginTop="@dimen/_4dp"
                         android:background="@drawable/proceedback"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_4dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_Alert" />
@@ -307,10 +243,10 @@
                         android:id="@+id/txt_Alertmsg"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:layout_marginTop="@dimen/_16dp"
                         android:fontFamily="@font/lato_medium"
                         android:gravity="center"
-                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:text="@string/unauthorizeduser"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_10dp"
@@ -340,6 +276,7 @@
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <Button
             android:id="@+id/setDateButton"
             android:layout_width="wrap_content"

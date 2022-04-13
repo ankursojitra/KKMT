@@ -22,8 +22,8 @@ import com.rjsquare.kkmt.Activity.Login.Login
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UploadDoc_Model
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UploadSelfieService
 import com.rjsquare.kkmt.databinding.ActivityUploadSelfieBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -170,8 +170,8 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_Selfie] = fileString
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<UploadSelfieService>(
-                    UploadSelfieService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.UploadSelfieService>(
+                    NetworkServices.UploadSelfieService::class.java
                 )
             val call =
                 service.UploadSelfieDoc(

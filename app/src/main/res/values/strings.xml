@@ -8,6 +8,8 @@
     <string name="otpmsg">ONE-TIME PASSWORD (OTP) WAS SENT TO YOUR MOBILE TELEPHONE NUMBER. PLEASE ENTER IT BELOW.</string>
     <string name="OTP">-  OTP  -</string>
     <string name="Login">- Login -</string>
+    <string name="verified">Verified</string>
+    <string name="unverified">Unverified</string>
     <string name="checkin">CheckIn</string>
     <string name="Proceed">Proceed</string>
     <string name="loadmore">Load More</string>

@@ -6,6 +6,8 @@ class Constants {
         //Base URL
         var BASE_URL: String = "https://kkmtapp.com/developing/api/"
 
+        val YES = "Yes"
+        val NO = "No"
         val Pending = "panding"
         val Approve = "approve"
         val paramKey_MobileNo = "phoneno"
@@ -28,6 +30,8 @@ class Constants {
         val paramKey_Usertype = "usertype"
         val paramKey_limit = "limit"
         val paramKey_Reason = "reason"
+        val paramKey_Image = "image"
+        val paramKey_KKMTID = "text"
         val paramKey_BusinessName = "busssines_name"
         val paramKey_BeconList = "becon_list[]"
         val User = "U"

@@ -27,7 +27,7 @@ import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.userInfoModel
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.LogInCall.OTPCallService
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
 import com.rjsquare.kkmt.databinding.ActivityOTPConfirmationBinding
 import retrofit2.Call
@@ -68,8 +68,8 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                 params[Constants.paramKey_OPT] = FinalOTPCode
                 params[Constants.paramKey_UserId] = UserId
                 val service =
-                    ApiCallingInstance.retrofitInstance.create<OTPCallService>(
-                        OTPCallService::class.java
+                    ApiCallingInstance.retrofitInstance.create<NetworkServices.OTPCallService>(
+                        NetworkServices.OTPCallService::class.java
                     )
                 val call = service.GetOTPData(
                     params,

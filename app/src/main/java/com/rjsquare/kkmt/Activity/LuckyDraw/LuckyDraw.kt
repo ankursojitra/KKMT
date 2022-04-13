@@ -11,10 +11,9 @@ import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingIns
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDrawCheckService
 import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDrawCheck_Model
-import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDrawService
 import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDraw_Model
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.databinding.ActivityLuckyDrawBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -113,8 +112,8 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                 ApplicationClass.userInfoModel.data!!.userid!!
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<LuckyDrawCheckService>(
-                    LuckyDrawCheckService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.LuckyDrawCheckService>(
+                    NetworkServices.LuckyDrawCheckService::class.java
                 )
             val call = service.GetLuckyDrawCheckData(
                 params,
@@ -173,8 +172,8 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_Credit] = getCredit
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<LuckyDrawService>(
-                    LuckyDrawService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.LuckyDrawService>(
+                    NetworkServices.LuckyDrawService::class.java
                 )
             val call = service.GetLuckyDrawData(
                 params,

@@ -9,43 +9,35 @@ import androidx.databinding.DataBindingUtil
 import com.rjsquare.kkmt.Adapter.StoreLevelItemDetailAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mStoreLevelListModelSelected
-import com.rjsquare.kkmt.Model.StoreItemDetailModel
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
 import com.rjsquare.kkmt.databinding.ActivityStoreLevelListBinding
 
 class StoreLevelList : AppCompatActivity(), View.OnClickListener {
-//    private lateinit var mTxtNoStoredata: TextView
-//    private lateinit var mTxtTitle: TextView
-//    private lateinit var mImgBack: ImageView
-//    private lateinit var mRrStoreList: RecyclerView
-lateinit var mList_StoreItemDetailModel: ArrayList<StoreItemDetailModel>
-
-
+    lateinit var mList_StoreItemDetailModel: ArrayList<StoreList_Model.StoreItemData.StoreItem>
     override fun onBackPressed() {
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
     }
 
-    companion object{
-        lateinit var DB_StoreLevelList:ActivityStoreLevelListBinding
+
+    companion object {
+        lateinit var DB_StoreLevelList: ActivityStoreLevelListBinding
+        lateinit var selectedStoreItemModel: StoreList_Model.StoreItemData.StoreItem
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DB_StoreLevelList = DataBindingUtil.setContentView(this,R.layout.activity_store_level_list)
+        DB_StoreLevelList = DataBindingUtil.setContentView(this, R.layout.activity_store_level_list)
 
         try {
             ApplicationClass.StatusTextWhite(this, true)
 
-//            mTxtTitle = findViewById<TextView>(R.id.txt_title)
-//            mImgBack = findViewById<ImageView>(R.id.img_back)
-//            mRrStoreList = findViewById<RecyclerView>(R.id.rr_storeList)
-//            mTxtNoStoredata = findViewById<TextView>(R.id.txt_no_storedata)
             DB_StoreLevelList.imgBack.setOnClickListener(this)
 
-            DB_StoreLevelList.txtTitle.text = mStoreLevelListModelSelected!!.StoreLeveltag
+            DB_StoreLevelList.txtTitle.text = "Level " + mStoreLevelListModelSelected!!.level
 
-            mList_StoreItemDetailModel = mStoreLevelListModelSelected!!.List_StoreItemDetailModel
+            mList_StoreItemDetailModel = mStoreLevelListModelSelected!!.store_item!!
 
             framesAdapter()
 
@@ -77,16 +69,11 @@ lateinit var mList_StoreItemDetailModel: ArrayList<StoreItemDetailModel>
             }
 
             val loStoreLevelItemDetailAdapter: StoreLevelItemDetailAdapter
-//                if (mHomeModelArrayList_old == null) {
             loStoreLevelItemDetailAdapter = StoreLevelItemDetailAdapter(
                 this, mList_StoreItemDetailModel
             )
 
-//            val linearLayoutManager =
-//                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-//            DB_StoreLevelList.rrStoreList.setLayoutManager(linearLayoutManager)
-//            DB_StoreLevelList.rrStoreList.setLayoutManager(GridLayoutManager(this, 3))
-            DB_StoreLevelList.rrStoreList.setAdapter(loStoreLevelItemDetailAdapter)
+            DB_StoreLevelList.rrStoreList.adapter = loStoreLevelItemDetailAdapter
 
 
         } catch (NE: NullPointerException) {
@@ -112,9 +99,7 @@ lateinit var mList_StoreItemDetailModel: ArrayList<StoreItemDetailModel>
                 DB_StoreLevelList.cntConfirmation.visibility = View.GONE
             } else if (view == DB_StoreLevelList.cntRedeemConfirm) {
                 DB_StoreLevelList.cntConfirmation.visibility = View.GONE
-                var StoreItemRedeemintent = Intent(this, StoreItemRedeemConfirm::class.java)
-                startActivity(StoreItemRedeemintent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                ApplicationClass.NextScreen(this, Intent(this, StoreItemRedeemConfirm::class.java))
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
