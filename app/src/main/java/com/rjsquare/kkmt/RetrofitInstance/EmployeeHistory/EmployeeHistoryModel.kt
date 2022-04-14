@@ -24,8 +24,8 @@ class EmployeeHistoryModel {
         var last_month: ReviewsInfo? = null
 
         class ReviewsInfo {
-            @SerializedName("toal_sales")
-            var toal_sales: String? = null
+            @SerializedName("total_sales")
+            var total_sales: String? = null
 
             @SerializedName("total_star_count")
             var total_star_count: String? = null

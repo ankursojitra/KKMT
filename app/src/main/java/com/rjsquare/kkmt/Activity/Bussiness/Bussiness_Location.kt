@@ -1,6 +1,7 @@
 package com.rjsquare.kkmt.Activity.Bussiness
 
 import android.Manifest
+import android.R.attr.bitmap
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -27,7 +28,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import com.minew.beaconplus.sdk.MTCentralManager
 import com.minew.beaconplus.sdk.enums.BluetoothState
@@ -42,6 +46,7 @@ import com.rjsquare.kkmt.RetrofitInstance.OTPCall.BusinessNotFoundModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
 import com.rjsquare.kkmt.databinding.ActivityLocationBinding
 import com.squareup.picasso.Picasso
+import com.vipul.hp_hp.library.Layout_to_Image
 import kotlinx.android.synthetic.main.layout_bussiness_report.view.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -349,43 +354,8 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         DB_BusinessLocation.cntAlert.visibility = View.VISIBLE
     }
 
-    private fun getMarkerBitmapFromView(masterBeaconInfo: MasterBeaconModel.BusinessBescon): Bitmap {
+    private fun getMarkerBitmapFromView(customMarkerView: View): Bitmap {
         //HERE YOU CAN ADD YOUR CUSTOM VIEW
-        val customMarkerView: View =
-            (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
-                R.layout.map_marker,
-                null
-            )
-        val textView = customMarkerView.findViewById<TextView>(R.id.txt_busname) as TextView
-        val imageViewPin = customMarkerView.findViewById<ImageView>(R.id.img_pin) as ImageView
-        val imageViewBusiness =
-            customMarkerView.findViewById<ImageView>(R.id.img_business) as ImageView
-        val CntView =
-            customMarkerView.findViewById<ConstraintLayout>(R.id.cnt_view) as ConstraintLayout
-
-        imageViewPin.setImageResource(ApplicationClass.GetPin(this@Bussiness_Location,masterBeaconInfo.mappin!!))
-        CntView.setBackgroundResource(ApplicationClass.GetPinView(this@Bussiness_Location,masterBeaconInfo.mappin!!))
-
-        //Business Image showen
-        Log.e("TAG", "IMAGEBUSINESS")
-        Picasso.with(this).load(masterBeaconInfo.businesstreadetype).into(imageViewBusiness,
-            object : com.squareup.picasso.Callback {
-                override fun onSuccess() {
-
-                }
-
-                override fun onError() {
-                }
-            })
-
-
-        textView.text = masterBeaconInfo.bussiness_name
-        textView.setTextColor(
-            ContextCompat.getColor(
-                this@Bussiness_Location,
-                R.color.white
-            )
-        )
 
         customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         customMarkerView.layout(
@@ -408,25 +378,89 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         customMarkerView.draw(canvas)
         return returnedBitmap
     }
+
     private fun SetBusinessViews() {
         Log.e("TAG", "COLORLIST: " + masterList.size)
         for (BusinessPos in 0..masterList.size - 1) {
             Log.e("TAG", "COLORLIST: " + BusinessPos)
 
-            mMap.addMarker(
-                MarkerOptions()
-                    .position(
-                        LatLng(
-                            masterList[BusinessPos].latitude!!.toDouble(),
-                            masterList[BusinessPos].longitude!!.toDouble()
-                        )
-                    )
-                    .zIndex(BusinessPos.toFloat())
+            val customMarkerView: View =
+                (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
+                    R.layout.map_marker,
+                    null
+                )
+            val textView = customMarkerView.findViewById<TextView>(R.id.txt_busname) as TextView
+            val imageViewPin = customMarkerView.findViewById<ImageView>(R.id.img_pin) as ImageView
+            val imageViewBusiness =
+                customMarkerView.findViewById<ImageView>(R.id.img_business) as ImageView
+            val CntView =
+                customMarkerView.findViewById<ConstraintLayout>(R.id.cnt_view) as ConstraintLayout
+
+            imageViewPin.setImageResource(ApplicationClass.GetPin(this@Bussiness_Location,masterList[BusinessPos].mappin!!))
+            CntView.setBackgroundResource(ApplicationClass.GetPinView(this@Bussiness_Location,masterList[BusinessPos].mappin!!))
+
+            var MarkerLaout = customMarkerView.findViewById<ConstraintLayout>(R.id.cnt_marker)
+            MarkerLaout.setDrawingCacheEnabled(true)
+
+            MarkerLaout.buildDrawingCache()
+
+            var bm: Bitmap = MarkerLaout.getDrawingCache()
+            var layout_to_image: Layout_to_Image
+
+            layout_to_image = Layout_to_Image(this@Bussiness_Location, MarkerLaout)
+
+
+            bm = layout_to_image.convert_layout()
+
+            //Business Image showen
+            Log.e("TAG", "IMAGEBUSINESS")
+            Picasso.with(this).load(masterList[BusinessPos].businessimage).placeholder(R.drawable.ic_expe_logo).into(imageViewBusiness,
+                object : com.squareup.picasso.Callback {
+                    override fun onSuccess() {
+                        DB_BusinessLocation.imgFounds.setImageBitmap(bm)
+                        Log.e("TAG", "onSuccess")
+                        //SetUp Marker
+                        mMap.addMarker(
+                            MarkerOptions()
+                                .position(
+                                    LatLng(
+                                        masterList[BusinessPos].latitude!!.toDouble(),
+                                        masterList[BusinessPos].longitude!!.toDouble()
+                                    )
+                                )
+                                .zIndex(BusinessPos.toFloat())
 //                    .title(Business.bussiness_name)
-                    .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(masterList[BusinessPos])))
+                                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(customMarkerView)))
 //                    .icon(BitmapDescriptorFactory.fromBitmap(GetMarkerPin(masterList[BusinessPos])))
+                        )
+                    }
+
+                    override fun onError() {
+                        Log.e("TAG", "onError")
+                    }
+                })
+
+
+            textView.text = masterList[BusinessPos].bussiness_name
+            textView.setTextColor(
+                ContextCompat.getColor(
+                    this@Bussiness_Location,
+                    R.color.white
+                )
             )
+
         }
+    }
+    fun loadBitmapFromView(v: View): Bitmap? {
+        val b = Bitmap.createBitmap(
+            v.layoutParams.width,
+            v.layoutParams.height,
+            Bitmap.Config.ARGB_8888
+        )
+        val c = Canvas(b)
+        v.layout(v.left, v.top, v.right, v.bottom)
+        v.draw(c)
+        return b
     }
 
     private fun GetMarkerPin(businessBescon: MasterBeaconModel.BusinessBescon): Bitmap {
@@ -655,7 +689,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
                 Picasso.with(this)
                     .load(ApplicationClass.selectedMasterModel.businessimage)
-                    .into(mImgLogo)
+                    .placeholder(R.drawable.ic_expe_logo).into(mImgLogo)
                 mTxtBusinessName.text = ApplicationClass.selectedMasterModel.bussiness_name
                 ShowBusniessConfirmation()
 

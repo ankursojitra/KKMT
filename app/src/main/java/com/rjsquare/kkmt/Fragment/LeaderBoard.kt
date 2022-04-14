@@ -22,6 +22,7 @@ import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.*
 import com.rjsquare.kkmt.databinding.FragmentLeaderBoardBinding
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -341,6 +342,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
         DB_LeaderBoard.txtRankOwnName.text = EmpModel.username
         DB_LeaderBoard.txtRankOwn.text = EmpModel.rank
         DB_LeaderBoard.txtRankOwnAmount.text = EmpModel.credit
+        Picasso.with(requireActivity()).load(EmpModel.userimage).placeholder(R.drawable.ic_expe_logo).into(DB_LeaderBoard.imgRankOwnProfile)
     }
 
 

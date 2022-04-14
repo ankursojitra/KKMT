@@ -4,10 +4,12 @@ import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.ActivityProfileBinding
+import com.squareup.picasso.Picasso
 
 
 class Profile : AppCompatActivity(), View.OnClickListener {
@@ -16,13 +18,14 @@ class Profile : AppCompatActivity(), View.OnClickListener {
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
     }
-    companion object{
-        lateinit var DB_Profile:ActivityProfileBinding
+
+    companion object {
+        lateinit var DB_Profile: ActivityProfileBinding
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DB_Profile = DataBindingUtil.setContentView(this,R.layout.activity_profile)
+        DB_Profile = DataBindingUtil.setContentView(this, R.layout.activity_profile)
         try {
             ApplicationClass.StatusTextWhite(this, true)
             DB_Profile.imgBack.setOnClickListener(this)
@@ -56,8 +59,27 @@ class Profile : AppCompatActivity(), View.OnClickListener {
         DB_Profile.edtEmail.setText(ApplicationClass.userInfoModel.data!!.email)
         DB_Profile.edtDob.setText(ApplicationClass.userInfoModel.data!!.dob)
         DB_Profile.edtGender.setText(ApplicationClass.Gender(ApplicationClass.userInfoModel.data!!.gender!!))
-        DB_Profile.txtLevel.setText("Level : "+ApplicationClass.userInfoModel.data!!.credit_details!!.level)
+        DB_Profile.txtLevel.setText("Level : " + ApplicationClass.userInfoModel.data!!.credit_details!!.level)
         DB_Profile.txtCredits.setText(ApplicationClass.userInfoModel.data!!.credit_details!!.credit)
+        Picasso.with(this).load(ApplicationClass.userInfoModel.data!!.userimage)
+            .placeholder(R.drawable.ic_expe_logo).into(DB_Profile.imgUserProfile)
+
+        var verifiedImage = ContextCompat.getDrawable(
+            this,
+            R.drawable.ic_nonverified
+        )
+        if (ApplicationClass.isApprove) {
+            verifiedImage = ContextCompat.getDrawable(
+                this,
+                R.drawable.ic_verified
+            )
+        } else {
+            verifiedImage = ContextCompat.getDrawable(
+                this,
+                R.drawable.ic_nonverified
+            )
+        }
+        DB_Profile.imgUserverified.setImageDrawable(verifiedImage)
     }
 
     override fun onClick(view: View?) {

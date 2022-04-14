@@ -102,6 +102,7 @@ dependencies {
     implementation 'com.bigkoo:svprogresshud:1.0.6'
     implementation 'com.github.Fuadafdhal:Auto-Image-Slider:1.0'
     implementation 'com.github.Cutta:GifView:1.4'
+    implementation 'com.github.vipulasri.layouttoimage:library:1.0.0'
 //    implementation 'com.mindorks:paracamera:0.2.2'
 
 //    implementation 'com.vincent.filepicker:MultiTypeFilePicker:1.0.8'

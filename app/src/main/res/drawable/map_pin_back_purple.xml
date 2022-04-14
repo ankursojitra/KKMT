@@ -4,7 +4,7 @@
 
     <solid android:color="@color/purple_pin" />
     <corners
-        android:radius="@dimen/_4dp"/>
+        android:radius="@dimen/_3dp"/>
 
 
 </shape>

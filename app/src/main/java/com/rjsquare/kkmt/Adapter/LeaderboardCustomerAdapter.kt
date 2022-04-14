@@ -73,7 +73,7 @@ class LeaderboardCustomerAdapter(
     }
 
     override fun getItemCount(): Int {
-        Log.e("TAG","SizeOfLeaderBoard : "+moArrayList.size)
+//        Log.e("TAG","SizeOfLeaderBoard : "+moArrayList.size)
         return moArrayList.size
     }
 

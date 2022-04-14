@@ -261,7 +261,7 @@ class History : Fragment(), View.OnClickListener {
 
     private fun SetThirdReview(reviewItemInfoModel: CustomerHistoryModel.reviewData.reviewItemInfo) {
         Picasso.with(requireActivity()).load(reviewItemInfoModel.userimage)
-            .into(DB_FHistory.imgEmployeeHistory3)
+            .placeholder(R.drawable.ic_expe_logo).into(DB_FHistory.imgEmployeeHistory3)
         DB_FHistory.txtEmpname1History3.text = reviewItemInfoModel.username
         DB_FHistory.txtEmpratingHistory3.text = reviewItemInfoModel.ratings
         DB_FHistory.txtEmpTotalSupportHistory3.text = ("$${reviewItemInfoModel.spend_amount}")
@@ -269,7 +269,7 @@ class History : Fragment(), View.OnClickListener {
 
     private fun SetSecondReview(reviewItemInfoModel: CustomerHistoryModel.reviewData.reviewItemInfo) {
         Picasso.with(requireActivity()).load(reviewItemInfoModel.userimage)
-            .into(DB_FHistory.imgEmployeeHistory2)
+            .placeholder(R.drawable.ic_expe_logo).into(DB_FHistory.imgEmployeeHistory2)
         DB_FHistory.txtEmpname1History2.text = reviewItemInfoModel.username
         DB_FHistory.txtEmpratingHistory2.text = reviewItemInfoModel.ratings
         DB_FHistory.txtEmpTotalSupportHistory2.text = ("$${reviewItemInfoModel.spend_amount}")
@@ -277,7 +277,7 @@ class History : Fragment(), View.OnClickListener {
 
     private fun SetFirstReview(reviewItemInfoModel: CustomerHistoryModel.reviewData.reviewItemInfo) {
         Picasso.with(requireActivity()).load(reviewItemInfoModel.userimage)
-            .into(DB_FHistory.imgEmployee)
+            .placeholder(R.drawable.ic_expe_logo).into(DB_FHistory.imgEmployee)
         DB_FHistory.txtEmpname1.text = reviewItemInfoModel.username
         DB_FHistory.txtEmprating.text = reviewItemInfoModel.ratings
         DB_FHistory.txtEmpTotalSupport.text = ("$${reviewItemInfoModel.spend_amount}")

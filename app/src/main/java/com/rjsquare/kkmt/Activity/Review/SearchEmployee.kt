@@ -270,7 +270,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         )
 
         Picasso.with(this).load(ApplicationClass.selectedMasterModel.businessimage)
-            .into(DB_SearchEmployee.imgBusiness)
+            .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.imgBusiness)
 
         DB_SearchEmployee.txtBusname.text = ApplicationClass.selectedMasterModel.bussiness_name
 
@@ -367,7 +367,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             0 -> {
                 DB_SearchEmployee.cntView1.ly_emp1.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView1.ly_emp1.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView1.ly_emp1.img_emp)
                 DB_SearchEmployee.cntView1.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView1.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -378,7 +378,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             1 -> {
                 DB_SearchEmployee.cntView2.ly_emp2.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView2.ly_emp2.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView2.ly_emp2.img_emp)
                 DB_SearchEmployee.cntView2.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView2.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -389,7 +389,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             2 -> {
                 DB_SearchEmployee.cntView3.ly_emp3.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView3.ly_emp3.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView3.ly_emp3.img_emp)
                 DB_SearchEmployee.cntView3.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView3.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -400,7 +400,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             3 -> {
                 DB_SearchEmployee.cntView4.ly_emp4.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView4.ly_emp4.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView4.ly_emp4.img_emp)
                 DB_SearchEmployee.cntView4.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView4.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -411,7 +411,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             4 -> {
                 DB_SearchEmployee.cntView5.ly_emp5.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView5.ly_emp5.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView5.ly_emp5.img_emp)
                 DB_SearchEmployee.cntView5.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView5.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -422,7 +422,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             5 -> {
                 DB_SearchEmployee.cntView6.ly_emp6.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView6.ly_emp6.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView6.ly_emp6.img_emp)
                 DB_SearchEmployee.cntView6.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView6.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -433,7 +433,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             6 -> {
                 DB_SearchEmployee.cntView7.ly_emp7.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView7.ly_emp7.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView7.ly_emp7.img_emp)
                 DB_SearchEmployee.cntView7.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView7.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -444,7 +444,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             7 -> {
                 DB_SearchEmployee.cntView8.ly_emp8.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView8.ly_emp8.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView8.ly_emp8.img_emp)
                 DB_SearchEmployee.cntView8.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView8.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -455,7 +455,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             8 -> {
                 DB_SearchEmployee.cntView9.ly_emp9.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView9.ly_emp9.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView9.ly_emp9.img_emp)
                 DB_SearchEmployee.cntView9.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView9.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -466,7 +466,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             9 -> {
                 DB_SearchEmployee.cntView10.ly_emp10.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView10.ly_emp10.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView10.ly_emp10.img_emp)
                 DB_SearchEmployee.cntView10.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView10.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -477,7 +477,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             10 -> {
                 DB_SearchEmployee.cntView11.ly_emp11.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView11.ly_emp11.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView11.ly_emp11.img_emp)
                 DB_SearchEmployee.cntView11.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView11.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -488,7 +488,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             11 -> {
                 DB_SearchEmployee.cntView12.ly_emp12.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .into(DB_SearchEmployee.cntView12.ly_emp12.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView12.ly_emp12.img_emp)
                 DB_SearchEmployee.cntView12.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView12.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
