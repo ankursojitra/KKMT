@@ -7,8 +7,8 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
-import com.rjsquare.kkmt.Activity.function
 import com.rjsquare.kkmt.Activity.HomeActivity
+import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Helpers.Preferences
@@ -48,10 +48,11 @@ class Splash : AppCompatActivity() {
                 }
 
                 override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-                    function.NextScreen(
+                    commanUtils.NextScreen(
                         this@Splash,
                         Intent(this@Splash, HomeActivity::class.java)
                     )
+                    finish()
                 }
 
                 override fun onTransitionTrigger(

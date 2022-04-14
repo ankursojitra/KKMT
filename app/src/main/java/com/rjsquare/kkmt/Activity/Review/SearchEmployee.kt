@@ -273,9 +273,9 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.imgBusiness)
 
         DB_SearchEmployee.txtBusname.text = ApplicationClass.selectedMasterModel.bussiness_name
+        DB_SearchEmployee.txtCompanyname.text = ApplicationClass.selectedMasterModel.bussiness_name
 
     }
-
 
     private fun SlaveBleDeviceInfo() {
         DB_SearchEmployee.cntLoader.visibility = View.VISIBLE

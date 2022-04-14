@@ -13,6 +13,10 @@
     <string name="checkin">CheckIn</string>
     <string name="attention">Attention</string>
     <string name="Proceed">Proceed</string>
+    <string name="onestar">1 star</string>
+    <string name="bad">Bad</string>
+    <string name="good">Good</string>
+    <string name="fivestar">5 Star</string>
     <string name="loadmore">Load More</string>
     <string name="challengesmsg">Complete Challenges to Earn Additional Credits</string>
     <string name="submit">Submit</string>
@@ -45,6 +49,7 @@
     <string name="dummyemail">Naria@gmail.com</string>
     <string name="date">15/05/1995</string>
     <string name="dob">DOB</string>
+    <string name="uploacreceipt">Uploac Receipt</string>
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="doc_msg">Upload and verify document</string>

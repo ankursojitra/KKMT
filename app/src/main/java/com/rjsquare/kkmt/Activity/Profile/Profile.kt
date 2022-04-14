@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.ActivityProfileBinding
@@ -59,10 +60,15 @@ class Profile : AppCompatActivity(), View.OnClickListener {
         DB_Profile.edtEmail.setText(ApplicationClass.userInfoModel.data!!.email)
         DB_Profile.edtDob.setText(ApplicationClass.userInfoModel.data!!.dob)
         DB_Profile.edtGender.setText(ApplicationClass.Gender(ApplicationClass.userInfoModel.data!!.gender!!))
-        DB_Profile.txtLevel.setText("Level : " + ApplicationClass.userInfoModel.data!!.credit_details!!.level)
-        DB_Profile.txtCredits.setText(ApplicationClass.userInfoModel.data!!.credit_details!!.credit)
-        Picasso.with(this).load(ApplicationClass.userInfoModel.data!!.userimage)
-            .placeholder(R.drawable.ic_expe_logo).into(DB_Profile.imgUserProfile)
+        DB_Profile.txtLevel.setText("Level : ${ApplicationClass.userInfoModel.data!!.credit_details!!.level}")
+        DB_Profile.txtCredits.setText(commanUtils.formatNumber(ApplicationClass.userInfoModel.data!!.credit_details!!.credit!!.toInt()))
+
+        var UserImage = ""
+        if (ApplicationClass.userInfoModel.data!!.userimage != null && !ApplicationClass.userInfoModel.data!!.userimage.equals("") ){
+            UserImage = ApplicationClass.userInfoModel.data!!.userimage!!
+            Picasso.with(this).load(UserImage)
+                .placeholder(R.drawable.ic_expe_logo).into(DB_Profile.imgUserProfile)
+        }
 
         var verifiedImage = ContextCompat.getDrawable(
             this,

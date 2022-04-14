@@ -2,8 +2,10 @@ package com.rjsquare.kkmt.Fragment
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Handler
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +20,15 @@ import com.rjsquare.kkmt.Activity.Notifications.NotificationList
 import com.rjsquare.kkmt.Activity.Profile.Profile
 import com.rjsquare.kkmt.Activity.Store.Store
 import com.rjsquare.kkmt.Activity.Video.Video
-import com.rjsquare.kkmt.Activity.function
+import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.FragmentHomeBinding
 import com.squareup.picasso.Picasso
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+
 
 class Home : Fragment(), View.OnClickListener {
     lateinit var DB_FHome: FragmentHomeBinding
@@ -36,24 +42,22 @@ class Home : Fragment(), View.OnClickListener {
         if (ApplicationClass.userLogedIn) {
             DB_FHome.cntLogin.visibility = View.GONE
             DB_FHome.cntProfileView.visibility = View.VISIBLE
-
-            var userImage = ApplicationClass.userInfoModel.data!!.userimage
-            //Set User Data
-            val handler = Handler()
-            val runnable = Runnable {
-//                Picasso.with(requireActivity()).load(userImage)
-//                    .placeholder(R.drawable.ic_expe_logo)
-//                    .into(DB_FHome.imgProfile)
+            var UserImage = ""
+            if (ApplicationClass.userInfoModel.data!!.userimage != null
+                && !ApplicationClass.userInfoModel.data!!.userimage.equals("")
+            ) {
+                UserImage = ApplicationClass.userInfoModel.data!!.userimage!!
+                Picasso.with(requireActivity()).load(UserImage)
+                    .placeholder(R.drawable.ic_expe_logo).into(DB_FHome.imgProfile)
             }
-            handler.postDelayed(runnable, 1500)
-
             DB_FHome.txtProfName.text = ApplicationClass.userInfoModel.data!!.username
 
             DB_FHome.txtLevel.text =
                 "Level : " + ApplicationClass.userInfoModel.data!!.credit_details!!.level
 
             DB_FHome.txtTotalCredits.text =
-                ApplicationClass.userInfoModel.data!!.credit_details!!.credit
+                commanUtils.formatNumber(ApplicationClass.userInfoModel.data!!.credit_details!!.credit!!.toInt())
+
         } else {
             DB_FHome.cntLogin.visibility = View.VISIBLE
             DB_FHome.cntProfileView.visibility = View.GONE
@@ -115,6 +119,7 @@ class Home : Fragment(), View.OnClickListener {
         return DB_FHome.root
     }
 
+
     private fun SetUpUserVerified() {
         if (ApplicationClass.isApprove) {
             DB_FHome.imgVerified.setImageDrawable(
@@ -152,23 +157,47 @@ class Home : Fragment(), View.OnClickListener {
         try {
             if (ApplicationClass.userLogedIn) {
                 if (view == DB_FHome.cardViewStore) {
-                    function.NextScreen(requireActivity(),Intent(requireActivity(), Store::class.java))
+                    commanUtils.NextScreen(
+                        requireActivity(),
+                        Intent(requireActivity(), Store::class.java)
+                    )
                 } else if (view == DB_FHome.cardViewEvent) {
-                    function.NextScreen(requireActivity(),Intent(requireActivity(), Events::class.java))
+                    commanUtils.NextScreen(
+                        requireActivity(),
+                        Intent(requireActivity(), Events::class.java)
+                    )
                 } else if (view == DB_FHome.cardViewNotify) {
-                    ApplicationClass. NextScreen(requireActivity(),Intent(requireActivity(), NotificationList::class.java))
+                    ApplicationClass.NextScreen(
+                        requireActivity(),
+                        Intent(requireActivity(), NotificationList::class.java)
+                    )
                 } else if (view == DB_FHome.cardViewLuckydraw) {
-                    function.NextScreen(requireActivity(),Intent(requireActivity(), LuckyDraw::class.java))
+                    commanUtils.NextScreen(
+                        requireActivity(),
+                        Intent(requireActivity(), LuckyDraw::class.java)
+                    )
                 } else if (view == DB_FHome.cardViewVideos) {
-                    function.NextScreen(requireActivity(),Intent(requireActivity(), Video::class.java))
+                    commanUtils.NextScreen(
+                        requireActivity(),
+                        Intent(requireActivity(), Video::class.java)
+                    )
                 } else if (view == DB_FHome.crdProfile) {
-                    function.NextScreen(requireActivity(),Intent(requireActivity(), Profile::class.java))
+                    commanUtils.NextScreen(
+                        requireActivity(),
+                        Intent(requireActivity(), Profile::class.java)
+                    )
                 }
             } else {
                 if (view == DB_FHome.cardViewEvent) {
-                    function.NextScreen(requireActivity(),Intent(requireActivity(), Events::class.java))
+                    commanUtils.NextScreen(
+                        requireActivity(),
+                        Intent(requireActivity(), Events::class.java)
+                    )
                 } else if (view == DB_FHome.cardViewStore) {
-                    function.NextScreen(requireActivity(),Intent(requireActivity(), Store::class.java))
+                    commanUtils.NextScreen(
+                        requireActivity(),
+                        Intent(requireActivity(), Store::class.java)
+                    )
                 } else {
                     HomeActivity.DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
                     ApplicationClass.UserLogIn(requireActivity())

@@ -15,6 +15,12 @@ class BusinessCheckInModel {
 
     class BusinessCheckIn {
 
+        @SerializedName("total_credit")
+        var total_credit: String? = null
+
+        @SerializedName("check_in_credit")
+        var check_in_credit: String? = null
+
     }
 }
 
