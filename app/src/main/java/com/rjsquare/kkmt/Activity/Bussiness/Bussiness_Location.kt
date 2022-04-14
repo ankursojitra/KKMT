@@ -1,41 +1,49 @@
 package com.rjsquare.kkmt.Activity.Bussiness
 
 import android.Manifest
-import android.R.attr.bitmap
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.location.Location
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.drawToBitmap
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.LocationListener
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import com.minew.beaconplus.sdk.MTCentralManager
 import com.minew.beaconplus.sdk.enums.BluetoothState
 import com.minew.beaconplus.sdk.interfaces.OnBluetoothStateChangedListener
+import com.nabinbhandari.android.permissions.PermissionHandler
+import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Review.SearchEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
@@ -46,7 +54,7 @@ import com.rjsquare.kkmt.RetrofitInstance.OTPCall.BusinessNotFoundModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
 import com.rjsquare.kkmt.databinding.ActivityLocationBinding
 import com.squareup.picasso.Picasso
-import com.vipul.hp_hp.library.Layout_to_Image
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.layout_bussiness_report.view.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -55,7 +63,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReadyCallback {
+class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReadyCallback,
+    LocationListener, GoogleApiClient.ConnectionCallbacks,
+    GoogleApiClient.OnConnectionFailedListener {
 
     private lateinit var mCh1: CheckBox
     private lateinit var mCh2: CheckBox
@@ -63,7 +73,6 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     private lateinit var edtBussinessName: EditText
     private lateinit var mTxtSubmit: TextView
     private lateinit var mCntBackToHome: ConstraintLayout
-    private lateinit var mMap: GoogleMap
     private lateinit var mCntBussinessname: ConstraintLayout
     private lateinit var mTxtLeave: TextView
     private lateinit var mTxtBusinessName: TextView
@@ -75,6 +84,12 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     private lateinit var mImgBusRepClose: ImageView
 
     lateinit var DB_BusinessLocation: ActivityLocationBinding
+
+    private var mMap: GoogleMap? = null
+    var mLastLocation: Location? = null
+    var mCurrLocationMarker: Marker? = null
+    var mGoogleApiClient: GoogleApiClient? = null
+    var mLocationRequest: LocationRequest? = null
 
     private var notFoundBusinessName = ""
     private var notFoundBusinessReason = ""
@@ -88,7 +103,8 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     lateinit var runnable: Runnable
     var HandlerCallavailable = false
     lateinit var masterList: ArrayList<MasterBeaconModel.BusinessBescon>
-
+    var userLat = 0.0
+    var userLong = 0.0
     override fun onBackPressed() {
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
@@ -199,6 +215,28 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         initManager()
         getRequiredPermissions()
         initListener()
+        val locationManager =
+            this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationProvider = LocationManager.NETWORK_PROVIDER
+        // I suppressed the missing-permission warning because this wouldn't be executed in my
+        // case without location services being enabled
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            return
+        }
+
+        val lastKnownLocation =
+            locationManager.getLastKnownLocation(locationProvider)
+        userLat = lastKnownLocation!!.latitude
+        userLong = lastKnownLocation!!.longitude
     }
 
     private fun MasterBleDeviceInfo() {
@@ -222,6 +260,11 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.MasterBeaconService>(
                     NetworkServices.MasterBeaconService::class.java
                 )
+//            AC233F6E20D7
+//            AC233F6E20D8
+//            BeaconMACList = ArrayList()
+//            BeaconMACList.add("AC233F6E20D7")
+//            BeaconMACList.add("AC233F6E20D8")
             val call =
                 service.GetBusinessBeaconData(
                     params, BeaconMACList, ApplicationClass.userInfoModel.data!!.access_token!!
@@ -389,93 +432,76 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                     R.layout.map_marker,
                     null
                 )
-            val textView = customMarkerView.findViewById<TextView>(R.id.txt_busname) as TextView
+
             val imageViewPin = customMarkerView.findViewById<ImageView>(R.id.img_pin) as ImageView
             val imageViewBusiness =
-                customMarkerView.findViewById<ImageView>(R.id.img_business) as ImageView
+                customMarkerView.findViewById<CircleImageView>(R.id.img_business) as CircleImageView
             val CntView =
                 customMarkerView.findViewById<ConstraintLayout>(R.id.cnt_view) as ConstraintLayout
 
-            imageViewPin.setImageResource(ApplicationClass.GetPin(this@Bussiness_Location,masterList[BusinessPos].mappin!!))
-            CntView.setBackgroundResource(ApplicationClass.GetPinView(this@Bussiness_Location,masterList[BusinessPos].mappin!!))
-
-            var MarkerLaout = customMarkerView.findViewById<ConstraintLayout>(R.id.cnt_marker)
-            MarkerLaout.setDrawingCacheEnabled(true)
-
-            MarkerLaout.buildDrawingCache()
-
-            var bm: Bitmap = MarkerLaout.getDrawingCache()
-            var layout_to_image: Layout_to_Image
-
-            layout_to_image = Layout_to_Image(this@Bussiness_Location, MarkerLaout)
-
-
-            bm = layout_to_image.convert_layout()
-
-            //Business Image showen
-            Log.e("TAG", "IMAGEBUSINESS")
-            Picasso.with(this).load(masterList[BusinessPos].businessimage).placeholder(R.drawable.ic_expe_logo).into(imageViewBusiness,
-                object : com.squareup.picasso.Callback {
-                    override fun onSuccess() {
-                        DB_BusinessLocation.imgFounds.setImageBitmap(bm)
-                        Log.e("TAG", "onSuccess")
-                        //SetUp Marker
-                        mMap.addMarker(
-                            MarkerOptions()
-                                .position(
-                                    LatLng(
-                                        masterList[BusinessPos].latitude!!.toDouble(),
-                                        masterList[BusinessPos].longitude!!.toDouble()
-                                    )
-                                )
-                                .zIndex(BusinessPos.toFloat())
-//                    .title(Business.bussiness_name)
-                                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(customMarkerView)))
-//                    .icon(BitmapDescriptorFactory.fromBitmap(GetMarkerPin(masterList[BusinessPos])))
-                        )
-                    }
-
-                    override fun onError() {
-                        Log.e("TAG", "onError")
-                    }
-                })
-
-
-            textView.text = masterList[BusinessPos].bussiness_name
-            textView.setTextColor(
-                ContextCompat.getColor(
+            imageViewPin.setImageResource(
+                ApplicationClass.GetPin(
                     this@Bussiness_Location,
-                    R.color.white
+                    masterList[BusinessPos].mappin!!
+                )
+            )
+            CntView.setBackgroundResource(
+                ApplicationClass.GetPinView(
+                    this@Bussiness_Location,
+                    masterList[BusinessPos].mappin!!
                 )
             )
 
+            var cardBusinessImage =
+                customMarkerView.findViewById<CardView>(R.id.crd_busimage) as CardView
+            var BusinessName = customMarkerView.findViewById<TextView>(R.id.txt_busname)
+            BusinessName.text = masterList[BusinessPos].bussiness_name
+
+
+            //Business Image showen
+            Log.e("TAG", "IMAGEBUSINESS")
+            Picasso.with(this).load(masterList[BusinessPos].businessimage)
+                .placeholder(R.drawable.ic_expe_logo).into(imageViewBusiness,
+                    object : com.squareup.picasso.Callback {
+                        override fun onSuccess() {
+                            Log.e("TAG", "onSuccess")
+                            Handler().postDelayed({
+                                val radius = TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP,
+                                    50f,
+                                    this@Bussiness_Location.resources.displayMetrics
+                                )
+                                cardBusinessImage.radius = radius
+
+                                //SetUp Marker
+                                mMap!!.addMarker(
+                                    MarkerOptions()
+                                        .position(
+                                            LatLng(
+                                                masterList[BusinessPos].latitude!!.toDouble(),
+                                                masterList[BusinessPos].longitude!!.toDouble()
+                                            )
+                                        )
+                                        .zIndex(BusinessPos.toFloat())
+//                                  .title(Business.bussiness_name)
+                                        .icon(
+                                            BitmapDescriptorFactory.fromBitmap(
+                                                getMarkerBitmapFromView(
+                                                    customMarkerView
+                                                )
+                                            )
+                                        )
+//                                  .icon(BitmapDescriptorFactory.fromBitmap(GetMarkerPin(masterList[BusinessPos])))
+                                )
+                            }, 800)
+
+                        }
+
+                        override fun onError() {
+                            Log.e("TAG", "onError")
+                        }
+                    })
         }
-    }
-    fun loadBitmapFromView(v: View): Bitmap? {
-        val b = Bitmap.createBitmap(
-            v.layoutParams.width,
-            v.layoutParams.height,
-            Bitmap.Config.ARGB_8888
-        )
-        val c = Canvas(b)
-        v.layout(v.left, v.top, v.right, v.bottom)
-        v.draw(c)
-        return b
-    }
-
-    private fun GetMarkerPin(businessBescon: MasterBeaconModel.BusinessBescon): Bitmap {
-//        BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(masterList[BusinessPos]))
-        val customMarkerView: View =
-            (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
-                R.layout.map_marker,
-                null
-            )
-
-        var mainMarkerView = customMarkerView.findViewById<ConstraintLayout>(R.id.cnt_marker)
-        mainMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        mainMarkerView.layout(0, 0, mainMarkerView.measuredWidth, mainMarkerView.measuredHeight)
-        val bitmap = mainMarkerView.drawToBitmap(Bitmap.Config.ARGB_8888)
-        return bitmap
     }
 
     private fun getRequiredPermissions() {
@@ -666,17 +692,78 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             mMap = googleMap
 
             // Add a marker in Sydney and move the camera
+
+            userLat
+            userLong
+            val CurrenctLocation = LatLng(userLat, userLong)
             val Trinidad = LatLng(10.3761803, -61.2449877)
 //        mMap.addMarker(MarkerOptions().position(Trinidad).title("Trinidad & Tobago"))
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(Trinidad))
 //        mMap.uiSettings.isRotateGesturesEnabled = false
 //        mMap.uiSettings.isScrollGesturesEnabled = false
 //        mMap.uiSettings.isZoomGesturesEnabled = false
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                    == PackageManager.PERMISSION_GRANTED
+                ) {
+                    buildGoogleApiClient();
+                    mMap!!.setMyLocationEnabled(true);
+                    Log.e("TAG", "CHECKSTARTINGPos")
 
-            mMap.uiSettings.isCompassEnabled = false
-            mMap.uiSettings.isMapToolbarEnabled = false
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Trinidad, 10.0f))
-            mMap.setOnMarkerClickListener { marker -> // on marker click we are getting the title of our marker
+                } else {
+                    Log.e("TAG", "CHECKSTARTINGPoselse")
+                    val permissions =
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+
+                    Permissions.check(this, permissions, null, null, object : PermissionHandler() {
+                        override fun onGranted() {
+                            if (ContextCompat.checkSelfPermission(
+                                    this@Bussiness_Location,
+                                    Manifest.permission.ACCESS_FINE_LOCATION
+                                )
+                                == PackageManager.PERMISSION_GRANTED
+                            ) {
+                                buildGoogleApiClient();
+                                mMap!!.setMyLocationEnabled(true);
+                            }
+                        }
+
+                        override fun onDenied(
+                            context: Context?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onDenied(context, deniedPermissions)
+                        }
+
+                        override fun onBlocked(
+                            context: Context?,
+                            blockedList: java.util.ArrayList<String>?
+                        ): Boolean {
+                            return super.onBlocked(context, blockedList)
+                        }
+
+                        override fun onJustBlocked(
+                            context: Context?,
+                            justBlockedList: java.util.ArrayList<String>?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onJustBlocked(context, justBlockedList, deniedPermissions)
+                        }
+                    })
+                }
+            } else {
+                Log.e("TAG", "CHECKSTARTINGNeg")
+                buildGoogleApiClient();
+                mMap!!.setMyLocationEnabled(true);
+            }
+
+            mMap!!.uiSettings.isCompassEnabled = false
+            mMap!!.uiSettings.isMapToolbarEnabled = false
+//            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(CurrenctLocation, 10.0f))
+            mMap!!.setOnMarkerClickListener { marker -> // on marker click we are getting the title of our marker
                 // which is clicked and displaying it in a toast message.
                 val markerName = marker.title
 //                Toast.makeText(
@@ -727,6 +814,16 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         }
     }
 
+    @Synchronized
+    protected fun buildGoogleApiClient() {
+        Log.e("TAG", "buildGoogleApiClient")
+        mGoogleApiClient = GoogleApiClient.Builder(this)
+            .addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this)
+            .addApi(LocationServices.API).build()
+        mGoogleApiClient!!.connect()
+    }
+
     private fun ShowBusniessConfirmation() {
         CloseViews()
         DB_BusinessLocation.layoutBussinessConfirm.BusinessConfirm.visibility = View.VISIBLE
@@ -736,7 +833,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CHECK_IN_CODE && resultCode == Activity.RESULT_OK) {
             //Rescan Here
-            mMap.clear()
+            mMap!!.clear()
             BleScan()
         }
     }
@@ -744,7 +841,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     override fun onDestroy() {
         super.onDestroy()
         mMtCentralManager!!.stopScan()
-        handler.removeCallbacks(runnable);
+        handler.removeCallbacks(runnable)
     }
 
     private fun BusinessCheckInFlow() {
@@ -757,5 +854,58 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             startActivityForResult(BusinessCheckInIntent, CHECK_IN_CODE)
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
         }
+    }
+
+    override fun onLocationChanged(location: Location) {
+        Log.e("TAG", "MAPLOCATIONX : ")
+        mLastLocation = location
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker!!.remove()
+        }
+        //Place current location marker
+        val latLng = LatLng(location.getLatitude(), location.getLongitude())
+        val markerOptions = MarkerOptions()
+        markerOptions.position(latLng)
+//        markerOptions.title("Current Position")
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+//        mCurrLocationMarker = mMap!!.addMarker(markerOptions)
+
+        Log.e("TAG", "MAPLOCATION : ")
+        //move map camera
+        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        mMap!!.animateCamera(CameraUpdateFactory.zoomTo(11f))
+
+        //stop location updates
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient!!, this)
+        }
+
+    }
+
+    override fun onConnected(bundle: Bundle?) {
+        Log.e("TAG", "LocationConnected")
+        mLocationRequest = LocationRequest()
+        mLocationRequest!!.setInterval(1000)
+        mLocationRequest!!.setFastestInterval(1000)
+        mLocationRequest!!.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient!!,
+                mLocationRequest!!, this
+            )
+        }
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+
+    }
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+
     }
 }

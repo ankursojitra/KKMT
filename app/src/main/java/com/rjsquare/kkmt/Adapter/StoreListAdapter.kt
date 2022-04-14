@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Activity.Store.Store
 import com.rjsquare.kkmt.Activity.Store.StoreLevelList
-import com.rjsquare.kkmt.Activity.function
+import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.Model.StoreListModel
 import com.rjsquare.kkmt.R
@@ -122,7 +122,7 @@ class StoreListAdapter(
             try {
                 if (view == DB_RawStorelistFrameBinding.txtMore) {
                     ApplicationClass.mStoreLevelListModelSelected = lStoreListModelSelected
-                    function.NextScreen(
+                    commanUtils.NextScreen(
                         moContext as Store,
                         Intent(moContext, StoreLevelList::class.java)
                     )

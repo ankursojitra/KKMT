@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.rjsquare.kkmt.Activity.function
+import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.Adapter.StoreLevelItemDetailAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mStoreLevelListModelSelected
@@ -103,7 +103,7 @@ class StoreLevelList : AppCompatActivity(), View.OnClickListener {
                 DB_StoreLevelList.cntConfirmation.visibility = View.GONE
             } else if (view == DB_StoreLevelList.cntRedeemConfirm) {
                 DB_StoreLevelList.cntConfirmation.visibility = View.GONE
-                function.NextScreen(this, Intent(this, StoreItemRedeemConfirm::class.java))
+                commanUtils.NextScreen(this, Intent(this, StoreItemRedeemConfirm::class.java))
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

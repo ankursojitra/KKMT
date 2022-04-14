@@ -103,7 +103,7 @@
                             android:layout_width="@dimen/_75dp"
                             android:layout_height="@dimen/_75dp"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/image"
+                            android:src="@drawable/ic_expe_logo"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

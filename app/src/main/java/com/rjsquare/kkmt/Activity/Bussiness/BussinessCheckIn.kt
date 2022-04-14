@@ -9,12 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Review.SearchEmployee
+import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.BusinessCheckInModel
 import com.rjsquare.kkmt.databinding.ActivityBussinessCheckInBinding
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -43,7 +45,22 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
         DB_BussinessCheckIn.txtContinue.setOnClickListener(this)
         DB_BussinessCheckIn.cntCheckout.setOnClickListener(this)
         DB_BussinessCheckIn.txtUnauthOk.setOnClickListener(this)
+
+        Setupdata()
         CheckInCredit()
+
+    }
+
+    private fun Setupdata() {
+        ApplicationClass.selectedMasterModel
+        Picasso.with(this).load(ApplicationClass.selectedMasterModel.businessimage!!)
+            .placeholder(R.drawable.ic_expe_logo).into(
+                DB_BussinessCheckIn.imgLogo
+            )
+
+        DB_BussinessCheckIn.txtBusinessName.text =
+            ApplicationClass.selectedMasterModel.bussiness_name!!
+
 
     }
 
@@ -78,7 +95,8 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
                 ) {
                     DB_BussinessCheckIn.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-
+                        DB_BussinessCheckIn.txtCredit.text =
+                            commanUtils.formatNumber(response.body()!!.data!!.check_in_credit!!.toInt())
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_BussinessCheckIn.cntUnAuthorized.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {

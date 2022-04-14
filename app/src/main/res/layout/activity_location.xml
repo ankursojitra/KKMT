@@ -248,9 +248,9 @@
             android:id="@+id/cnt_alert"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="gone"
-            android:clickable="true"
             android:background="@color/loader_back"
+            android:clickable="true"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -294,9 +294,9 @@
                         android:id="@+id/view_sap"
                         android:layout_width="@dimen/_24dp"
                         android:layout_height="@dimen/_2dp"
+                        android:layout_marginTop="@dimen/_4dp"
                         android:background="@drawable/proceedback"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_4dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_Alert" />
@@ -305,10 +305,10 @@
                         android:id="@+id/txt_Alertmsg"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:layout_marginTop="@dimen/_16dp"
                         android:fontFamily="@font/lato_medium"
                         android:gravity="center"
-                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:text="Otp"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_10dp"
@@ -338,14 +338,15 @@
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cnt_unAuthorized"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="gone"
+            android:background="@color/loader_back"
             android:clickable="true"
             android:elevation="@dimen/_20dp"
-            android:background="@color/loader_back"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -389,9 +390,9 @@
                         android:id="@+id/view_altsap"
                         android:layout_width="@dimen/_24dp"
                         android:layout_height="@dimen/_2dp"
+                        android:layout_marginTop="@dimen/_4dp"
                         android:background="@drawable/proceedback"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_4dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_unauth" />
@@ -400,10 +401,10 @@
                         android:id="@+id/txt_unauthmsg"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:layout_marginTop="@dimen/_16dp"
                         android:fontFamily="@font/lato_medium"
                         android:gravity="center"
-                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:text="@string/unauthorizeduser"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_10dp"
@@ -431,19 +432,6 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <ImageView
-            android:id="@+id/img_founds"
-            android:layout_width="@dimen/_100dp"
-            android:layout_height="@dimen/_100dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/comp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

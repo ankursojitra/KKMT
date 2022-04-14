@@ -2,7 +2,6 @@ package com.rjsquare.kkmt.Adapter
 
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +13,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Model.LeaderBoardModel
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.EmpInfo
-import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.LeaderboardCustomer_Model
 import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.UserData
 import com.rjsquare.kkmt.databinding.RawLeaderboardFrameBinding
-import java.util.*
+import com.squareup.picasso.Picasso
 
 class LeaderboardCustomerAdapter(
     var moContext: Context,
@@ -53,9 +50,15 @@ class LeaderboardCustomerAdapter(
         try {
             var mLeaderBoardModel = moArrayList[position]
             holder.CustomerInfoSelected = mLeaderBoardModel
-            holder.DB_RawLeaderboardFrameBinding.txtName.text = holder.CustomerInfoSelected!!.username
-            holder.DB_RawLeaderboardFrameBinding.txtCredits.text = holder.CustomerInfoSelected!!.credit
+            holder.DB_RawLeaderboardFrameBinding.txtName.text =
+                holder.CustomerInfoSelected!!.username
+            holder.DB_RawLeaderboardFrameBinding.txtCredits.text =
+                holder.CustomerInfoSelected!!.credit
             holder.DB_RawLeaderboardFrameBinding.txtRank.text = holder.CustomerInfoSelected!!.rank
+
+            Picasso.with(moContext).load(holder.CustomerInfoSelected!!.userimage)
+                .placeholder(R.drawable.ic_expe_logo)
+                .into(holder.DB_RawLeaderboardFrameBinding.imgProfile)
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -77,7 +80,8 @@ class LeaderboardCustomerAdapter(
         return moArrayList.size
     }
 
-    inner class View_holder(itemBinding: RawLeaderboardFrameBinding) : RecyclerView.ViewHolder(itemBinding.root),
+    inner class View_holder(itemBinding: RawLeaderboardFrameBinding) :
+        RecyclerView.ViewHolder(itemBinding.root),
         View.OnClickListener {
 
         private lateinit var mImgNotify: ImageView
@@ -89,6 +93,7 @@ class LeaderboardCustomerAdapter(
         var CustomerInfoSelected: UserData.CustomerInfo? = null
 
         lateinit var DB_RawLeaderboardFrameBinding: RawLeaderboardFrameBinding
+
         init {
             try {
                 DB_RawLeaderboardFrameBinding = itemBinding
@@ -111,22 +116,24 @@ class LeaderboardCustomerAdapter(
             }
         }
 
-        override fun onClick(view: View?) {try{
-            if (view == mIdFrameconstraint) {
-                Toast.makeText(moContext, "Comming soon...", Toast.LENGTH_SHORT).show()
-            }} catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
+        override fun onClick(view: View?) {
+            try {
+                if (view == mIdFrameconstraint) {
+                    Toast.makeText(moContext, "Comming soon...", Toast.LENGTH_SHORT).show()
+                }
+            } catch (NE: NullPointerException) {
+                NE.printStackTrace()
+            } catch (IE: IndexOutOfBoundsException) {
+                IE.printStackTrace()
+            } catch (AE: ActivityNotFoundException) {
+                AE.printStackTrace()
+            } catch (E: IllegalArgumentException) {
+                E.printStackTrace()
+            } catch (RE: RuntimeException) {
+                RE.printStackTrace()
+            } catch (E: Exception) {
+                E.printStackTrace()
+            }
         }
     }
 
