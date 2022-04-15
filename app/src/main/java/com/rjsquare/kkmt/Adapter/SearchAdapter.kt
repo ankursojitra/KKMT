@@ -125,11 +125,14 @@ class SearchAdapter(
 
         override fun onClick(view: View?) {
             try {
+                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
                 if (view == DB_RawSearchFrameBinding.idFrameconstraint) {
                     ApplicationClass.mSearchModelSelected = lSearchModelSelected
                     if (HomeActivity.KeyBoardOpen) hideSoftKeyboard(moContext as HomeActivity)
                     search.DB_FSearch.edtSearchbar.clearFocus()
                     search.PrepareBottomSheetView()
+                }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

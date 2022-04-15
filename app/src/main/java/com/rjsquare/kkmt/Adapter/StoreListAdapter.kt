@@ -120,12 +120,15 @@ class StoreListAdapter(
 
         override fun onClick(view: View?) {
             try {
+                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
                 if (view == DB_RawStorelistFrameBinding.txtMore) {
                     ApplicationClass.mStoreLevelListModelSelected = lStoreListModelSelected
                     commanUtils.NextScreen(
                         moContext as Store,
                         Intent(moContext, StoreLevelList::class.java)
                     )
+                }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

@@ -163,6 +163,8 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_ReviewList.imgBack) {
                 onBackPressed()
             }else if (view == DB_ReviewList.txtPendingReview) {
@@ -200,6 +202,7 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
                         R.color.white
                     )
                 )
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

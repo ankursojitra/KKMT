@@ -100,6 +100,8 @@ class VideosAdapter(
         }
 
         override fun onClick(view: View?) {try{
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_RawVideoFrameBinding.idFrameconstraintX) {
                 ApplicationClass.mVideoesModelSelected = lVideoesModelSelected
                 var ShowVideoIntent = Intent(moContext, VideoPlayer::class.java)
@@ -108,7 +110,9 @@ class VideosAdapter(
                     R.anim.activity_in,
                     R.anim.activity_out
                 )
-            } } catch (NE: NullPointerException) {
+            }
+            }
+            } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
             IE.printStackTrace()

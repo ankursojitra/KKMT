@@ -591,6 +591,8 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_BusinessLocation.cntNotfound) {
                 ShowBusinessReport()
             } else if (view == mTxtSubmit) {
@@ -638,6 +640,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             } else if (view == DB_BusinessLocation.layoutBussinessConfirm.cntNotfind) {
                 HideBusinessConfiramation()
                 ShowBusinessReport()
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

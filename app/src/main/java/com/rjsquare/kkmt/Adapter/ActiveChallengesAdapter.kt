@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Activity.Challenges.ActiveChallenge
 import com.rjsquare.kkmt.Activity.Challenges.Challenge_info
+import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.Model.ActiveChallengesModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.RawChallengesFrameBinding
@@ -123,6 +124,8 @@ class ActiveChallengesAdapter(
         }
 
         override fun onClick(view: View?) {try{
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_RawChallengesFrameBinding.idFrameconstraintX) {
                 var ChallengesInfoIntent = Intent(moContext, Challenge_info::class.java)
                 moContext.startActivity(ChallengesInfoIntent)
@@ -130,7 +133,9 @@ class ActiveChallengesAdapter(
                     R.anim.activity_in,
                     R.anim.activity_out
                 )
-            }} catch (NE: NullPointerException) {
+            }
+            }
+            } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
             IE.printStackTrace()

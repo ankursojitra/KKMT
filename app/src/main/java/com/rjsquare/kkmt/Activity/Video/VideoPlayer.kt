@@ -133,12 +133,15 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_VideoPlayer.imgBack) {
                 onBackPressed()
             } else if (view == DB_VideoPlayer.txtQuestions) {
                 var QuestionIntent = Intent(this, Questions::class.java)
                 startActivity(QuestionIntent)
                 overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

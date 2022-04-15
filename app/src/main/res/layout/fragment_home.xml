@@ -196,7 +196,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/_6dp"
-                                android:background="@drawable/proceedback"
+                                android:background="@drawable/proceedback_orange"
                                 android:fontFamily="@font/lato_bold"
                                 android:gravity="center"
                                 android:paddingHorizontal="@dimen/_10dp"

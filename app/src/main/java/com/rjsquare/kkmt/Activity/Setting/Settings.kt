@@ -56,6 +56,8 @@ class Settings : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_Settings.imgBack) {
                 onBackPressed()
             } else if (view == DB_Settings.cntNotificationMain) {
@@ -76,6 +78,7 @@ class Settings : AppCompatActivity(), View.OnClickListener {
                 Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
             } else if (view == DB_Settings.cntAboutMain) {
                 Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

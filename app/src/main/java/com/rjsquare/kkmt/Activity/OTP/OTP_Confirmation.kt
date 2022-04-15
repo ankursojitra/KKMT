@@ -228,6 +228,8 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_OTPConfirmation.txtVerify) {
                 FinalOTPCode = GetOTP()
                 User_OTPConfirmation(
@@ -254,6 +256,7 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                     handler.postDelayed(runnable, 1500)
                 }
                 handler.postDelayed(runnablex, 1000)
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

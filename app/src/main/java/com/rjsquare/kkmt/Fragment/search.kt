@@ -147,9 +147,9 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
             val DB_BottomSheet = DB_FSearch.cntBottomView
             mCntBottomView = DB_BottomSheet
             mCntBottomback = DB_BottomSheet.cnt_bottomback
-            mImgSearch =DB_BottomSheet.img_search
-            mTxtTitle =DB_BottomSheet.txt_title
-            mTxtLocationname =DB_BottomSheet.txt_locationname
+            mImgSearch = DB_BottomSheet.img_search
+            mTxtTitle = DB_BottomSheet.txt_title
+            mTxtLocationname = DB_BottomSheet.txt_locationname
 
             DB_BottomSheet.cnt_bottomback.setOnClickListener(this)
 
@@ -288,13 +288,13 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
 
         private lateinit var mMap: GoogleMap
         fun BusinessListUpside(b: Boolean) {
-            if (b){
+            if (b) {
                 DB_FSearch.cntRr
                     .animate()
                     .x(0f)
                     .y(HomeActivity.keyBoardOn)
                     .duration = HomeActivity.durationTime
-            }else{
+            } else {
                 DB_FSearch.cntRr
                     .animate()
                     .x(0f)
@@ -411,14 +411,18 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
 
     override fun onClick(view: View?) {
         try {
-            if (view == mCntBottomback) {
-                mCntBottomView.visibility = View.GONE
-            } else if (view == DB_FSearch.cntOutside) {
-                hideSoftKeyboard(requireActivity())
-                DB_FSearch.edtSearchbar.clearFocus()
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == mCntBottomback) {
+                    mCntBottomView.visibility = View.GONE
+                } else if (view == DB_FSearch.cntOutside) {
+                    hideSoftKeyboard(requireActivity())
+                    DB_FSearch.edtSearchbar.clearFocus()
 //                DB_FSearch.cntOutside.isClickable = false
 
-                BusinessListUpside(false)
+                    BusinessListUpside(false)
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -434,7 +438,6 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
             E.printStackTrace()
         }
     }
-
 
 
     override fun onMapReady(googleMap: GoogleMap) {

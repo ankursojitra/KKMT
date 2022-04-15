@@ -255,11 +255,14 @@ class Video : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
+        if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+            ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
         if (view == DB_Video.imgBack) {
             onBackPressed()
         } else if (view == DB_Video.txtUnauthOk) {
             DB_Video.cntUnAuthorized.visibility = View.GONE
             ApplicationClass.UserLogout(this)
+        }
         }
 //        else if (view == DB_Video.cntLoadmore) {
 //            if (IsVideoCallavailable) {

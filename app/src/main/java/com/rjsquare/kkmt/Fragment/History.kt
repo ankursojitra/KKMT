@@ -285,10 +285,13 @@ class History : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_FHistory.cardViewHistory1 || view == DB_FHistory.cardViewHistory2 || view == DB_FHistory.cardViewHistory3) {
                 var HistoryReviewIntent = Intent(requireActivity(), ReviewList::class.java)
                 requireActivity().startActivity(HistoryReviewIntent)
                 requireActivity().overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

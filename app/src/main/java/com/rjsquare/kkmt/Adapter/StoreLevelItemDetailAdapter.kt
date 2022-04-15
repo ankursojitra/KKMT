@@ -93,6 +93,8 @@ class StoreLevelItemDetailAdapter(
         }
 
         override fun onClick(view: View?) {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_RawStoreFrameBinding.cntStoreItem) {
                 StoreLevelList.selectedStoreItemModel = lStoreItemDetailModelSelected!!
                 Picasso.with(moContext).load(lStoreItemDetailModelSelected!!.image!![0])
@@ -102,6 +104,7 @@ class StoreLevelItemDetailAdapter(
                 StoreLevelList.DB_StoreLevelList.txtRedeemItemCredit.text =
                     lStoreItemDetailModelSelected!!.credit_required
                 StoreLevelList.DB_StoreLevelList.cntConfirmation.visibility = View.VISIBLE
+            }
             }
         }
     }

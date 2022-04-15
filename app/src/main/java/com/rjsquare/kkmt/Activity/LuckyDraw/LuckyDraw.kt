@@ -273,6 +273,8 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_LuckyDraw.txtSpin) {
                 if (!Spinning) {
                     var SpinTimeL =
@@ -297,6 +299,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             } else if (view == DB_LuckyDraw.txtUnauthOk) {
                 DB_LuckyDraw.cntUnAuthorized.visibility = View.GONE
                 ApplicationClass.UserLogout(this)
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

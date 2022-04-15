@@ -93,6 +93,8 @@ class ReviewAdapter(
 
         override fun onClick(view: View?) {
             try {
+                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
                 if (view == DB_RawReviewFrameBinding.idFrameconstraint) {
                     ApplicationClass.empReviewModelSelected = lReviewModelSelected
                     ApplicationClass.isNewReview = false
@@ -102,6 +104,7 @@ class ReviewAdapter(
                         R.anim.activity_in,
                         R.anim.activity_out
                     )
+                }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()
