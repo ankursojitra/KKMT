@@ -155,6 +155,8 @@ class Home : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (ApplicationClass.userLogedIn) {
                 if (view == DB_FHome.cardViewStore) {
                     commanUtils.NextScreen(
@@ -201,6 +203,7 @@ class Home : Fragment(), View.OnClickListener {
                 } else {
                     HomeActivity.DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
                     ApplicationClass.UserLogIn(requireActivity())
+                }
                 }
             }
         } catch (NE: NullPointerException) {

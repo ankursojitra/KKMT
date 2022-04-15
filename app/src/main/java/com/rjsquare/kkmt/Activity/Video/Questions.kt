@@ -182,6 +182,8 @@ class Questions : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_Question.txtNextquestion) {
                 if (SelectedOption == 0) {
                     DB_Question.txtAlertmsg.text = "Please select one option."
@@ -216,6 +218,7 @@ class Questions : AppCompatActivity(), View.OnClickListener {
                 overridePendingTransition(R.anim.activity_back_in,R.anim.activity_back_out)
             } else if (view == DB_Question.txtAlertok) {
                 DB_Question.cntAlert.visibility = View.GONE
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

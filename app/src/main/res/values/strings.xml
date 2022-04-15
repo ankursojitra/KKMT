@@ -3,6 +3,7 @@
     <string name="welcomeuser">Welcome</string>
     <string name="Phonenumber">Phone Number</string>
     <string name="confirmyou">Confirm it\'s you</string>
+    <string name="confirm">Confirm</string>
     <string name="loginmsg">WE ARE HAPPY TO HAVE YOU.\n LOGIN OR SIGNUP
         TO BEGIN YOUR EXPERIENCE.</string>
     <string name="otpmsg">ONE-TIME PASSWORD (OTP) WAS SENT TO YOUR MOBILE TELEPHONE NUMBER. PLEASE ENTER IT BELOW.</string>
@@ -11,6 +12,9 @@
     <string name="verified">Verified</string>
     <string name="unverified">Unverified</string>
     <string name="checkin">CheckIn</string>
+    <string name="defaulttimer">00:00</string>
+    <string name="cancel">Cancel</string>
+    <string name="recording">Recording...</string>
     <string name="attention">Attention</string>
     <string name="Proceed">Proceed</string>
     <string name="onestar">1 star</string>

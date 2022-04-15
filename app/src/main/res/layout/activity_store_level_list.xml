@@ -234,7 +234,7 @@
                             android:id="@+id/txt_confirm"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_36dp"
-                            android:background="@drawable/proceedback"
+                            android:background="@drawable/proceedback_orange"
                             android:fontFamily="@font/lato_bold"
                             android:gravity="center"
                             android:text="Confirm"

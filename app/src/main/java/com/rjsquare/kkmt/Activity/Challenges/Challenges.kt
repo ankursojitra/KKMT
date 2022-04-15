@@ -140,6 +140,8 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_Challenges.imgBack) {
                 onBackPressed()
             } else if (view == DB_Challenges.txtDaily) {
@@ -224,6 +226,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                         R.color.transparent
                     )
                 )
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

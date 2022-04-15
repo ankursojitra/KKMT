@@ -99,6 +99,8 @@ class StoreItemDetailAdapter(
         }
 
         override fun onClick(view: View?) {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval}
         }
     }
 

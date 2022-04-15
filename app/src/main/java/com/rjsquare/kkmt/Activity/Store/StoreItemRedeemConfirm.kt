@@ -329,6 +329,8 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
+        if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+            ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
         if (view == DB_StoreItemRedeemConfirm.cntItemredeemSubmit) {
             if (!IsPickUpStore) {
                 if (!DB_StoreItemRedeemConfirm.edtAddress1.text.toString().trim()
@@ -376,6 +378,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             } else {
                 DB_StoreItemRedeemConfirm.cntAlert.visibility = View.GONE
             }
+        }
         }
     }
 

@@ -106,6 +106,8 @@ class ActiveChallenge : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_ActiveChallenge.txtAchallenge) {
                 DB_ActiveChallenge.viewPager.currentItem = 0
                 DB_ActiveChallenge.txtAchallenge.background =
@@ -142,6 +144,7 @@ class ActiveChallenge : AppCompatActivity(), View.OnClickListener {
                 )
             } else if (view == DB_ActiveChallenge.imgBack) {
                 onBackPressed()
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

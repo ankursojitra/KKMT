@@ -90,8 +90,11 @@ class Profile : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_Profile.imgBack) {
                 onBackPressed()
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

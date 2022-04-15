@@ -689,6 +689,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
+        if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+            ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
         if (view == DB_SearchEmployee.cntNotfound) {
             CloseViews()
             DB_SearchEmployee.layoutHelperReport.cntReportview.visibility = View.VISIBLE
@@ -727,6 +729,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             DB_SearchEmployee.cntEmpmainView.visibility = View.VISIBLE
         } else if (view == DB_SearchEmployee.txtUnauthOk) {
             ApplicationClass.UserLogout(this)
+        }
         }
     }
 

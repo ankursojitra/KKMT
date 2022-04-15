@@ -280,6 +280,8 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_UploadDoc.cntUploadDoc) {
                 DB_UploadDoc.cntUploadDocType.visibility = View.VISIBLE
             } else if (view == DB_UploadDoc.txtSkip) {
@@ -397,6 +399,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
                 }
             } else if (view == DB_UploadDoc.txtAlertok) {
                 DB_UploadDoc.cntAlert.visibility = View.GONE
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

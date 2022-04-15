@@ -143,6 +143,8 @@ class EventsAdapter(
 
         override fun onClick(view: View?) {
             try {
+                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
                 if (view == DB_RawEventsFrameBinding.idFrameconstraint) {
                     mEventsModelSelected = lEventsModelSelected
                     var FullEventIntent = Intent(moContext, EventsFullView::class.java)
@@ -151,6 +153,7 @@ class EventsAdapter(
                         R.anim.activity_in,
                         R.anim.activity_out
                     )
+                }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

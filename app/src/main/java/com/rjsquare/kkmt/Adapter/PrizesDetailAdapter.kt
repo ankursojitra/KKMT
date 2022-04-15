@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.PrizeList_Model
 import com.rjsquare.kkmt.databinding.RawPrizeFrameBinding
@@ -85,7 +86,10 @@ class PrizesDetailAdapter(
         }
 
         override fun onClick(view: View?) {
-
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            }
         }
     }
 

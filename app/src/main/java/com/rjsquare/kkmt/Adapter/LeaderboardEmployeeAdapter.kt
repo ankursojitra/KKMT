@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.Model.LeaderBoardModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.EmpInfo
@@ -118,8 +119,11 @@ class LeaderboardEmployeeAdapter(
 
         override fun onClick(view: View?) {
             try {
+                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
                 if (view == mIdFrameconstraint) {
                     Toast.makeText(moContext, "Comming soon...", Toast.LENGTH_SHORT).show()
+                }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

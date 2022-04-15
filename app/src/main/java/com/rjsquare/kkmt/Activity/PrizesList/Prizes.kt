@@ -153,6 +153,8 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_Prizes.imgBack) {
                 onBackPressed()
             } else if (view == DB_Prizes.txtUnauthOk) {
@@ -160,6 +162,7 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
                 ApplicationClass.UserLogout(this)
             } else if (view == DB_Prizes.txtAlertok) {
                 DB_Prizes.cntAlert.visibility = View.GONE
+            }
             }
 
         } catch (NE: NullPointerException) {

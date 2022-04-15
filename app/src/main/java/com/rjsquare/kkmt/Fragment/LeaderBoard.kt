@@ -402,6 +402,8 @@ class LeaderBoard : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_LeaderBoard.crdPrizes) {
                 var PrizesIntent = Intent(activity, Prizes::class.java)
                 requireActivity().startActivity(PrizesIntent)
@@ -443,6 +445,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                         R.color.black
                     )
                 )
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

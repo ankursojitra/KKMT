@@ -76,7 +76,8 @@ class ApplicationClass : Application(), LifecycleObserver {
         var autorisedUser = true
         var isReviewNew = true
         var isApprove = true
-
+        var lastClick = 0L
+        var clickInterval = 500L
         val email_Pattern: Pattern = Pattern.compile(
             "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
                     "\\@" +

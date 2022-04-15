@@ -297,6 +297,8 @@ class ReviewEmployeeSearch : AppCompatActivity(), OnMapReadyCallback, View.OnCli
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == mCntNotfound) {
                 mCntNotfound.visibility = View.INVISIBLE
                 ReportView.visibility = View.VISIBLE
@@ -356,6 +358,7 @@ class ReviewEmployeeSearch : AppCompatActivity(), OnMapReadyCallback, View.OnCli
                 var HelperIntent = Intent(this, ReviewEdit::class.java)
                 startActivity(HelperIntent)
                 overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.Model.NotificationModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.RawLeaderboardFrameBinding
@@ -112,9 +113,13 @@ class NotifiyAdapter(
         }
 
         override fun onClick(view: View?) {try{
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_RawNotificationFrameBinding.idFrameconstraint) {
                 Toast.makeText(moContext, "Comming soon...", Toast.LENGTH_SHORT).show()
-            }} catch (NE: NullPointerException) {
+            }
+            }
+            } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
             IE.printStackTrace()

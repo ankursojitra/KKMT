@@ -139,7 +139,7 @@
                     android:id="@+id/txt_questions"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_46dp"
-                    android:background="@drawable/proceedback"
+                    android:background="@drawable/proceedback_orange"
                     android:fontFamily="@font/lato_bold"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/_16dp"

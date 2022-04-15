@@ -106,6 +106,8 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (view == DB_RegisterUser.txtSignup) {
                 if (GetValidationConfirmation()) {
                     DB_RegisterUser.cntLoader.visibility = View.VISIBLE
@@ -135,6 +137,7 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
                     datePicker.show()
                     DatePickerVISIBLE = true
                 }
+            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

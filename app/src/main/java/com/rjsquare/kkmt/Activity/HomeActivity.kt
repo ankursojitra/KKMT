@@ -271,6 +271,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
+            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
             if (ApplicationClass.userLogedIn) {
                 if (view == DB_HomeActivity.HomeScreen.ContentView.cntHome || view == DB_HomeActivity.nevigationMenuview.cntHomeMenu) {
                     HomeClick()
@@ -336,6 +338,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                     DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
                     ApplicationClass.UserLogIn(this)
                 }
+            }
             }
 
         } catch (NE: NullPointerException) {
