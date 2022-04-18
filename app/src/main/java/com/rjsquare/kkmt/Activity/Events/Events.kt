@@ -1,13 +1,16 @@
 package com.rjsquare.kkmt.Activity.Events
 
 import android.content.ActivityNotFoundException
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.applandeo.materialcalendarview.utils.DateUtils
@@ -53,59 +56,60 @@ class Events : AppCompatActivity(), View.OnClickListener, OnDayClickListener {
 //            DB_Events.cntLoadmore.setOnClickListener(this)
 
 
-//            val events: MutableList<EventDay> = java.util.ArrayList()
-//
-//            val calendar = Calendar.getInstance()
-//            events.add(EventDay(calendar, R.drawable.dot))
-//
-//            val calendar1 = Calendar.getInstance()
-//            calendar1.set(Calendar.DAY_OF_MONTH, 10)
-//            calendar1.set(Calendar.MONTH, Calendar.NOVEMBER)
-//            calendar1.set(Calendar.YEAR, 2020)
-//            events.add(EventDay(calendar1, R.drawable.dot))
-//
-//            val calendar2 = Calendar.getInstance()
-//            calendar2.set(Calendar.DAY_OF_MONTH, 11)
-//            events.add(
-//                EventDay(
-//                    calendar2,
-//                    R.drawable.dot,
-//                    Color.parseColor("#228B22")
-//                )
-//            )
-//
-//            val calendar3 = Calendar.getInstance()
-//            calendar3.set(Calendar.DAY_OF_MONTH, 7)
-//            events.add(EventDay(calendar3, R.drawable.dot))
-//
-//            val calendar4 = Calendar.getInstance()
-//            calendar4.set(Calendar.DAY_OF_MONTH, 13)
-//            events.add(EventDay(calendar4, R.drawable.dot))
-//
-//            val calendarView =
-//                findViewById<View>(R.id.calendarView) as CalendarView
-//
-//            val min = Calendar.getInstance()
-//            min.add(Calendar.MONTH, -12)
-//
-//            val max = Calendar.getInstance()
-//            max.add(Calendar.MONTH, 12)
-//
-//            calendarView.setMinimumDate(min)
-//            calendarView.setMaximumDate(max)
-//
-//            calendarView.setEvents(events)
-//
-////        calendarView.setDisabledDays(getDisabledDays())
-//
-//            calendarView.setOnDayClickListener { eventDay: EventDay ->
-//                Toast.makeText(
-//                    applicationContext,
-//                    eventDay.calendar.time.toString() + " "
-//                            + eventDay.isEnabled,
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
+            val events: MutableList<EventDay> = java.util.ArrayList()
+
+            val calendar = Calendar.getInstance()
+            events.add(EventDay(calendar, R.drawable.dot))
+
+            val calendar1 = Calendar.getInstance()
+            calendar1.set(Calendar.DAY_OF_MONTH, 10)
+            calendar1.set(Calendar.MONTH, Calendar.NOVEMBER)
+            calendar1.set(Calendar.YEAR, 2022)
+            events.add(EventDay(calendar1, R.drawable.dot))
+
+            val calendar2 = Calendar.getInstance()
+            calendar2.set(Calendar.DAY_OF_MONTH, 11)
+            events.add(
+                EventDay(
+                    calendar2,
+                    R.drawable.dot,
+                    Color.parseColor("#228B22")
+                )
+            )
+
+            val calendar3 = Calendar.getInstance()
+            calendar3.set(Calendar.DAY_OF_MONTH, 7)
+            events.add(EventDay(calendar3, R.drawable.dot))
+
+            val calendar4 = Calendar.getInstance()
+            calendar4.set(Calendar.DAY_OF_MONTH, 13)
+            events.add(EventDay(calendar4, R.drawable.dot))
+
+            val calendarView =
+                findViewById<View>(R.id.calendarView) as CalendarView
+
+            val min = Calendar.getInstance()
+            min.add(Calendar.MONTH, 0)
+            min.add(Calendar.DAY_OF_MONTH, -1)
+
+            val max = Calendar.getInstance()
+            max.add(Calendar.MONTH, 12)
+
+            calendarView.setMinimumDate(min)
+            calendarView.setMaximumDate(max)
+
+            calendarView.setEvents(events)
+
+//        calendarView.setDisabledDays(getDisabledDays())
+
+            calendarView.setOnDayClickListener { eventDay: EventDay ->
+                Toast.makeText(
+                    applicationContext,
+                    eventDay.calendar.time.toString() + " "
+                            + eventDay.isEnabled,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
             DB_Events.txtUnauthOk.setOnClickListener(this)
             IsEventCallavailable = true

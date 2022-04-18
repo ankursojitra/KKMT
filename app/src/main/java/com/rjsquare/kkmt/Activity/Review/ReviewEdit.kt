@@ -30,19 +30,26 @@ import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder
 import com.google.gson.Gson
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
+import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.MainActivity
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewSubmitModel
 import com.rjsquare.kkmt.databinding.ActivityReviewScreenBinding
 import com.squareup.picasso.Picasso
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.*
 import java.util.*
 
 
 class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 
-    var PDFString: String = ""
+    var receiptImageString: String = ""
     val PICK_IMAGE = 1
     var photoFileName = "photo.jpg"
     var photoFile: File? = null
@@ -60,6 +67,11 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     private var seconds = 0
     private var running = false
     private var wasRunning = false
+    var receiptno = ""
+    var receiptamount = ""
+    var star = ""
+    var WrittenNote = ""
+    var voiceNoteString = ""
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -410,11 +422,11 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         DB_ReviewEdit.edtWrittenNote.text.clear()
 
         //Image selection nill
-        PDFString = ""
+        receiptImageString = ""
     }
 
     private fun SetUpReviewData() {
-        if (ApplicationClass.isReviewNew) {
+        if (ApplicationClass.isNewReview) {
             //Setup New review data
 //            UncheckedReview()
             DB_ReviewEdit.cnt1star.performClick()
@@ -455,9 +467,9 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             val `in` = contentResolver.openInputStream(sUri)
             val bytes: ByteArray = getBytes(`in`!!)!!
 
-            PDFString = Base64.encodeToString(bytes, Base64.DEFAULT)
+            receiptImageString = Base64.encodeToString(bytes, Base64.DEFAULT)
 
-            Log.e("TAG", "ActivityResult: " + PDFString)
+            Log.e("TAG", "ActivityResult: " + receiptImageString)
             ChangeUploadText()
             DB_ReviewEdit.cntLoader.visibility = View.GONE
         } catch (e: java.lang.Exception) {
@@ -552,27 +564,27 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                 ApplicationClass.lastClick =
                     System.currentTimeMillis() + ApplicationClass.clickInterval
                 if (view == DB_ReviewEdit.txtSubmit) {
-                    var HelperIntent = Intent(this, ReviewDisplay::class.java)
-                    startActivity(HelperIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    if (CheckDataForReview()) SubmitReview()
+                    else DB_ReviewEdit.cntAlert.visibility = View.VISIBLE
                 } else if (view == DB_ReviewEdit.imgBack) {
                     onBackPressed()
                 } else if (view == DB_ReviewEdit.cnt1star) {
-                    UncheckedReview()
+                    star = Constants.onestar
                     DB_ReviewEdit.cnt1star.setBackgroundResource(R.drawable.review_selection)
                 } else if (view == DB_ReviewEdit.cntBad) {
-                    UncheckedReview()
+                    star = Constants.bad
                     DB_ReviewEdit.cntBad.setBackgroundResource(R.drawable.review_selection)
                 } else if (view == DB_ReviewEdit.cntGood) {
-                    UncheckedReview()
+                    star = Constants.good
                     DB_ReviewEdit.cntGood.setBackgroundResource(R.drawable.review_selection)
                 } else if (view == DB_ReviewEdit.cnt5star) {
-                    UncheckedReview()
+                    star = Constants.fivestar
                     DB_ReviewEdit.cnt5star.setBackgroundResource(R.drawable.review_selection)
                 } else if (view == DB_ReviewEdit.cntVoice) {
                     VoiceRecordingSetup()
                 } else if (view == DB_ReviewEdit.txtConfirm) {
                     DB_ReviewEdit.cntVoiceDialoug.visibility = View.GONE
+                    DB_ReviewEdit.cntLoader.visibility = View.VISIBLE
                     ConvertAudioToBase64()
                 } else if (view == DB_ReviewEdit.txtCancel) {
                     DB_ReviewEdit.cntVoiceDialoug.visibility = View.GONE
@@ -636,54 +648,128 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun CheckDataForReview(): Boolean {
+        receiptno = DB_ReviewEdit.edtReceiptNumber.text.toString()
+        receiptamount = DB_ReviewEdit.edtReceiptAmount.text.toString()
+//        receiptImageString
+//            star
+        WrittenNote = DB_ReviewEdit.edtWrittenNote.text.toString()
+//        voiceNoteString
+
+        if (star.equals(Constants.onestar) || star.equals(Constants.fivestar)) {
+            if (WrittenNote.trim().length > 0 || voiceNoteString.trim().length > 0) {
+                return true
+            } else {
+                DB_ReviewEdit.txtAlertmsg.text = getString(R.string.reviewnoteserror)
+                return false
+            }
+        } else {
+            return true
+        }
+    }
+
+    private fun SubmitReview() {
+        try {
+            DB_ReviewEdit.cntLoader.visibility = View.VISIBLE
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+            params[Constants.paramKey_UserId] =
+                ApplicationClass.userInfoModel.data!!.userid!!.toString()
+            params[Constants.paramKey_EmployeeId] = ApplicationClass.empSlaveModel.employeeid!!
+            params[Constants.paramKey_receiptno] = receiptno
+            params[Constants.paramKey_receiptamount] = receiptamount
+            params[Constants.paramKey_UploadRecipt] = receiptImageString
+            params[Constants.paramKey_star] = star
+            params[Constants.paramKey_WrittenNote] = WrittenNote
+            params[Constants.paramKey_VoiceNote] = voiceNoteString
+
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.EmployeeReportService>(
+                    NetworkServices.EmployeeReportService::class.java
+                )
+            val call =
+                service.EmployeeReportData(
+                    params, ApplicationClass.userInfoModel.data!!.access_token!!.toString()
+                )
+
+            call.enqueue(object : Callback<ReviewSubmitModel> {
+                override fun onFailure(call: Call<ReviewSubmitModel>, t: Throwable) {
+                    DB_ReviewEdit.cntLoader.visibility = View.GONE
+                    Log.e("GetResponsesasXASX", "Hell: ")
+                }
+
+                override fun onResponse(
+                    call: Call<ReviewSubmitModel>,
+                    response: Response<ReviewSubmitModel>
+                ) {
+                    Log.e("GetResponsesasXASX", "responseHell: " + response.body()!!)
+                    DB_ReviewEdit.cntLoader.visibility = View.GONE
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        ApplicationClass.ReviewSubmitDisplayModel = response.body()!!.data!!
+
+                        commanUtils.NextScreen(
+                            this@ReviewEdit,
+                            Intent(this@ReviewEdit, ReviewDisplay::class.java)
+                        )
+//                    var HelperIntent = Intent(this@ReviewEdit, ReviewDisplay::class.java)
+//                    startActivity(HelperIntent)
+//                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        DB_ReviewEdit.cntUnAuthorized.visibility = View.VISIBLE
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+
+                    } else {
+                        DB_ReviewEdit.txtAlertmsg.text = response.body()!!.message
+                        DB_ReviewEdit.cntAlert.visibility = View.VISIBLE
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+    }
+
     private fun ConvertAudioToBase64() {
 
         val audioBytes: ByteArray
         try {
-
-            val photoURI = FileProvider.getUriForFile(
-                this,
-                "com.rjsquare.kkmt.fileprovider",
-                File(audioFilePath)
-            )
-            // Just to check file size.. Its is correct i-e; Not Zero
-
-
-//            val audioFile: File = File(photoURI.path)
-//            val fileSize = audioFile.length()
-//            val baos = ByteArrayOutputStream()
-//            val fis = FileInputStream(audioFile)
-//            val buf = ByteArray(1024)
-//            var n: Int
-//            while (-1 != fis.read(buf).also { n = it }) baos.write(buf, 0, n)
-//            audioBytes = baos.toByteArray()
-
             val file = File(audioFilePath)
             val bytes: ByteArray = loadFile(file)!!
-//            val encoded: ByteArray = Base64.encodeBase64(bytes)
-//            val encodedString = String(encoded)
-
 
             // Here goes the Base64 string
-            var _audioBase64 = Base64.encodeToString(bytes, Base64.DEFAULT)
-            Log.e("TAG", "StringAudio : " + _audioBase64)
+            voiceNoteString = Base64.encodeToString(bytes, Base64.DEFAULT)
+            Log.e("TAG", "StringAudio : " + voiceNoteString)
 
-//            val data: ByteArray = Base64.decode(_audioBase64, Base64.DEFAULT)
 
-            val fos = FileOutputStream(File(DaudioFilePath))
-            fos.write(Base64.decode(_audioBase64, Base64.DEFAULT))
-            fos.close()
-            try {
-                player = MediaPlayer()
-                player!!.setDataSource(DaudioFilePath)
-                player!!.prepare()
-                player!!.start()
-                Log.e("TAG","Check audio")
-            } catch (e: java.lang.Exception) {
-//                DiagnosticHelper.writeException(e)
-
-            }
-//            decodeAudio(_audioBase64,DaudioFilePath,player!!)
+            //Decode Audio File
+//            val fos = FileOutputStream(File(DaudioFilePath))
+//            fos.write(Base64.decode(_audioBase64, Base64.DEFAULT))
+//            fos.close()
+//            try {
+//                player = MediaPlayer()
+//                player!!.setDataSource(DaudioFilePath)
+//                player!!.prepare()
+//                player!!.start()
+//                Log.e("TAG","Check audio")
+//            } catch (e: java.lang.Exception) {
+////                DiagnosticHelper.writeException(e)
+//            }
+            DB_ReviewEdit.cntLoader.visibility = View.GONE
 
         } catch (e: java.lang.Exception) {
 //            DiagnosticHelper.writeException(e)
@@ -694,19 +780,6 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 //        Log.e("TAG","StringAudio : "+ConvertFileOrImageToString(Uri.parse(audioFilePath)))
     }
 
-    private fun decodeAudio(
-        base64AudioData: String,
-//        fileName: File,
-        path: String,
-        mp: MediaPlayer
-    ) {
-        var mp = mp
-        try {
-
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
 
     @Throws(IOException::class)
     private fun loadFile(file: File): ByteArray? {

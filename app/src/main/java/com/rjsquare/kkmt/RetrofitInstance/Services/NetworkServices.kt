@@ -265,6 +265,22 @@ object NetworkServices  {
 
         }
 
+        //Item Redeem Service
+        interface EmployeeReportService {
+            @POST("api-employee-report")
+            @FormUrlEncoded
+            fun EmployeeReportData(@FieldMap params: Map<String, String>,@Header("token") token:String): Call<ReviewSubmitModel>
+
+        }
+
+        //Item Redeem Service
+        interface EditProfileService {
+            @POST("api-edit-profile")
+            @FormUrlEncoded
+            fun EditProfileData(@FieldMap params: Map<String, String>,@Header("token") token:String): Call<UserInfoData_Model>
+
+        }
+
 
 //    }
 }

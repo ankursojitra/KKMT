@@ -592,7 +592,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun ReviewScreen() {
-        ApplicationClass.isReviewNew = true
+        ApplicationClass.isNewReview = true
         var HelperIntent = Intent(this, ReviewEdit::class.java)
         startActivity(HelperIntent)
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
