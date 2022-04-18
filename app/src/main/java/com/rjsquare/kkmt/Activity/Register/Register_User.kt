@@ -227,7 +227,7 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[Constants.paramKey_MobileNo] = MobileNo
+            params[Constants.paramKey_PhoneNo] = MobileNo
             params[Constants.paramKey_FirstName] = FirstName
             params[Constants.paramKey_LastName] = LastName
             params[Constants.paramKey_EmailAddress] = EmailAddress

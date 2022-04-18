@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/blue_dark"
@@ -68,14 +68,14 @@
         <com.applandeo.materialcalendarview.CalendarView
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="@dimen/_8dp"
-            android:layout_marginRight="@dimen/_8dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:overScrollMode="never"
-            android:visibility="gone"
             app:eventsEnabled="true"
-            app:headerColor="@color/appcolor"
+            app:headerColor="@color/blue_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cnt_tool"
             app:selectionColor="@color/appcolor"
             app:todayLabelColor="@color/appcolor"
             app:type="one_day_picker" />
@@ -84,7 +84,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cnt_bot"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_margin="@dimen/_8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -286,5 +286,5 @@
             android:text="Set random date"
             android:visibility="gone" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

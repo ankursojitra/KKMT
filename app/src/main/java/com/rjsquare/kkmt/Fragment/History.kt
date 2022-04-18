@@ -124,10 +124,10 @@ class History : Fragment(), View.OnClickListener {
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         ReviewModel = response.body()!!
-                        if (response.body()!!.data!!.review_itemInfo!! != null && response.body()!!.data!!.review_itemInfo!!.size > 0) {
-                            lArray_ReviewModel.addAll(response.body()!!.data!!.review_itemInfo!!)
-                        }
-                        FillData()
+//                        if (response.body()!!.data!!.review_itemInfo!! != null && response.body()!!.data!!.review_itemInfo!!.size > 0) {
+//                            lArray_ReviewModel.addAll(response.body()!!.data!!.review_itemInfo!!)
+//                        }
+//                        FillData()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         HomeActivity.UnauthorizedUser()
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {

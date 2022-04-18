@@ -44,6 +44,7 @@
     <string name="Signupmsg">LOGIN OR SIGN UP TO BEGIN</string>
     <string name="firstname">First Name *</string>
     <string name="lastname">Last Name *</string>
+    <string name="dummy_displayName">Naria Gonzaleia</string>
     <string name="dummy_lastname">Gonzaleia</string>
     <string name="dummy_firstname">Naria</string>
     <string name="alreadyaccount">Already have an account?</string>
@@ -55,12 +56,14 @@
     <string name="dob">DOB</string>
     <string name="uploacreceipt">Uploac Receipt</string>
     <string name="gender">Gender</string>
+    <string name="displayname">Display name</string>
     <string name="male">Male</string>
     <string name="doc_msg">Upload and verify document</string>
     <string name="upload_msg">Please upload government issue document to verify your identity.</string>
     <string name="upload_doc">Upload Document</string>
     <string name="upload_selfie">Upload Selfie</string>
     <string name="Skip">Skip</string>
+    <string name="birthdate">Date of Birth</string>
     <string name="docmsg">File must be in PDF or JPG</string>
     <string name="docvalidatemsg">File must be less than 5 MB in size.</string>
     <string name="Guidelines">-   Guidelines   -</string>
@@ -71,6 +74,7 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="reviewnoteserror">For 1 star and 5 star rating Written note or Voice note is require.</string>
     <string name="action_settings">Settings</string>
     <string name="businessscan">Business Search</string>
     <string name="employeescan">Employee Search</string>

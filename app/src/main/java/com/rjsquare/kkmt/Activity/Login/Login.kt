@@ -93,7 +93,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[Constants.paramKey_MobileNo] = DB_Login.edtPhoneNum.text.toString()
+            params[Constants.paramKey_PhoneNo] = DB_Login.edtPhoneNum.text.toString()
 //            params[ApplicationClass.paramKey_DeviceType] = "A"
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.LogInCallService>(

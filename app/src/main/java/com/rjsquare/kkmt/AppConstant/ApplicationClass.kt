@@ -34,6 +34,7 @@ import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewSubmitModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.SlaveBeaconModel
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
@@ -66,6 +67,7 @@ class ApplicationClass : Application(), LifecycleObserver {
 
         lateinit var mReviewEmp_Model: ReviewEmp_Model
         lateinit var Selected_ReviewEmp_Model: ReviewEmp_Model
+        lateinit var ReviewSubmitDisplayModel: ReviewSubmitModel.ReviewSubmitdata
         lateinit var ArrayList_mReviewEmp_Model: ArrayList<ReviewEmp_Model>
         lateinit var mUserLoginInfo_Model: UserLoginInfo_Model
         lateinit var mLogInInfo_Model: UserLogIn_Model
@@ -74,7 +76,6 @@ class ApplicationClass : Application(), LifecycleObserver {
         lateinit var slaveModellist: ArrayList<SlaveBeaconModel.SlaveBescon>
         lateinit var empSlaveModel: SlaveBeaconModel.SlaveBescon
         var autorisedUser = true
-        var isReviewNew = true
         var isApprove = true
         var lastClick = 0L
         var clickInterval = 500L
@@ -98,7 +99,6 @@ class ApplicationClass : Application(), LifecycleObserver {
         lateinit var mReviewModel: ReviewModel
         lateinit var mArray_ReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
         lateinit var mList_StoreListModel: ArrayList<StoreList_Model.StoreItemData>
-        lateinit var mList_StoreItemDetailModel: ArrayList<StoreItemDetailModel>
         var mStoreLevelListModelSelected: StoreList_Model.StoreItemData? = null
         var isUserEmployee: Boolean = false
         var appBackground: Boolean = false
@@ -431,7 +431,7 @@ class ApplicationClass : Application(), LifecycleObserver {
                         call: Call<UserInfoData_Model>,
                         response: retrofit2.Response<UserInfoData_Model>
                     ) {
-//                        Log.e("GetResponsesas", ": " + Gson().toJson(response.body()!!))
+                        Log.e("GetResponsesas", ": " + Gson().toJson(response.body()!!))
 
                         if (response.body()!!.status.equals(Constants.ResponseSucess, true)) {
 

@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -42,7 +44,10 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
 
     var photoFileName = "photo.jpg"
     var photoFile: File? = null
-    var selFileSize = 0.0
+
+    var resultLauncher: ActivityResultLauncher<Intent>? = null
+
+
     override fun onBackPressed() {
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
@@ -53,6 +58,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
         lateinit var selUri: Uri
         lateinit var DB_UploadDoc: ActivityUploadDocBinding
         var PDFString: String = ""
+        var selFileSize = 0.0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,45 +121,13 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    fun isfilesizelow(fileUri: Uri): Boolean {
-        val selectedFilePath: String = fileUri.getPath().toString()
-        val file = File(selectedFilePath)
-        selFileSize = getFolderSizeLabel(file)
-        return if (selFileSize < 5.0) true else false
-    }
-
-    fun getFolderSizeLabel(file: File): Double {
-        val size = getFolderSize(file).toDouble() / 1000.0 // Get size and convert bytes into KB.
-//        return if (size >= 1024) {
-//            (size / 1024).toString() + " MB"
-//        } else {
-//            "$size KB"
-//        }
-        return (size / 1024)
-    }
-
-    fun getFolderSize(file: File): Long {
-        var size: Long = 0
-//        if (file.isDirectory) {
-//            for (child in file.listFiles()) {
-//                size += getFolderSize(child)
-//            }
-//        } else {
-        size = file.length()
-//        }
-        return size
-    }
-
     fun ConvertFileOrImageToString(sUri: Uri) {
         //Convert File to Base64String
         try {
-            if (isfilesizelow(sUri)) {
-                selUri=sUri
-                Base64Converter().execute()
-            }else{
-                //Invalid File document File size large.
-                selFileSize
-            }
+            Log.e("TAG", "CHECKURIPATH ; ")
+            selUri = sUri
+            Base64Converter().execute()
+
         } catch (e: java.lang.Exception) {
             // TODO: handle exception
             e.printStackTrace()
@@ -161,8 +135,6 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
             DB_UploadDoc.cntLoader.visibility = View.GONE
         }
     }
-
-    var resultLauncher: ActivityResultLauncher<Intent>? = null
 
 
     private fun selectPDF() {
@@ -240,7 +212,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
             call.enqueue(object : Callback<UploadDoc_Model> {
                 override fun onFailure(call: Call<UploadDoc_Model>, t: Throwable) {
                     Log.e("GetResponsesasXASX", "Hell: ")
-                        DB_UploadDoc.cntLoader.visibility = View.GONE
+                    DB_UploadDoc.cntLoader.visibility = View.GONE
                 }
 
                 override fun onResponse(
@@ -252,7 +224,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         var HomeIntent = Intent(this@upload_doc, Upload_Selfie::class.java)
                         startActivity(HomeIntent)
-                        overridePendingTransition(R.anim.activity_in,R.anim.activity_out)
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_UploadDoc.cntUnAuthorized.visibility = View.VISIBLE
                     } else {
@@ -280,126 +252,136 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_UploadDoc.cntUploadDoc) {
-                DB_UploadDoc.cntUploadDocType.visibility = View.VISIBLE
-            } else if (view == DB_UploadDoc.txtSkip) {
-                var HomeIntent = Intent(this, Upload_Selfie::class.java)
-                startActivity(HomeIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_UploadDoc.txtUnauthOk) {
-                DB_UploadDoc.cntUnAuthorized.visibility = View.GONE
-                ApplicationClass.UserLogout(this)
-            } else if (view == DB_UploadDoc.txtPdf) {
-                val permissions =
-                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                Permissions.check(this, permissions, null, null, object : PermissionHandler() {
-                    override fun onGranted() {
-                        // do your task.
-                        DB_UploadDoc.cntUploadDocType.visibility = View.GONE
-                        selectPDF()
-                    }
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_UploadDoc.cntUploadDoc) {
+                    DB_UploadDoc.cntUploadDocType.visibility = View.VISIBLE
+                } else if (view == DB_UploadDoc.txtSkip) {
+                    var HomeIntent = Intent(this, Upload_Selfie::class.java)
+                    startActivity(HomeIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                } else if (view == DB_UploadDoc.txtUnauthOk) {
+                    DB_UploadDoc.cntUnAuthorized.visibility = View.GONE
+                    ApplicationClass.UserLogout(this)
+                } else if (view == DB_UploadDoc.txtPdf) {
+                    val permissions =
+                        arrayOf(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                    Permissions.check(this, permissions, null, null, object : PermissionHandler() {
+                        override fun onGranted() {
+                            // do your task.
+                            DB_UploadDoc.cntUploadDocType.visibility = View.GONE
+                            selectPDF()
+                        }
 
-                    override fun onDenied(
-                        context: Context?,
-                        deniedPermissions: java.util.ArrayList<String>?
-                    ) {
-                        super.onDenied(context, deniedPermissions)
-                    }
+                        override fun onDenied(
+                            context: Context?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onDenied(context, deniedPermissions)
+                        }
 
-                    override fun onBlocked(
-                        context: Context?,
-                        blockedList: java.util.ArrayList<String>?
-                    ): Boolean {
-                        return super.onBlocked(context, blockedList)
-                    }
+                        override fun onBlocked(
+                            context: Context?,
+                            blockedList: java.util.ArrayList<String>?
+                        ): Boolean {
+                            return super.onBlocked(context, blockedList)
+                        }
 
-                    override fun onJustBlocked(
-                        context: Context?,
-                        justBlockedList: java.util.ArrayList<String>?,
-                        deniedPermissions: java.util.ArrayList<String>?
-                    ) {
-                        super.onJustBlocked(context, justBlockedList, deniedPermissions)
-                    }
-                })
-            } else if (view == DB_UploadDoc.txtCamera) {
-                val permissions =
-                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                Permissions.check(this, permissions, null, null, object : PermissionHandler() {
-                    override fun onGranted() {
-                        // do your task.
-                        DB_UploadDoc.cntUploadDocType.visibility = View.GONE
-                        selectImageCam()
-                    }
+                        override fun onJustBlocked(
+                            context: Context?,
+                            justBlockedList: java.util.ArrayList<String>?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onJustBlocked(context, justBlockedList, deniedPermissions)
+                        }
+                    })
+                } else if (view == DB_UploadDoc.txtCamera) {
+                    val permissions =
+                        arrayOf(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                    Permissions.check(this, permissions, null, null, object : PermissionHandler() {
+                        override fun onGranted() {
+                            // do your task.
+                            DB_UploadDoc.cntUploadDocType.visibility = View.GONE
+                            selectImageCam()
+                        }
 
-                    override fun onDenied(
-                        context: Context?,
-                        deniedPermissions: java.util.ArrayList<String>?
-                    ) {
-                        super.onDenied(context, deniedPermissions)
-                    }
+                        override fun onDenied(
+                            context: Context?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onDenied(context, deniedPermissions)
+                        }
 
-                    override fun onBlocked(
-                        context: Context?,
-                        blockedList: java.util.ArrayList<String>?
-                    ): Boolean {
-                        return super.onBlocked(context, blockedList)
-                    }
+                        override fun onBlocked(
+                            context: Context?,
+                            blockedList: java.util.ArrayList<String>?
+                        ): Boolean {
+                            return super.onBlocked(context, blockedList)
+                        }
 
-                    override fun onJustBlocked(
-                        context: Context?,
-                        justBlockedList: java.util.ArrayList<String>?,
-                        deniedPermissions: java.util.ArrayList<String>?
-                    ) {
-                        super.onJustBlocked(context, justBlockedList, deniedPermissions)
-                    }
-                })
-            } else if (view == DB_UploadDoc.txtGallery) {
-                val permissions =
-                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                Permissions.check(this, permissions, null, null, object : PermissionHandler() {
-                    override fun onGranted() {
-                        // do your task.
-                        DB_UploadDoc.cntUploadDocType.visibility = View.GONE
-                        selectImage()
-                    }
+                        override fun onJustBlocked(
+                            context: Context?,
+                            justBlockedList: java.util.ArrayList<String>?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onJustBlocked(context, justBlockedList, deniedPermissions)
+                        }
+                    })
+                } else if (view == DB_UploadDoc.txtGallery) {
+                    val permissions =
+                        arrayOf(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                    Permissions.check(this, permissions, null, null, object : PermissionHandler() {
+                        override fun onGranted() {
+                            // do your task.
+                            DB_UploadDoc.cntUploadDocType.visibility = View.GONE
+                            selectImage()
+                        }
 
-                    override fun onDenied(
-                        context: Context?,
-                        deniedPermissions: java.util.ArrayList<String>?
-                    ) {
-                        super.onDenied(context, deniedPermissions)
-                    }
+                        override fun onDenied(
+                            context: Context?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onDenied(context, deniedPermissions)
+                        }
 
-                    override fun onBlocked(
-                        context: Context?,
-                        blockedList: java.util.ArrayList<String>?
-                    ): Boolean {
-                        return super.onBlocked(context, blockedList)
-                    }
+                        override fun onBlocked(
+                            context: Context?,
+                            blockedList: java.util.ArrayList<String>?
+                        ): Boolean {
+                            return super.onBlocked(context, blockedList)
+                        }
 
-                    override fun onJustBlocked(
-                        context: Context?,
-                        justBlockedList: java.util.ArrayList<String>?,
-                        deniedPermissions: java.util.ArrayList<String>?
-                    ) {
-                        super.onJustBlocked(context, justBlockedList, deniedPermissions)
+                        override fun onJustBlocked(
+                            context: Context?,
+                            justBlockedList: java.util.ArrayList<String>?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onJustBlocked(context, justBlockedList, deniedPermissions)
+                        }
+                    })
+                } else if (view == DB_UploadDoc.txtCancel) {
+                    DB_UploadDoc.cntUploadDocType.visibility = View.GONE
+                } else if (view == DB_UploadDoc.txtSaveandContinue) {
+                    if (!PDFString.equals("", true)) {
+                        DB_UploadDoc.cntLoader.visibility = View.VISIBLE
+                        UploadDoc(PDFString)
+                    } else {
+                        DB_UploadDoc.txtAlertmsg.text = "Invalid Document."
+                        DB_UploadDoc.cntAlert.visibility = View.VISIBLE
                     }
-                })
-            } else if (view == DB_UploadDoc.txtCancel) {
-                DB_UploadDoc.cntUploadDocType.visibility = View.GONE
-            } else if (view == DB_UploadDoc.txtSaveandContinue) {
-                if (!PDFString.equals("", true)) {
-                    DB_UploadDoc.cntLoader.visibility = View.VISIBLE
-                    UploadDoc(PDFString)
-                } else {
-                    DB_UploadDoc.txtAlertmsg.text = "Invalid Document."
-                    DB_UploadDoc.cntAlert.visibility = View.VISIBLE
+                } else if (view == DB_UploadDoc.txtAlertok) {
+                    DB_UploadDoc.cntAlert.visibility = View.GONE
                 }
-            } else if (view == DB_UploadDoc.txtAlertok) {
-                DB_UploadDoc.cntAlert.visibility = View.GONE
-            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -418,7 +400,11 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode === 1 && resultCode === RESULT_OK) {
+
+        Log.e("TAG", "CHECKURIPATH ; " + requestCode)
+        Log.e("TAG", "CHECKURIPATH ; " + resultCode)
+        Log.e("TAG", "CHECKURIPATH ; " + photoFile)
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             ConvertFileOrImageToString(Uri.fromFile(photoFile))
         }
     }
@@ -435,15 +421,70 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
             }
             return byteBuffer.toByteArray()
         }
+
+        fun getFolderSizeLabel(file: File): Double {
+            val size =
+                getFolderSize(file).toDouble() / 1000.0 // Get size and convert bytes into KB.
+//        return if (size >= 1024) {
+//            (size / 1024).toString() + " MB"
+//        } else {
+//            "$size KB"
+//        }
+            return (size / 1024)
+        }
+
+        fun getFolderSize(file: File): Long {
+            var size: Long = 0
+//        if (file.isDirectory) {
+//            for (child in file.listFiles()) {
+//                size += getFolderSize(child)
+//            }
+//        } else {
+            size = file.length()
+//        }
+            return size
+        }
+
+        fun isfilesizelow(fileUri: Uri): Boolean {
+            val selectedFilePath: String = fileUri.getPath().toString()
+            val file = File(selectedFilePath)
+            selFileSize = getFolderSizeLabel(file)
+            return if (selFileSize < 5.0) true else false
+        }
+
         override fun onPreExecute() {
             super.onPreExecute()
             DB_UploadDoc.cntLoader.visibility = View.VISIBLE
         }
+
         override fun doInBackground(vararg params: Void?): String? {
-            val baos = ByteArrayOutputStream()
-            val `in` = uploadDocActyivity.contentResolver.openInputStream(selUri)
-            val bytes: ByteArray = getBytes(`in`!!)!!
-            PDFString = Base64.encodeToString(bytes, Base64.DEFAULT)
+            if (isfilesizelow(selUri)) {
+                Log.e("TAG", "CHECKURIPATH  sUri ; ")
+
+                val baos = ByteArrayOutputStream()
+                val `in` = uploadDocActyivity.contentResolver.openInputStream(selUri)
+                val bytes: ByteArray = getBytes(`in`!!)!!
+                PDFString = Base64.encodeToString(bytes, Base64.DEFAULT)
+                Log.e("TAG", "ImageString : " + PDFString)
+            } else {
+                Log.e("TAG", "CHECKURIPATH selFileSize ; ")
+                val bitmapImage = BitmapFactory.decodeFile(selUri.path)
+                val nh = (bitmapImage.height * (512.0 / bitmapImage.width)).toInt()
+                val scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true)
+//                your_imageview.setImageBitmap(scaled)
+
+                val baos = ByteArrayOutputStream()
+
+                scaled.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                val imageBytes = baos.toByteArray()
+                PDFString = Base64.encodeToString(imageBytes, Base64.DEFAULT)
+
+
+                Log.e("TAG", "ImageStringLarge : " + PDFString)
+                //Invalid File document File size large.
+                selFileSize
+            }
+
             return ""
         }
 

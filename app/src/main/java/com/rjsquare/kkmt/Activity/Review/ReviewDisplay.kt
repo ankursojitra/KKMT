@@ -50,6 +50,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             DB_ReviewDisplay.txtAlertok.setOnClickListener(this)
 
             SetUpUI()
+
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -68,10 +69,10 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
     private fun SetUpUI() {
         if (ApplicationClass.isNewReview) {
             //Employee search Screen Call
-            DB_ReviewDisplay.txtReviewName.text = ApplicationClass.Selected_ReviewEmp_Model.EmpName
+            DB_ReviewDisplay.txtReviewName.text = ApplicationClass.ReviewSubmitDisplayModel.staffname
 
-            Picasso.with(this).load(ApplicationClass.Selected_ReviewEmp_Model.EmpImage)
-                .placeholder(R.drawable.ic_expe_logo).into(DB_ReviewDisplay.imgProfile)
+//            Picasso.with(this).load(ApplicationClass.ReviewSubmitDisplayModel.ima)
+//                .placeholder(R.drawable.ic_expe_logo).into(DB_ReviewDisplay.imgProfile)
         } else {
             Log.e("TAG", "CHECKEditFlow")
             //Customer History Screen Call

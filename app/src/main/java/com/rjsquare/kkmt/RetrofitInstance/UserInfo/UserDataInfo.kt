@@ -19,6 +19,12 @@ class UserDataInfo {
     @SerializedName("userimage")
     var userimage: String? = null
 
+    @SerializedName("display_name")
+    var display_name: String? = null
+
+    @SerializedName("display_name_show")
+    var display_name_show: String? = null
+
     @SerializedName("contactno")
     var contactno: String? = null
 
