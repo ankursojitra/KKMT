@@ -15,6 +15,7 @@ import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
 import android.view.View
+import android.widget.CompoundButton
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -27,6 +28,7 @@ import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.DatePicker
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
+import com.google.gson.Gson
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
@@ -34,8 +36,10 @@ import com.rjsquare.kkmt.Activity.Register.upload_doc
 import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.DisplayNameModel
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
 import com.rjsquare.kkmt.databinding.ActivityProfileBinding
 import com.squareup.picasso.Picasso
@@ -98,9 +102,10 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
             mGenderListView.txt_male.setOnClickListener(this)
             mGenderListView.txt_female.setOnClickListener(this)
             mGenderListView.txt_other.setOnClickListener(this)
+            DB_Profile.txtUnauthOk.setOnClickListener(this)
             DB_Profile.imgUserProfile.isClickable = false
-            DB_Profile.txtGender.isClickable = false
-            DB_Profile.txtDob.isClickable = false
+            DB_Profile.txtGender.isEnabled = false
+            DB_Profile.txtDob.isEnabled = false
             DB_Profile.cntSave.visibility = View.GONE
 
 //            if (!ApplicationClass.isUserEmployee) {
@@ -129,6 +134,13 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                     }
                 })
 
+            DB_Profile.swtNameVisible.setOnCheckedChangeListener(object :
+                CompoundButton.OnCheckedChangeListener {
+                override fun onCheckedChanged(p0: CompoundButton?, isEnable: Boolean) {
+                    DisplayName(isEnable)
+                }
+
+            })
             SetProfileData()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -148,7 +160,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
     private fun SetupDatePicker() {
 
         val calendar = Calendar.getInstance()
-        if (!ApplicationClass.userInfoModel.data!!.dob!!.trim().equals("")){
+        if (!ApplicationClass.userInfoModel.data!!.dob!!.trim().equals("")) {
             calendar.set(Calendar.DAY_OF_MONTH, 10)
             calendar.set(Calendar.MONTH, Calendar.NOVEMBER)
             calendar.set(Calendar.YEAR, 2022)
@@ -177,6 +189,12 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         DB_Profile.edtLastName.setHint(ApplicationClass.userInfoModel.data!!.lastname)
         DB_Profile.edtPhoneNumber.setHint(ApplicationClass.userInfoModel.data!!.contactno)
         DB_Profile.edtEmail.setHint(ApplicationClass.userInfoModel.data!!.email)
+        DB_Profile.swtNameVisible.isChecked =
+            if (ApplicationClass.userInfoModel.data!!.display_name_show!!.equals(
+                    "Yes",
+                    true
+                )
+            ) true else false
         if (ApplicationClass.userInfoModel.data!!.dob!!.trim().equals("")) {
             DB_Profile.txtDob.setHint(getString(R.string.birthdate))
         } else {
@@ -190,16 +208,18 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         if (ApplicationClass.userInfoModel.data!!.display_name!!.trim().equals("")) {
             DB_Profile.edtDisplayName.setHint(getString(R.string.displayname))
         } else {
-            DB_Profile.edtDisplayName.setHint(ApplicationClass.Gender(ApplicationClass.userInfoModel.data!!.display_name!!))
+            DB_Profile.edtDisplayName.setHint(ApplicationClass.userInfoModel.data!!.display_name!!)
         }
+
         DB_Profile.txtLevel.setText("Level : ${ApplicationClass.userInfoModel.data!!.credit_details!!.level}")
         DB_Profile.txtCredits.setText(commanUtils.formatNumber(ApplicationClass.userInfoModel.data!!.credit_details!!.credit!!.toInt()))
 
 
-        DB_Profile.cntDob.background = ContextCompat.getDrawable(this,R.drawable.profile_field)
-        DB_Profile.cntDisplayName.background = ContextCompat.getDrawable(this,R.drawable.profile_field)
-        DB_Profile.cntEmail.background = ContextCompat.getDrawable(this,R.drawable.profile_field)
-        DB_Profile.cntGender.background = ContextCompat.getDrawable(this,R.drawable.profile_field)
+        DB_Profile.cntDob.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
+        DB_Profile.cntDisplayName.background =
+            ContextCompat.getDrawable(this, R.drawable.profile_field)
+        DB_Profile.cntEmail.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
+        DB_Profile.cntGender.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
 
         var UserImage = ""
         if (ApplicationClass.userInfoModel.data!!.userimage != null && !ApplicationClass.userInfoModel.data!!.userimage.equals(
@@ -315,6 +335,8 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                     DB_Profile.cntUserProfile.visibility = View.VISIBLE
                 } else if (view == DB_Profile.imgEditProfile) {
                     EditProfileSetup()
+                } else if (view == DB_Profile.txtUnauthOk) {
+                    ApplicationClass.UserLogout(this)
                 } else if (view == mGenderListView.txt_male) {
                     DB_Profile.txtGender.setText("Male")
                     mGenderListView.visibility = View.GONE
@@ -406,7 +428,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                         }
                     })
                 } else if (view == DB_Profile.cntSave) {
-                    if (IsProfileUpdate()) UpdateProfile()
+                    UpdateProfile()
                 } else if (view == DB_Profile.txtCancel) {
                     DB_Profile.cntUserProfile.visibility = View.GONE
                 }
@@ -434,8 +456,8 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
 //        DB_Profile.txtGender.isEnabled = true
 
         DB_Profile.imgUserProfile.isClickable = true
-        DB_Profile.txtDob.isClickable = true
-        DB_Profile.txtGender.isClickable = true
+        DB_Profile.txtDob.isEnabled = true
+        DB_Profile.txtGender.isEnabled = true
         DB_Profile.cntSave.visibility = View.VISIBLE
         DB_Profile.edtDisplayName.setText(DB_Profile.edtDisplayName.hint)
         DB_Profile.edtEmail.setText(DB_Profile.edtEmail.hint)
@@ -450,54 +472,72 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
             DB_Profile.txtGender.setText(DB_Profile.txtGender.hint)
         }
         if (ApplicationClass.userInfoModel.data!!.display_name!!.trim().equals("")) {
-//            DB_Profile.edtDisplayName.setHint(getString(R.string.displayname))
-            DB_Profile.edtDisplayName.setText("")
+            DB_Profile.edtDisplayName.setHint(getString(R.string.displayname))
+//            DB_Profile.edtDisplayName.setText("")
         } else {
             DB_Profile.edtDisplayName.setText(DB_Profile.edtDisplayName.hint)
         }
 
-        DB_Profile.cntDob.background = ContextCompat.getDrawable(this,R.drawable.prof_edit)
-        DB_Profile.cntDisplayName.background = ContextCompat.getDrawable(this,R.drawable.prof_edit)
-        DB_Profile.cntEmail.background = ContextCompat.getDrawable(this,R.drawable.prof_edit)
-        DB_Profile.cntGender.background = ContextCompat.getDrawable(this,R.drawable.prof_edit)
+        DB_Profile.cntDob.background = ContextCompat.getDrawable(this, R.drawable.prof_edit)
+        DB_Profile.cntDisplayName.background = ContextCompat.getDrawable(this, R.drawable.prof_edit)
+        DB_Profile.cntEmail.background = ContextCompat.getDrawable(this, R.drawable.prof_edit)
+        DB_Profile.cntGender.background = ContextCompat.getDrawable(this, R.drawable.prof_edit)
 
 //        DB_Profile.edtDisplayName.isFocusable = true
         Log.e("TAG", "Editable")
     }
 
-    private fun IsProfileUpdate(): Boolean {
-        var dispName = DB_Profile.edtDisplayName.text.toString()
-        var email = DB_Profile.edtEmail.text.toString()
-        var dob = DB_Profile.txtDob.text.toString()
-        var gender = DB_Profile.txtGender.text.toString()
-        var phoneNo = DB_Profile.edtPhoneNumber.text.toString()
-        var userImage = ""
-
-//        if ()
-        return true
-    }
-
     private fun UpdateProfile() {
         try {
             //Here the json data is add to a hash map with key data
+            DB_Profile.cntLoader.visibility = View.VISIBLE
             val params: MutableMap<String, String> =
                 HashMap()
 
-            params[Constants.paramKey_UserId] = ApplicationClass.mLogInInfo_Model.data!!.userid
-            params[Constants.paramKey_EmailAddress] =
-                ApplicationClass.mLogInInfo_Model.data!!.userid
-            params[Constants.paramKey_DOB] = ApplicationClass.mLogInInfo_Model.data!!.userid
-            params[Constants.paramKey_Gender] = ApplicationClass.mLogInInfo_Model.data!!.userid
-            params[Constants.paramKey_PhoneNo] = ApplicationClass.mLogInInfo_Model.data!!.userid
-            params[Constants.paramKey_UserImage] = ApplicationClass.mLogInInfo_Model.data!!.userid
-            params[Constants.paramKey_DisplayName] = ApplicationClass.mLogInInfo_Model.data!!.userid
+            params[Constants.paramKey_UserId] = ApplicationClass.userInfoModel.data!!.userid!!
+
+            if (!DB_Profile.edtDisplayName.text.toString().trim().equals("")) {
+                params[Constants.paramKey_DisplayName] = DB_Profile.edtDisplayName.text.toString()
+            } else {
+                params[Constants.paramKey_DisplayName] =
+                    ApplicationClass.userInfoModel.data!!.display_name!!
+            }
+
+            if (!DB_Profile.edtEmail.text.toString().trim().equals("")) {
+                if (commanUtils.isValidEmail(DB_Profile.edtEmail.text.toString())) {
+                    params[Constants.paramKey_EmailAddress] = DB_Profile.edtEmail.text.toString()
+                } else {
+                    DB_Profile.txtAlertmsg.text = "Invalid Email address"
+                    DB_Profile.cntAlert.visibility = View.VISIBLE
+                    return
+                }
+            } else {
+                params[Constants.paramKey_EmailAddress] =
+                    ApplicationClass.userInfoModel.data!!.email!!
+            }
+
+            if (!DB_Profile.txtDob.text.toString().trim().equals("")) {
+                params[Constants.paramKey_DOB] = DB_Profile.txtDob.text.toString()
+            } else {
+                params[Constants.paramKey_DOB] = ApplicationClass.userInfoModel.data!!.dob!!
+            }
+
+            if (!DB_Profile.txtGender.text.toString().trim().equals("")) {
+                params[Constants.paramKey_Gender] = DB_Profile.txtGender.text.toString()
+            } else {
+                params[Constants.paramKey_Gender] = ApplicationClass.userInfoModel.data!!.gender!!
+            }
+
+            params[Constants.paramKey_PhoneNo] = ApplicationClass.userInfoModel.data!!.contactno!!
+            params[Constants.paramKey_UserImage] = imageString
+
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.EditProfileService>(
                     NetworkServices.EditProfileService::class.java
                 )
             val call = service.EditProfileData(
                 params,
-                ApplicationClass.mLogInInfo_Model.data?.access_token.toString()
+                ApplicationClass.userInfoModel.data?.access_token.toString()
             )
             call.enqueue(object : Callback<UserInfoData_Model> {
                 override fun onFailure(call: Call<UserInfoData_Model>, t: Throwable) {
@@ -513,6 +553,123 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                     call: Call<UserInfoData_Model>,
                     response: retrofit2.Response<UserInfoData_Model>
                 ) {
+                    DB_Profile.cntLoader.visibility = View.GONE
+                    Log.e("TAG","UpdateInfo : "+Gson().toJson(response.body()))
+                    if (response.body()!!.status.equals(
+                            Constants.ResponseSucess, true
+                        )
+                    ) {
+//                        ApplicationClass.userInfoModel = response.body()!!
+//                        Preferences.StoreString(
+//                            Constants.Pref_UserDataModel,
+//                            Gson().toJson(ApplicationClass.userInfoModel)
+//                        )
+//
+//                        ApplicationClass.isUserEmployee = ApplicationClass.IsEmployee()
+//                        ApplicationClass.authorisedUser = true
+//                        if (ApplicationClass.userInfoModel.data!!.approve.equals(Constants.YES, true)) {
+//                            ApplicationClass.isApprove = true
+//                        } else {
+//                            ApplicationClass.isApprove = false
+//                        }
+                        ApplicationClass.updateUserInfo()
+                        UpdateDone()
+                    } else if (response.body()!!.status.equals(
+                            Constants.ResponseUnauthorized, true
+                        )
+                    ) {
+                        DB_Profile.cntUnAuthorized.visibility =
+                            View.VISIBLE
+                    } else {
+                        Log.e("TAG", "Messageerror : " + response.body()!!.message)
+                        DB_Profile.txtOtpAlertmsg.text = response.body()!!.message
+                        DB_Profile.cntAlert.visibility = View.VISIBLE
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+    }
+
+    private fun UpdateDone() {
+
+        DB_Profile.cntDob.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
+        DB_Profile.cntDisplayName.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
+        DB_Profile.cntEmail.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
+        DB_Profile.cntGender.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
+
+        DB_Profile.imgUserProfile.isClickable = false
+        DB_Profile.txtDob.isEnabled = false
+        DB_Profile.txtGender.isEnabled = false
+        DB_Profile.imgEditProfile.visibility = View.VISIBLE
+        DB_Profile.edtDisplayName.isEnabled = false
+        DB_Profile.edtEmail.isEnabled = false
+
+//        if (ApplicationClass.userInfoModel.data!!.dob!!.trim().equals("")) {
+//            DB_Profile.txtDob.setHint(getString(R.string.birthdate))
+//        } else {
+//        }
+//        if (ApplicationClass.userInfoModel.data!!.gender!!.trim().equals("")) {
+//            DB_Profile.txtGender.setHint(getString(R.string.gender))
+//        } else {
+//        }
+//        if (ApplicationClass.userInfoModel.data!!.display_name!!.trim().equals("")) {
+//            DB_Profile.edtDisplayName.setHint(getString(R.string.displayname))
+////            DB_Profile.edtDisplayName.setText("")
+//        } else {
+//        }
+        DB_Profile.txtDob.setHint(DB_Profile.txtDob.text)
+        DB_Profile.txtGender.setHint(DB_Profile.txtGender.text)
+        DB_Profile.edtDisplayName.setHint(DB_Profile.edtDisplayName.text.toString())
+    }
+
+    private fun DisplayName(isEnable: Boolean) {
+        try {
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+            params[Constants.paramKey_UserId] = ApplicationClass.userInfoModel.data!!.userid!!
+
+            params[Constants.paramKey_IsnameShow] = if (isEnable) "Yes" else "No"
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.DisplayNameService>(
+                    NetworkServices.DisplayNameService::class.java
+                )
+            val call = service.DisplayNameData(
+                params,
+                ApplicationClass.userInfoModel.data?.access_token.toString()
+            )
+            call.enqueue(object : Callback<DisplayNameModel> {
+                override fun onFailure(call: Call<DisplayNameModel>, t: Throwable) {
+                    Log.e("GetResponse", ": " + t)
+                    ApplicationClass.ShowToast(
+                        thisProfileActivity,
+                        "Something went wrong"
+                    )
+                    DB_Profile.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<DisplayNameModel>,
+                    response: retrofit2.Response<DisplayNameModel>
+                ) {
+                    DB_Profile.cntLoader.visibility = View.GONE
+                    Log.e("TAG", "MessageRes : " + Gson().toJson(response.body()!!))
                     if (response.body()!!.status.equals(
                             Constants.ResponseSucess, true
                         )
@@ -522,21 +679,12 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                             Constants.ResponseUnauthorized, true
                         )
                     ) {
-                        DB_Profile.cntUnAuthorized.visibility =
-                            View.VISIBLE
+                        DB_Profile.cntUnAuthorized.visibility = View.VISIBLE
                     } else {
+                        Log.e("TAG", "Messageerror : " + response.body()!!.message)
                         DB_Profile.txtOtpAlertmsg.text = response.body()!!.message
                         DB_Profile.cntAlert.visibility = View.VISIBLE
                     }
-
-//                    LoaderVisible(false)
-
-//                        if (userInfoModel.status.equals(Constants.ResponseSucess, true)) {
-//
-//                        } else {
-//                            ShowToast(OTPActivity, userInfoModel.message)
-//                        }
-//                        DB_Profile.cntLoader.visibility = View.GONE
                 }
             })
         } catch (E: Exception) {

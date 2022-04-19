@@ -283,7 +283,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         var arrayJ = JSONArray()
         for (Mac in BeaconMACList) {
             arrayJ.put(Mac)
-//            Log.e("TAG", "CheckSlaveMac : " + Mac)
+            Log.e("TAG", "CheckSlaveMac : " + Mac)
         }
         beaconOBJ.put("becon_list", arrayJ)
         try {
@@ -310,6 +310,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             call.enqueue(object : Callback<SlaveBeaconModel> {
                 override fun onFailure(call: Call<SlaveBeaconModel>, t: Throwable) {
                     DB_SearchEmployee.cntLoader.visibility = View.GONE
+                    Log.e("TAG","CHECKERROR : "+t)
                 }
 
                 override fun onResponse(

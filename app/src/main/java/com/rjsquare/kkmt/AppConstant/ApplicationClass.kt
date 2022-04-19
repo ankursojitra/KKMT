@@ -21,10 +21,8 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Location
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
-import com.rjsquare.kkmt.Fragment.Home
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.Model.*
 import com.rjsquare.kkmt.R
@@ -32,10 +30,7 @@ import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
-import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
-import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
-import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewSubmitModel
-import com.rjsquare.kkmt.RetrofitInstance.OTPCall.SlaveBeaconModel
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.*
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
 import retrofit2.Call
@@ -67,7 +62,7 @@ class ApplicationClass : Application(), LifecycleObserver {
 
         lateinit var mReviewEmp_Model: ReviewEmp_Model
         lateinit var Selected_ReviewEmp_Model: ReviewEmp_Model
-        lateinit var ReviewSubmitDisplayModel: ReviewSubmitModel.ReviewSubmitdata
+        lateinit var ReviewInfoModel: ReviewInfodata
         lateinit var ArrayList_mReviewEmp_Model: ArrayList<ReviewEmp_Model>
         lateinit var mUserLoginInfo_Model: UserLoginInfo_Model
         lateinit var mLogInInfo_Model: UserLogIn_Model
@@ -75,7 +70,7 @@ class ApplicationClass : Application(), LifecycleObserver {
         lateinit var selectedMasterModel: MasterBeaconModel.BusinessBescon
         lateinit var slaveModellist: ArrayList<SlaveBeaconModel.SlaveBescon>
         lateinit var empSlaveModel: SlaveBeaconModel.SlaveBescon
-        var autorisedUser = true
+        var authorisedUser = true
         var isApprove = true
         var lastClick = 0L
         var clickInterval = 500L
@@ -97,7 +92,9 @@ class ApplicationClass : Application(), LifecycleObserver {
 
         var mBiconReviewImageX: Bitmap? = null
         lateinit var mReviewModel: ReviewModel
-        lateinit var mArray_ReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+        lateinit var mPendingReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+        lateinit var mApproveReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+        lateinit var mCancelReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
         lateinit var mList_StoreListModel: ArrayList<StoreList_Model.StoreItemData>
         var mStoreLevelListModelSelected: StoreList_Model.StoreItemData? = null
         var isUserEmployee: Boolean = false
@@ -442,7 +439,7 @@ class ApplicationClass : Application(), LifecycleObserver {
                             )
 
                             isUserEmployee = IsEmployee()
-                            autorisedUser = true
+                            authorisedUser = true
                             if (userInfoModel.data!!.approve.equals(Constants.YES, true)) {
                                 isApprove = true
                             } else {
@@ -453,7 +450,7 @@ class ApplicationClass : Application(), LifecycleObserver {
                                 true
                             )
                         ) {
-                            autorisedUser = false
+                            authorisedUser = false
                         } else {
                             ShowToast(ApplicationContext, response.body()!!.message)
                         }

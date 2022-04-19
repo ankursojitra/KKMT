@@ -14,7 +14,7 @@ import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.FragmentPendingReviewBinding
 
 class PendingReviewFragment : Fragment() {
-    lateinit var arrayCompleteReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+    lateinit var arrayPendingReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -30,7 +30,7 @@ class PendingReviewFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_pending_review, container, false)
         var rootView = DB_PendingReviewFragment.root
 
-        arrayCompleteReviewModel = ReviewList.pendingReviewItemInfo
+        arrayPendingReviewList = ReviewList.pendingReviewItemInfo
         framesAdapter()
         return rootView
     }
@@ -38,14 +38,14 @@ class PendingReviewFragment : Fragment() {
     fun framesAdapter() {
         try {
 
-            if (arrayCompleteReviewModel.size > 0) {
+            if (arrayPendingReviewList.size > 0) {
                 DB_PendingReviewFragment.txtNoReviews.visibility = View.GONE
             } else {
                 DB_PendingReviewFragment.txtNoReviews.visibility = View.VISIBLE
             }
 
             val reviewAdapter = ReviewAdapter(
-                requireActivity(), arrayCompleteReviewModel
+                requireActivity(), arrayPendingReviewList
             )
 
             DB_PendingReviewFragment.rrReviewPendinglist.adapter = reviewAdapter

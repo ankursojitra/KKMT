@@ -146,6 +146,13 @@ object NetworkServices  {
             fun GetEventsData(@FieldMap params: Map<String, String>): Call<Events_Model>
         }
 
+        //Events Service
+        interface EventsByMonthService {
+            @POST("api-get-event-list-by-month")
+            @FormUrlEncoded
+            fun GetEventsByMonthData(@FieldMap params: Map<String, String>): Call<Events_Model>
+        }
+
         //Leaderboard Customer Service
         interface LeaderboardCustomerService {
             @POST("api-customer-leaderboard")
@@ -278,6 +285,14 @@ object NetworkServices  {
             @POST("api-edit-profile")
             @FormUrlEncoded
             fun EditProfileData(@FieldMap params: Map<String, String>,@Header("token") token:String): Call<UserInfoData_Model>
+
+        }
+
+        //Item Redeem Service
+        interface DisplayNameService {
+            @POST("api-display-name-hide-show")
+            @FormUrlEncoded
+            fun DisplayNameData(@FieldMap params: Map<String, String>,@Header("token") token:String): Call<DisplayNameModel>
 
         }
 
