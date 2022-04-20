@@ -5,7 +5,7 @@
     <size
         android:width="@dimen/_6dp"
         android:height="@dimen/_6dp"/>
-    <solid android:color="@color/eventcolor" />
+    <solid android:color="@color/appcolor" />
 
 
 </shape>

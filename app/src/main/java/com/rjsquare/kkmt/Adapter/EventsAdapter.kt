@@ -3,6 +3,7 @@ package com.rjsquare.kkmt.Adapter
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,6 +63,7 @@ class EventsAdapter(
             holder.DB_RawEventsFrameBinding.txtEventDate.text = mEventsModel.date
             Picasso.with(moContext).load(mEventsModel.image!![0])
                 .placeholder(R.drawable.ic_expe_logo).into(holder.DB_RawEventsFrameBinding.imgEvent)
+            Log.e("TAG","Event Item has : "+mEventsModel.date)
 //            Glide
 //                .with(moContext)
 //                .load(mEventsModel.image!![0])

@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Activity.Review.ReviewDisplay
 import com.rjsquare.kkmt.Activity.Review.ReviewList
+import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.Model.ReviewModel
 import com.rjsquare.kkmt.R
@@ -99,12 +100,13 @@ class ReviewAdapter(
                 if (view == DB_RawReviewFrameBinding.idFrameconstraint) {
                     ApplicationClass.empReviewModelSelected = lReviewModelSelected
                     ApplicationClass.isNewReview = false
-                    var HistoryReviewIntent = Intent(moContext, ReviewDisplay::class.java)
-                    moContext.startActivity(HistoryReviewIntent)
-                    (moContext as ReviewList).overridePendingTransition(
-                        R.anim.activity_in,
-                        R.anim.activity_out
-                    )
+                    commanUtils.NextScreen(moContext as ReviewList,Intent(moContext, ReviewDisplay::class.java))
+//                    var HistoryReviewIntent = Intent(moContext, ReviewDisplay::class.java)
+//                    moContext.startActivity(HistoryReviewIntent)
+//                    (moContext as ReviewList).overridePendingTransition(
+//                        R.anim.activity_in,
+//                        R.anim.activity_out
+//                    )
                 }
                 }
             } catch (NE: NullPointerException) {
