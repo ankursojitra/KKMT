@@ -2,6 +2,7 @@ package com.rjsquare.kkmt.Activity.Review
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,8 @@ import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
@@ -69,6 +72,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun SetUpUI() {
+        Log.e("TAG", "CHECKEditFlow : " + ApplicationClass.isNewReview)
         if (ApplicationClass.isNewReview) {
             //Employee search Screen Call
             SetUIData()
@@ -121,6 +125,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             call.enqueue(object : Callback<ReviewDetailModel> {
                 override fun onFailure(call: Call<ReviewDetailModel>, t: Throwable) {
                     DB_ReviewDisplay.cntLoader.visibility = View.GONE
+                    Log.e("TAG", "ResponseReview t : " + t)
                 }
 
                 override fun onResponse(
@@ -129,8 +134,8 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                 ) {
                     DB_ReviewDisplay.cntLoader.visibility = View.GONE
 
+                    Log.e("TAG", "ResponseReview : " + Gson().toJson(response.body()!!))
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        Log.e("TAG", "ResponseReview : " + Gson().toJson(response.body()!!))
 //                        ReviewInfo = response.body()!!.data!!
                         ApplicationClass.ReviewInfoModel = response.body()!!.data!!
                         SetUIData()
@@ -162,29 +167,20 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
 
     private fun SetUIData() {
         //Latest Info update in UI
-        Hour24 = 1000 * 60 * 60 * 24
 
-        val CurrentTime = System.currentTimeMillis() / 1000
-        val EditExpireTime =
-            (ApplicationClass.ReviewInfoModel.created_timestamp!!.toLong() + Hour24.toLong())
-
-        if (ApplicationClass.ReviewInfoModel.created_timestamp!!.toInt() > (CurrentTime + Hour24)) {
-            DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
-        }
-        Log.e("TAG", "TimeMilies : " + CurrentTime)
-        Log.e("TAG", "TimeMilies : " + ApplicationClass.ReviewInfoModel.created_timestamp!!)
-        var RestTime = (EditExpireTime - CurrentTime)
-
-        val hours = ((RestTime / (1000 * 60 * 60)))
-        TimeUnit.MILLISECONDS.toMinutes(RestTime)
-
+        val differDate = differenceTime(ApplicationClass.ReviewInfoModel.created_at!!).toInt()
+        Log.e("TAG", "TimeMiliessa : " + differDate)
         DB_ReviewDisplay.txtEdit.text =
-            getString(R.string.editadditiondetail) + " ($hours Hours Left)"
+            getString(R.string.editadditiondetail) + " ($differDate Hours Left)"
 
         if (ApplicationClass.ReviewInfoModel.review_status!!.equals(Constants.Approve, true)) {
             DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
         } else {
-            DB_ReviewDisplay.cntEditdetails.visibility = View.VISIBLE
+            if (differDate < 0) {
+                DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
+            } else {
+                DB_ReviewDisplay.cntEditdetails.visibility = View.VISIBLE
+            }
         }
 
         DB_ReviewDisplay.txtCheckinCredit.text =
@@ -329,6 +325,31 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
         }
 
 
+    }
+
+    private fun differenceTime(createdAt: String): String {
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+
+        var dateCreate = simpleDateFormat.parse(createdAt)
+        val df =
+            SimpleDateFormat("yyyy-MM-dd HH:mm:ss") // pass the format pattern that you like and done.
+
+        var dateCreateds = df.format(dateCreate)
+
+        val cal = Calendar.getInstance(Locale.ENGLISH)
+        cal.timeInMillis = System.currentTimeMillis()
+        val datez: String = DateFormat.format("yyyy-MM-dd HH:mm:ss", cal).toString()
+        var dateCurrent = df.parse(datez)
+        var dateCreated = df.parse(dateCreateds)
+
+        val difference: Long = dateCreated.getTime() - dateCurrent.getTime()
+        var days = (difference / (1000 * 60 * 60 * 24)).toInt()
+        var hours = ((difference - 1000 * 60 * 60 * 24 * days) / (1000 * 60 * 60)).toInt()
+//       var hours = ((((difference) / (1000 * 60 * 60)).toInt())-1000 * 60 * 60 * 24 * days)
+        var min =
+            (difference - 1000 * 60 * 60 * 24 * days - 1000 * 60 * 60 * hours).toInt() / (1000 * 60)
+//        hours = if (hours < 0) -hours else hours
+        return hours.toString()
     }
 
     override fun onClick(v: View?) {
