@@ -157,7 +157,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 DefaultKeyboardDP + if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) 48f else 0f
 
             DB_HomeActivity.txtUnauthOk.setOnClickListener(this)
-            if (!ApplicationClass.autorisedUser) {
+            if (!ApplicationClass.authorisedUser) {
                 DB_HomeActivity.cntUnAuthorized.visibility = View.VISIBLE
             }
 
@@ -178,7 +178,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             mImgHomeback = findViewById<ImageView>(R.id.img_homeback)
 
             UserLogInViewSetup()
-            SetUpUserVerifiedAndData()
 
             mCntLoader.setOnClickListener(this)
             DB_HomeActivity.HomeScreen.ContentView.cntHome.setOnClickListener(this)
@@ -203,7 +202,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             DB_HomeActivity.HomeScreen.ContentView.cntSelHome.visibility = View.VISIBLE
             mCntLoader.visibility = View.VISIBLE
 
-            Log.e("TAG", "CheckEmployeeUser : " + ApplicationClass.isUserEmployee)
             //setup Employee new Review
             DB_HomeActivity.HomeScreen.ContentView.cntNewreview.visibility =
                 if (ApplicationClass.isUserEmployee) View.GONE else View.VISIBLE
@@ -216,6 +214,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
             LoadFragmentsPages().execute()
 
+            SetUpUserVerifiedAndData()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {

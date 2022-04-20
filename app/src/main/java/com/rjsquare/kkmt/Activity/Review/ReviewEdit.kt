@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
 import android.media.MediaRecorder
@@ -31,6 +33,7 @@ import com.google.gson.Gson
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Register.upload_doc
 import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -105,6 +108,8 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         DB_ReviewEdit.imgDelete.setOnClickListener(this)
         DB_ReviewEdit.imgMic.setOnClickListener(this)
         DB_ReviewEdit.imgPlaypause.setOnClickListener(this)
+        DB_ReviewEdit.txtUploadReceipt.setOnClickListener(this)
+        DB_ReviewEdit.txtAlertok.setOnClickListener(this)
         TimerHandler = Handler()
         if (savedInstanceState != null) {
 
@@ -353,6 +358,9 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         DB_ReviewEdit.cntBad.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
         DB_ReviewEdit.cntGood.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
         DB_ReviewEdit.cnt5star.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
+    }
+        fun NewReveiwSetup() {
+
 
         //Clear fields
         DB_ReviewEdit.imgReceipt.setImageDrawable(
@@ -428,21 +436,21 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     private fun SetUpReviewData() {
         if (ApplicationClass.isNewReview) {
             //Setup New review data
-//            UncheckedReview()
+
+            NewReveiwSetup()
             DB_ReviewEdit.cnt1star.performClick()
 
-            DB_ReviewEdit.txtReviewName.text = ApplicationClass.Selected_ReviewEmp_Model.EmpName
+            DB_ReviewEdit.txtReviewName.text = ApplicationClass.empSlaveModel.username
 
             var UserImage = ""
-            if (ApplicationClass.userInfoModel.data!!.userimage != null && !ApplicationClass.userInfoModel.data!!.userimage.equals(
+            if (ApplicationClass.empSlaveModel.employeeimage!! != null && !ApplicationClass.empSlaveModel.employeeimage!!.equals(
                     ""
                 )
             ) {
-                UserImage = ApplicationClass.userInfoModel.data!!.userimage!!
+                UserImage = ApplicationClass.empSlaveModel.employeeimage!!
                 Picasso.with(this).load(UserImage)
                     .placeholder(R.drawable.ic_expe_logo).into(DB_ReviewEdit.imgProfile)
             }
-
         } else {
             //Setup edit review data
         }
@@ -463,11 +471,22 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     fun ConvertFileOrImageToString(sUri: Uri) {
         //Convert File to Base64String
         try {
-            val baos = ByteArrayOutputStream()
-            val `in` = contentResolver.openInputStream(sUri)
-            val bytes: ByteArray = getBytes(`in`!!)!!
+//            val baos = ByteArrayOutputStream()
+//            val `in` = contentResolver.openInputStream(sUri)
 
-            receiptImageString = Base64.encodeToString(bytes, Base64.DEFAULT)
+//            val bytes: ByteArray = getBytes(`in`!!)!!
+            val bitmapImage = BitmapFactory.decodeFile(sUri.path)
+            val nh = (bitmapImage.height * (512.0 / bitmapImage.width)).toInt()
+            val scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true)
+//                your_imageview.setImageBitmap(scaled)
+
+            val baos = ByteArrayOutputStream()
+
+            scaled.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val imageBytes = baos.toByteArray()
+            receiptImageString = Base64.encodeToString(imageBytes, Base64.DEFAULT)
+
+//            receiptImageString = Base64.encodeToString(bytes, Base64.DEFAULT)
 
             Log.e("TAG", "ActivityResult: " + receiptImageString)
             ChangeUploadText()
@@ -568,16 +587,22 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                     else DB_ReviewEdit.cntAlert.visibility = View.VISIBLE
                 } else if (view == DB_ReviewEdit.imgBack) {
                     onBackPressed()
+                }else if (view == DB_ReviewEdit.txtAlertok) {
+                    DB_ReviewEdit.cntAlert.visibility = View.GONE
                 } else if (view == DB_ReviewEdit.cnt1star) {
+                    UncheckedReview()
                     star = Constants.onestar
                     DB_ReviewEdit.cnt1star.setBackgroundResource(R.drawable.review_selection)
                 } else if (view == DB_ReviewEdit.cntBad) {
+                    UncheckedReview()
                     star = Constants.bad
                     DB_ReviewEdit.cntBad.setBackgroundResource(R.drawable.review_selection)
                 } else if (view == DB_ReviewEdit.cntGood) {
+                    UncheckedReview()
                     star = Constants.good
                     DB_ReviewEdit.cntGood.setBackgroundResource(R.drawable.review_selection)
                 } else if (view == DB_ReviewEdit.cnt5star) {
+                    UncheckedReview()
                     star = Constants.fivestar
                     DB_ReviewEdit.cnt5star.setBackgroundResource(R.drawable.review_selection)
                 } else if (view == DB_ReviewEdit.cntVoice) {
@@ -598,6 +623,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                     isPlaying = !isPlaying
                     FilePlayPause()
                 } else if (view == DB_ReviewEdit.txtUploadReceipt) {
+                    Log.e("TAG", "txtUploadReceipt")
                     val permissions =
                         arrayOf(
                             Manifest.permission.CAMERA,
@@ -606,6 +632,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                     Permissions.check(this, permissions, null, null, object : PermissionHandler() {
                         override fun onGranted() {
                             // do your task.
+                            Log.e("TAG", "onGranted")
                             selectImageCam()
                         }
 
@@ -685,7 +712,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_WrittenNote] = WrittenNote
             params[Constants.paramKey_VoiceNote] = voiceNoteString
 
-
+            Log.e("TAG","Call Param : "+Gson().toJson(params))
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.EmployeeReportService>(
                     NetworkServices.EmployeeReportService::class.java
@@ -698,7 +725,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             call.enqueue(object : Callback<ReviewSubmitModel> {
                 override fun onFailure(call: Call<ReviewSubmitModel>, t: Throwable) {
                     DB_ReviewEdit.cntLoader.visibility = View.GONE
-                    Log.e("GetResponsesasXASX", "Hell: ")
+                    Log.e("GetResponsesasXASX", "Hell: "+t)
                 }
 
                 override fun onResponse(
@@ -708,12 +735,13 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                     Log.e("GetResponsesasXASX", "responseHell: " + response.body()!!)
                     DB_ReviewEdit.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        ApplicationClass.ReviewSubmitDisplayModel = response.body()!!.data!!
+                        ApplicationClass.ReviewInfoModel = response.body()!!.data!!
 
                         commanUtils.NextScreen(
                             this@ReviewEdit,
                             Intent(this@ReviewEdit, ReviewDisplay::class.java)
                         )
+                        finish()
 //                    var HelperIntent = Intent(this@ReviewEdit, ReviewDisplay::class.java)
 //                    startActivity(HelperIntent)
 //                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)

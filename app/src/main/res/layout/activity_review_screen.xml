@@ -803,6 +803,7 @@
             android:background="@color/loader_back"
             android:clickable="true"
             android:visibility="gone"
+            android:elevation="@dimen/_10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

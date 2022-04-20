@@ -40,13 +40,13 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
                 SectionsPagerReviewAdapter(this, supportFragmentManager)
             pendingReviewItemInfo = ArrayList()
             completeReviewItemInfo = ArrayList()
-            for (model in ApplicationClass.mArray_ReviewModel){
-                if (model.review_status!!.equals(Constants.Pending,true)){
-                    pendingReviewItemInfo.add(model)
-                }else if (model.review_status!!.equals(Constants.Approve,true)){
-                    completeReviewItemInfo.add(model)
-                }
-            }
+//            for (model in ApplicationClass.mPendingReviewList){
+//                if (model.review_status!!.equals(Constants.Pending,true)){
+//                }else if (model.review_status!!.equals(Constants.Approve,true)){
+//                }
+//            }
+            pendingReviewItemInfo.addAll(ApplicationClass.mPendingReviewList)
+            completeReviewItemInfo.addAll(ApplicationClass.mApproveReviewList)
 
             DB_ReviewList.viewPager.adapter = sectionsPagerReviewAdapter
             DB_ReviewList.viewPager.addOnPageChangeListener(object :

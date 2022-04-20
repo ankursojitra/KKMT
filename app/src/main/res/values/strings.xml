@@ -41,6 +41,7 @@
     <string name="loginalrttxt">Login</string>
     <string name="otpalrttxt">OTP</string>
     <string name="loginalertmsg">Login Message</string>
+    <string name="editadditiondetail">Edit additional details</string>
     <string name="Signupmsg">LOGIN OR SIGN UP TO BEGIN</string>
     <string name="firstname">First Name *</string>
     <string name="lastname">Last Name *</string>

@@ -44,6 +44,7 @@ class ReviewAdapter(
             holder.DB_RawReviewFrameBinding.txtEmpName.text = mReviewModel.username
             holder.DB_RawReviewFrameBinding.txtEmprating.text = mReviewModel.ratings
             holder.DB_RawReviewFrameBinding.txtEmpamount.text = ("$${mReviewModel.spend_amount}")
+            holder.DB_RawReviewFrameBinding.txtBusname.text = ("${mReviewModel.bussinessname}")
             Picasso.with(moContext).load(mReviewModel.userimage).placeholder(R.drawable.ic_expe_logo).into(holder.DB_RawReviewFrameBinding.imgEmpProfile)
 
         } catch (NE: NullPointerException) {

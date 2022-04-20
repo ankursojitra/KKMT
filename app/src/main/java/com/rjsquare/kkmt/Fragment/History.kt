@@ -11,8 +11,11 @@ import androidx.fragment.app.Fragment
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Review.ReviewList
+import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mArray_ReviewModel
+import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mApproveReviewList
+import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mCancelReviewList
+import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mPendingReviewList
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mReviewModel
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.userLogedIn
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -29,7 +32,9 @@ import retrofit2.Response
 
 class History : Fragment(), View.OnClickListener {
 
-    lateinit var lArray_ReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+    lateinit var pendingReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+    lateinit var approveReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+    lateinit var rejectedReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
     lateinit var ReviewModel: CustomerHistoryModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +72,9 @@ class History : Fragment(), View.OnClickListener {
             DB_FHistory.cardViewHistory2.setOnClickListener(this)
             DB_FHistory.cardViewHistory3.setOnClickListener(this)
 
-            lArray_ReviewModel = ArrayList()
+            pendingReviewList = ArrayList()
+            approveReviewList = ArrayList()
+            rejectedReviewList = ArrayList()
 
 
             if (userLogedIn) {
@@ -124,10 +131,18 @@ class History : Fragment(), View.OnClickListener {
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         ReviewModel = response.body()!!
-//                        if (response.body()!!.data!!.review_itemInfo!! != null && response.body()!!.data!!.review_itemInfo!!.size > 0) {
-//                            lArray_ReviewModel.addAll(response.body()!!.data!!.review_itemInfo!!)
-//                        }
-//                        FillData()
+                        if (!response.body()!!.data!!.panding_review.isNullOrEmpty()) {
+                            pendingReviewList.addAll(response.body()!!.data!!.panding_review!!)
+                        }
+                        if (!response.body()!!.data!!.approve_review.isNullOrEmpty()) {
+                            approveReviewList.addAll(response.body()!!.data!!.approve_review!!)
+                        }
+                        if (!response.body()!!.data!!.cancel_review.isNullOrEmpty()) {
+                            rejectedReviewList.addAll(response.body()!!.data!!.cancel_review!!)
+                        }
+//                        approveReviewList.addAll(response.body()!!.data!!.approve_review!!)
+////                            rejectedReviewList.addAll(response.body()!!.data!!.cancel_review!!)
+                        FillData()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         HomeActivity.UnauthorizedUser()
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
@@ -171,11 +186,13 @@ class History : Fragment(), View.OnClickListener {
     private fun FillData() {
         try {
             SetRatingData()
-            mArray_ReviewModel = lArray_ReviewModel
+            mPendingReviewList = pendingReviewList
+            mApproveReviewList = approveReviewList
+            mCancelReviewList = rejectedReviewList
             mReviewModel = ReviewModel()
             mReviewModel.Notify_Title = ""
 
-            var ReviewCount = mArray_ReviewModel.size
+            var ReviewCount = mPendingReviewList.size
             if (ReviewCount >= 3) {
                 DB_FHistory.cardViewHistory1.visibility = View.VISIBLE
                 DB_FHistory.cardViewHistory2.visibility = View.VISIBLE
@@ -183,9 +200,9 @@ class History : Fragment(), View.OnClickListener {
                 DB_FHistory.cardViewReview.visibility = View.VISIBLE
                 DB_FHistory.txtNoReviews.visibility = View.GONE
 
-                SetFirstReview(mArray_ReviewModel[0])
-                SetSecondReview(mArray_ReviewModel[1])
-                SetThirdReview(mArray_ReviewModel[2])
+                SetFirstReview(mPendingReviewList[0])
+                SetSecondReview(mPendingReviewList[1])
+                SetThirdReview(mPendingReviewList[2])
 
 
             } else if (ReviewCount == 2) {
@@ -195,8 +212,8 @@ class History : Fragment(), View.OnClickListener {
                 DB_FHistory.cardViewReview.visibility = View.VISIBLE
                 DB_FHistory.txtNoReviews.visibility = View.GONE
 
-                SetFirstReview(mArray_ReviewModel[0])
-                SetSecondReview(mArray_ReviewModel[1])
+                SetFirstReview(mPendingReviewList[0])
+                SetSecondReview(mPendingReviewList[1])
             } else if (ReviewCount == 1) {
                 DB_FHistory.cardViewHistory1.visibility = View.VISIBLE
                 DB_FHistory.cardViewHistory2.visibility = View.GONE
@@ -204,7 +221,7 @@ class History : Fragment(), View.OnClickListener {
                 DB_FHistory.cardViewReview.visibility = View.VISIBLE
                 DB_FHistory.txtNoReviews.visibility = View.GONE
 
-                SetFirstReview(mArray_ReviewModel[0])
+                SetFirstReview(mPendingReviewList[0])
             } else if (ReviewCount == 0) {
                 DB_FHistory.cardViewHistory1.visibility = View.GONE
                 DB_FHistory.cardViewHistory2.visibility = View.GONE
@@ -285,13 +302,18 @@ class History : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_FHistory.cardViewHistory1 || view == DB_FHistory.cardViewHistory2 || view == DB_FHistory.cardViewHistory3) {
-                var HistoryReviewIntent = Intent(requireActivity(), ReviewList::class.java)
-                requireActivity().startActivity(HistoryReviewIntent)
-                requireActivity().overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            }
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_FHistory.cardViewHistory1 || view == DB_FHistory.cardViewHistory2 || view == DB_FHistory.cardViewHistory3) {
+                    commanUtils.NextScreen(requireActivity(),Intent(requireActivity(), ReviewList::class.java))
+//                    var HistoryReviewIntent = Intent(requireActivity(), ReviewList::class.java)
+//                    requireActivity().startActivity(HistoryReviewIntent)
+//                    requireActivity().overridePendingTransition(
+//                        R.anim.activity_in,
+//                        R.anim.activity_out
+//                    )
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

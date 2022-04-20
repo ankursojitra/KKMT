@@ -64,76 +64,68 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_title" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.applandeo.materialcalendarview.CalendarView
-            android:id="@+id/calendarView"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout31"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            app:eventsEnabled="true"
-            app:headerColor="@color/blue_dark"
+            android:layout_marginLeft="@dimen/_12dp"
+            android:layout_marginTop="@dimen/_12dp"
+            android:layout_marginRight="@dimen/_12dp"
+            android:background="@drawable/border"
+            android:padding="@dimen/_2dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cnt_tool"
-            app:selectionColor="@color/appcolor"
-            app:todayLabelColor="@color/appcolor"
-            app:type="one_day_picker" />
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cnt_bot"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="@dimen/_8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarView">
+            app:layout_constraintTop_toBottomOf="@id/cnt_tool">
 
             <TextView
-                android:id="@+id/txt_no_events"
-                android:layout_width="wrap_content"
+                android:id="@+id/txt_pendingReview"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_regular"
-                android:text="@string/noevents"
-                android:textColor="@android:color/white"
+                android:background="@drawable/tab_selection"
+                android:fontFamily="@font/lato_semibold"
+                android:gravity="center"
+                android:padding="@dimen/_8dp"
+                android:text="@string/tab_review_1"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/_12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/txt_completeReview"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rr_events"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/_8dp"
-                android:overScrollMode="never"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/gif_loader"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:spanCount="2"
-                tools:itemCount="5"
-                tools:listitem="@layout/raw_events_frame" />
-
-
-            <com.cunoraz.gifview.library.GifView
-                android:id="@+id/gif_loader"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_30dp"
-                android:visibility="gone"
-                app:gif="@mipmap/loading"
+            <TextView
+                android:id="@+id/txt_completeReview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_semibold"
+                android:gravity="center"
+                android:padding="@dimen/_8dp"
+                android:text="@string/tab_review_2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/txt_pendingReview"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:overScrollMode="never"
+            android:layout_marginTop="@dimen/_4dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout31" />
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cnt_loader"
@@ -282,9 +274,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="16dp"
             android:text="Set random date"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

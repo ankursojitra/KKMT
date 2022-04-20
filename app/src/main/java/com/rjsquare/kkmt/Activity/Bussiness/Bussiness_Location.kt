@@ -189,7 +189,29 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                 mMtCentralManager!!.stopScan()
                 MasterBleDeviceInfo()
             }
-            BleScan()
+            val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            if (mBluetoothAdapter == null) {
+                // Device does not support Bluetooth
+                Log.e("Tag", "BluetoothCheck mBluetoothAdapter")
+            } else if (!mBluetoothAdapter.isEnabled) {
+                // Bluetooth is not enabled :)
+                if (ActivityCompat.checkSelfPermission(
+                        this@Bussiness_Location,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    Log.e("Tag", "BluetoothCheckasd")
+                }
+                mBluetoothAdapter.enable()
+                Handler().postDelayed({
+                    BleScan()
+                }, 500)
+//            return
+            } else {
+                Log.e("Tag", "BluetoothCheck 123456")
+                BleScan()
+                // Bluetooth is enabled
+            }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -540,6 +562,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     }
 
     private fun initManager() {
+
         mMtCentralManager = MTCentralManager.getInstance(this)
         //startservice
         mMtCentralManager!!.startService()
@@ -591,56 +614,57 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_BusinessLocation.cntNotfound) {
-                ShowBusinessReport()
-            } else if (view == mTxtSubmit) {
-                if (mCh1.isChecked) {
-                    notFoundBusinessName = edtBussinessName.text.toString()
-                    if (!notFoundBusinessName.equals("".trim(), true)) {
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_BusinessLocation.cntNotfound) {
+                    ShowBusinessReport()
+                } else if (view == mTxtSubmit) {
+                    if (mCh1.isChecked) {
+                        notFoundBusinessName = edtBussinessName.text.toString()
+                        if (!notFoundBusinessName.equals("".trim(), true)) {
+                            CloseViews()
+                            notFoundBusinessReason = getString(R.string.businessrason1)
+                            BusinessNotFound()
+                        } else {
+                            // Business Name is mendatory
+                            ShowAlert("Business name is require.")
+                        }
+                    } else if (mCh2.isChecked) {
                         CloseViews()
-                        notFoundBusinessReason = getString(R.string.businessrason1)
+                        notFoundBusinessReason = getString(R.string.businessrason2)
+                        BusinessNotFound()
+                    } else if (mCh3.isChecked) {
+                        CloseViews()
+                        notFoundBusinessReason = getString(R.string.businessrason3)
                         BusinessNotFound()
                     } else {
-                        // Business Name is mendatory
-                        ShowAlert("Business name is require.")
+                        Toast.makeText(
+                            this,
+                            "Please select atleast one option from above.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                } else if (mCh2.isChecked) {
-                    CloseViews()
-                    notFoundBusinessReason = getString(R.string.businessrason2)
-                    BusinessNotFound()
-                } else if (mCh3.isChecked) {
-                    CloseViews()
-                    notFoundBusinessReason = getString(R.string.businessrason3)
-                    BusinessNotFound()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Please select atleast one option from above.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else if (view == mCntBackToHome) {
-                onBackPressed()
-            } else if (view == DB_BusinessLocation.cntCompany) {
+                } else if (view == mCntBackToHome) {
+                    onBackPressed()
+                } else if (view == DB_BusinessLocation.cntCompany) {
 //                ShowBusniessConfirmation()
-            } else if (view == mImgClose) {
-                ShowBusniessMainView()
-            } else if (view == mImgBusRepClose) {
-                ShowBusniessMainView()
-            } else if (view == mCntConfirm) {
-                ShowBusniessMainView()
-                BusinessCheckInFlow()
-            } else if (view == DB_BusinessLocation.txtUnauthOk) {
-                HideUnauthorization()
-                ApplicationClass.UserLogout(this)
-            } else if (view == DB_BusinessLocation.txtAlertok) {
-                HideAlert()
-            } else if (view == DB_BusinessLocation.layoutBussinessConfirm.cntNotfind) {
-                HideBusinessConfiramation()
-                ShowBusinessReport()
-            }
+                } else if (view == mImgClose) {
+                    ShowBusniessMainView()
+                } else if (view == mImgBusRepClose) {
+                    ShowBusniessMainView()
+                } else if (view == mCntConfirm) {
+                    ShowBusniessMainView()
+                    BusinessCheckInFlow()
+                } else if (view == DB_BusinessLocation.txtUnauthOk) {
+                    HideUnauthorization()
+                    ApplicationClass.UserLogout(this)
+                } else if (view == DB_BusinessLocation.txtAlertok) {
+                    HideAlert()
+                } else if (view == DB_BusinessLocation.layoutBussinessConfirm.cntNotfind) {
+                    HideBusinessConfiramation()
+                    ShowBusinessReport()
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -843,7 +867,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
     override fun onDestroy() {
         super.onDestroy()
-        mMtCentralManager!!.stopScan()
+        if (mMtCentralManager != null) mMtCentralManager!!.stopScan()
         handler.removeCallbacks(runnable)
     }
 

@@ -2,10 +2,7 @@ package com.rjsquare.kkmt.Fragment
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,12 +19,10 @@ import com.rjsquare.kkmt.Activity.Store.Store
 import com.rjsquare.kkmt.Activity.Video.Video
 import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.FragmentHomeBinding
 import com.squareup.picasso.Picasso
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileInputStream
 
 
 class Home : Fragment(), View.OnClickListener {
@@ -58,6 +53,7 @@ class Home : Fragment(), View.OnClickListener {
             DB_FHome.txtTotalCredits.text =
                 commanUtils.formatNumber(ApplicationClass.userInfoModel.data!!.credit_details!!.credit!!.toInt())
 
+
         } else {
             DB_FHome.cntLogin.visibility = View.VISIBLE
             DB_FHome.cntProfileView.visibility = View.GONE
@@ -78,6 +74,7 @@ class Home : Fragment(), View.OnClickListener {
             DB_FHome.cardViewLuckydraw.setOnClickListener(this)
             DB_FHome.cardViewVideos.setOnClickListener(this)
             DB_FHome.crdProfile.setOnClickListener(this)
+            DB_FHome.txtLogin.setOnClickListener(this)
 
             SetupUserLogInViewAndData()
             SetUpUserVerified()
@@ -155,55 +152,55 @@ class Home : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (ApplicationClass.userLogedIn) {
-                if (view == DB_FHome.cardViewStore) {
-                    commanUtils.NextScreen(
-                        requireActivity(),
-                        Intent(requireActivity(), Store::class.java)
-                    )
-                } else if (view == DB_FHome.cardViewEvent) {
-                    commanUtils.NextScreen(
-                        requireActivity(),
-                        Intent(requireActivity(), Events::class.java)
-                    )
-                } else if (view == DB_FHome.cardViewNotify) {
-                    ApplicationClass.NextScreen(
-                        requireActivity(),
-                        Intent(requireActivity(), NotificationList::class.java)
-                    )
-                } else if (view == DB_FHome.cardViewLuckydraw) {
-                    commanUtils.NextScreen(
-                        requireActivity(),
-                        Intent(requireActivity(), LuckyDraw::class.java)
-                    )
-                } else if (view == DB_FHome.cardViewVideos) {
-                    commanUtils.NextScreen(
-                        requireActivity(),
-                        Intent(requireActivity(), Video::class.java)
-                    )
-                } else if (view == DB_FHome.crdProfile) {
-                    commanUtils.NextScreen(
-                        requireActivity(),
-                        Intent(requireActivity(), Profile::class.java)
-                    )
-                }
-            } else {
-                if (view == DB_FHome.cardViewEvent) {
-                    commanUtils.NextScreen(
-                        requireActivity(),
-                        Intent(requireActivity(), Events::class.java)
-                    )
-                } else if (view == DB_FHome.cardViewStore) {
-                    commanUtils.NextScreen(
-                        requireActivity(),
-                        Intent(requireActivity(), Store::class.java)
-                    )
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (ApplicationClass.userLogedIn) {
+                    if (view == DB_FHome.cardViewStore) {
+                        commanUtils.NextScreen(
+                            requireActivity(),
+                            Intent(requireActivity(), Store::class.java)
+                        )
+                    } else if (view == DB_FHome.cardViewEvent) {
+                        commanUtils.NextScreen(
+                            requireActivity(),
+                            Intent(requireActivity(), Events::class.java)
+                        )
+                    } else if (view == DB_FHome.cardViewNotify) {
+                        ApplicationClass.NextScreen(
+                            requireActivity(),
+                            Intent(requireActivity(), NotificationList::class.java)
+                        )
+                    } else if (view == DB_FHome.cardViewLuckydraw) {
+                        commanUtils.NextScreen(
+                            requireActivity(),
+                            Intent(requireActivity(), LuckyDraw::class.java)
+                        )
+                    } else if (view == DB_FHome.cardViewVideos) {
+                        commanUtils.NextScreen(
+                            requireActivity(),
+                            Intent(requireActivity(), Video::class.java)
+                        )
+                    } else if (view == DB_FHome.crdProfile) {
+                        commanUtils.NextScreen(
+                            requireActivity(),
+                            Intent(requireActivity(), Profile::class.java)
+                        )
+                    }
                 } else {
-                    HomeActivity.DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                    ApplicationClass.UserLogIn(requireActivity())
-                }
+                    if (view == DB_FHome.cardViewEvent) {
+                        commanUtils.NextScreen(
+                            requireActivity(),
+                            Intent(requireActivity(), Events::class.java)
+                        )
+                    } else if (view == DB_FHome.cardViewStore) {
+                        commanUtils.NextScreen(
+                            requireActivity(),
+                            Intent(requireActivity(), Store::class.java)
+                        )
+                    } else if (view == DB_FHome.txtLogin) {
+                        ApplicationClass.UserLogIn(requireActivity())
+                    }
                 }
             }
         } catch (NE: NullPointerException) {
