@@ -46,7 +46,9 @@ class ReviewAdapter(
             holder.DB_RawReviewFrameBinding.txtEmprating.text = mReviewModel.ratings
             holder.DB_RawReviewFrameBinding.txtEmpamount.text = ("$${mReviewModel.spend_amount}")
             holder.DB_RawReviewFrameBinding.txtBusname.text = ("${mReviewModel.bussinessname}")
-            Picasso.with(moContext).load(mReviewModel.userimage).placeholder(R.drawable.ic_expe_logo).into(holder.DB_RawReviewFrameBinding.imgEmpProfile)
+            Picasso.with(moContext).load(mReviewModel.userimage)
+                .placeholder(R.drawable.ic_expe_logo)
+                .into(holder.DB_RawReviewFrameBinding.imgEmpProfile)
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -95,19 +97,23 @@ class ReviewAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-                if (view == DB_RawReviewFrameBinding.idFrameconstraint) {
-                    ApplicationClass.empReviewModelSelected = lReviewModelSelected
-                    ApplicationClass.isNewReview = false
-                    commanUtils.NextScreen(moContext as ReviewList,Intent(moContext, ReviewDisplay::class.java))
+                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick =
+                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                    if (view == DB_RawReviewFrameBinding.idFrameconstraint) {
+                        ApplicationClass.empReviewModelSelected = lReviewModelSelected
+                        ApplicationClass.isNewReview = false
+                        commanUtils.NextScreen(
+                            moContext as ReviewList,
+                            Intent(moContext, ReviewDisplay::class.java)
+                        )
 //                    var HistoryReviewIntent = Intent(moContext, ReviewDisplay::class.java)
 //                    moContext.startActivity(HistoryReviewIntent)
 //                    (moContext as ReviewList).overridePendingTransition(
 //                        R.anim.activity_in,
 //                        R.anim.activity_out
 //                    )
-                }
+                    }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

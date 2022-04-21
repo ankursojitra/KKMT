@@ -111,7 +111,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_12dp"
-                app:layout_constraintWidth_percent="0.9"
                 android:layout_marginBottom="@dimen/_12dp"
                 android:fontFamily="@font/lato_medium"
                 android:gravity="center"
@@ -122,19 +121,20 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout12" />
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout12"
+                app:layout_constraintWidth_percent="0.9" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayoutx"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_16dp"
-                app:layout_constraintWidth_percent="0.9"
                 app:layout_constraintBottom_toTopOf="@id/cnt_checkout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView30">
+                app:layout_constraintTop_toBottomOf="@+id/textView30"
+                app:layout_constraintWidth_percent="0.9">
 
 
                 <TextView
@@ -187,13 +187,13 @@
                 android:id="@+id/cnt_checkout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintWidth_percent="0.9"
                 android:layout_marginBottom="@dimen/_8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayoutx">
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayoutx"
+                app:layout_constraintWidth_percent="0.9">
 
                 <TextView
                     android:id="@+id/txt_checkout"
@@ -261,13 +261,13 @@
             android:layout_height="0dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@+id/txt_businessName"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cnt_tool"
-            app:srcCompat="@drawable/imgone"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintWidth_percent="0.35"/>
+            app:layout_constraintWidth_percent="0.35"
+            app:srcCompat="@drawable/imgone" />
 
         <TextView
             android:id="@+id/txt_businessName"
@@ -296,8 +296,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/constraintLayout15"
-            app:srcCompat="@drawable/ic_card"
-            app:layout_constraintWidth_percent="0.22"/>
+            app:layout_constraintWidth_percent="0.22"
+            app:srcCompat="@drawable/ic_card" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cnt_loader"
@@ -344,14 +344,15 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cnt_unAuthorized"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="gone"
+            android:background="@color/loader_back"
             android:clickable="true"
             android:elevation="@dimen/_20dp"
-            android:background="@color/loader_back"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -395,9 +396,9 @@
                         android:id="@+id/view_sap"
                         android:layout_width="@dimen/_24dp"
                         android:layout_height="@dimen/_2dp"
+                        android:layout_marginTop="@dimen/_4dp"
                         android:background="@drawable/proceedback_orange"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_4dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_Alert" />
@@ -406,10 +407,10 @@
                         android:id="@+id/txt_Alertmsg"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:layout_marginTop="@dimen/_16dp"
                         android:fontFamily="@font/lato_medium"
                         android:gravity="center"
-                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:text="@string/unauthorizeduser"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_10dp"

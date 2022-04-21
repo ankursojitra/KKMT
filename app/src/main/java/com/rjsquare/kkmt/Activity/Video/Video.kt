@@ -53,10 +53,10 @@ class Video : AppCompatActivity(), View.OnClickListener {
                 DB_Video.txtVideoLbl.text = (Html.fromHtml(
                     "Enhance Your Perspective and <font color='#FC9A1F'>Earn Credits</font>",
                     Html.FROM_HTML_MODE_COMPACT
-                ));
+                ))
             } else {
                 DB_Video.txtVideoLbl.text =
-                    (Html.fromHtml("Enhance Your Perspective and and <font color='#FC9A1F'>Earn Credits</font>"));
+                    (Html.fromHtml("Enhance Your Perspective and and <font color='#FC9A1F'>Earn Credits</font>"))
             }
 
 
@@ -158,12 +158,7 @@ class Video : AppCompatActivity(), View.OnClickListener {
                     DB_Video.gifLoader.visibility = View.GONE
                     Log.e("TAG", "VideoResponse : " + Gson().toJson(response.body()!!))
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        if (response.body()!!.data!!.size < this@Video.PagePerlimit) {
-//                            DB_Video.cntLoadmore.visibility = View.GONE
-                            IsVideoCallavailable = false
-                        } else {
-                            IsVideoCallavailable = true
-                        }
+                        IsVideoCallavailable = response.body()!!.data!!.size >= this@Video.PagePerlimit
                         dataSize = response.body()!!.data!!.size
                         mArray_VideosModel.addAll(response.body()!!.data!!)
                         DB_Video.rrVideos.adapter!!.notifyDataSetChanged()
@@ -214,7 +209,7 @@ class Video : AppCompatActivity(), View.OnClickListener {
                 this, mArray_VideosModel
             )
 
-            DB_Video.rrVideos.setAdapter(loVideosAdapter)
+            DB_Video.rrVideos.adapter = loVideosAdapter
 
             DB_Video.rrVideos.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -255,14 +250,14 @@ class Video : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+        if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
             ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-        if (view == DB_Video.imgBack) {
-            onBackPressed()
-        } else if (view == DB_Video.txtUnauthOk) {
-            DB_Video.cntUnAuthorized.visibility = View.GONE
-            ApplicationClass.UserLogout(this)
-        }
+            if (view == DB_Video.imgBack) {
+                onBackPressed()
+            } else if (view == DB_Video.txtUnauthOk) {
+                DB_Video.cntUnAuthorized.visibility = View.GONE
+                ApplicationClass.UserLogout(this)
+            }
         }
 //        else if (view == DB_Video.cntLoadmore) {
 //            if (IsVideoCallavailable) {

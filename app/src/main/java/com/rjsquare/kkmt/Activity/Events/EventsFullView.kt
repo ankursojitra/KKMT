@@ -1,7 +1,6 @@
 package com.rjsquare.kkmt.Activity.Events
 
 import android.content.ActivityNotFoundException
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -35,7 +34,7 @@ class EventsFullView : AppCompatActivity(), View.OnClickListener {
 
 
             val imageList = ArrayList<SlideUIModel>()
-            for (link in ApplicationClass.mEventsModelSelected!!.image!!){
+            for (link in ApplicationClass.mEventsModelSelected!!.image!!) {
                 imageList.add(SlideUIModel(link, " "))
             }
             DB_EventsView.imageSlide.setItemClickListener(object : ItemClickListener {
@@ -44,13 +43,13 @@ class EventsFullView : AppCompatActivity(), View.OnClickListener {
                 }
             })
             DB_EventsView.imageSlide.setImageList(imageList)
-           DB_EventsView.imageSlide.startSliding(1000) // with new period
-           DB_EventsView.imageSlide.startSliding()
+            DB_EventsView.imageSlide.startSliding(1000) // with new period
+            DB_EventsView.imageSlide.startSliding()
 //           DB_EventsView.imageSlide.stopSliding()
-            DB_EventsView.txtEventTitle.text =  ApplicationClass.mEventsModelSelected!!.title!!
-            DB_EventsView.txtEventLocation.text =  ApplicationClass.mEventsModelSelected!!.location
-            DB_EventsView.txtEventTime.text =  ApplicationClass.mEventsModelSelected!!.time
-            DB_EventsView.txtEventDesc.text =  ApplicationClass.mEventsModelSelected!!.description
+            DB_EventsView.txtEventTitle.text = ApplicationClass.mEventsModelSelected!!.title!!
+            DB_EventsView.txtEventLocation.text = ApplicationClass.mEventsModelSelected!!.location
+            DB_EventsView.txtEventTime.text = ApplicationClass.mEventsModelSelected!!.time
+            DB_EventsView.txtEventDesc.text = ApplicationClass.mEventsModelSelected!!.description
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -69,11 +68,12 @@ class EventsFullView : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_EventsView.imgBack) {
-                onBackPressed()
-            }
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_EventsView.imgBack) {
+                    onBackPressed()
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

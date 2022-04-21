@@ -20,9 +20,9 @@ import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.IsEmployee
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.isUserEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.ShowToast
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.UserLogout
+import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.isUserEmployee
 import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.userInfoModel
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.Helpers.Preferences
@@ -79,7 +79,7 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                     override fun onFailure(call: Call<UserInfoData_Model>, t: Throwable) {
                         Log.e("GetResponse", ": " + t)
                         ShowToast(OTPActivity, "Something went wrong")
-                            DB_OTPConfirmation.cntLoader.visibility = View.GONE
+                        DB_OTPConfirmation.cntLoader.visibility = View.GONE
                     }
 
                     override fun onResponse(
@@ -104,7 +104,7 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                             )
                         ) {
                             DB_OTPConfirmation.cntUnAuthorized.visibility = View.VISIBLE
-                        }else {
+                        } else {
                             DB_OTPConfirmation.txtOtpAlertmsg.text = response.body()!!.message
                             DB_OTPConfirmation.cntAlert.visibility = View.VISIBLE
                         }
@@ -228,35 +228,36 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_OTPConfirmation.txtVerify) {
-                FinalOTPCode = GetOTP()
-                User_OTPConfirmation(
-                    FinalOTPCode,
-                    ApplicationClass.mLogInInfo_Model.data!!.userid
-                )
-            } else if (view == DB_OTPConfirmation.txtOtpAlertok) {
-                DB_OTPConfirmation.cntAlert.visibility = View.GONE
-            }  else if (view == DB_OTPConfirmation.txtUnauthOk) {
-                DB_OTPConfirmation.cntUnAuthorized.visibility = View.GONE
-                UserLogout(this)
-            } else if (view == DB_OTPConfirmation.txtResend) {
-                LoaderVisible(true)
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_OTPConfirmation.txtVerify) {
+                    FinalOTPCode = GetOTP()
+                    User_OTPConfirmation(
+                        FinalOTPCode,
+                        ApplicationClass.mLogInInfo_Model.data!!.userid
+                    )
+                } else if (view == DB_OTPConfirmation.txtOtpAlertok) {
+                    DB_OTPConfirmation.cntAlert.visibility = View.GONE
+                } else if (view == DB_OTPConfirmation.txtUnauthOk) {
+                    DB_OTPConfirmation.cntUnAuthorized.visibility = View.GONE
+                    UserLogout(this)
+                } else if (view == DB_OTPConfirmation.txtResend) {
+                    LoaderVisible(true)
 //                DB_OTPConfirmation.cntLoader.visibility = View.VISIBLE
-                val handler = Handler()
-                val runnablex = Runnable {
-                    LoaderVisible(false)
-//                    DB_OTPConfirmation.cntLoader.visibility = View.GONE
-                    DB_OTPConfirmation.cntSent.visibility = View.VISIBLE
                     val handler = Handler()
-                    val runnable = Runnable {
-                        DB_OTPConfirmation.cntSent.visibility = View.GONE
+                    val runnablex = Runnable {
+                        LoaderVisible(false)
+//                    DB_OTPConfirmation.cntLoader.visibility = View.GONE
+                        DB_OTPConfirmation.cntSent.visibility = View.VISIBLE
+                        val handler = Handler()
+                        val runnable = Runnable {
+                            DB_OTPConfirmation.cntSent.visibility = View.GONE
+                        }
+                        handler.postDelayed(runnable, 1500)
                     }
-                    handler.postDelayed(runnable, 1500)
+                    handler.postDelayed(runnablex, 1000)
                 }
-                handler.postDelayed(runnablex, 1000)
-            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

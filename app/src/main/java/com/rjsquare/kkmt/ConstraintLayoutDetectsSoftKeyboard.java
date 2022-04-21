@@ -14,7 +14,7 @@ public class ConstraintLayoutDetectsSoftKeyboard extends ConstraintLayout {
     }
 
     public interface Listener {
-        public void onSoftKeyboardShown(boolean isShowing);
+        void onSoftKeyboardShown(boolean isShowing);
     }
 
     private Listener listener;

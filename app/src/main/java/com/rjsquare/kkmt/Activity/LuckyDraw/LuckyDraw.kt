@@ -68,7 +68,10 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             DB_LuckyDraw.luckyWheel.setLuckyRoundItemSelectedListener(object :
                 LuckyWheelView.LuckyRoundItemSelectedListener {
                 override fun LuckyRoundItemSelected(index: Int) {
-                    Log.e("TAG", "Check Item Selected : " + data.get(index).topText.toString().trim())
+                    Log.e(
+                        "TAG",
+                        "Check Item Selected : " + data.get(index).topText.toString().trim()
+                    )
                     Log.e("TAG", "Check Item Selected : " + GetCredit(data.get(index).topText))
 
                     LuckyDrawCreditAdd(GetCredit(data.get(index).topText))
@@ -92,7 +95,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun GetCredit(CreditText: String): String {
-        val newString = CreditText.replace(" ","")
+        val newString = CreditText.replace(" ", "")
         return newString
 //        if (CreditText.equals("5 0", true)) {
 //            return "50"

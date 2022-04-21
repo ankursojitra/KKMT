@@ -13,8 +13,6 @@ class DisplayNameModel {
     @SerializedName("data")
     var data: displayname? = null
 
-    class displayname {
-
-    }
+    class displayname
 }
 

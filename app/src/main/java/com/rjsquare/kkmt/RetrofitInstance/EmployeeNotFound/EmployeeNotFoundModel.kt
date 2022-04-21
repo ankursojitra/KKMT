@@ -13,8 +13,6 @@ class EmployeeNotFoundModel {
     @SerializedName("data")
     var data: BusinessNotFound? = null
 
-    class BusinessNotFound {
-
-    }
+    class BusinessNotFound
 }
 

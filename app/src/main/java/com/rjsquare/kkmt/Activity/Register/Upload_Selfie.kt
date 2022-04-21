@@ -182,7 +182,7 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
             call.enqueue(object : Callback<UploadDoc_Model> {
                 override fun onFailure(call: Call<UploadDoc_Model>, t: Throwable) {
                     Log.e("GetResponsesasXASX", "Hell: ")
-                        DB_UploadSelfie.cntLoader.visibility = View.GONE
+                    DB_UploadSelfie.cntLoader.visibility = View.GONE
                 }
 
                 override fun onResponse(
@@ -193,7 +193,7 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         var HomeIntent = Intent(this@Upload_Selfie, HomeActivity::class.java)
                         startActivity(HomeIntent)
-                        overridePendingTransition(R.anim.activity_in,R.anim.activity_out)
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
                         if (ApplicationClass.IsRegisterFlow) {
                             Login.LoginActivity.finish()
                             Register_User.Register_UserActivity.finish()
@@ -228,69 +228,73 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_UploadSelfie.cntUploadSelfie) {
-                val permissions =
-                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                Permissions.check(this, permissions, null, null, object : PermissionHandler() {
-                    override fun onGranted() {
-                        // do your task.
-                        selectImageCam()
-                    }
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_UploadSelfie.cntUploadSelfie) {
+                    val permissions =
+                        arrayOf(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                    Permissions.check(this, permissions, null, null, object : PermissionHandler() {
+                        override fun onGranted() {
+                            // do your task.
+                            selectImageCam()
+                        }
 
-                    override fun onDenied(
-                        context: Context?,
-                        deniedPermissions: java.util.ArrayList<String>?
-                    ) {
-                        super.onDenied(context, deniedPermissions)
-                    }
+                        override fun onDenied(
+                            context: Context?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onDenied(context, deniedPermissions)
+                        }
 
-                    override fun onBlocked(
-                        context: Context?,
-                        blockedList: java.util.ArrayList<String>?
-                    ): Boolean {
-                        return super.onBlocked(context, blockedList)
-                    }
+                        override fun onBlocked(
+                            context: Context?,
+                            blockedList: java.util.ArrayList<String>?
+                        ): Boolean {
+                            return super.onBlocked(context, blockedList)
+                        }
 
-                    override fun onJustBlocked(
-                        context: Context?,
-                        justBlockedList: java.util.ArrayList<String>?,
-                        deniedPermissions: java.util.ArrayList<String>?
-                    ) {
-                        super.onJustBlocked(context, justBlockedList, deniedPermissions)
+                        override fun onJustBlocked(
+                            context: Context?,
+                            justBlockedList: java.util.ArrayList<String>?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onJustBlocked(context, justBlockedList, deniedPermissions)
+                        }
+                    })
+                } else if (view == DB_UploadSelfie.txtSaveandexplore) {
+                    if (!PDFString.equals("", true)) {
+                        DB_UploadSelfie.cntLoader.visibility = View.VISIBLE
+                        UploadSelfie(PDFString)
+                    } else {
+                        DB_UploadSelfie.txtAlertmsg.text = "Invalid Selfie."
+                        DB_UploadSelfie.cntAlert.visibility = View.VISIBLE
                     }
-                })
-            } else if (view == DB_UploadSelfie.txtSaveandexplore) {
-                if (!PDFString.equals("", true)) {
-                    DB_UploadSelfie.cntLoader.visibility = View.VISIBLE
-                    UploadSelfie(PDFString)
-                } else {
-                    DB_UploadSelfie.txtAlertmsg.text = "Invalid Selfie."
-                    DB_UploadSelfie.cntAlert.visibility = View.VISIBLE
+                } else if (view == DB_UploadSelfie.txtSkip) {
+                    var HomeIntent = Intent(this, HomeActivity::class.java)
+                    startActivity(HomeIntent)
+                    Login.LoginActivity.finish()
+                    Register_User.Register_UserActivity.finish()
+                    upload_doc.uploadDocActyivity.finish()
+                    finish()
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                } else if (view == DB_UploadSelfie.txtAlertok) {
+                    DB_UploadSelfie.cntAlert.visibility = View.GONE
+                } else if (view == DB_UploadSelfie.txtPdf) {
+
+                } else if (view == DB_UploadSelfie.txtCamera) {
+
+                } else if (view == DB_UploadSelfie.txtCancel) {
+                    DB_UploadSelfie.cntUploadDocType.visibility = View.GONE
+                } else if (view == DB_UploadSelfie.txtGallery) {
+
+                } else if (view == DB_UploadSelfie.txtUnauthOk) {
+                    DB_UploadSelfie.cntUnAuthorized.visibility = View.GONE
+                    ApplicationClass.UserLogout(this)
                 }
-            } else if (view == DB_UploadSelfie.txtSkip) {
-                var HomeIntent = Intent(this, HomeActivity::class.java)
-                startActivity(HomeIntent)
-                Login.LoginActivity.finish()
-                Register_User.Register_UserActivity.finish()
-                upload_doc.uploadDocActyivity.finish()
-                finish()
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_UploadSelfie.txtAlertok) {
-                DB_UploadSelfie.cntAlert.visibility = View.GONE
-            } else if (view == DB_UploadSelfie.txtPdf) {
-
-            } else if (view == DB_UploadSelfie.txtCamera) {
-
-            } else if (view == DB_UploadSelfie.txtCancel) {
-                DB_UploadSelfie.cntUploadDocType.visibility = View.GONE
-            } else if (view == DB_UploadSelfie.txtGallery) {
-
-            } else if (view == DB_UploadSelfie.txtUnauthOk) {
-                DB_UploadSelfie.cntUnAuthorized.visibility = View.GONE
-                ApplicationClass.UserLogout(this)
-            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

@@ -20,7 +20,10 @@ import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
-import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.*
+import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.EmpInfo
+import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.LeaderboardCustomer_Model
+import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.LeaderboardEmployee_Model
+import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.UserData
 import com.rjsquare.kkmt.databinding.FragmentLeaderBoardBinding
 import com.squareup.picasso.Picasso
 import retrofit2.Call
@@ -220,7 +223,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
     private fun LeaderBoardDataEmployee() {
         try {
             DB_LeaderBoard.cntLoader.visibility = View.VISIBLE
-            Log.e("TAG","CHECKRESEMPLOYEEDATA : ")
+            Log.e("TAG", "CHECKRESEMPLOYEEDATA : ")
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -240,7 +243,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             call.enqueue(object : Callback<LeaderboardEmployee_Model> {
                 override fun onFailure(call: Call<LeaderboardEmployee_Model>, t: Throwable) {
                     DB_LeaderBoard.cntLoader.visibility = View.GONE
-                    Log.e("TAG","CHECKRESEMPLOYEEDATA : "+t)
+                    Log.e("TAG", "CHECKRESEMPLOYEEDATA : " + t)
                 }
 
                 override fun onResponse(
@@ -248,7 +251,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                     response: Response<LeaderboardEmployee_Model>
                 ) {
                     DB_LeaderBoard.cntLoader.visibility = View.GONE
-                    Log.e("TAG","CHECKRESEMPLOYEEDATA : "+response.body())
+                    Log.e("TAG", "CHECKRESEMPLOYEEDATA : " + response.body())
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         mLeaderboardEmployee_Model = response.body()!!
                         FillEmpData()
@@ -342,7 +345,8 @@ class LeaderBoard : Fragment(), View.OnClickListener {
         DB_LeaderBoard.txtRankOwnName.text = EmpModel.username
         DB_LeaderBoard.txtRankOwn.text = EmpModel.rank
         DB_LeaderBoard.txtRankOwnAmount.text = EmpModel.credit
-        Picasso.with(requireActivity()).load(EmpModel.userimage).placeholder(R.drawable.ic_expe_logo).into(DB_LeaderBoard.imgRankOwnProfile)
+        Picasso.with(requireActivity()).load(EmpModel.userimage)
+            .placeholder(R.drawable.ic_expe_logo).into(DB_LeaderBoard.imgRankOwnProfile)
     }
 
 
@@ -402,50 +406,57 @@ class LeaderBoard : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_LeaderBoard.crdPrizes) {
-                var PrizesIntent = Intent(activity, Prizes::class.java)
-                requireActivity().startActivity(PrizesIntent)
-                requireActivity().overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_LeaderBoard.crdChallenges) {
-                var ChallengesIntent = Intent(activity, Challenges::class.java)
-                requireActivity().startActivity(ChallengesIntent)
-                requireActivity().overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_LeaderBoard.txtEmployee) {
-                DB_LeaderBoard.txtEmployee.background =
-                    ContextCompat.getDrawable(requireActivity(), R.drawable.tab_selection)
-                DB_LeaderBoard.txtUser.background = null
-                DB_LeaderBoard.txtEmployee.setTextColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        R.color.black
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_LeaderBoard.crdPrizes) {
+                    var PrizesIntent = Intent(activity, Prizes::class.java)
+                    requireActivity().startActivity(PrizesIntent)
+                    requireActivity().overridePendingTransition(
+                        R.anim.activity_in,
+                        R.anim.activity_out
                     )
-                )
-                DB_LeaderBoard.txtUser.setTextColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        R.color.white
+                } else if (view == DB_LeaderBoard.crdChallenges) {
+                    var ChallengesIntent = Intent(activity, Challenges::class.java)
+                    requireActivity().startActivity(ChallengesIntent)
+                    requireActivity().overridePendingTransition(
+                        R.anim.activity_in,
+                        R.anim.activity_out
                     )
-                )
+                } else if (view == DB_LeaderBoard.txtEmployee) {
+                    DB_LeaderBoard.txtEmployee.background =
+                        ContextCompat.getDrawable(requireActivity(), R.drawable.tab_selection)
+                    DB_LeaderBoard.txtUser.background = null
+                    DB_LeaderBoard.txtEmployee.setTextColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.black
+                        )
+                    )
+                    DB_LeaderBoard.txtUser.setTextColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
 
-            } else if (view == DB_LeaderBoard.txtUser) {
-                DB_LeaderBoard.txtUser.background =
-                    ContextCompat.getDrawable(requireActivity(), R.drawable.tab_selection)
-                DB_LeaderBoard.txtEmployee.background = null
-                DB_LeaderBoard.txtEmployee.setTextColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        R.color.white
+                } else if (view == DB_LeaderBoard.txtUser) {
+                    DB_LeaderBoard.txtUser.background =
+                        ContextCompat.getDrawable(requireActivity(), R.drawable.tab_selection)
+                    DB_LeaderBoard.txtEmployee.background = null
+                    DB_LeaderBoard.txtEmployee.setTextColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
                     )
-                )
-                DB_LeaderBoard.txtUser.setTextColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        R.color.black
+                    DB_LeaderBoard.txtUser.setTextColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.black
+                        )
                     )
-                )
-            }
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

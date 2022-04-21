@@ -1,5 +1,6 @@
 package com.rjsquare.kkmt.Activity.Store
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.util.Log
@@ -199,6 +200,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
                 ) {
                     DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
 
+//                    Log.e("GetResponsesasXASX", "Hell: "+Gson().toJson(response.body()!!))
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         LocationList.addAll(response.body()!!.data!!)
                         SetUpDataUI()
@@ -235,7 +237,6 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-
 
             params[Constants.paramKey_UserId] =
                 ApplicationClass.userInfoModel.data!!.userid!!.toString()
@@ -309,9 +310,9 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun SetUpDataUI() {
-        DB_StoreItemRedeemConfirm.chPickUp1.setText(LocationList[0].location)
-        DB_StoreItemRedeemConfirm.chPickUp2.setText(LocationList[1].location)
-        DB_StoreItemRedeemConfirm.chPickUp3.setText(LocationList[2].location)
+        DB_StoreItemRedeemConfirm.chPickUp1.text = LocationList[0].location
+        DB_StoreItemRedeemConfirm.chPickUp2.text = LocationList[1].location
+        DB_StoreItemRedeemConfirm.chPickUp3.text = LocationList[2].location
 
         IsPickUpStore = true
         DeliveryAddress = DB_StoreItemRedeemConfirm.chPickUp1.text.toString()
@@ -329,56 +330,57 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+        if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
             ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-        if (view == DB_StoreItemRedeemConfirm.cntItemredeemSubmit) {
-            if (!IsPickUpStore) {
-                if (!DB_StoreItemRedeemConfirm.edtAddress1.text.toString().trim()
-                        .equals("", true)
-                ) {
-                    if (!DB_StoreItemRedeemConfirm.edtAddress2.text.toString().trim()
+            if (view == DB_StoreItemRedeemConfirm.cntItemredeemSubmit) {
+                if (!IsPickUpStore) {
+                    if (!DB_StoreItemRedeemConfirm.edtAddress1.text.toString().trim()
                             .equals("", true)
                     ) {
-                        DeliveryAddress =
-                            DB_StoreItemRedeemConfirm.edtAddress1.text.toString() +
-                                    ", " + DB_StoreItemRedeemConfirm.edtAddress2.text.toString() +
-                                    ", " + DB_StoreItemRedeemConfirm.edtPincode.text.toString()
-                    } else {
-                        DeliveryAddress =
-                            DB_StoreItemRedeemConfirm.edtAddress1.text.toString() +
-                                    ", " + DB_StoreItemRedeemConfirm.edtPincode.text.toString()
+                        if (!DB_StoreItemRedeemConfirm.edtAddress2.text.toString().trim()
+                                .equals("", true)
+                        ) {
+                            DeliveryAddress =
+                                DB_StoreItemRedeemConfirm.edtAddress1.text.toString() +
+                                        ", " + DB_StoreItemRedeemConfirm.edtAddress2.text.toString() +
+                                        ", " + DB_StoreItemRedeemConfirm.edtPincode.text.toString()
+                        } else {
+                            DeliveryAddress =
+                                DB_StoreItemRedeemConfirm.edtAddress1.text.toString() +
+                                        ", " + DB_StoreItemRedeemConfirm.edtPincode.text.toString()
+                        }
                     }
                 }
-            }
-            if (!IsPickUpStore && DB_StoreItemRedeemConfirm.edtAddress1.text.toString().trim()
-                    .equals("", true) &&
-                DB_StoreItemRedeemConfirm.edtPincode.text.toString().trim()
-                    .equals("", true)
-            ) {
-                Toast.makeText(this, "Enter address.", Toast.LENGTH_SHORT).show()
-                return
-            }
-            SetUpConfirmUI()
-            DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.VISIBLE
-        } else if (view == DB_StoreItemRedeemConfirm.cntRedeemConfirm) {
-            DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
-            ItemRedeemRequest()
-        } else if (view == DB_StoreItemRedeemConfirm.cntRedeemCancel) {
-            DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
-        } else if (view == DB_StoreItemRedeemConfirm.imgBack) {
-            onBackPressed()
-        } else if (view == DB_StoreItemRedeemConfirm.txtUnauthOk) {
-            ApplicationClass.UserLogout(this)
-        } else if (view == DB_StoreItemRedeemConfirm.txtAlertok) {
-            if (ItemRedeemed) {
+                if (!IsPickUpStore && DB_StoreItemRedeemConfirm.edtAddress1.text.toString().trim()
+                        .equals("", true) &&
+                    DB_StoreItemRedeemConfirm.edtPincode.text.toString().trim()
+                        .equals("", true)
+                ) {
+                    Toast.makeText(this, "Enter address.", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                SetUpConfirmUI()
+                DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.VISIBLE
+            } else if (view == DB_StoreItemRedeemConfirm.cntRedeemConfirm) {
+                DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
+                ItemRedeemRequest()
+            } else if (view == DB_StoreItemRedeemConfirm.cntRedeemCancel) {
+                DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
+            } else if (view == DB_StoreItemRedeemConfirm.imgBack) {
+                onBackPressed()
+            } else if (view == DB_StoreItemRedeemConfirm.txtUnauthOk) {
+                ApplicationClass.UserLogout(this)
+            } else if (view == DB_StoreItemRedeemConfirm.txtAlertok) {
+                if (ItemRedeemed) {
 //                Store.thisStoreActivity.finish()
-//                StoreLevelList.thisStoreLevelActivity.finish()
-                finish()
-                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
-            } else {
-                DB_StoreItemRedeemConfirm.cntAlert.visibility = View.GONE
+                    setResult(Activity.RESULT_OK)
+                    StoreLevelList.thisStoreLevelActivity.finish()
+                    finish()
+                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+                } else {
+                    DB_StoreItemRedeemConfirm.cntAlert.visibility = View.GONE
+                }
             }
-        }
         }
     }
 

@@ -190,9 +190,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_24dp"
+                        android:layout_marginTop="@dimen/_6dp"
                         android:button="@drawable/cb_selector_orange"
                         android:checked="true"
-                        android:layout_marginTop="@dimen/_6dp"
                         android:fontFamily="@font/lato_medium"
                         android:paddingLeft="@dimen/_8dp"
                         android:paddingTop="@dimen/_8dp"
@@ -265,8 +265,8 @@
                     android:id="@+id/cnt_DeliveryLocation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:layout_marginTop="@dimen/_6dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/ch_DeliveryLocation"
                     app:layout_constraintStart_toStartOf="@id/ch_DeliveryLocation"
                     app:layout_constraintTop_toBottomOf="@+id/ch_DeliveryLocation">
@@ -308,25 +308,25 @@
                             android:gravity="center_vertical"
                             android:hint="Address 1"
                             android:inputType="text"
-                            android:singleLine="true"
                             android:padding="@dimen/_4dp"
+                            android:singleLine="true"
                             android:textSize="@dimen/_11dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-<!--                        <ImageView-->
-<!--                            android:id="@+id/imageView1"-->
-<!--                            android:layout_width="@dimen/_16dp"-->
-<!--                            android:layout_height="@dimen/_16dp"-->
-<!--                            android:layout_marginLeft="@dimen/_16dp"-->
-<!--                            android:layout_marginTop="@dimen/_12dp"-->
-<!--                            android:layout_marginBottom="@dimen/_12dp"-->
-<!--                            android:src="@drawable/ic_user"-->
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent" />-->
+                        <!--                        <ImageView-->
+                        <!--                            android:id="@+id/imageView1"-->
+                        <!--                            android:layout_width="@dimen/_16dp"-->
+                        <!--                            android:layout_height="@dimen/_16dp"-->
+                        <!--                            android:layout_marginLeft="@dimen/_16dp"-->
+                        <!--                            android:layout_marginTop="@dimen/_12dp"-->
+                        <!--                            android:layout_marginBottom="@dimen/_12dp"-->
+                        <!--                            android:src="@drawable/ic_user"-->
+                        <!--                            app:layout_constraintBottom_toBottomOf="parent"-->
+                        <!--                            app:layout_constraintStart_toStartOf="parent"-->
+                        <!--                            app:layout_constraintTop_toTopOf="parent" />-->
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -334,8 +334,8 @@
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_38dp"
                         android:layout_marginLeft="@dimen/_16dp"
-                        android:layout_marginRight="@dimen/_28dp"
                         android:layout_marginTop="@dimen/_8dp"
+                        android:layout_marginRight="@dimen/_28dp"
                         android:background="@drawable/numberfield"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -367,33 +367,33 @@
                             android:gravity="center_vertical"
                             android:hint="Address 2"
                             android:inputType="text"
-                            android:singleLine="true"
                             android:padding="@dimen/_4dp"
+                            android:singleLine="true"
                             android:textSize="@dimen/_11dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-<!--                        <ImageView-->
-<!--                            android:id="@+id/imageView2"-->
-<!--                            android:layout_width="@dimen/_16dp"-->
-<!--                            android:layout_height="@dimen/_16dp"-->
-<!--                            android:layout_marginLeft="@dimen/_16dp"-->
-<!--                            android:layout_marginTop="@dimen/_12dp"-->
-<!--                            android:layout_marginBottom="@dimen/_12dp"-->
-<!--                            android:src="@drawable/ic_user"-->
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent" />-->
+                        <!--                        <ImageView-->
+                        <!--                            android:id="@+id/imageView2"-->
+                        <!--                            android:layout_width="@dimen/_16dp"-->
+                        <!--                            android:layout_height="@dimen/_16dp"-->
+                        <!--                            android:layout_marginLeft="@dimen/_16dp"-->
+                        <!--                            android:layout_marginTop="@dimen/_12dp"-->
+                        <!--                            android:layout_marginBottom="@dimen/_12dp"-->
+                        <!--                            android:src="@drawable/ic_user"-->
+                        <!--                            app:layout_constraintBottom_toBottomOf="parent"-->
+                        <!--                            app:layout_constraintStart_toStartOf="parent"-->
+                        <!--                            app:layout_constraintTop_toTopOf="parent" />-->
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cnt_pincode"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_38dp"
-                        android:layout_marginTop="@dimen/_8dp"
                         android:layout_marginLeft="@dimen/_16dp"
+                        android:layout_marginTop="@dimen/_8dp"
                         android:layout_marginRight="@dimen/_28dp"
                         android:background="@drawable/numberfield"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -427,25 +427,25 @@
                             android:hint="Pincode"
                             android:imeOptions="actionDone"
                             android:inputType="number"
-                            android:singleLine="true"
                             android:padding="@dimen/_4dp"
+                            android:singleLine="true"
                             android:textSize="@dimen/_11dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-<!--                        <ImageView-->
-<!--                            android:id="@+id/imageView"-->
-<!--                            android:layout_width="@dimen/_16dp"-->
-<!--                            android:layout_height="@dimen/_16dp"-->
-<!--                            android:layout_marginLeft="@dimen/_16dp"-->
-<!--                            android:layout_marginTop="@dimen/_12dp"-->
-<!--                            android:layout_marginBottom="@dimen/_12dp"-->
-<!--                            android:src="@drawable/ic_user"-->
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent" />-->
+                        <!--                        <ImageView-->
+                        <!--                            android:id="@+id/imageView"-->
+                        <!--                            android:layout_width="@dimen/_16dp"-->
+                        <!--                            android:layout_height="@dimen/_16dp"-->
+                        <!--                            android:layout_marginLeft="@dimen/_16dp"-->
+                        <!--                            android:layout_marginTop="@dimen/_12dp"-->
+                        <!--                            android:layout_marginBottom="@dimen/_12dp"-->
+                        <!--                            android:src="@drawable/ic_user"-->
+                        <!--                            app:layout_constraintBottom_toBottomOf="parent"-->
+                        <!--                            app:layout_constraintStart_toStartOf="parent"-->
+                        <!--                            app:layout_constraintTop_toTopOf="parent" />-->
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -549,24 +549,24 @@
                         android:id="@+id/img_redeemItem_confirm"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        app:layout_constraintWidth_percent="0.4"
-                        android:layout_marginTop="@dimen/_8dp"
                         android:layout_marginStart="@dimen/_8dp"
+                        android:layout_marginTop="@dimen/_8dp"
                         android:scaleType="centerCrop"
-                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintBottom_toTopOf="@+id/txt_redeemaddress_sel"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_percent="0.4"
                         app:srcCompat="@drawable/shop1" />
 
                     <TextView
                         android:id="@+id/txt_redeemItemName_confirm"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8dp"
                         android:fontFamily="@font/lato_bold"
                         android:text="Samsung Watch"
-                        android:layout_marginStart="@dimen/_8dp"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_14dp"
                         app:layout_constraintBottom_toTopOf="@+id/txt_redeemItemCredit_confirm"
@@ -604,10 +604,10 @@
                         android:id="@+id/txt_redeemaddress_sel"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12dp"
                         android:layout_marginTop="@dimen/_12dp"
                         android:fontFamily="@font/lato_bold"
                         android:text="Pick up EXPE Store"
-                        android:layout_marginHorizontal="@dimen/_12dp"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_14dp"
                         app:layout_constraintBottom_toTopOf="@+id/txt_redeemaddress_lbl"
@@ -698,6 +698,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cnt_loader"
             android:layout_width="0dp"

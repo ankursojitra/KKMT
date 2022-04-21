@@ -15,7 +15,6 @@ import com.rjsquare.kkmt.Fragment.search
 import com.rjsquare.kkmt.Model.SearchModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.RawSearchFrameBinding
-import java.util.*
 
 class SearchAdapter(
     var moContext: Context,
@@ -52,7 +51,7 @@ class SearchAdapter(
             var Per_Value_old = 0.0
             val mSearchModel_old: SearchModel
             holder.lSearchModelSelected = mSearchModel
-            holder.DB_RawSearchFrameBinding.idFrameconstraint.setBackground(mSearchModel.BackColor)
+            holder.DB_RawSearchFrameBinding.idFrameconstraint.background = mSearchModel.BackColor
             holder.DB_RawSearchFrameBinding.imgSearch.setImageDrawable(mSearchModel.ImgLink)
             holder.DB_RawSearchFrameBinding.txtSearchTitle.text = mSearchModel.TxtTitle
             holder.DB_RawSearchFrameBinding.txtSearchAdd.text = mSearchModel.TxtAddress
@@ -125,14 +124,15 @@ class SearchAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-                if (view == DB_RawSearchFrameBinding.idFrameconstraint) {
-                    ApplicationClass.mSearchModelSelected = lSearchModelSelected
-                    if (HomeActivity.KeyBoardOpen) hideSoftKeyboard(moContext as HomeActivity)
-                    search.DB_FSearch.edtSearchbar.clearFocus()
-                    search.PrepareBottomSheetView()
-                }
+                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick =
+                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                    if (view == DB_RawSearchFrameBinding.idFrameconstraint) {
+                        ApplicationClass.mSearchModelSelected = lSearchModelSelected
+                        if (HomeActivity.KeyBoardOpen) hideSoftKeyboard(moContext as HomeActivity)
+                        search.DB_FSearch.edtSearchbar.clearFocus()
+                        search.PrepareBottomSheetView()
+                    }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

@@ -63,7 +63,7 @@ class EventsAdapter(
             holder.DB_RawEventsFrameBinding.txtEventDate.text = mEventsModel.date
             Picasso.with(moContext).load(mEventsModel.image!![0])
                 .placeholder(R.drawable.ic_expe_logo).into(holder.DB_RawEventsFrameBinding.imgEvent)
-            Log.e("TAG","Event Item has : "+mEventsModel.date)
+            Log.e("TAG", "Event Item has : " + mEventsModel.date)
 //            Glide
 //                .with(moContext)
 //                .load(mEventsModel.image!![0])
@@ -145,17 +145,18 @@ class EventsAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-                if (view == DB_RawEventsFrameBinding.idFrameconstraint) {
-                    mEventsModelSelected = lEventsModelSelected
-                    var FullEventIntent = Intent(moContext, EventsFullView::class.java)
-                    moContext.startActivity(FullEventIntent)
-                    (moContext as Events).overridePendingTransition(
-                        R.anim.activity_in,
-                        R.anim.activity_out
-                    )
-                }
+                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick =
+                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                    if (view == DB_RawEventsFrameBinding.idFrameconstraint) {
+                        mEventsModelSelected = lEventsModelSelected
+                        var FullEventIntent = Intent(moContext, EventsFullView::class.java)
+                        moContext.startActivity(FullEventIntent)
+                        (moContext as Events).overridePendingTransition(
+                            R.anim.activity_in,
+                            R.anim.activity_out
+                        )
+                    }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

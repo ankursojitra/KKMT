@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.ActivityReviewListBinding
@@ -22,8 +21,8 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
     }
 
-    companion object{
-        lateinit var reviewListActivity : Activity
+    companion object {
+        lateinit var reviewListActivity: Activity
         lateinit var DB_ReviewList: ActivityReviewListBinding
         lateinit var pendingReviewItemInfo: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
         lateinit var completeReviewItemInfo: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
@@ -31,7 +30,7 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DB_ReviewList = DataBindingUtil.setContentView(this,R.layout.activity_review_list)
+        DB_ReviewList = DataBindingUtil.setContentView(this, R.layout.activity_review_list)
 
         try {
             reviewListActivity = this
@@ -163,46 +162,47 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_ReviewList.imgBack) {
-                onBackPressed()
-            }else if (view == DB_ReviewList.txtPendingReview) {
-                Log.e("TAG","CHECKItemclick")
-                DB_ReviewList.viewPager.currentItem = 0
-                DB_ReviewList.txtPendingReview.background =
-                    ContextCompat.getDrawable(this, R.drawable.tab_selection)
-                DB_ReviewList.txtCompleteReview.background = null
-                DB_ReviewList.txtPendingReview.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.black
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_ReviewList.imgBack) {
+                    onBackPressed()
+                } else if (view == DB_ReviewList.txtPendingReview) {
+                    Log.e("TAG", "CHECKItemclick")
+                    DB_ReviewList.viewPager.currentItem = 0
+                    DB_ReviewList.txtPendingReview.background =
+                        ContextCompat.getDrawable(this, R.drawable.tab_selection)
+                    DB_ReviewList.txtCompleteReview.background = null
+                    DB_ReviewList.txtPendingReview.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.black
+                        )
                     )
-                )
-                DB_ReviewList.txtCompleteReview.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.white
+                    DB_ReviewList.txtCompleteReview.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.white
+                        )
                     )
-                )
-            }else if (view == DB_ReviewList.txtCompleteReview) {
-                DB_ReviewList.viewPager.currentItem = 1
-                DB_ReviewList.txtCompleteReview.background =
-                    ContextCompat.getDrawable(this, R.drawable.tab_selection)
-                DB_ReviewList.txtPendingReview.background = null
-                DB_ReviewList.txtCompleteReview.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.black
+                } else if (view == DB_ReviewList.txtCompleteReview) {
+                    DB_ReviewList.viewPager.currentItem = 1
+                    DB_ReviewList.txtCompleteReview.background =
+                        ContextCompat.getDrawable(this, R.drawable.tab_selection)
+                    DB_ReviewList.txtPendingReview.background = null
+                    DB_ReviewList.txtCompleteReview.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.black
+                        )
                     )
-                )
-                DB_ReviewList.txtPendingReview.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.white
+                    DB_ReviewList.txtPendingReview.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.white
+                        )
                     )
-                )
-            }
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

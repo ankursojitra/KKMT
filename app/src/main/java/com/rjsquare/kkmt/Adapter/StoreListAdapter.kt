@@ -65,9 +65,9 @@ class StoreListAdapter(
                 moContext, mStoreListModel
             )
 
-            val linearLayoutManager =
-                LinearLayoutManager(moContext, LinearLayoutManager.HORIZONTAL, false)
-            mRrPrize.layoutManager = linearLayoutManager
+//            val linearLayoutManager =
+//                LinearLayoutManager(moContext, LinearLayoutManager.HORIZONTAL, false)
+//            mRrPrize.layoutManager = linearLayoutManager
 
             mRrPrize.adapter = loStoreItemDetailAdapter
             mRrPrize.setItemViewCacheSize(mStoreListModel.size)
@@ -120,15 +120,16 @@ class StoreListAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-                if (view == DB_RawStorelistFrameBinding.txtMore) {
-                    ApplicationClass.mStoreLevelListModelSelected = lStoreListModelSelected
-                    commanUtils.NextScreen(
-                        moContext as Store,
-                        Intent(moContext, StoreLevelList::class.java)
-                    )
-                }
+                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick =
+                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                    if (view == DB_RawStorelistFrameBinding.txtMore) {
+                        ApplicationClass.mStoreLevelListModelSelected = lStoreListModelSelected
+                        commanUtils.NextScreen(
+                            moContext as Store,
+                            Intent(moContext, StoreLevelList::class.java)
+                        )
+                    }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

@@ -36,7 +36,6 @@ import com.rjsquare.kkmt.Activity.Register.upload_doc
 import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
-import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.DisplayNameModel
@@ -184,35 +183,34 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
     }
 
     private fun SetProfileData() {
-        DB_Profile.txtProfileName.setHint(ApplicationClass.userInfoModel.data!!.username)
-        DB_Profile.edtFirstName.setHint(ApplicationClass.userInfoModel.data!!.firstname)
-        DB_Profile.edtLastName.setHint(ApplicationClass.userInfoModel.data!!.lastname)
-        DB_Profile.edtPhoneNumber.setHint(ApplicationClass.userInfoModel.data!!.contactno)
-        DB_Profile.edtEmail.setHint(ApplicationClass.userInfoModel.data!!.email)
+        DB_Profile.txtProfileName.hint = ApplicationClass.userInfoModel.data!!.username
+        DB_Profile.edtFirstName.hint = ApplicationClass.userInfoModel.data!!.firstname
+        DB_Profile.edtLastName.hint = ApplicationClass.userInfoModel.data!!.lastname
+        DB_Profile.edtPhoneNumber.hint = ApplicationClass.userInfoModel.data!!.contactno
+        DB_Profile.edtEmail.hint = ApplicationClass.userInfoModel.data!!.email
         DB_Profile.swtNameVisible.isChecked =
-            if (ApplicationClass.userInfoModel.data!!.display_name_show!!.equals(
+            ApplicationClass.userInfoModel.data!!.display_name_show!!.equals(
                     "Yes",
                     true
                 )
-            ) true else false
         if (ApplicationClass.userInfoModel.data!!.dob!!.trim().equals("")) {
-            DB_Profile.txtDob.setHint(getString(R.string.birthdate))
+            DB_Profile.txtDob.hint = getString(R.string.birthdate)
         } else {
-            DB_Profile.txtDob.setHint(ApplicationClass.userInfoModel.data!!.dob)
+            DB_Profile.txtDob.hint = ApplicationClass.userInfoModel.data!!.dob
         }
         if (ApplicationClass.userInfoModel.data!!.gender!!.trim().equals("")) {
-            DB_Profile.txtGender.setHint(getString(R.string.gender))
+            DB_Profile.txtGender.hint = getString(R.string.gender)
         } else {
-            DB_Profile.txtGender.setHint(ApplicationClass.Gender(ApplicationClass.userInfoModel.data!!.gender!!))
+            DB_Profile.txtGender.hint = ApplicationClass.Gender(ApplicationClass.userInfoModel.data!!.gender!!)
         }
         if (ApplicationClass.userInfoModel.data!!.display_name!!.trim().equals("")) {
-            DB_Profile.edtDisplayName.setHint(getString(R.string.displayname))
+            DB_Profile.edtDisplayName.hint = getString(R.string.displayname)
         } else {
-            DB_Profile.edtDisplayName.setHint(ApplicationClass.userInfoModel.data!!.display_name!!)
+            DB_Profile.edtDisplayName.hint = ApplicationClass.userInfoModel.data!!.display_name!!
         }
 
-        DB_Profile.txtLevel.setText("Level : ${ApplicationClass.userInfoModel.data!!.credit_details!!.level}")
-        DB_Profile.txtCredits.setText(commanUtils.formatNumber(ApplicationClass.userInfoModel.data!!.credit_details!!.credit!!.toInt()))
+        DB_Profile.txtLevel.text = "Level : ${ApplicationClass.userInfoModel.data!!.credit_details!!.level}"
+        DB_Profile.txtCredits.text = commanUtils.formatNumber(ApplicationClass.userInfoModel.data!!.credit_details!!.credit!!.toInt())
 
 
         DB_Profile.cntDob.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
@@ -338,13 +336,13 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                 } else if (view == DB_Profile.txtUnauthOk) {
                     ApplicationClass.UserLogout(this)
                 } else if (view == mGenderListView.txt_male) {
-                    DB_Profile.txtGender.setText("Male")
+                    DB_Profile.txtGender.text = "Male"
                     mGenderListView.visibility = View.GONE
                 } else if (view == mGenderListView.txt_female) {
-                    DB_Profile.txtGender.setText("Female")
+                    DB_Profile.txtGender.text = "Female"
                     mGenderListView.visibility = View.GONE
                 } else if (view == mGenderListView.txt_other) {
-                    DB_Profile.txtGender.setText("Other")
+                    DB_Profile.txtGender.text = "Other"
                     mGenderListView.visibility = View.GONE
                 } else if (view == DB_Profile.txtGender) {
                     Log.e("TAG", "Gender")
@@ -462,17 +460,17 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         DB_Profile.edtDisplayName.setText(DB_Profile.edtDisplayName.hint)
         DB_Profile.edtEmail.setText(DB_Profile.edtEmail.hint)
         if (ApplicationClass.userInfoModel.data!!.dob!!.trim().equals("")) {
-            DB_Profile.txtDob.setHint(getString(R.string.birthdate))
+            DB_Profile.txtDob.hint = getString(R.string.birthdate)
         } else {
-            DB_Profile.txtDob.setText(DB_Profile.txtDob.hint)
+            DB_Profile.txtDob.text = DB_Profile.txtDob.hint
         }
         if (ApplicationClass.userInfoModel.data!!.gender!!.trim().equals("")) {
-            DB_Profile.txtGender.setHint(getString(R.string.gender))
+            DB_Profile.txtGender.hint = getString(R.string.gender)
         } else {
-            DB_Profile.txtGender.setText(DB_Profile.txtGender.hint)
+            DB_Profile.txtGender.text = DB_Profile.txtGender.hint
         }
         if (ApplicationClass.userInfoModel.data!!.display_name!!.trim().equals("")) {
-            DB_Profile.edtDisplayName.setHint(getString(R.string.displayname))
+            DB_Profile.edtDisplayName.hint = getString(R.string.displayname)
 //            DB_Profile.edtDisplayName.setText("")
         } else {
             DB_Profile.edtDisplayName.setText(DB_Profile.edtDisplayName.hint)
@@ -554,7 +552,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                     response: retrofit2.Response<UserInfoData_Model>
                 ) {
                     DB_Profile.cntLoader.visibility = View.GONE
-                    Log.e("TAG","UpdateInfo : "+Gson().toJson(response.body()))
+                    Log.e("TAG", "UpdateInfo : " + Gson().toJson(response.body()))
                     if (response.body()!!.status.equals(
                             Constants.ResponseSucess, true
                         )
@@ -607,7 +605,8 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
     private fun UpdateDone() {
 
         DB_Profile.cntDob.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
-        DB_Profile.cntDisplayName.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
+        DB_Profile.cntDisplayName.background =
+            ContextCompat.getDrawable(this, R.drawable.profile_field)
         DB_Profile.cntEmail.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
         DB_Profile.cntGender.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
 
@@ -631,9 +630,9 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
 ////            DB_Profile.edtDisplayName.setText("")
 //        } else {
 //        }
-        DB_Profile.txtDob.setHint(DB_Profile.txtDob.text)
-        DB_Profile.txtGender.setHint(DB_Profile.txtGender.text)
-        DB_Profile.edtDisplayName.setHint(DB_Profile.edtDisplayName.text.toString())
+        DB_Profile.txtDob.hint = DB_Profile.txtDob.text
+        DB_Profile.txtGender.hint = DB_Profile.txtGender.text
+        DB_Profile.edtDisplayName.hint = DB_Profile.edtDisplayName.text.toString()
     }
 
     private fun DisplayName(isEnable: Boolean) {
@@ -704,7 +703,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         }
     }
 
-    class Base64Converter() : AsyncTask<Void, Void, String>() {
+    class Base64Converter : AsyncTask<Void, Void, String>() {
         @Throws(IOException::class)
         fun getBytes(inputStream: InputStream): ByteArray? {
             val byteBuffer = ByteArrayOutputStream()
@@ -746,10 +745,10 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         }
 
         fun isfilesizelow(fileUri: Uri): Boolean {
-            val selectedFilePath: String = fileUri.getPath().toString()
+            val selectedFilePath: String = fileUri.path.toString()
             val file = File(selectedFilePath)
             selFileSize = getFolderSizeLabel(file)
-            return if (selFileSize < 5.0) true else false
+            return selFileSize < 5.0
         }
 
         override fun doInBackground(vararg params: Void?): String? {
@@ -784,7 +783,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         DatePickerVISIBLE = false
 
         selDate = sendSDF.format(currentDateandTime)
-        DB_Profile.txtDob.setText(selDate)
+        DB_Profile.txtDob.text = selDate
         Log.e("TAG", "Dateselection")
     }
 }

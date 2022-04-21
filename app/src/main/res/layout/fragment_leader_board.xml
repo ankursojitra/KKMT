@@ -104,12 +104,12 @@
                             android:layout_height="0dp"
                             android:overScrollMode="never"
                             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                            tools:listitem="@layout/raw_leaderboard_frame"
                             app:layout_constraintBottom_toTopOf="@+id/cnt_rank"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:listitem="@layout/raw_leaderboard_frame" />
 
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -445,6 +445,7 @@
                     app:layout_constraintStart_toStartOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cnt_loader"
                 android:layout_width="0dp"

@@ -24,13 +24,19 @@ import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingIns
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
 import com.rjsquare.kkmt.Helpers.Preferences
-import com.rjsquare.kkmt.Model.*
+import com.rjsquare.kkmt.Model.ReviewEmp_Model
+import com.rjsquare.kkmt.Model.ReviewModel
+import com.rjsquare.kkmt.Model.SearchModel
+import com.rjsquare.kkmt.Model.UserLoginInfo_Model
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
-import com.rjsquare.kkmt.RetrofitInstance.OTPCall.*
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewInfodata
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.SlaveBeaconModel
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
 import retrofit2.Call
@@ -217,7 +223,7 @@ class ApplicationClass : Application(), LifecycleObserver {
             Preferences.Cleardata()
             ResetAllData()
             var LogInIntent = Intent(activity, HomeActivity::class.java)
-            LogInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            LogInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             activity.startActivity(LogInIntent)
             activity.finish()
 //            activity.overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
@@ -440,11 +446,7 @@ class ApplicationClass : Application(), LifecycleObserver {
 
                             isUserEmployee = IsEmployee()
                             authorisedUser = true
-                            if (userInfoModel.data!!.approve.equals(Constants.YES, true)) {
-                                isApprove = true
-                            } else {
-                                isApprove = false
-                            }
+                            isApprove = userInfoModel.data!!.approve.equals(Constants.YES, true)
                         } else if (response.body()!!.status.equals(
                                 Constants.ResponseUnauthorized,
                                 true

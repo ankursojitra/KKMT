@@ -109,7 +109,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 val dx: Float = mView.x
                 val dy: Float = mView.y
 //
-                mView.setVisibility(View.VISIBLE)
+                mView.visibility = View.VISIBLE
                 mView.animate()
                     .x(dx)
                     .y(dy)
@@ -310,7 +310,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             call.enqueue(object : Callback<SlaveBeaconModel> {
                 override fun onFailure(call: Call<SlaveBeaconModel>, t: Throwable) {
                     DB_SearchEmployee.cntLoader.visibility = View.GONE
-                    Log.e("TAG","CHECKERROR : "+t)
+                    Log.e("TAG", "CHECKERROR : " + t)
                 }
 
                 override fun onResponse(
@@ -368,7 +368,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             0 -> {
                 DB_SearchEmployee.cntView1.ly_emp1.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView1.ly_emp1.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView1.ly_emp1.img_emp)
                 DB_SearchEmployee.cntView1.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView1.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -379,7 +380,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             1 -> {
                 DB_SearchEmployee.cntView2.ly_emp2.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView2.ly_emp2.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView2.ly_emp2.img_emp)
                 DB_SearchEmployee.cntView2.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView2.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -390,7 +392,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             2 -> {
                 DB_SearchEmployee.cntView3.ly_emp3.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView3.ly_emp3.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView3.ly_emp3.img_emp)
                 DB_SearchEmployee.cntView3.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView3.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -401,7 +404,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             3 -> {
                 DB_SearchEmployee.cntView4.ly_emp4.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView4.ly_emp4.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView4.ly_emp4.img_emp)
                 DB_SearchEmployee.cntView4.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView4.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -412,7 +416,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             4 -> {
                 DB_SearchEmployee.cntView5.ly_emp5.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView5.ly_emp5.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView5.ly_emp5.img_emp)
                 DB_SearchEmployee.cntView5.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView5.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -423,7 +428,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             5 -> {
                 DB_SearchEmployee.cntView6.ly_emp6.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView6.ly_emp6.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView6.ly_emp6.img_emp)
                 DB_SearchEmployee.cntView6.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView6.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -434,7 +440,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             6 -> {
                 DB_SearchEmployee.cntView7.ly_emp7.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView7.ly_emp7.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView7.ly_emp7.img_emp)
                 DB_SearchEmployee.cntView7.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView7.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -445,7 +452,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             7 -> {
                 DB_SearchEmployee.cntView8.ly_emp8.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView8.ly_emp8.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView8.ly_emp8.img_emp)
                 DB_SearchEmployee.cntView8.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView8.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -456,7 +464,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             8 -> {
                 DB_SearchEmployee.cntView9.ly_emp9.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView9.ly_emp9.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView9.ly_emp9.img_emp)
                 DB_SearchEmployee.cntView9.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView9.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -467,7 +476,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             9 -> {
                 DB_SearchEmployee.cntView10.ly_emp10.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView10.ly_emp10.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView10.ly_emp10.img_emp)
                 DB_SearchEmployee.cntView10.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView10.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -478,7 +488,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             10 -> {
                 DB_SearchEmployee.cntView11.ly_emp11.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView11.ly_emp11.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView11.ly_emp11.img_emp)
                 DB_SearchEmployee.cntView11.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView11.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -489,7 +500,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             11 -> {
                 DB_SearchEmployee.cntView12.ly_emp12.txt_employeename.text = slaveBescon.username
                 Picasso.with(this).load(slaveBescon.employeeimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_SearchEmployee.cntView12.ly_emp12.img_emp)
+                    .placeholder(R.drawable.ic_expe_logo)
+                    .into(DB_SearchEmployee.cntView12.ly_emp12.img_emp)
                 DB_SearchEmployee.cntView12.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView12.setOnClickListener(View.OnClickListener {
                     ApplicationClass.empSlaveModel = slaveBescon
@@ -690,47 +702,47 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+        if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
             ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-        if (view == DB_SearchEmployee.cntNotfound) {
-            CloseViews()
-            DB_SearchEmployee.layoutHelperReport.cntReportview.visibility = View.VISIBLE
-        } else if (view == mTxtSubmit) {
-            if (mCh1.isChecked) {
-                notFoundEmployeekkmtid = edtEmployeekkmtID.text.toString()
-                notFoundEmployeeReason = getString(R.string.empreson1)
-                if (!notFoundEmployeeReason.equals("".trim(), true)) {
+            if (view == DB_SearchEmployee.cntNotfound) {
+                CloseViews()
+                DB_SearchEmployee.layoutHelperReport.cntReportview.visibility = View.VISIBLE
+            } else if (view == mTxtSubmit) {
+                if (mCh1.isChecked) {
+                    notFoundEmployeekkmtid = edtEmployeekkmtID.text.toString()
+                    notFoundEmployeeReason = getString(R.string.empreson1)
+                    if (!notFoundEmployeeReason.equals("".trim(), true)) {
+                        EmployeeNotFound()
+                    } else {
+                        ShowAlert("KKMT ID required.")
+                    }
+                } else if (mCh2.isChecked) {
+                    notFoundEmployeeReason = getString(R.string.empreson2)
                     EmployeeNotFound()
-                } else {
-                    ShowAlert("KKMT ID required.")
+
+                } else if (mCh3.isChecked) {
+                    notFoundEmployeeReason = getString(R.string.empreson3)
+                    EmployeeNotFound()
                 }
-            } else if (mCh2.isChecked) {
-                notFoundEmployeeReason = getString(R.string.empreson2)
-                EmployeeNotFound()
+            } else if (view == DB_SearchEmployee.txtAlertok) {
+                Log.e("TAG", "AlertOk")
+                HideAlert()
+            } else if (view == mTxtBacktohome) {
+                if (!ApplicationClass.selectedMasterModel.check_in!!.equals("Yes", true)) {
+                    BussinessCheckIn.thisBusinessCheckIn.finish()
+                }
+                Bussiness_Location.thisBussiness_Activity.finish()
+                finish()
+                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+            } else if (view == this.imgCamera) {
+                TakeCameraPicture()
 
-            } else if (mCh3.isChecked) {
-                notFoundEmployeeReason = getString(R.string.empreson3)
-                EmployeeNotFound()
+            } else if (view == mImgClose) {
+                CloseViews()
+                DB_SearchEmployee.cntEmpmainView.visibility = View.VISIBLE
+            } else if (view == DB_SearchEmployee.txtUnauthOk) {
+                ApplicationClass.UserLogout(this)
             }
-        } else if (view == DB_SearchEmployee.txtAlertok) {
-            Log.e("TAG", "AlertOk")
-            HideAlert()
-        } else if (view == mTxtBacktohome) {
-            if (!ApplicationClass.selectedMasterModel.check_in!!.equals("Yes", true)) {
-                BussinessCheckIn.thisBusinessCheckIn.finish()
-            }
-            Bussiness_Location.thisBussiness_Activity.finish()
-            finish()
-            overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
-        } else if (view == this.imgCamera) {
-            TakeCameraPicture()
-
-        } else if (view == mImgClose) {
-            CloseViews()
-            DB_SearchEmployee.cntEmpmainView.visibility = View.VISIBLE
-        } else if (view == DB_SearchEmployee.txtUnauthOk) {
-            ApplicationClass.UserLogout(this)
-        }
         }
     }
 
@@ -843,7 +855,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
         mMtCentralManager!!.stopScan()
-        handler.removeCallbacks(runnable);
+        handler.removeCallbacks(runnable)
     }
 
     private fun CloseViews() {

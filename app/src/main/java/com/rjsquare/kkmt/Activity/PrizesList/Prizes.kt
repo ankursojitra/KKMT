@@ -153,16 +153,17 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_Prizes.imgBack) {
-                onBackPressed()
-            } else if (view == DB_Prizes.txtUnauthOk) {
-                DB_Prizes.cntUnAuthorized.visibility = View.GONE
-                ApplicationClass.UserLogout(this)
-            } else if (view == DB_Prizes.txtAlertok) {
-                DB_Prizes.cntAlert.visibility = View.GONE
-            }
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_Prizes.imgBack) {
+                    onBackPressed()
+                } else if (view == DB_Prizes.txtUnauthOk) {
+                    DB_Prizes.cntUnAuthorized.visibility = View.GONE
+                    ApplicationClass.UserLogout(this)
+                } else if (view == DB_Prizes.txtAlertok) {
+                    DB_Prizes.cntAlert.visibility = View.GONE
+                }
             }
 
         } catch (NE: NullPointerException) {

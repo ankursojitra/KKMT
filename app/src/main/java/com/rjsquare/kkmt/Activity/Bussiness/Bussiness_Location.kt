@@ -258,7 +258,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
         val lastKnownLocation =
             locationManager.getLastKnownLocation(locationProvider)
         userLat = lastKnownLocation!!.latitude
-        userLong = lastKnownLocation!!.longitude
+        userLong = lastKnownLocation.longitude
     }
 
     private fun MasterBleDeviceInfo() {
@@ -736,8 +736,8 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                     )
                     == PackageManager.PERMISSION_GRANTED
                 ) {
-                    buildGoogleApiClient();
-                    mMap!!.setMyLocationEnabled(true);
+                    buildGoogleApiClient()
+                    mMap!!.isMyLocationEnabled = true
                     Log.e("TAG", "CHECKSTARTINGPos")
 
                 } else {
@@ -753,8 +753,8 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                                 )
                                 == PackageManager.PERMISSION_GRANTED
                             ) {
-                                buildGoogleApiClient();
-                                mMap!!.setMyLocationEnabled(true);
+                                buildGoogleApiClient()
+                                mMap!!.isMyLocationEnabled = true
                             }
                         }
 
@@ -783,8 +783,8 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
                 }
             } else {
                 Log.e("TAG", "CHECKSTARTINGNeg")
-                buildGoogleApiClient();
-                mMap!!.setMyLocationEnabled(true);
+                buildGoogleApiClient()
+                mMap!!.isMyLocationEnabled = true
             }
 
             mMap!!.uiSettings.isCompassEnabled = false
@@ -890,7 +890,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             mCurrLocationMarker!!.remove()
         }
         //Place current location marker
-        val latLng = LatLng(location.getLatitude(), location.getLongitude())
+        val latLng = LatLng(location.latitude, location.longitude)
         val markerOptions = MarkerOptions()
         markerOptions.position(latLng)
 //        markerOptions.title("Current Position")
@@ -912,9 +912,9 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
     override fun onConnected(bundle: Bundle?) {
         Log.e("TAG", "LocationConnected")
         mLocationRequest = LocationRequest()
-        mLocationRequest!!.setInterval(1000)
-        mLocationRequest!!.setFastestInterval(1000)
-        mLocationRequest!!.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+        mLocationRequest!!.interval = 1000
+        mLocationRequest!!.fastestInterval = 1000
+        mLocationRequest!!.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION

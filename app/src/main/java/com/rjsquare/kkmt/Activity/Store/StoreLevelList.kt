@@ -97,16 +97,17 @@ class StoreLevelList : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_StoreLevelList.imgBack) {
-                onBackPressed()
-            } else if (view == DB_StoreLevelList.cntRedeemCancel) {
-                DB_StoreLevelList.cntConfirmation.visibility = View.GONE
-            } else if (view == DB_StoreLevelList.cntRedeemConfirm) {
-                DB_StoreLevelList.cntConfirmation.visibility = View.GONE
-                commanUtils.NextScreen(this, Intent(this, StoreItemRedeemConfirm::class.java))
-            }
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_StoreLevelList.imgBack) {
+                    onBackPressed()
+                } else if (view == DB_StoreLevelList.cntRedeemCancel) {
+                    DB_StoreLevelList.cntConfirmation.visibility = View.GONE
+                } else if (view == DB_StoreLevelList.cntRedeemConfirm) {
+                    DB_StoreLevelList.cntConfirmation.visibility = View.GONE
+                    commanUtils.NextScreen(this, Intent(this, StoreItemRedeemConfirm::class.java))
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

@@ -1,7 +1,7 @@
 package com.rjsquare.kkmt.AppConstant
 
 class Constants {
-    companion object{
+    companion object {
 
         //Base URL
         var BASE_URL: String = "https://kkmtapp.com/developing/api/"

@@ -187,20 +187,21 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_Login.txtProceed) {
-                if (GetValidationConfirmation()) {
-                    DB_Login.cntLoader.visibility = View.VISIBLE
-                    LogInExistingUser()
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_Login.txtProceed) {
+                    if (GetValidationConfirmation()) {
+                        DB_Login.cntLoader.visibility = View.VISIBLE
+                        LogInExistingUser()
+                    }
+                } else if (view == DB_Login.txtSignup) {
+                    var otpView = Intent(this, Register_User::class.java)
+                    startActivity(otpView)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                } else if (view == DB_Login.txtLoginAlertcancle) {
+                    DB_Login.cntAlert.visibility = View.GONE
                 }
-            } else if (view == DB_Login.txtSignup) {
-                var otpView = Intent(this, Register_User::class.java)
-                startActivity(otpView)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_Login.txtLoginAlertcancle) {
-                DB_Login.cntAlert.visibility = View.GONE
-            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

@@ -3,7 +3,6 @@ package com.rjsquare.kkmt.Activity.Video
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import android.widget.CompoundButton
 import androidx.appcompat.app.AppCompatActivity
@@ -135,7 +134,7 @@ class Questions : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun CheckAns(SelectedOption: Int) {
-        if (!QuistionInfo.answer!!.equals(SelectedOption.toString(),true)) {
+        if (!QuistionInfo.answer!!.equals(SelectedOption.toString(), true)) {
             DB_Question.cntWrongAns.visibility = View.VISIBLE
         } else {
             ResetOptions()
@@ -182,21 +181,22 @@ class Questions : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_Question.txtNextquestion) {
-                if (SelectedOption == 0) {
-                    DB_Question.txtAlertmsg.text = "Please select one option."
-                    DB_Question.cntAlert.visibility = View.VISIBLE
-                } else if (TotalQUestions == (QuestionNo + 1)) {
-                    var ResultIntent = Intent(this, ResultQuestion::class.java)
-                    startActivity(ResultIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                    VideoPlayer.VideoPlayerActivity.finish()
-                    finish()
-                } else {
-                    CheckAns(SelectedOption)
-                }
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_Question.txtNextquestion) {
+                    if (SelectedOption == 0) {
+                        DB_Question.txtAlertmsg.text = "Please select one option."
+                        DB_Question.cntAlert.visibility = View.VISIBLE
+                    } else if (TotalQUestions == (QuestionNo + 1)) {
+                        var ResultIntent = Intent(this, ResultQuestion::class.java)
+                        startActivity(ResultIntent)
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                        VideoPlayer.VideoPlayerActivity.finish()
+                        finish()
+                    } else {
+                        CheckAns(SelectedOption)
+                    }
 //                if (QuestionNo == 0){
 //                    SelectedOption = 1
 //                    CheckAns(SelectedOption)
@@ -209,16 +209,16 @@ class Questions : AppCompatActivity(), View.OnClickListener {
 //                    finish()
 //                }
 
-            } else if (view == DB_Question.cntWatchagain) {
-                finish()
-                overridePendingTransition(R.anim.activity_back_in,R.anim.activity_back_out)
-            } else if (view == DB_Question.cntWatchmore) {
-                VideoPlayer.VideoPlayerActivity.finish()
-                finish()
-                overridePendingTransition(R.anim.activity_back_in,R.anim.activity_back_out)
-            } else if (view == DB_Question.txtAlertok) {
-                DB_Question.cntAlert.visibility = View.GONE
-            }
+                } else if (view == DB_Question.cntWatchagain) {
+                    finish()
+                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+                } else if (view == DB_Question.cntWatchmore) {
+                    VideoPlayer.VideoPlayerActivity.finish()
+                    finish()
+                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+                } else if (view == DB_Question.txtAlertok) {
+                    DB_Question.cntAlert.visibility = View.GONE
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

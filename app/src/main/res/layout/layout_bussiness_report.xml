@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/BusinessReport"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white_26"
-        android:id="@+id/BusinessReport"
         android:clickable="true">
 
         <TextView
@@ -15,9 +14,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_18dp"
+            android:layout_marginTop="@dimen/_32dp"
             android:fontFamily="@font/lato_medium"
             android:gravity="center"
-            android:layout_marginTop="@dimen/_32dp"
             android:text="REPORT  ISSUE WITH CHECK IN"
             android:textColor="@android:color/black"
             android:textSize="@dimen/_16dp"

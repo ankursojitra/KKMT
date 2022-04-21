@@ -270,74 +270,75 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (ApplicationClass.userLogedIn) {
-                if (view == DB_HomeActivity.HomeScreen.ContentView.cntHome || view == DB_HomeActivity.nevigationMenuview.cntHomeMenu) {
-                    HomeClick()
-                } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
-                    SearchClick()
-                } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntLeaderboard) {
-                    LeaderBoardClick()
-                } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntHistory ||
-                    view == DB_HomeActivity.nevigationMenuview.cntMyhistoryMenu
-                ) {
-                    HistoryClick()
-                } else if (view == DB_HomeActivity.HomeScreen.ContentView.imgMenu) {
-                    if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
-                        DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
-                } else if (view == DB_HomeActivity.nevigationMenuview.cntProfileMenu) {
-                    var ProfileIntent = Intent(this, Profile::class.java)
-                    startActivity(ProfileIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                } else if (view == DB_HomeActivity.nevigationMenuview.cntNotificationMenu) {
-                    var NotifyIntent = Intent(this, NotificationList::class.java)
-                    startActivity(NotifyIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                } else if (view == DB_HomeActivity.nevigationMenuview.cntChallangesMenu) {
-                    var NotifyIntent = Intent(this, ActiveChallenge::class.java)
-                    startActivity(NotifyIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                } else if (view == DB_HomeActivity.nevigationMenuview.cntSettingMenu) {
-                    var SettingIntent = Intent(this, Settings::class.java)
-                    startActivity(SettingIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                } else if (view == DB_HomeActivity.nevigationMenuview.cntUploadMenu) {
-                    var SettingIntent = Intent(this, upload_doc::class.java)
-                    startActivity(SettingIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                } else if (view == DB_HomeActivity.nevigationMenuview.cntLogoutMenu) {
-                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                    ApplicationClass.UserLogout(this)
-                } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntNewreview ||
-                    view == DB_HomeActivity.nevigationMenuview.cntReviewsMenu
-                ) {
-                    var StarIntent = Intent(this, Bussiness_Location::class.java)
-                    startActivity(StarIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                } else if (view == DB_HomeActivity.txtUnauthOk) {
-                    DB_HomeActivity.cntUnAuthorized.visibility = View.GONE
-                    ApplicationClass.UserLogout(this)
-                }
-            } else {
-                if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
-                    SearchClick()
-                } else if (view == DB_HomeActivity.HomeScreen.ContentView.imgMenu) {
-                    if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
-                        DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
-                } else if (view == DB_HomeActivity.nevigationMenuview.cntLogin) {
-                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                    ApplicationClass.UserLogIn(this)
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (ApplicationClass.userLogedIn) {
+                    if (view == DB_HomeActivity.HomeScreen.ContentView.cntHome || view == DB_HomeActivity.nevigationMenuview.cntHomeMenu) {
+                        HomeClick()
+                    } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
+                        SearchClick()
+                    } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntLeaderboard) {
+                        LeaderBoardClick()
+                    } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntHistory ||
+                        view == DB_HomeActivity.nevigationMenuview.cntMyhistoryMenu
+                    ) {
+                        HistoryClick()
+                    } else if (view == DB_HomeActivity.HomeScreen.ContentView.imgMenu) {
+                        if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
+                            DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
+                    } else if (view == DB_HomeActivity.nevigationMenuview.cntProfileMenu) {
+                        var ProfileIntent = Intent(this, Profile::class.java)
+                        startActivity(ProfileIntent)
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                    } else if (view == DB_HomeActivity.nevigationMenuview.cntNotificationMenu) {
+                        var NotifyIntent = Intent(this, NotificationList::class.java)
+                        startActivity(NotifyIntent)
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                    } else if (view == DB_HomeActivity.nevigationMenuview.cntChallangesMenu) {
+                        var NotifyIntent = Intent(this, ActiveChallenge::class.java)
+                        startActivity(NotifyIntent)
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                    } else if (view == DB_HomeActivity.nevigationMenuview.cntSettingMenu) {
+                        var SettingIntent = Intent(this, Settings::class.java)
+                        startActivity(SettingIntent)
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                    } else if (view == DB_HomeActivity.nevigationMenuview.cntUploadMenu) {
+                        var SettingIntent = Intent(this, upload_doc::class.java)
+                        startActivity(SettingIntent)
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                    } else if (view == DB_HomeActivity.nevigationMenuview.cntLogoutMenu) {
+                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                        ApplicationClass.UserLogout(this)
+                    } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntNewreview ||
+                        view == DB_HomeActivity.nevigationMenuview.cntReviewsMenu
+                    ) {
+                        var StarIntent = Intent(this, Bussiness_Location::class.java)
+                        startActivity(StarIntent)
+                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    } else if (view == DB_HomeActivity.txtUnauthOk) {
+                        DB_HomeActivity.cntUnAuthorized.visibility = View.GONE
+                        ApplicationClass.UserLogout(this)
+                    }
                 } else {
-                    DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                    ApplicationClass.UserLogIn(this)
+                    if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
+                        SearchClick()
+                    } else if (view == DB_HomeActivity.HomeScreen.ContentView.imgMenu) {
+                        if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
+                            DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
+                    } else if (view == DB_HomeActivity.nevigationMenuview.cntLogin) {
+                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                        ApplicationClass.UserLogIn(this)
+                    } else {
+                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                        ApplicationClass.UserLogIn(this)
+                    }
                 }
-            }
             }
 
         } catch (NE: NullPointerException) {

@@ -430,7 +430,7 @@ class AndroidCameraApi : AppCompatActivity() {
 
     override fun onPause() {
         Log.e(TAG, "onPause")
-        closeCamera();
+        closeCamera()
         stopBackgroundThread()
         super.onPause()
     }

@@ -80,8 +80,8 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/_170dp"
             android:scaleType="centerCrop"
-            android:visibility="invisible"
             android:src="@drawable/event1"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -91,16 +91,16 @@
             android:id="@+id/imageSlide"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_170dp"
+            android:overScrollMode="never"
             app:iss_auto_cycle="true"
             app:iss_delay="0"
             app:iss_period="1000"
-            android:overScrollMode="never"
-            app:iss_with_title="false"
             app:iss_with_background="false"
+            app:iss_with_title="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cnt_tool"  />
+            app:layout_constraintTop_toBottomOf="@+id/cnt_tool" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

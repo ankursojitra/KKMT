@@ -20,13 +20,14 @@ class NotificationList : AppCompatActivity(), View.OnClickListener {
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
     }
 
-    companion object{
-        lateinit var DB_NotificationList:ActivityNotificationListBinding
+    companion object {
+        lateinit var DB_NotificationList: ActivityNotificationListBinding
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DB_NotificationList = DataBindingUtil.setContentView(this,R.layout.activity_notification_list)
+        DB_NotificationList =
+            DataBindingUtil.setContentView(this, R.layout.activity_notification_list)
 //        setContentView(R.layout.activity_notification_list)
         try {
             ApplicationClass.StatusTextWhite(this, true)
@@ -87,7 +88,7 @@ class NotificationList : AppCompatActivity(), View.OnClickListener {
                 this, mArray_NotificationModel
             )
 
-            DB_NotificationList.rrNotification.setAdapter(loNotifiyAdapter)
+            DB_NotificationList.rrNotification.adapter = loNotifiyAdapter
 
 
         } catch (NE: NullPointerException) {
@@ -107,11 +108,12 @@ class NotificationList : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_NotificationList.imgBack) {
-                onBackPressed()
-            }
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_NotificationList.imgBack) {
+                    onBackPressed()
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

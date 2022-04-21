@@ -15,6 +15,7 @@ class ReviewSubmitModel {
 
 
 }
+
 class ReviewInfodata {
 
     @SerializedName("customer_name")

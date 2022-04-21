@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -83,104 +84,104 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cnt_tool" />
-<!--        <androidx.core.widget.NestedScrollView-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.5"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/txt_video_lbl">-->
+        <!--        <androidx.core.widget.NestedScrollView-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.5"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/txt_video_lbl">-->
 
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.5"-->
-<!--                app:layout_constraintTop_toTopOf="parent">-->
+        <!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                app:layout_constraintHorizontal_bias="0.5"-->
+        <!--                app:layout_constraintTop_toTopOf="parent">-->
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rr_videos"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_margin="@dimen/_8dp"
-                    tools:itemCount="2"
-                    android:overScrollMode="never"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:layout_constraintBottom_toTopOf="@id/gif_loader"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_video_lbl" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rr_videos"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/_8dp"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/gif_loader"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_video_lbl"
+            tools:itemCount="2" />
 
-<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                    android:id="@+id/cnt_loadmore"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="@dimen/_16dp"-->
-<!--                    android:layout_marginRight="@dimen/_16dp"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintHorizontal_bias="0.5"-->
-<!--                    app:layout_constraintStart_toStartOf="parent">-->
+        <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--                    android:id="@+id/cnt_loadmore"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_marginLeft="@dimen/_16dp"-->
+        <!--                    android:layout_marginRight="@dimen/_16dp"-->
+        <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                    app:layout_constraintHorizontal_bias="0.5"-->
+        <!--                    app:layout_constraintStart_toStartOf="parent">-->
 
-<!--                    <TextView-->
-<!--                        android:id="@+id/txt_proceed"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="@dimen/_46dp"-->
-<!--                        android:background="@drawable/proceedback"-->
-<!--                        android:fontFamily="@font/lato_bold"-->
-<!--                        android:gravity="center"-->
-<!--                        android:paddingTop="@dimen/_10dp"-->
-<!--                        android:paddingBottom="@dimen/_10dp"-->
-<!--                        android:text="@string/loadmore"-->
-<!--                        android:textColor="@android:color/white"-->
-<!--                        android:textSize="@dimen/_15dp"-->
-<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintHorizontal_bias="0.5"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toTopOf="parent" />-->
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/txt_proceed"-->
+        <!--                        android:layout_width="0dp"-->
+        <!--                        android:layout_height="@dimen/_46dp"-->
+        <!--                        android:background="@drawable/proceedback"-->
+        <!--                        android:fontFamily="@font/lato_bold"-->
+        <!--                        android:gravity="center"-->
+        <!--                        android:paddingTop="@dimen/_10dp"-->
+        <!--                        android:paddingBottom="@dimen/_10dp"-->
+        <!--                        android:text="@string/loadmore"-->
+        <!--                        android:textColor="@android:color/white"-->
+        <!--                        android:textSize="@dimen/_15dp"-->
+        <!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                        app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                        app:layout_constraintHorizontal_bias="0.5"-->
+        <!--                        app:layout_constraintStart_toStartOf="parent"-->
+        <!--                        app:layout_constraintTop_toTopOf="parent" />-->
 
-<!--                       <ImageView&ndash;&gt;-->
-<!--                       android:id="@+id/imageView3"&ndash;&gt;-->
-<!--                       android:layout_width="@dimen/_16dp"&ndash;&gt;-->
-<!--                       android:layout_height="@dimen/_16dp"&ndash;&gt;-->
-<!--                       android:layout_marginTop="@dimen/_12dp"&ndash;&gt;-->
-<!--                       android:layout_marginRight="@dimen/_14dp"&ndash;&gt;-->
-<!--                       android:layout_marginBottom="@dimen/_12dp"&ndash;&gt;-->
-<!--                       android:padding="@dimen/_2dp"&ndash;&gt;-->
-<!--                       android:src="@drawable/ic_preceed"&ndash;&gt;-->
-<!--                       app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
-<!--                       app:layout_constraintEnd_toEndOf="@+id/txt_proceed"&ndash;&gt;-->
-<!--                       app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
+        <!--                       <ImageView&ndash;&gt;-->
+        <!--                       android:id="@+id/imageView3"&ndash;&gt;-->
+        <!--                       android:layout_width="@dimen/_16dp"&ndash;&gt;-->
+        <!--                       android:layout_height="@dimen/_16dp"&ndash;&gt;-->
+        <!--                       android:layout_marginTop="@dimen/_12dp"&ndash;&gt;-->
+        <!--                       android:layout_marginRight="@dimen/_14dp"&ndash;&gt;-->
+        <!--                       android:layout_marginBottom="@dimen/_12dp"&ndash;&gt;-->
+        <!--                       android:padding="@dimen/_2dp"&ndash;&gt;-->
+        <!--                       android:src="@drawable/ic_preceed"&ndash;&gt;-->
+        <!--                       app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+        <!--                       app:layout_constraintEnd_toEndOf="@+id/txt_proceed"&ndash;&gt;-->
+        <!--                       app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
 
-<!--                       <LinearLayout&ndash;&gt;-->
-<!--                       android:layout_width="@dimen/_1dp"&ndash;&gt;-->
-<!--                       android:layout_height="0dp"&ndash;&gt;-->
-<!--                       android:layout_marginTop="@dimen/_8dp"&ndash;&gt;-->
-<!--                       android:layout_marginRight="@dimen/_14dp"&ndash;&gt;-->
-<!--                       android:layout_marginBottom="@dimen/_8dp"&ndash;&gt;-->
-<!--                       android:background="@drawable/saperator"&ndash;&gt;-->
-<!--                       android:orientation="vertical"&ndash;&gt;-->
-<!--                       app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
-<!--                       app:layout_constraintEnd_toStartOf="@+id/imageView3"&ndash;&gt;-->
-<!--                       app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
-<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+        <!--                       <LinearLayout&ndash;&gt;-->
+        <!--                       android:layout_width="@dimen/_1dp"&ndash;&gt;-->
+        <!--                       android:layout_height="0dp"&ndash;&gt;-->
+        <!--                       android:layout_marginTop="@dimen/_8dp"&ndash;&gt;-->
+        <!--                       android:layout_marginRight="@dimen/_14dp"&ndash;&gt;-->
+        <!--                       android:layout_marginBottom="@dimen/_8dp"&ndash;&gt;-->
+        <!--                       android:background="@drawable/saperator"&ndash;&gt;-->
+        <!--                       android:orientation="vertical"&ndash;&gt;-->
+        <!--                       app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+        <!--                       app:layout_constraintEnd_toStartOf="@+id/imageView3"&ndash;&gt;-->
+        <!--                       app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
+        <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-                <com.cunoraz.gifview.library.GifView
-                    android:id="@+id/gif_loader"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_30dp"
-                    android:visibility="gone"
-                    app:gif="@mipmap/loading"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+        <com.cunoraz.gifview.library.GifView
+            android:id="@+id/gif_loader"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30dp"
+            android:visibility="gone"
+            app:gif="@mipmap/loading"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--        </androidx.core.widget.NestedScrollView>-->
+        <!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+        <!--        </androidx.core.widget.NestedScrollView>-->
 
         <TextView
             android:id="@+id/txt_no_events"
@@ -241,14 +242,15 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cnt_unAuthorized"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="gone"
+            android:background="@color/loader_back"
             android:clickable="true"
             android:elevation="@dimen/_20dp"
-            android:background="@color/loader_back"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -292,9 +294,9 @@
                         android:id="@+id/view_sapunauth"
                         android:layout_width="@dimen/_24dp"
                         android:layout_height="@dimen/_2dp"
+                        android:layout_marginTop="@dimen/_4dp"
                         android:background="@drawable/proceedback_orange"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_4dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_Alert" />
@@ -303,10 +305,10 @@
                         android:id="@+id/txt_Alertmsg"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:layout_marginTop="@dimen/_16dp"
                         android:fontFamily="@font/lato_medium"
                         android:gravity="center"
-                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:text="@string/unauthorizeduser"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_10dp"

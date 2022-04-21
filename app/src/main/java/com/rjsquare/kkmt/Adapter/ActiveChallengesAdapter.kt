@@ -6,9 +6,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Activity.Challenges.ActiveChallenge
@@ -17,7 +14,6 @@ import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.Model.ActiveChallengesModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.RawChallengesFrameBinding
-import java.util.*
 
 class ActiveChallengesAdapter(
     var moContext: Context,
@@ -77,7 +73,8 @@ class ActiveChallengesAdapter(
         return moArrayList.size
     }
 
-    inner class View_holder(itemBinding: RawChallengesFrameBinding) : RecyclerView.ViewHolder(itemBinding.root),
+    inner class View_holder(itemBinding: RawChallengesFrameBinding) :
+        RecyclerView.ViewHolder(itemBinding.root),
         View.OnClickListener {
 
         lateinit var DB_RawChallengesFrameBinding: RawChallengesFrameBinding
@@ -123,31 +120,33 @@ class ActiveChallengesAdapter(
             }
         }
 
-        override fun onClick(view: View?) {try{
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_RawChallengesFrameBinding.idFrameconstraintX) {
-                var ChallengesInfoIntent = Intent(moContext, Challenge_info::class.java)
-                moContext.startActivity(ChallengesInfoIntent)
-                (moContext as ActiveChallenge).overridePendingTransition(
-                    R.anim.activity_in,
-                    R.anim.activity_out
-                )
-            }
-            }
+        override fun onClick(view: View?) {
+            try {
+                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick =
+                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                    if (view == DB_RawChallengesFrameBinding.idFrameconstraintX) {
+                        var ChallengesInfoIntent = Intent(moContext, Challenge_info::class.java)
+                        moContext.startActivity(ChallengesInfoIntent)
+                        (moContext as ActiveChallenge).overridePendingTransition(
+                            R.anim.activity_in,
+                            R.anim.activity_out
+                        )
+                    }
+                }
             } catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
+                NE.printStackTrace()
+            } catch (IE: IndexOutOfBoundsException) {
+                IE.printStackTrace()
+            } catch (AE: ActivityNotFoundException) {
+                AE.printStackTrace()
+            } catch (E: IllegalArgumentException) {
+                E.printStackTrace()
+            } catch (RE: RuntimeException) {
+                RE.printStackTrace()
+            } catch (E: Exception) {
+                E.printStackTrace()
+            }
         }
     }
 

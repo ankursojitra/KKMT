@@ -14,7 +14,5 @@ class LuckyDraw_Model : Serializable {
     @SerializedName("data")
     var data: LuckyDraw? = null
 
-    class LuckyDraw {
-
-    }
+    class LuckyDraw
 }

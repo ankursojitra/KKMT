@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -14,7 +13,8 @@ import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingIns
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.*
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
+import com.rjsquare.kkmt.RetrofitInstance.Events.VideoDetail_Model
 import com.rjsquare.kkmt.databinding.ActivityVideoPlayerBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -89,7 +89,7 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<VideoDetail_Model> {
                 override fun onFailure(call: Call<VideoDetail_Model>, t: Throwable) {
-                        DB_VideoPlayer.cntLoader.visibility = View.GONE
+                    DB_VideoPlayer.cntLoader.visibility = View.GONE
                 }
 
                 override fun onResponse(
@@ -133,15 +133,16 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_VideoPlayer.imgBack) {
-                onBackPressed()
-            } else if (view == DB_VideoPlayer.txtQuestions) {
-                var QuestionIntent = Intent(this, Questions::class.java)
-                startActivity(QuestionIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            }
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_VideoPlayer.imgBack) {
+                    onBackPressed()
+                } else if (view == DB_VideoPlayer.txtQuestions) {
+                    var QuestionIntent = Intent(this, Questions::class.java)
+                    startActivity(QuestionIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 
-class VideoQuestionComplete_Model : Serializable {
+class LuckyDrawCredit_Model : Serializable {
     @SerializedName("status")
     var status: String? = null
 
@@ -12,7 +12,7 @@ class VideoQuestionComplete_Model : Serializable {
     var message: String? = null
 
     @SerializedName("data")
-    var data: VideoDetail? = null
+    var data: LuckyDraw? = null
 
-    class VideoDetail
+    class LuckyDraw
 }

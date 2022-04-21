@@ -4,10 +4,9 @@
 
     <gradient
         android:angle="270"
-        android:startColor="@color/dropshadow"
         android:centerColor="@color/dropshadowcenter"
-        android:endColor="@color/dropshadowbottom" />
-
+        android:endColor="@color/dropshadowbottom"
+        android:startColor="@color/dropshadow" />
 
 
 </shape>

@@ -14,7 +14,5 @@ class ItemRedeem_Model : Serializable {
     @SerializedName("data")
     var data: StoreItemRedeem? = null
 
-    class StoreItemRedeem {
-
-    }
+    class StoreItemRedeem
 }

@@ -86,7 +86,7 @@ class PrizesDetailAdapter(
         }
 
         override fun onClick(view: View?) {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
                 ApplicationClass.lastClick =
                     System.currentTimeMillis() + ApplicationClass.clickInterval
             }

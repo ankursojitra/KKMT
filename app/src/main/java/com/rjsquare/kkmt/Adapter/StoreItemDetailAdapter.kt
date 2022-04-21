@@ -36,9 +36,11 @@ class StoreItemDetailAdapter(
             var mStoreItemDetailModel = moArrayList[position]
             holder.lStoreItemDetailModelSelected = mStoreItemDetailModel
             holder.DB_RawStoreFrameBinding.txtItemName.text = mStoreItemDetailModel.title
-            holder.DB_RawStoreFrameBinding.txtItemcredit.text = mStoreItemDetailModel.credit_required
+            holder.DB_RawStoreFrameBinding.txtItemcredit.text =
+                mStoreItemDetailModel.credit_required
             Picasso.with(moContext).load(mStoreItemDetailModel.image!![0])
-                .placeholder(R.drawable.ic_expe_logo).into(holder.DB_RawStoreFrameBinding.imgStoreitem)
+                .placeholder(R.drawable.ic_expe_logo)
+                .into(holder.DB_RawStoreFrameBinding.imgStoreitem)
 
 
         } catch (NE: NullPointerException) {
@@ -77,11 +79,11 @@ class StoreItemDetailAdapter(
             try {
                 DB_RawStoreFrameBinding = itemBinding
 
-                ApplicationClass.SetLayoutWidthHeight(
-                    DB_RawStoreFrameBinding.cntStoreItem,
-                    ((Width / 12) * 4),
-                    ((Width / 12) * 5)
-                )
+//                ApplicationClass.SetLayoutWidthHeight(
+//                    DB_RawStoreFrameBinding.cntStoreItem,
+//                    ((Width / 12) * 4),
+//                    ((Width / 12) * 5)
+//                )
 
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()
@@ -99,8 +101,10 @@ class StoreItemDetailAdapter(
         }
 
         override fun onClick(view: View?) {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval}
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            }
         }
     }
 
