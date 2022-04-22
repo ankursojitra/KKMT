@@ -306,7 +306,10 @@ class History : Fragment(), View.OnClickListener {
                 ApplicationClass.lastClick =
                     System.currentTimeMillis() + ApplicationClass.clickInterval
                 if (view == DB_FHistory.cardViewHistory1 || view == DB_FHistory.cardViewHistory2 || view == DB_FHistory.cardViewHistory3) {
-                    commanUtils.NextScreen(requireActivity(),Intent(requireActivity(), ReviewList::class.java))
+                    commanUtils.NextScreen(
+                        requireActivity(),
+                        Intent(requireActivity(), ReviewList::class.java)
+                    )
 //                    var HistoryReviewIntent = Intent(requireActivity(), ReviewList::class.java)
 //                    requireActivity().startActivity(HistoryReviewIntent)
 //                    requireActivity().overridePendingTransition(

@@ -409,7 +409,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    class Base64Converter() : AsyncTask<Void, Void, String>() {
+    class Base64Converter : AsyncTask<Void, Void, String>() {
         @Throws(IOException::class)
         fun getBytes(inputStream: InputStream): ByteArray? {
             val byteBuffer = ByteArrayOutputStream()
@@ -446,10 +446,10 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
         }
 
         fun isfilesizelow(fileUri: Uri): Boolean {
-            val selectedFilePath: String = fileUri.getPath().toString()
+            val selectedFilePath: String = fileUri.path.toString()
             val file = File(selectedFilePath)
             selFileSize = getFolderSizeLabel(file)
-            return if (selFileSize < 5.0) true else false
+            return selFileSize < 5.0
         }
 
         override fun onPreExecute() {

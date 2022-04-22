@@ -2,7 +2,6 @@ package com.rjsquare.kkmt.Adapter
 
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,7 +59,9 @@ class LeaderboardEmployeeAdapter(
                 holder.employeeInfoSelected!!.credit
             holder.DB_RawLeaderboardFrameBinding.txtRank.text = holder.employeeInfoSelected!!.rank
 
-            Picasso.with(moContext).load(holder.employeeInfoSelected!!.userimage).placeholder(R.drawable.ic_expe_logo).into( holder.DB_RawLeaderboardFrameBinding.imgProfile)
+            Picasso.with(moContext).load(holder.employeeInfoSelected!!.userimage)
+                .placeholder(R.drawable.ic_expe_logo)
+                .into(holder.DB_RawLeaderboardFrameBinding.imgProfile)
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -119,11 +120,12 @@ class LeaderboardEmployeeAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-                if (view == mIdFrameconstraint) {
-                    Toast.makeText(moContext, "Comming soon...", Toast.LENGTH_SHORT).show()
-                }
+                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick =
+                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                    if (view == mIdFrameconstraint) {
+                        Toast.makeText(moContext, "Comming soon...", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

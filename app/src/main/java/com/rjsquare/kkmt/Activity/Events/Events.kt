@@ -4,17 +4,13 @@ import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.applandeo.materialcalendarview.utils.DateUtils
-import com.rjsquare.kkmt.Activity.Review.ReviewList
-import com.rjsquare.kkmt.Activity.Review.SectionsPagerReviewAdapter
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.databinding.ActivityEventsBinding
 import java.util.*
 

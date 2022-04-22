@@ -140,93 +140,119 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_Challenges.imgBack) {
-                onBackPressed()
-            } else if (view == DB_Challenges.txtDaily) {
-                Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
-                DB_Challenges.txtDaily.setTextColor(ContextCompat.getColor(this, R.color.blue_dark))
-                DB_Challenges.llDaily.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.blue_darklight
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_Challenges.imgBack) {
+                    onBackPressed()
+                } else if (view == DB_Challenges.txtDaily) {
+                    Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+                    DB_Challenges.txtDaily.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.blue_dark
+                        )
                     )
-                )
-                DB_Challenges.txtWeekly.setTextColor(ContextCompat.getColor(this, R.color.white))
-                DB_Challenges.llWeekly.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.transparent
+                    DB_Challenges.llDaily.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.blue_darklight
+                        )
                     )
-                )
-                DB_Challenges.txtMonthly.setTextColor(ContextCompat.getColor(this, R.color.white))
-                DB_Challenges.llMonthly.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.transparent
+                    DB_Challenges.txtWeekly.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.white
+                        )
                     )
-                )
-            } else if (view == DB_Challenges.txtWeekly) {
-                Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
-                DB_Challenges.txtWeekly.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.blue_dark
+                    DB_Challenges.llWeekly.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.transparent
+                        )
                     )
-                )
-                DB_Challenges.llWeekly.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.blue_darklight
+                    DB_Challenges.txtMonthly.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.white
+                        )
                     )
-                )
-                DB_Challenges.txtDaily.setTextColor(ContextCompat.getColor(this, R.color.white))
-                DB_Challenges.llDaily.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.transparent
+                    DB_Challenges.llMonthly.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.transparent
+                        )
                     )
-                )
-                DB_Challenges.txtMonthly.setTextColor(ContextCompat.getColor(this, R.color.white))
-                DB_Challenges.llMonthly.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.transparent
+                } else if (view == DB_Challenges.txtWeekly) {
+                    Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+                    DB_Challenges.txtWeekly.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.blue_dark
+                        )
                     )
-                )
-            } else if (view == DB_Challenges.txtMonthly) {
-                Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
-                DB_Challenges.txtMonthly.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.blue_dark
+                    DB_Challenges.llWeekly.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.blue_darklight
+                        )
                     )
-                )
-                DB_Challenges.llMonthly.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.blue_darklight
+                    DB_Challenges.txtDaily.setTextColor(ContextCompat.getColor(this, R.color.white))
+                    DB_Challenges.llDaily.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.transparent
+                        )
                     )
-                )
+                    DB_Challenges.txtMonthly.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.white
+                        )
+                    )
+                    DB_Challenges.llMonthly.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.transparent
+                        )
+                    )
+                } else if (view == DB_Challenges.txtMonthly) {
+                    Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+                    DB_Challenges.txtMonthly.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.blue_dark
+                        )
+                    )
+                    DB_Challenges.llMonthly.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.blue_darklight
+                        )
+                    )
 
-                DB_Challenges.txtWeekly.setTextColor(ContextCompat.getColor(this, R.color.white))
-                DB_Challenges.llWeekly.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.transparent
+                    DB_Challenges.txtWeekly.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.white
+                        )
                     )
-                )
+                    DB_Challenges.llWeekly.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.transparent
+                        )
+                    )
 
 
-                DB_Challenges.txtDaily.setTextColor(ContextCompat.getColor(this, R.color.white))
-                DB_Challenges.llDaily.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.transparent
+                    DB_Challenges.txtDaily.setTextColor(ContextCompat.getColor(this, R.color.white))
+                    DB_Challenges.llDaily.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.transparent
+                        )
                     )
-                )
-            }
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

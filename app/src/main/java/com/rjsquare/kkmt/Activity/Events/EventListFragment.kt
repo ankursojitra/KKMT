@@ -145,12 +145,7 @@ class EventListFragment : Fragment() {
                         mArray_EventsModel.addAll(response.body()!!.data!!)
                         DB_EventListFragment.rrEvents.adapter!!.notifyDataSetChanged()
 
-                        if (response.body()!!.data!!.size < this@EventListFragment.PagePerlimit) {
-//                            DB_Events.cntLoadmore.visibility = View.GONE
-                            IsEventCallavailable = false
-                        } else {
-                            IsEventCallavailable = true
-                        }
+                        IsEventCallavailable = response.body()!!.data!!.size >= this@EventListFragment.PagePerlimit
 
                         if (mArray_EventsModel.size > 0) {
                             DB_EventListFragment.txtNoEvents.visibility = View.GONE

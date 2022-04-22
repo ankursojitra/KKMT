@@ -2,11 +2,11 @@ package com.rjsquare.kkmt.Activity.Review.Fragment
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.rjsquare.kkmt.Activity.Review.ReviewList
 import com.rjsquare.kkmt.Adapter.ReviewAdapter
 import com.rjsquare.kkmt.R
@@ -64,8 +64,10 @@ class PendingReviewFragment : Fragment() {
             E.printStackTrace()
         }
     }
+
     companion object {
-        lateinit var DB_PendingReviewFragment:FragmentPendingReviewBinding
+        lateinit var DB_PendingReviewFragment: FragmentPendingReviewBinding
+
         @JvmStatic
         fun newInstance() =
             PendingReviewFragment().apply {

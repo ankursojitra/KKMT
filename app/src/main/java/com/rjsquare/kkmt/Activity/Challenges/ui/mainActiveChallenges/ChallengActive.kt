@@ -14,7 +14,7 @@ import com.rjsquare.kkmt.databinding.FragmentChallengActiveBinding
 
 class ChallengActive : Fragment() {
 
-        lateinit var mArray_ActiveChallengesModel: ArrayList<ActiveChallengesModel>
+    lateinit var mArray_ActiveChallengesModel: ArrayList<ActiveChallengesModel>
     lateinit var mActiveChallengesModel: ActiveChallengesModel
     lateinit var DB_ChallengeActive: FragmentChallengActiveBinding
     override fun onCreate(savedInstanceState: Bundle?) {

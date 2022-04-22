@@ -106,38 +106,39 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_RegisterUser.txtSignup) {
-                if (GetValidationConfirmation()) {
-                    DB_RegisterUser.cntLoader.visibility = View.VISIBLE
-                    RegisterNewUser()
-                }
-            } else if (view == DB_RegisterUser.txtLogin) {
-                finish()
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == DB_RegisterUser.txtOtpAlertok) {
-                DB_RegisterUser.cntAlert.visibility = View.GONE
-            } else if (view!!.id == R.id.constraintLayougender) {
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_RegisterUser.txtSignup) {
+                    if (GetValidationConfirmation()) {
+                        DB_RegisterUser.cntLoader.visibility = View.VISIBLE
+                        RegisterNewUser()
+                    }
+                } else if (view == DB_RegisterUser.txtLogin) {
+                    finish()
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                } else if (view == DB_RegisterUser.txtOtpAlertok) {
+                    DB_RegisterUser.cntAlert.visibility = View.GONE
+                } else if (view!!.id == R.id.constraintLayougender) {
 
-            } else if (view == mGenderListView.txt_male) {
-                DB_RegisterUser.txtGender.text = "Male"
-                mGenderListView.visibility = View.GONE
-            } else if (view == mGenderListView.txt_female) {
-                DB_RegisterUser.txtGender.text = "Female"
-                mGenderListView.visibility = View.GONE
-            } else if (view == mGenderListView.txt_other) {
-                DB_RegisterUser.txtGender.text = "Other"
-                mGenderListView.visibility = View.GONE
-            } else if (view == DB_RegisterUser.txtGender) {
-                if (mGenderListView.visibility == View.GONE)
-                    mGenderListView.visibility = View.VISIBLE
-            } else if (view == DB_RegisterUser.txtDob) {
-                if (!DatePickerVISIBLE) {
-                    datePicker.show()
-                    DatePickerVISIBLE = true
+                } else if (view == mGenderListView.txt_male) {
+                    DB_RegisterUser.txtGender.text = "Male"
+                    mGenderListView.visibility = View.GONE
+                } else if (view == mGenderListView.txt_female) {
+                    DB_RegisterUser.txtGender.text = "Female"
+                    mGenderListView.visibility = View.GONE
+                } else if (view == mGenderListView.txt_other) {
+                    DB_RegisterUser.txtGender.text = "Other"
+                    mGenderListView.visibility = View.GONE
+                } else if (view == DB_RegisterUser.txtGender) {
+                    if (mGenderListView.visibility == View.GONE)
+                        mGenderListView.visibility = View.VISIBLE
+                } else if (view == DB_RegisterUser.txtDob) {
+                    if (!DatePickerVISIBLE) {
+                        datePicker.show()
+                        DatePickerVISIBLE = true
+                    }
                 }
-            }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -243,7 +244,7 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
                 override fun onFailure(call: Call<UserInfoData_Model>, t: Throwable) {
                     Log.e("GetResponse", ": " + t)
 //                    RELiveMatcheScore()
-                        DB_RegisterUser.cntLoader.visibility = View.GONE
+                    DB_RegisterUser.cntLoader.visibility = View.GONE
                 }
 
                 override fun onResponse(

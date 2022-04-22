@@ -102,7 +102,7 @@ class EmployeeHistory : Fragment() {
             call.enqueue(object : Callback<EmployeeHistoryModel> {
                 override fun onFailure(call: Call<EmployeeHistoryModel>, t: Throwable) {
                     DB_FEmployeeHistory.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "EMPHistoryDataError : "+t)
+                    Log.e("TAG", "EMPHistoryDataError : " + t)
                 }
 
                 override fun onResponse(
@@ -168,10 +168,10 @@ class EmployeeHistory : Fragment() {
         DB_FEmployeeHistory.cpOverallOneStar.setCurrentProgress(OverallOneStarPer)
         DB_FEmployeeHistory.cpOverallBad.setCurrentProgress(OverallBadPer)
 
-        DB_FEmployeeHistory.txtFiveStar.text = String.format("%.1f",OverallFiveStarPer)+"%"
-        DB_FEmployeeHistory.txtGood.text = String.format("%.1f",OverallGoodPer)+"%"
-        DB_FEmployeeHistory.txtOneStar.text = String.format("%.1f",OverallOneStarPer)+"%"
-        DB_FEmployeeHistory.txtBad.text = String.format("%.1f",OverallBadPer)+"%"
+        DB_FEmployeeHistory.txtFiveStar.text = String.format("%.1f", OverallFiveStarPer) + "%"
+        DB_FEmployeeHistory.txtGood.text = String.format("%.1f", OverallGoodPer) + "%"
+        DB_FEmployeeHistory.txtOneStar.text = String.format("%.1f", OverallOneStarPer) + "%"
+        DB_FEmployeeHistory.txtBad.text = String.format("%.1f", OverallBadPer) + "%"
 
         //----Set Last week Data----
         var LastWeekTotalReview = EmpHistory.data!!.last_week!!.total_star_count.toString().toInt()

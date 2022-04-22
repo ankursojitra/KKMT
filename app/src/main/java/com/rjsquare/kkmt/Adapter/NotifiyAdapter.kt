@@ -5,18 +5,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.Model.NotificationModel
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.databinding.RawLeaderboardFrameBinding
 import com.rjsquare.kkmt.databinding.RawNotificationFrameBinding
-import java.util.*
 
 class NotifiyAdapter(
     var moContext: Context,
@@ -30,7 +25,12 @@ class NotifiyAdapter(
             layoutInflater = LayoutInflater.from(parent.context)
         }
         val binding: RawNotificationFrameBinding =
-            DataBindingUtil.inflate(layoutInflater!!, R.layout.raw_notification_frame, parent, false)
+            DataBindingUtil.inflate(
+                layoutInflater!!,
+                R.layout.raw_notification_frame,
+                parent,
+                false
+            )
         val height = parent.measuredHeight
         val width = parent.measuredWidth
         Width = width
@@ -73,7 +73,8 @@ class NotifiyAdapter(
         return moArrayList.size
     }
 
-    inner class View_holder(itemBinding: RawNotificationFrameBinding) : RecyclerView.ViewHolder(itemBinding.root),
+    inner class View_holder(itemBinding: RawNotificationFrameBinding) :
+        RecyclerView.ViewHolder(itemBinding.root),
         View.OnClickListener {
 
 //        private lateinit var mImgNotify: ImageView
@@ -85,9 +86,10 @@ class NotifiyAdapter(
         var lNotificationModelSelected: NotificationModel? = null
 
         lateinit var DB_RawNotificationFrameBinding: RawNotificationFrameBinding
+
         init {
             try {
-                DB_RawNotificationFrameBinding =itemBinding
+                DB_RawNotificationFrameBinding = itemBinding
 //                mImgNotify = itemView.findViewById<ImageView>(R.id.img_notify)
 //                mTxtNotifyTitle = itemView.findViewById<TextView>(R.id.txt_notify_title)
 //                mTxtNotifyAmt = itemView.findViewById<TextView>(R.id.txt_notify_amt)
@@ -112,26 +114,28 @@ class NotifiyAdapter(
             }
         }
 
-        override fun onClick(view: View?) {try{
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_RawNotificationFrameBinding.idFrameconstraint) {
-                Toast.makeText(moContext, "Comming soon...", Toast.LENGTH_SHORT).show()
-            }
-            }
+        override fun onClick(view: View?) {
+            try {
+                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick =
+                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                    if (view == DB_RawNotificationFrameBinding.idFrameconstraint) {
+                        Toast.makeText(moContext, "Comming soon...", Toast.LENGTH_SHORT).show()
+                    }
+                }
             } catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
+                NE.printStackTrace()
+            } catch (IE: IndexOutOfBoundsException) {
+                IE.printStackTrace()
+            } catch (AE: ActivityNotFoundException) {
+                AE.printStackTrace()
+            } catch (E: IllegalArgumentException) {
+                E.printStackTrace()
+            } catch (RE: RuntimeException) {
+                RE.printStackTrace()
+            } catch (E: Exception) {
+                E.printStackTrace()
+            }
         }
     }
 

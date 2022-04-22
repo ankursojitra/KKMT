@@ -542,6 +542,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cnt_loader"
             android:layout_width="0dp"
@@ -592,9 +593,9 @@
             android:id="@+id/cnt_alert"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="gone"
-            android:clickable="true"
             android:background="@color/loader_back"
+            android:clickable="true"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -638,9 +639,9 @@
                         android:id="@+id/view_sap"
                         android:layout_width="@dimen/_30dp"
                         android:layout_height="@dimen/_2dp"
+                        android:layout_marginTop="@dimen/_4dp"
                         android:background="@drawable/proceedback_orange"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_4dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_otpAlert" />
@@ -649,10 +650,10 @@
                         android:id="@+id/txt_unauthAlertmsg"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:layout_marginTop="@dimen/_16dp"
                         android:fontFamily="@font/lato_medium"
                         android:gravity="center"
-                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:text="Otp"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_10dp"
@@ -680,14 +681,15 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cnt_unAuthorized"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="gone"
+            android:background="@color/loader_back"
             android:clickable="true"
             android:elevation="@dimen/_20dp"
-            android:background="@color/loader_back"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -731,9 +733,9 @@
                         android:id="@+id/view_sapunauth"
                         android:layout_width="@dimen/_24dp"
                         android:layout_height="@dimen/_2dp"
+                        android:layout_marginTop="@dimen/_4dp"
                         android:background="@drawable/proceedback_orange"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_4dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_Alert" />
@@ -742,10 +744,10 @@
                         android:id="@+id/txt_Alertmsg"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:layout_marginTop="@dimen/_16dp"
                         android:fontFamily="@font/lato_medium"
                         android:gravity="center"
-                        android:layout_marginHorizontal="@dimen/_4dp"
                         android:text="@string/unauthorizeduser"
                         android:textColor="@color/blue_dark"
                         android:textSize="@dimen/_10dp"

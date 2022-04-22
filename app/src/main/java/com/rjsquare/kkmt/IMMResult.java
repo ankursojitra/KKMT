@@ -6,6 +6,7 @@ import android.util.Log;
 
 public class IMMResult extends ResultReceiver {
     public int result = -1;
+
     public IMMResult() {
         super(null);
     }

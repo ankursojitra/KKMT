@@ -119,11 +119,12 @@ class LeaderboardCustomerAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-                if (view == mIdFrameconstraint) {
-                    Toast.makeText(moContext, "Comming soon...", Toast.LENGTH_SHORT).show()
-                }
+                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick =
+                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                    if (view == mIdFrameconstraint) {
+                        Toast.makeText(moContext, "Comming soon...", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

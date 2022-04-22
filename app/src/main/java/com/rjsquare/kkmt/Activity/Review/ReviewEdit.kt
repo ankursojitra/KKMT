@@ -33,7 +33,6 @@ import com.google.gson.Gson
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.Activity.Register.upload_doc
 import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -148,7 +147,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                 )
 
             // Set the text view text.
-            DB_ReviewEdit.txtTimer.setText(time)
+            DB_ReviewEdit.txtTimer.text = time
 
             // If running is true, increment the
             // seconds variable.
@@ -282,27 +281,26 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 
         })
 
-        DB_ReviewEdit.edtReceiptAmount.setOnFocusChangeListener(
-            @RequiresApi(Build.VERSION_CODES.M)
-            object : View.OnFocusChangeListener {
-                override fun onFocusChange(p0: View?, focused: Boolean) {
-                    if (!focused) {
-                        if (!DB_ReviewEdit.edtReceiptAmount.text.toString().equals("")) {
-                            DB_ReviewEdit.edtReceiptAmount.setText(
-                                commanUtils.formatNumber(
-                                    DB_ReviewEdit.edtReceiptAmount.text.toString().toInt()
-                                )
+        DB_ReviewEdit.edtReceiptAmount.onFocusChangeListener = @RequiresApi(Build.VERSION_CODES.M)
+        object : View.OnFocusChangeListener {
+            override fun onFocusChange(p0: View?, focused: Boolean) {
+                if (!focused) {
+                    if (!DB_ReviewEdit.edtReceiptAmount.text.toString().equals("")) {
+                        DB_ReviewEdit.edtReceiptAmount.setText(
+                            commanUtils.formatNumber(
+                                DB_ReviewEdit.edtReceiptAmount.text.toString().toInt()
                             )
-                        }
-                    } else {
-                        if (!DB_ReviewEdit.edtReceiptAmount.text.toString().equals("")) {
-                            var value =
-                                DB_ReviewEdit.edtReceiptAmount.text.toString().replace(",", "")
-                            DB_ReviewEdit.edtReceiptAmount.setText(value)
-                        }
+                        )
+                    }
+                } else {
+                    if (!DB_ReviewEdit.edtReceiptAmount.text.toString().equals("")) {
+                        var value =
+                            DB_ReviewEdit.edtReceiptAmount.text.toString().replace(",", "")
+                        DB_ReviewEdit.edtReceiptAmount.setText(value)
                     }
                 }
-            })
+            }
+        }
 
         DB_ReviewEdit.edtWrittenNote.addTextChangedListener(@RequiresApi(Build.VERSION_CODES.M)
         object : View.OnContextClickListener, TextWatcher {
@@ -359,7 +357,8 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         DB_ReviewEdit.cntGood.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
         DB_ReviewEdit.cnt5star.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
     }
-        fun NewReveiwSetup() {
+
+    fun NewReveiwSetup() {
 
 
         //Clear fields
@@ -506,7 +505,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                 R.drawable.ic_upload_receipt
             )
         )
-        DB_ReviewEdit.txtUploadReceipt.setText(getString(R.string.uploacreceipt))
+        DB_ReviewEdit.txtUploadReceipt.text = getString(R.string.uploacreceipt)
         DB_ReviewEdit.imgReceiptVerified.setImageDrawable(
             ContextCompat.getDrawable(
                 this,
@@ -541,7 +540,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     fun getAudioFileUri(fileName: String): File {
         val root = Environment.getExternalStorageDirectory()
         val dir = File(root.absolutePath + "/KKMT/Music")
-        dir.mkdirs();
+        dir.mkdirs()
 
         val file = File(dir, "fileName")
         val mediaStorageDir =
@@ -587,7 +586,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                     else DB_ReviewEdit.cntAlert.visibility = View.VISIBLE
                 } else if (view == DB_ReviewEdit.imgBack) {
                     onBackPressed()
-                }else if (view == DB_ReviewEdit.txtAlertok) {
+                } else if (view == DB_ReviewEdit.txtAlertok) {
                     DB_ReviewEdit.cntAlert.visibility = View.GONE
                 } else if (view == DB_ReviewEdit.cnt1star) {
                     UncheckedReview()
@@ -712,7 +711,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_WrittenNote] = WrittenNote
             params[Constants.paramKey_VoiceNote] = voiceNoteString
 
-            Log.e("TAG","Call Param : "+Gson().toJson(params))
+            Log.e("TAG", "Call Param : " + Gson().toJson(params))
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.EmployeeReportService>(
                     NetworkServices.EmployeeReportService::class.java
@@ -725,7 +724,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             call.enqueue(object : Callback<ReviewSubmitModel> {
                 override fun onFailure(call: Call<ReviewSubmitModel>, t: Throwable) {
                     DB_ReviewEdit.cntLoader.visibility = View.GONE
-                    Log.e("GetResponsesasXASX", "Hell: "+t)
+                    Log.e("GetResponsesasXASX", "Hell: " + t)
                 }
 
                 override fun onResponse(
@@ -840,16 +839,16 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun StopCounter() {
-        running = false;
+        running = false
     }
 
     private fun ResetCounter() {
-        running = false;
-        seconds = 0;
+        running = false
+        seconds = 0
     }
 
     private fun StartCounter() {
-        running = true;
+        running = true
         TimerHandler.postDelayed(TimerRunnable!!, 0)
     }
 
@@ -925,8 +924,8 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     private fun StopRecording() {
         DB_ReviewEdit.txtRecodinglbl.visibility = View.INVISIBLE
         if (recorder != null) {
-            recorder!!.release();
-            recorder = null;
+            recorder!!.release()
+            recorder = null
         }
         ResetCounter()
         DB_ReviewEdit.crdPlaypause.visibility = View.VISIBLE
@@ -959,7 +958,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             Log.e(MainActivity::class.java.simpleName + ":startRecording()", "prepare() failed")
         }
         StartCounter()
-        recorder!!.start();
+        recorder!!.start()
     }
 
 
@@ -1062,9 +1061,9 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                 if (isRecoding) {
                     Log.e("TA", "Recording")
                     if (DB_ReviewEdit.motMic.transitionToStart() == motionLayout!!.transitionToStart()) {
-                        motionLayout.transitionToEnd();
+                        motionLayout.transitionToEnd()
                     } else {
-                        motionLayout.transitionToStart();
+                        motionLayout.transitionToStart()
                     }
 //                    if (!looped) {
 //                        motionLayout!!.transitionToStart();
@@ -1076,7 +1075,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 //                    }
 
                 } else {
-                    motionLayout!!.transitionToEnd();
+                    motionLayout!!.transitionToEnd()
                     Log.e("TA", "Recording NOt")
                 }
             }

@@ -25,7 +25,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
 
@@ -342,7 +341,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
         var dateCurrent = df.parse(datez)
         var dateCreated = df.parse(dateCreateds)
 
-        val difference: Long = dateCreated.getTime() - dateCurrent.getTime()
+        val difference: Long = dateCreated.time - dateCurrent.time
         var days = (difference / (1000 * 60 * 60 * 24)).toInt()
         var hours = ((difference - 1000 * 60 * 60 * 24 * days) / (1000 * 60 * 60)).toInt()
 //       var hours = ((((difference) / (1000 * 60 * 60)).toInt())-1000 * 60 * 60 * 24 * days)

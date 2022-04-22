@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -545,8 +544,8 @@
             android:id="@+id/cnt_loginView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_48dp"
             android:layout_marginEnd="@dimen/_16dp"
+            android:layout_marginBottom="@dimen/_48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -567,10 +566,10 @@
                     android:id="@+id/img_login"
                     android:layout_width="@dimen/_32dp"
                     android:layout_height="@dimen/_32dp"
-                    android:padding="@dimen/_8dp"
-                    android:visibility="gone"
                     android:background="@drawable/menu_icon_back"
+                    android:padding="@dimen/_8dp"
                     android:src="@drawable/ic_logout"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"

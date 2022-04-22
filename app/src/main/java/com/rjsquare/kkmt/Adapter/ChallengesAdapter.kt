@@ -14,7 +14,6 @@ import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.Model.ChallengesModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.RawChallengesFrameBinding
-import java.util.*
 
 class ChallengesAdapter(
     var moContext: Context,
@@ -148,16 +147,17 @@ class ChallengesAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-                if (view == DB_RawChallengesFrameBinding.idFrameconstraintX) {
-                    var ChallengesInfoIntent = Intent(moContext, Challenge_info::class.java)
-                    moContext.startActivity(ChallengesInfoIntent)
-                    (moContext as Challenges).overridePendingTransition(
-                        R.anim.activity_in,
-                        R.anim.activity_out
-                    )
-                }
+                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                    ApplicationClass.lastClick =
+                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                    if (view == DB_RawChallengesFrameBinding.idFrameconstraintX) {
+                        var ChallengesInfoIntent = Intent(moContext, Challenge_info::class.java)
+                        moContext.startActivity(ChallengesInfoIntent)
+                        (moContext as Challenges).overridePendingTransition(
+                            R.anim.activity_in,
+                            R.anim.activity_out
+                        )
+                    }
                 }
             } catch (NE: NullPointerException) {
                 NE.printStackTrace()

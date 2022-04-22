@@ -1,11 +1,10 @@
 package com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable
 
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.RetrofitInstance.UnsafeOkHttpClient
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import okhttp3.OkHttpClient
 
 object ApiCallingInstance {
 

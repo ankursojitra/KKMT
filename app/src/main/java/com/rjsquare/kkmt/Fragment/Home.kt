@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.rjsquare.kkmt.Activity.Events.Events
@@ -19,7 +18,6 @@ import com.rjsquare.kkmt.Activity.Store.Store
 import com.rjsquare.kkmt.Activity.Video.Video
 import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.FragmentHomeBinding
 import com.squareup.picasso.Picasso

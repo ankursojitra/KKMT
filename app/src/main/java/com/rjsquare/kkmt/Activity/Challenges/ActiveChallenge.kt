@@ -106,45 +106,46 @@ class ActiveChallenge : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_ActiveChallenge.txtAchallenge) {
-                DB_ActiveChallenge.viewPager.currentItem = 0
-                DB_ActiveChallenge.txtAchallenge.background =
-                    ContextCompat.getDrawable(this, R.drawable.tab_selection)
-                DB_ActiveChallenge.txtCchallenge.background = null
-                DB_ActiveChallenge.txtAchallenge.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.black
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_ActiveChallenge.txtAchallenge) {
+                    DB_ActiveChallenge.viewPager.currentItem = 0
+                    DB_ActiveChallenge.txtAchallenge.background =
+                        ContextCompat.getDrawable(this, R.drawable.tab_selection)
+                    DB_ActiveChallenge.txtCchallenge.background = null
+                    DB_ActiveChallenge.txtAchallenge.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.black
+                        )
                     )
-                )
-                DB_ActiveChallenge.txtCchallenge.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.white
+                    DB_ActiveChallenge.txtCchallenge.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.white
+                        )
                     )
-                )
-            } else if (view == DB_ActiveChallenge.txtCchallenge) {
-                DB_ActiveChallenge.viewPager.currentItem = 1
-                DB_ActiveChallenge.txtCchallenge.background =
-                    ContextCompat.getDrawable(this, R.drawable.tab_selection)
-                DB_ActiveChallenge.txtAchallenge.background = null
-                DB_ActiveChallenge.txtCchallenge.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.black
+                } else if (view == DB_ActiveChallenge.txtCchallenge) {
+                    DB_ActiveChallenge.viewPager.currentItem = 1
+                    DB_ActiveChallenge.txtCchallenge.background =
+                        ContextCompat.getDrawable(this, R.drawable.tab_selection)
+                    DB_ActiveChallenge.txtAchallenge.background = null
+                    DB_ActiveChallenge.txtCchallenge.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.black
+                        )
                     )
-                )
-                DB_ActiveChallenge.txtAchallenge.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.white
+                    DB_ActiveChallenge.txtAchallenge.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.white
+                        )
                     )
-                )
-            } else if (view == DB_ActiveChallenge.imgBack) {
-                onBackPressed()
-            }
+                } else if (view == DB_ActiveChallenge.imgBack) {
+                    onBackPressed()
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

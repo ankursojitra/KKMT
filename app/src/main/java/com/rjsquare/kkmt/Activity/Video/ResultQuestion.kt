@@ -12,7 +12,8 @@ import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingIns
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.*
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
+import com.rjsquare.kkmt.RetrofitInstance.Events.VideoQuestionComplete_Model
 import com.rjsquare.kkmt.databinding.ActivityResultQuestionBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -133,20 +134,21 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == DB_ResultQuestion.imgBack) {
-                Video.thisVideo.finish()
-                onBackPressed()
-            } else if (view == DB_ResultQuestion.txtWatchmore) {
-                setResult(Activity.RESULT_OK)
-                onBackPressed()
-            } else if (view == DB_ResultQuestion.cntBacktohome) {
-                Video.thisVideo.finish()
-                onBackPressed()
-            } else if (view == DB_ResultQuestion.txtAlertok) {
-                DB_ResultQuestion.cntAlert.visibility = View.GONE
-            }
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == DB_ResultQuestion.imgBack) {
+                    Video.thisVideo.finish()
+                    onBackPressed()
+                } else if (view == DB_ResultQuestion.txtWatchmore) {
+                    setResult(Activity.RESULT_OK)
+                    onBackPressed()
+                } else if (view == DB_ResultQuestion.cntBacktohome) {
+                    Video.thisVideo.finish()
+                    onBackPressed()
+                } else if (view == DB_ResultQuestion.txtAlertok) {
+                    DB_ResultQuestion.cntAlert.visibility = View.GONE
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

@@ -145,13 +145,13 @@ class ReviewEmployeeSearch : AppCompatActivity(), OnMapReadyCallback, View.OnCli
 
             ApplicationClass.mReviewEmp_Model = ReviewEmp_Model()
             ApplicationClass.mReviewEmp_Model.EmpName = "Alexa Jinaou"
-            ApplicationClass.mReviewEmp_Model.EmpImage = R.drawable.rp!!
+            ApplicationClass.mReviewEmp_Model.EmpImage = R.drawable.rp
 
             ApplicationClass.ArrayList_mReviewEmp_Model.add(ApplicationClass.mReviewEmp_Model)
 
             ApplicationClass.mReviewEmp_Model = ReviewEmp_Model()
             ApplicationClass.mReviewEmp_Model.EmpName = "Alexa Gonzaleia"
-            ApplicationClass.mReviewEmp_Model.EmpImage = R.drawable.review!!
+            ApplicationClass.mReviewEmp_Model.EmpImage = R.drawable.review
 
             ApplicationClass.ArrayList_mReviewEmp_Model.add(ApplicationClass.mReviewEmp_Model)
 
@@ -179,27 +179,6 @@ class ReviewEmployeeSearch : AppCompatActivity(), OnMapReadyCallback, View.OnCli
     }
 
 
-    override fun onStart() {
-        super.onStart()
-//        mCameraKitView.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        mCameraKitView.onResume()
-    }
-
-    override fun onPause() {
-//        mCameraKitView.onPause()
-        super.onPause()
-    }
-
-    override fun onStop() {
-//        mCameraKitView.onStop()
-        super.onStop()
-    }
-
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -217,8 +196,8 @@ class ReviewEmployeeSearch : AppCompatActivity(), OnMapReadyCallback, View.OnCli
             val dx: Float = R.nextFloat()
             val dy: Float = R.nextFloat()
 
-            mCntHelper.setVisibility(View.VISIBLE)
-            mCntHelper2.setVisibility(View.VISIBLE)
+            mCntHelper.visibility = View.VISIBLE
+            mCntHelper2.visibility = View.VISIBLE
             val timer = Timer()
             mCntHelper.animate()
                 .x(dx)
@@ -297,28 +276,29 @@ class ReviewEmployeeSearch : AppCompatActivity(), OnMapReadyCallback, View.OnCli
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis()< ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
-            if (view == mCntNotfound) {
-                mCntNotfound.visibility = View.INVISIBLE
-                ReportView.visibility = View.VISIBLE
-                ReportThankYouView.visibility = View.GONE
-                mCntTopHeader.visibility = View.INVISIBLE
-            } else if (view == mTxtSubmit) {
-                if (mCh1.isChecked || mCh2.isChecked || mCh3.isChecked) {
-                    ReportView.visibility = View.GONE
-                    ReportThankYouView.visibility = View.VISIBLE
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Please select atleast one option from above.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else if (view == mTxtBacktohome) {
-                Bussiness_Location.thisBussiness_Activity.finish()
-                BussinessCheckIn.thisBusinessCheckIn.finish()
-                finish()
+            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
+                ApplicationClass.lastClick =
+                    System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (view == mCntNotfound) {
+                    mCntNotfound.visibility = View.INVISIBLE
+                    ReportView.visibility = View.VISIBLE
+                    ReportThankYouView.visibility = View.GONE
+                    mCntTopHeader.visibility = View.INVISIBLE
+                } else if (view == mTxtSubmit) {
+                    if (mCh1.isChecked || mCh2.isChecked || mCh3.isChecked) {
+                        ReportView.visibility = View.GONE
+                        ReportThankYouView.visibility = View.VISIBLE
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Please select atleast one option from above.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } else if (view == mTxtBacktohome) {
+                    Bussiness_Location.thisBussiness_Activity.finish()
+                    BussinessCheckIn.thisBusinessCheckIn.finish()
+                    finish()
 
 //                mCntNotfound.visibility = View.VISIBLE
 //                ReportView.visibility = View.GONE
@@ -326,22 +306,24 @@ class ReviewEmployeeSearch : AppCompatActivity(), OnMapReadyCallback, View.OnCli
 //                mCntTopHeader.visibility = View.VISIBLE
 
 
-                //Next changes
+                    //Next changes
 //                AppClass.Selected_ReviewEmp_Model = AppClass.ArrayList_mReviewEmp_Model.get(0)
 //                var HelperIntent = Intent(this, ReviewEdit::class.java)
 //                startActivity(HelperIntent)
-                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
-            } else if (view == mCntHelper) {
-                ApplicationClass.Selected_ReviewEmp_Model = ApplicationClass.ArrayList_mReviewEmp_Model.get(0)
-                var HelperIntent = Intent(this, ReviewEdit::class.java)
-                startActivity(HelperIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == mCntHelper2) {
-                ApplicationClass.Selected_ReviewEmp_Model = ApplicationClass.ArrayList_mReviewEmp_Model.get(1)
-                var HelperIntent = Intent(this, ReviewEdit::class.java)
-                startActivity(HelperIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == mImgComplogo) {
+                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
+                } else if (view == mCntHelper) {
+                    ApplicationClass.Selected_ReviewEmp_Model =
+                        ApplicationClass.ArrayList_mReviewEmp_Model.get(0)
+                    var HelperIntent = Intent(this, ReviewEdit::class.java)
+                    startActivity(HelperIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                } else if (view == mCntHelper2) {
+                    ApplicationClass.Selected_ReviewEmp_Model =
+                        ApplicationClass.ArrayList_mReviewEmp_Model.get(1)
+                    var HelperIntent = Intent(this, ReviewEdit::class.java)
+                    startActivity(HelperIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                } else if (view == mImgComplogo) {
 //            mCameraKitView.captureImage(this)
 //            mCameraKitView.captureImage { _, image ->
 //                Log.e("Taking picture", "callback called")
@@ -349,16 +331,16 @@ class ReviewEmployeeSearch : AppCompatActivity(), OnMapReadyCallback, View.OnCli
 //                mImgCamera.setImageBitmap(image)
 //            }
 //            mCameraKitView.visibility = View.INVISIBLE
-            } else if (view == mImgCamera) {
-                Toast.makeText(this, "Bicon image capture here", Toast.LENGTH_SHORT).show()
+                } else if (view == mImgCamera) {
+                    Toast.makeText(this, "Bicon image capture here", Toast.LENGTH_SHORT).show()
 //            var HelperIntent = Intent(this, AndroidCameraApi::class.java)
 //            startActivityForResult(HelperIntent, 0)
 //            overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            } else if (view == mTxtLeave) {
-                var HelperIntent = Intent(this, ReviewEdit::class.java)
-                startActivity(HelperIntent)
-                overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-            }
+                } else if (view == mTxtLeave) {
+                    var HelperIntent = Intent(this, ReviewEdit::class.java)
+                    startActivity(HelperIntent)
+                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                }
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
