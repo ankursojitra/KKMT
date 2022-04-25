@@ -156,7 +156,7 @@ object NetworkServices {
     interface EventsByMonthService {
         @POST("api-get-event-list-by-month")
         @FormUrlEncoded
-        fun GetEventsByMonthData(@FieldMap params: Map<String, String>): Call<Events_Model>
+        fun GetEventsByMonthData(@FieldMap params: Map<String, String>): Call<EventsByMonth_Model>
     }
 
     //Leaderboard Customer Service
@@ -323,6 +323,39 @@ object NetworkServices {
             @FieldMap params: Map<String, String>,
             @Header("token") token: String
         ): Call<DisplayNameModel>
+
+    }
+
+    //Item Redeem Service
+    interface DailyChallangeService {
+        @POST("api-get-challanges-daily")
+        @FormUrlEncoded
+        fun DailyChallangeData(
+            @FieldMap params: Map<String, String>,
+            @Header("token") token: String
+        ): Call<ChallangesModel>
+
+    }
+
+    //Weekly Challange Service
+    interface WeeklyChallangeService {
+        @POST("api-get-challanges-daily")
+        @FormUrlEncoded
+        fun WeeklyChallangeData(
+            @FieldMap params: Map<String, String>,
+            @Header("token") token: String
+        ): Call<ChallangesModel>
+
+    }
+
+    //Monthly Challange Service
+    interface MonthlyChallangeService {
+        @POST("api-get-challanges-daily")
+        @FormUrlEncoded
+        fun MonthlyChallangeData(
+            @FieldMap params: Map<String, String>,
+            @Header("token") token: String
+        ): Call<ChallangesModel>
 
     }
 

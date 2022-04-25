@@ -10,7 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Activity.Video.Video
 import com.rjsquare.kkmt.Activity.Video.VideoPlayer
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
 import com.rjsquare.kkmt.databinding.RawVideoFrameBinding
@@ -100,11 +101,11 @@ class VideosAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick =
-                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                    GlobalUsage.lastClick =
+                        System.currentTimeMillis() + GlobalUsage.clickInterval
                     if (view == DB_RawVideoFrameBinding.idFrameconstraintX) {
-                        ApplicationClass.mVideoesModelSelected = lVideoesModelSelected
+                        GlobalUsage.mVideoesModelSelected = lVideoesModelSelected
                         var ShowVideoIntent = Intent(moContext, VideoPlayer::class.java)
                         (moContext as Video).startActivityForResult(
                             ShowVideoIntent,

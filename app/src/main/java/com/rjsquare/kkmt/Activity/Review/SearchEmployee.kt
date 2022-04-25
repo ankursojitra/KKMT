@@ -36,9 +36,10 @@ import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
-import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Location
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Beacon_Search
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.EmployeeNotFoundModel
@@ -167,7 +168,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         DB_SearchEmployee = DataBindingUtil.setContentView(this, R.layout.activity_search_employee)
         thisSearchEmployee = this
 
-        ApplicationClass.StatusTextWhite(this, false)
+        GlobalUsage.StatusTextWhite(this, false)
         DB_SearchEmployee.rippleBack.startRippleAnimation()
         EmpViewList = ArrayList()
         SlaveViewList = ArrayList()
@@ -263,17 +264,17 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         }
 
         DB_SearchEmployee.cntBusinessView.setBackgroundResource(
-            ApplicationClass.GetPinView(
+            GlobalUsage.GetPinView(
                 this@SearchEmployee,
-                ApplicationClass.selectedMasterModel.mappin!!
+                GlobalUsage.selectedMasterModel.mappin!!
             )
         )
 
-        Picasso.with(this).load(ApplicationClass.selectedMasterModel.businessimage)
+        Picasso.with(this).load(GlobalUsage.selectedMasterModel.businessimage)
             .placeholder(R.drawable.expe_logo).into(DB_SearchEmployee.imgBusiness)
 
-        DB_SearchEmployee.txtBusname.text = ApplicationClass.selectedMasterModel.bussiness_name
-        DB_SearchEmployee.txtCompanyname.text = ApplicationClass.selectedMasterModel.bussiness_name
+        DB_SearchEmployee.txtBusname.text = GlobalUsage.selectedMasterModel.bussiness_name
+        DB_SearchEmployee.txtCompanyname.text = GlobalUsage.selectedMasterModel.bussiness_name
 
     }
 
@@ -292,10 +293,10 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 HashMap()
 
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             params[Constants.paramKey_BussinessId] =
-                ApplicationClass.selectedMasterModel.businessid.toString()
+                GlobalUsage.selectedMasterModel.businessid.toString()
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.SlaveBeaconService>(
@@ -304,7 +305,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             val call =
                 service.GetSlaveBeaconData(
                     params, BeaconMACList,
-                    ApplicationClass.userInfoModel.data!!.access_token!!
+                    GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<SlaveBeaconModel> {
@@ -321,8 +322,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     Log.e("TAG", "CHECKRESPONSESlave : " + Gson().toJson(response.body()))
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        ApplicationClass.slaveModellist = ArrayList()
-                        ApplicationClass.slaveModellist = response.body()!!.data!!
+                        GlobalUsage.slaveModellist = ArrayList()
+                        GlobalUsage.slaveModellist = response.body()!!.data!!
                         ShowEmployees()
 
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
@@ -354,11 +355,11 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
     private fun ShowEmployees() {
 
-        var TotalViews = ApplicationClass.slaveModellist.size
+        var TotalViews = GlobalUsage.slaveModellist.size
 
         GenerateRandomPos(TotalViews)
         for (pos in 0..TotalViews - 1) {
-            SetUpDataInView(ApplicationClass.slaveModellist[pos], PosList[pos])
+            SetUpDataInView(GlobalUsage.slaveModellist[pos], PosList[pos])
         }
     }
 
@@ -372,7 +373,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView1.ly_emp1.img_emp)
                 DB_SearchEmployee.cntView1.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView1.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView1)
@@ -384,7 +385,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView2.ly_emp2.img_emp)
                 DB_SearchEmployee.cntView2.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView2.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView2)
@@ -396,7 +397,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView3.ly_emp3.img_emp)
                 DB_SearchEmployee.cntView3.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView3.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView3)
@@ -408,7 +409,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView4.ly_emp4.img_emp)
                 DB_SearchEmployee.cntView4.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView4.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView4)
@@ -420,7 +421,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView5.ly_emp5.img_emp)
                 DB_SearchEmployee.cntView5.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView5.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView5)
@@ -432,7 +433,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView6.ly_emp6.img_emp)
                 DB_SearchEmployee.cntView6.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView6.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView6)
@@ -444,7 +445,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView7.ly_emp7.img_emp)
                 DB_SearchEmployee.cntView7.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView7.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView7)
@@ -456,7 +457,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView8.ly_emp8.img_emp)
                 DB_SearchEmployee.cntView8.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView8.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView8)
@@ -468,7 +469,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView9.ly_emp9.img_emp)
                 DB_SearchEmployee.cntView9.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView9.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView9)
@@ -480,7 +481,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView10.ly_emp10.img_emp)
                 DB_SearchEmployee.cntView10.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView10.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView10)
@@ -492,7 +493,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView11.ly_emp11.img_emp)
                 DB_SearchEmployee.cntView11.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView11.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView11)
@@ -504,7 +505,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     .into(DB_SearchEmployee.cntView12.ly_emp12.img_emp)
                 DB_SearchEmployee.cntView12.visibility = View.VISIBLE
                 DB_SearchEmployee.cntView12.setOnClickListener(View.OnClickListener {
-                    ApplicationClass.empSlaveModel = slaveBescon
+                    GlobalUsage.empSlaveModel = slaveBescon
                     ReviewScreen()
                 })
                 AnimateDevice(DB_SearchEmployee.cntView12)
@@ -530,10 +531,10 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 HashMap()
 
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             params[Constants.paramKey_BussinessId] =
-                ApplicationClass.selectedMasterModel.businessid.toString()
+                GlobalUsage.selectedMasterModel.businessid.toString()
 
             params[Constants.paramKey_Reason] = notFoundEmployeeReason
             params[Constants.paramKey_KKMTID] = notFoundEmployeekkmtid
@@ -545,7 +546,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 )
             val call =
                 service.GetEmployeeNotFoundData(
-                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<EmployeeNotFoundModel> {
@@ -605,10 +606,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun ReviewScreen() {
-        ApplicationClass.isNewReview = true
-        var HelperIntent = Intent(this, ReviewEdit::class.java)
-        startActivity(HelperIntent)
-        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+        GlobalUsage.isNewReview = true
+        GlobalUsage.NextScreen(this,Intent(this, ReviewEdit::class.java))
     }
 
     private fun ensureBleExists(): Boolean {
@@ -623,7 +622,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         mMtCentralManager!!.setMTCentralManagerListener { peripherals ->
             for (peripheral in peripherals) {
                 val Mac = peripheral.mMTFrameHandler.mac.replace(":", "")
-                if (peripheral.mMTFrameHandler.name.contains(Constants.Companion.slaveBeacon)) {
+                if (peripheral.mMTFrameHandler.name.contains(Constants.slaveBeacon)) {
                     if (!BeaconMACList.contains(Mac)) {
                         BeaconMACList.add(Mac)
                     }
@@ -702,8 +701,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-            ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
+        if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+            GlobalUsage.lastClick = System.currentTimeMillis() + GlobalUsage.clickInterval
             if (view == DB_SearchEmployee.cntNotfound) {
                 CloseViews()
                 DB_SearchEmployee.layoutHelperReport.cntReportview.visibility = View.VISIBLE
@@ -728,10 +727,10 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 Log.e("TAG", "AlertOk")
                 HideAlert()
             } else if (view == mTxtBacktohome) {
-                if (!ApplicationClass.selectedMasterModel.check_in!!.equals("Yes", true)) {
+                if (!GlobalUsage.selectedMasterModel.check_in!!.equals("Yes", true)) {
                     BussinessCheckIn.thisBusinessCheckIn.finish()
                 }
-                Bussiness_Location.thisBussiness_Activity.finish()
+                Bussiness_Beacon_Search.thisBussiness_Activity.finish()
                 finish()
                 overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
             } else if (view == this.imgCamera) {
@@ -741,7 +740,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 CloseViews()
                 DB_SearchEmployee.cntEmpmainView.visibility = View.VISIBLE
             } else if (view == DB_SearchEmployee.txtUnauthOk) {
-                ApplicationClass.UserLogout(this)
+                GlobalUsage.UserLogout(this)
             }
         }
     }

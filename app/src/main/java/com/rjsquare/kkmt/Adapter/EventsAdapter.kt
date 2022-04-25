@@ -10,11 +10,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.rjsquare.kkmt.Activity.Events.Events
-import com.rjsquare.kkmt.Activity.Events.EventsFullView
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mEventsModelSelected
-import com.rjsquare.kkmt.Model.EventsModel
+import com.rjsquare.kkmt.Activity.Events.EventsHome
+import com.rjsquare.kkmt.Activity.Events.EventsDetailsScreen
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.databinding.RawEventsFrameBinding
@@ -51,8 +49,6 @@ class EventsAdapter(
     override fun onBindViewHolder(holder: View_holder, position: Int) {
         try {
             var mEventsModel = moArrayList[position]
-            var Per_Value_old = 0.0
-            val mEventsModel_old: EventsModel
             holder.lEventsModelSelected = mEventsModel
 //            holder.DB_RawEventsFrameBinding.imgEvent.setImageDrawable(mEventsModel.ImgLink)
 //            holder.DB_RawEventsFrameBinding.txtEventTitle.text = mEventsModel.EventTitle
@@ -120,7 +116,7 @@ class EventsAdapter(
 //                    itemView.findViewById<ConstraintLayout>(R.id.id_frameconstraint)
                 DB_RawEventsFrameBinding.idFrameconstraint.setOnClickListener(this)
 
-//                ApplicationClass.SetLayoutWidthHeight(
+//                GlobalUsage.SetLayoutWidthHeight(
 //                    DB_RawEventsFrameBinding.imgEvent,
 //                    ((Width / 11) * 6),
 //                    ((Width / 10) * 3)
@@ -145,14 +141,14 @@ class EventsAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick =
-                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                    GlobalUsage.lastClick =
+                        System.currentTimeMillis() + GlobalUsage.clickInterval
                     if (view == DB_RawEventsFrameBinding.idFrameconstraint) {
-                        mEventsModelSelected = lEventsModelSelected
-                        var FullEventIntent = Intent(moContext, EventsFullView::class.java)
+                        GlobalUsage.mEventsModelSelected = lEventsModelSelected
+                        var FullEventIntent = Intent(moContext, EventsDetailsScreen::class.java)
                         moContext.startActivity(FullEventIntent)
-                        (moContext as Events).overridePendingTransition(
+                        (moContext as EventsHome).overridePendingTransition(
                             R.anim.activity_in,
                             R.anim.activity_out
                         )

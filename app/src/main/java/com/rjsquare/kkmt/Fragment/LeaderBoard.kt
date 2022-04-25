@@ -16,7 +16,7 @@ import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.PrizesList.Prizes
 import com.rjsquare.kkmt.Adapter.LeaderboardCustomerAdapter
 import com.rjsquare.kkmt.Adapter.LeaderboardEmployeeAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
@@ -57,9 +57,9 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             DataBindingUtil.inflate(inflater, R.layout.fragment_leader_board, container, false)
 //        var rootView = inflater.inflate(R.layout.fragment_leader_board, container, false)
         try {
-            Log.e("TAG", "CHECKEMPLOYEE : " + ApplicationClass.isUserEmployee)
-            if (ApplicationClass.userLogedIn) {
-                if (ApplicationClass.isUserEmployee) {
+            Log.e("TAG", "CHECKEMPLOYEE : " + GlobalUsage.isUserEmployee)
+            if (GlobalUsage.userLogedIn) {
+                if (GlobalUsage.isUserEmployee) {
                     DB_LeaderBoard.cntEmporuser.visibility = View.GONE
                     IsCurrentBussiness = false
                     LeaderBoardDataEmployee()
@@ -173,7 +173,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             val params: MutableMap<String, String> =
                 HashMap()
             params[Constants.paramKey_CustomerId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.LeaderboardCustomerService>(
@@ -181,7 +181,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                 )
             val call = service.GetLeaderBoardData(
                 params,
-                ApplicationClass.userInfoModel.data!!.access_token!!
+                GlobalUsage.userInfoModel.data!!.access_token!!
             )
             call.enqueue(object : Callback<LeaderboardCustomer_Model> {
                 override fun onFailure(call: Call<LeaderboardCustomer_Model>, t: Throwable) {
@@ -228,9 +228,9 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             val params: MutableMap<String, String> =
                 HashMap()
             params[Constants.paramKey_BussinessId] =
-                ApplicationClass.userInfoModel.data!!.bussiness!!
+                GlobalUsage.userInfoModel.data!!.bussiness!!
             params[Constants.paramKey_EmployeeId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.LeaderboardEmployeeService>(
@@ -238,7 +238,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                 )
             val call = service.GetLeaderBoardEmpData(
                 params,
-                ApplicationClass.userInfoModel.data!!.access_token!!
+                GlobalUsage.userInfoModel.data!!.access_token!!
             )
             call.enqueue(object : Callback<LeaderboardEmployee_Model> {
                 override fun onFailure(call: Call<LeaderboardEmployee_Model>, t: Throwable) {
@@ -408,9 +408,9 @@ class LeaderBoard : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_LeaderBoard.crdPrizes) {
                     var PrizesIntent = Intent(activity, Prizes::class.java)
                     requireActivity().startActivity(PrizesIntent)

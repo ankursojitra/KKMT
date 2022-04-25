@@ -58,6 +58,7 @@
     <string name="uploacreceipt">Uploac Receipt</string>
     <string name="gender">Gender</string>
     <string name="displayname">Display name</string>
+    <string name="invalidemail">Invalid Email address</string>
     <string name="male">Male</string>
     <string name="doc_msg">Upload and verify document</string>
     <string name="upload_msg">Please upload government issue document to verify your identity.</string>

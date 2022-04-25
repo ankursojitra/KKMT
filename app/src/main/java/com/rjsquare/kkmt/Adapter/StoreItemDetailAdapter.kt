@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
 import com.rjsquare.kkmt.databinding.RawStoreFrameBinding
@@ -79,7 +79,7 @@ class StoreItemDetailAdapter(
             try {
                 DB_RawStoreFrameBinding = itemBinding
 
-//                ApplicationClass.SetLayoutWidthHeight(
+//                GlobalUsage.SetLayoutWidthHeight(
 //                    DB_RawStoreFrameBinding.cntStoreItem,
 //                    ((Width / 12) * 4),
 //                    ((Width / 12) * 5)
@@ -101,9 +101,9 @@ class StoreItemDetailAdapter(
         }
 
         override fun onClick(view: View?) {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
             }
         }
     }

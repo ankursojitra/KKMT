@@ -17,11 +17,8 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.OTP.OTP_Confirmation
 import com.rjsquare.kkmt.Activity.Register.Register_User
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.HiddenKeyBoard
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.isUserEmployee
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mLogInInfo_Model
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
@@ -42,7 +39,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
         super.onCreate(savedInstanceState)
         DB_Login = DataBindingUtil.setContentView(this, R.layout.activity_login)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
             LoginActivity = this
 
             DB_Login.txtLoginAlertcancle.setOnClickListener(this)
@@ -58,7 +55,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
                     // If user press done key
                     if (i == EditorInfo.IME_ACTION_DONE) {
                         DB_Login.cntLoader.visibility = View.VISIBLE
-                        HiddenKeyBoard(this@Login, DB_Login.imgBack)
+                        GlobalUsage.HiddenKeyBoard(this@Login, DB_Login.imgBack)
                         if (GetValidationConfirmation()) {
                             DB_Login.cntLoader.visibility = View.VISIBLE
                             LogInExistingUser()
@@ -94,7 +91,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
             val params: MutableMap<String, String> =
                 HashMap()
             params[Constants.paramKey_PhoneNo] = DB_Login.edtPhoneNum.text.toString()
-//            params[ApplicationClass.paramKey_DeviceType] = "A"
+//            params[GlobalUsage.paramKey_DeviceType] = "A"
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.LogInCallService>(
                     NetworkServices.LogInCallService::class.java
@@ -116,13 +113,13 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
                         DB_Login.txtLoginAlertmsg.text = response.body()!!.message
                         DB_Login.cntAlert.visibility = View.VISIBLE
                     } else {
-                        mLogInInfo_Model =
+                        GlobalUsage.mLogInInfo_Model =
                             UserLogIn_Model()
-                        mLogInInfo_Model = response.body()!!
-                        if (mLogInInfo_Model.status.equals(Constants.ResponseSucess, true)) {
+                        GlobalUsage.mLogInInfo_Model = response.body()!!
+                        if (GlobalUsage.mLogInInfo_Model.status.equals(Constants.ResponseSucess, true)) {
                             GOTO_OTP()
                         } else {
-                            Toast.makeText(this@Login, mLogInInfo_Model.message, Toast.LENGTH_SHORT)
+                            Toast.makeText(this@Login, GlobalUsage.mLogInInfo_Model.message, Toast.LENGTH_SHORT)
                                 .show()
                         }
                     }
@@ -147,9 +144,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
     }
 
     private fun GOTO_OTP() {
-        var otpView = Intent(this, OTP_Confirmation::class.java)
-        startActivity(otpView)
-        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+        GlobalUsage.NextScreen(this,Intent(this, OTP_Confirmation::class.java))
     }
 
     private fun GetValidationConfirmation(): Boolean {
@@ -187,18 +182,16 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_Login.txtProceed) {
                     if (GetValidationConfirmation()) {
                         DB_Login.cntLoader.visibility = View.VISIBLE
                         LogInExistingUser()
                     }
                 } else if (view == DB_Login.txtSignup) {
-                    var otpView = Intent(this, Register_User::class.java)
-                    startActivity(otpView)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    GlobalUsage.NextScreen(this,Intent(this, Register_User::class.java))
                 } else if (view == DB_Login.txtLoginAlertcancle) {
                     DB_Login.cntAlert.visibility = View.GONE
                 }
@@ -220,7 +213,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
 
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         if (buttonView == DB_Login.swEmp) {
-            isUserEmployee = isChecked
+            GlobalUsage.isUserEmployee = isChecked
         }
     }
 

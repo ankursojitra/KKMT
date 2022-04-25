@@ -3,32 +3,32 @@ package com.rjsquare.kkmt.Activity.Challenges
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Adapter.ChallengesAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.Model.ChallengesModel
+import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ChallangesModel
 import com.rjsquare.kkmt.databinding.ActivityChallengesBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class Challenges : AppCompatActivity(), View.OnClickListener {
-    private lateinit var mImgBack: ImageView
-    private lateinit var mRrChallenges: RecyclerView
-    private lateinit var mTxtNoChallenges: TextView
-    lateinit var mArray_ChallengesModel: ArrayList<ChallengesModel>
-    private lateinit var mTxtDaily: TextView
-    private lateinit var mLlDaily: LinearLayout
-    private lateinit var mTxtWeekly: TextView
-    private lateinit var mLlWeekly: LinearLayout
-    private lateinit var mTxtMonthly: TextView
-    private lateinit var mLlMonthly: LinearLayout
+    lateinit var dailyChallengesList: ArrayList<ChallangesModel.Challange>
+    lateinit var weeklyChallengesList: ArrayList<ChallangesModel.Challange>
+    lateinit var monthlyChallengesList: ArrayList<ChallangesModel.Challange>
     lateinit var DB_Challenges: ActivityChallengesBinding
+    var PageNo = 0
+    var PagePerlimit = 10
+    var IsChallangeCallavailable = true
+    var dataSize = 0
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -38,27 +38,10 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DB_Challenges = DataBindingUtil.setContentView(this, R.layout.activity_challenges)
-//        setContentView(R.layout.activity_challenges)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
 
-            mImgBack = findViewById<ImageView>(R.id.img_back)
-            mRrChallenges = findViewById<RecyclerView>(R.id.rr_challenges)
-            mTxtNoChallenges = findViewById<TextView>(R.id.txt_no_challenges)
-            mTxtDaily = findViewById<TextView>(R.id.txt_daily)
-            mLlDaily = findViewById<LinearLayout>(R.id.ll_daily)
-            mTxtWeekly = findViewById<TextView>(R.id.txt_weekly)
-            mLlWeekly = findViewById<LinearLayout>(R.id.ll_weekly)
-            mTxtMonthly = findViewById<TextView>(R.id.txt_monthly)
-            mLlMonthly = findViewById<LinearLayout>(R.id.ll_monthly)
-
-            mArray_ChallengesModel = ArrayList()
-
-
-            DB_Challenges.imgBack.setOnClickListener(this)
-            DB_Challenges.txtDaily.setOnClickListener(this)
-            DB_Challenges.txtWeekly.setOnClickListener(this)
-            DB_Challenges.txtMonthly.setOnClickListener(this)
+            initListners()
 
             fillData()
             framesAdapter()
@@ -77,19 +60,31 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun initListners() {
+        dailyChallengesList = ArrayList()
+        weeklyChallengesList = ArrayList()
+        monthlyChallengesList = ArrayList()
+
+        DB_Challenges.imgBack.setOnClickListener(this)
+        DB_Challenges.txtDaily.setOnClickListener(this)
+        DB_Challenges.txtWeekly.setOnClickListener(this)
+        DB_Challenges.txtMonthly.setOnClickListener(this)
+    }
+
     private fun fillData() {
         try {
-            var mChallengesModel = ChallengesModel()
-            mChallengesModel.Txt1 = "Watch 3 Videos"
-            mChallengesModel.Txt2 = "Check-in into 1 location"
-            mChallengesModel.Txt3 = "Leave 1 Verified Reviews"
-            mArray_ChallengesModel.add(mChallengesModel)
-
-            var mChallengesModelx = ChallengesModel()
-            mChallengesModelx.Txt1 = ""
-            mChallengesModelx.Txt2 = "Complete 1 Survey"
-            mChallengesModelx.Txt3 = ""
-            mArray_ChallengesModel.add(mChallengesModelx)
+            DailyChallanges((++PageNo).toString(), PagePerlimit.toString())
+//            var mChallengesModel = ChallengesModel()
+//            mChallengesModel.Txt1 = "Watch 3 Videos"
+//            mChallengesModel.Txt2 = "Check-in into 1 location"
+//            mChallengesModel.Txt3 = "Leave 1 Verified Reviews"
+//            dailyChallengesModel.add(mChallengesModel)
+//
+//            var mChallengesModelx = ChallengesModel()
+//            mChallengesModelx.Txt1 = ""
+//            mChallengesModelx.Txt2 = "Complete 1 Survey"
+//            mChallengesModelx.Txt3 = ""
+//            dailyChallengesModel.add(mChallengesModelx)
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -105,24 +100,227 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun DailyChallanges(PageNo: String, PagePerlimit: String) {
+        try {
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+            params[Constants.paramKey_UserId] =
+                GlobalUsage.userInfoModel.data!!.userid!!
+            params[Constants.paramKey_Usertype] =
+                GlobalUsage.userInfoModel.data!!.usertype!!
+            params[Constants.paramKey_PageNo] = PageNo
+            params[Constants.paramKey_limit] = PagePerlimit
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.DailyChallangeService>(
+                    NetworkServices.DailyChallangeService::class.java
+                )
+            val call =
+                service.DailyChallangeData(
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
+                )
+
+            call.enqueue(object : Callback<ChallangesModel> {
+                override fun onFailure(call: Call<ChallangesModel>, t: Throwable) {
+                    DB_Challenges.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<ChallangesModel>,
+                    response: Response<ChallangesModel>
+                ) {
+                    DB_Challenges.cntLoader.visibility = View.GONE
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        dailyChallengesList.addAll(response.body()!!.data!!)
+                        framesAdapter()
+                        IsChallangeCallavailable =
+                            response.body()!!.data!!.size >= this@Challenges.PagePerlimit
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        DB_Challenges.cntUnAuthorized.visibility = View.VISIBLE
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+                        IsChallangeCallavailable = false
+                    } else {
+
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+    }
+
+    private fun WeeklyChallanges(PageNo: String, PagePerlimit: String) {
+        try {
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+            params[Constants.paramKey_UserId] =
+                GlobalUsage.userInfoModel.data!!.userid!!
+            params[Constants.paramKey_Usertype] =
+                GlobalUsage.userInfoModel.data!!.usertype!!
+            params[Constants.paramKey_PageNo] = PageNo
+            params[Constants.paramKey_limit] = PagePerlimit
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.DailyChallangeService>(
+                    NetworkServices.DailyChallangeService::class.java
+                )
+            val call =
+                service.DailyChallangeData(
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
+                )
+
+            call.enqueue(object : Callback<ChallangesModel> {
+                override fun onFailure(call: Call<ChallangesModel>, t: Throwable) {
+                    DB_Challenges.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<ChallangesModel>,
+                    response: Response<ChallangesModel>
+                ) {
+                    DB_Challenges.cntLoader.visibility = View.GONE
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        dailyChallengesList.addAll(response.body()!!.data!!)
+                        framesAdapter()
+                        IsChallangeCallavailable =
+                            response.body()!!.data!!.size >= this@Challenges.PagePerlimit
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        DB_Challenges.cntUnAuthorized.visibility = View.VISIBLE
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+                        IsChallangeCallavailable = false
+                    } else {
+
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+    }
+
+    private fun MonthlyChallanges(PageNo: String, PagePerlimit: String) {
+        try {
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+            params[Constants.paramKey_UserId] =
+                GlobalUsage.userInfoModel.data!!.userid!!
+            params[Constants.paramKey_Usertype] =
+                GlobalUsage.userInfoModel.data!!.usertype!!
+            params[Constants.paramKey_PageNo] = PageNo
+            params[Constants.paramKey_limit] = PagePerlimit
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.DailyChallangeService>(
+                    NetworkServices.DailyChallangeService::class.java
+                )
+            val call =
+                service.DailyChallangeData(
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
+                )
+
+            call.enqueue(object : Callback<ChallangesModel> {
+                override fun onFailure(call: Call<ChallangesModel>, t: Throwable) {
+                    DB_Challenges.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<ChallangesModel>,
+                    response: Response<ChallangesModel>
+                ) {
+                    DB_Challenges.cntLoader.visibility = View.GONE
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        dailyChallengesList.addAll(response.body()!!.data!!)
+                        framesAdapter()
+                        IsChallangeCallavailable =
+                            response.body()!!.data!!.size >= this@Challenges.PagePerlimit
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        DB_Challenges.cntUnAuthorized.visibility = View.VISIBLE
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+                        IsChallangeCallavailable = false
+                    } else {
+
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
+        }
+    }
+
+
     fun framesAdapter() {
         try {
 
-            if (mArray_ChallengesModel != null && mArray_ChallengesModel.size > 0) {
-                DB_Challenges.txtNoChallenges.visibility = View.GONE
-            } else {
+            if (dailyChallengesList.isNullOrEmpty()) {
                 DB_Challenges.txtNoChallenges.visibility = View.VISIBLE
+            } else {
+                DB_Challenges.txtNoChallenges.visibility = View.GONE
             }
 
-            val loChallengesAdapter: ChallengesAdapter
-//                if (mHomeModelArrayList_old == null) {
-            loChallengesAdapter = ChallengesAdapter(
-                this, mArray_ChallengesModel
+            DB_Challenges.rrChallengesDaily.adapter = ChallengesAdapter(
+                this, dailyChallengesList
             )
 
-            DB_Challenges.rrChallenges.adapter = loChallengesAdapter
 
-
+            DB_Challenges.rrChallengesDaily.addOnScrollListener(object :
+                RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager =
+                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisible = layoutManager.findLastVisibleItemPosition()
+                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
+                    if (totalItemCount > 0 && endHasBeenReached) {
+                        //you have reached to the bottom of your recycler view
+                    }
+                    if ((totalItemCount - 1) == lastVisible && IsChallangeCallavailable && dataSize == PagePerlimit) {
+                        IsChallangeCallavailable = true
+                        DailyChallanges((++PageNo).toString(), PagePerlimit.toString())
+                    }
+                }
+            })
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -140,13 +338,15 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_Challenges.imgBack) {
                     onBackPressed()
                 } else if (view == DB_Challenges.txtDaily) {
-                    Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+                    UncheckSelection()
+                    setUpDailyList()
+                    DB_Challenges.rrChallengesDaily.visibility = View.VISIBLE
                     DB_Challenges.txtDaily.setTextColor(
                         ContextCompat.getColor(
                             this,
@@ -159,32 +359,12 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                             R.color.blue_darklight
                         )
                     )
-                    DB_Challenges.txtWeekly.setTextColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.white
-                        )
-                    )
-                    DB_Challenges.llWeekly.setBackgroundColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.transparent
-                        )
-                    )
-                    DB_Challenges.txtMonthly.setTextColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.white
-                        )
-                    )
-                    DB_Challenges.llMonthly.setBackgroundColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.transparent
-                        )
-                    )
+
                 } else if (view == DB_Challenges.txtWeekly) {
-                    Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+                    UncheckSelection()
+                    setUpWeeklyList()
+                    DB_Challenges.rrChallengesWeekly.visibility = View.VISIBLE
+
                     DB_Challenges.txtWeekly.setTextColor(
                         ContextCompat.getColor(
                             this,
@@ -197,27 +377,11 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                             R.color.blue_darklight
                         )
                     )
-                    DB_Challenges.txtDaily.setTextColor(ContextCompat.getColor(this, R.color.white))
-                    DB_Challenges.llDaily.setBackgroundColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.transparent
-                        )
-                    )
-                    DB_Challenges.txtMonthly.setTextColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.white
-                        )
-                    )
-                    DB_Challenges.llMonthly.setBackgroundColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.transparent
-                        )
-                    )
+
                 } else if (view == DB_Challenges.txtMonthly) {
-                    Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+                    UncheckSelection()
+                    setUpMonthlyList()
+                    DB_Challenges.rrChallengesMonthly.visibility = View.VISIBLE
                     DB_Challenges.txtMonthly.setTextColor(
                         ContextCompat.getColor(
                             this,
@@ -231,27 +395,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                         )
                     )
 
-                    DB_Challenges.txtWeekly.setTextColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.white
-                        )
-                    )
-                    DB_Challenges.llWeekly.setBackgroundColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.transparent
-                        )
-                    )
 
-
-                    DB_Challenges.txtDaily.setTextColor(ContextCompat.getColor(this, R.color.white))
-                    DB_Challenges.llDaily.setBackgroundColor(
-                        ContextCompat.getColor(
-                            this,
-                            R.color.transparent
-                        )
-                    )
                 }
             }
         } catch (NE: NullPointerException) {
@@ -267,5 +411,71 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
         } catch (E: Exception) {
             E.printStackTrace()
         }
+    }
+
+    private fun setUpMonthlyList() {
+        if (monthlyChallengesList.isNullOrEmpty()) {
+            DB_Challenges.txtNoChallenges.visibility = View.VISIBLE
+        } else {
+            DB_Challenges.txtNoChallenges.visibility = View.GONE
+        }
+    }
+
+    private fun setUpWeeklyList() {
+        if (weeklyChallengesList.isNullOrEmpty()) {
+            DB_Challenges.txtNoChallenges.visibility = View.VISIBLE
+        } else {
+            DB_Challenges.txtNoChallenges.visibility = View.GONE
+        }
+    }
+
+    private fun setUpDailyList() {
+        if (dailyChallengesList.isNullOrEmpty()) {
+            DB_Challenges.txtNoChallenges.visibility = View.VISIBLE
+        } else {
+            DB_Challenges.txtNoChallenges.visibility = View.GONE
+        }
+    }
+
+    private fun UncheckSelection() {
+        DB_Challenges.rrChallengesDaily.visibility = View.GONE
+        DB_Challenges.rrChallengesWeekly.visibility = View.GONE
+        DB_Challenges.rrChallengesMonthly.visibility = View.GONE
+        DB_Challenges.txtDaily.setTextColor(
+            ContextCompat.getColor(
+                this,
+                R.color.white
+            )
+        )
+        DB_Challenges.llDaily.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.transparent
+            )
+        )
+        DB_Challenges.txtWeekly.setTextColor(
+            ContextCompat.getColor(
+                this,
+                R.color.white
+            )
+        )
+        DB_Challenges.llWeekly.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.transparent
+            )
+        )
+        DB_Challenges.txtMonthly.setTextColor(
+            ContextCompat.getColor(
+                this,
+                R.color.white
+            )
+        )
+        DB_Challenges.llMonthly.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.transparent
+            )
+        )
     }
 }

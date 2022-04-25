@@ -13,8 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.ItemRedeem_Model
@@ -45,7 +46,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
         DB_StoreItemRedeemConfirm =
             DataBindingUtil.setContentView(this, R.layout.activity_store_item_redeem_confirm)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
 
             DB_StoreItemRedeemConfirm.chDeliveryLocation.setOnCheckedChangeListener { _, isChecked ->
                 if (!isChecked) {
@@ -129,7 +130,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
 //                        var imm = getSystemService(
 //                            Context.INPUT_METHOD_SERVICE);
 //                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                        ApplicationClass.HiddenKeyBoard(
+                        GlobalUsage.HiddenKeyBoard(
                             this@StoreItemRedeemConfirm,
                             DB_StoreItemRedeemConfirm.cntTopView
                         )
@@ -239,7 +240,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
                 HashMap()
 
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!.toString()
+                GlobalUsage.userInfoModel.data!!.userid!!.toString()
 
             params[Constants.paramKey_ItemId] = StoreLevelList.selectedStoreItemModel.id!!
             params[Constants.paramKey_ItemCredit] =
@@ -255,7 +256,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             val call =
                 service.ItemRedeemData(
                     params,
-                    ApplicationClass.userInfoModel.data!!.access_token!!.toString()
+                    GlobalUsage.userInfoModel.data!!.access_token!!.toString()
                 )
 
             call.enqueue(object : Callback<ItemRedeem_Model> {
@@ -330,8 +331,8 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-            ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
+        if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+            GlobalUsage.lastClick = System.currentTimeMillis() + GlobalUsage.clickInterval
             if (view == DB_StoreItemRedeemConfirm.cntItemredeemSubmit) {
                 if (!IsPickUpStore) {
                     if (!DB_StoreItemRedeemConfirm.edtAddress1.text.toString().trim()
@@ -369,7 +370,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             } else if (view == DB_StoreItemRedeemConfirm.imgBack) {
                 onBackPressed()
             } else if (view == DB_StoreItemRedeemConfirm.txtUnauthOk) {
-                ApplicationClass.UserLogout(this)
+                GlobalUsage.UserLogout(this)
             } else if (view == DB_StoreItemRedeemConfirm.txtAlertok) {
                 if (ItemRedeemed) {
 //                Store.thisStoreActivity.finish()

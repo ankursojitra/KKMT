@@ -37,6 +37,9 @@ class CustomerHistoryModel {
         @SerializedName("total_spend_amount")
         var total_spend_amount: String? = null
 
+        @SerializedName("latest_review")
+        var latest_review: ArrayList<reviewItemInfo>? = null
+
         @SerializedName("panding_review")
         var panding_review: ArrayList<reviewItemInfo>? = null
 

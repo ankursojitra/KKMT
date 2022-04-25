@@ -6,7 +6,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.kkmt.Adapter.NotifiyAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.Model.NotificationModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.ActivityNotificationListBinding
@@ -30,7 +31,7 @@ class NotificationList : AppCompatActivity(), View.OnClickListener {
             DataBindingUtil.setContentView(this, R.layout.activity_notification_list)
 //        setContentView(R.layout.activity_notification_list)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
 
             DB_NotificationList.imgBack.setOnClickListener(this)
             mArray_NotificationModel = ArrayList()
@@ -108,9 +109,9 @@ class NotificationList : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_NotificationList.imgBack) {
                     onBackPressed()
                 }

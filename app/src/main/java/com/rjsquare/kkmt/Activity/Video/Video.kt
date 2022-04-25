@@ -15,8 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Adapter.VideosAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
@@ -47,7 +48,7 @@ class Video : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_Video = DataBindingUtil.setContentView(this, R.layout.activity_video)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
             thisVideo = this
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 DB_Video.txtVideoLbl.text = (Html.fromHtml(
@@ -131,11 +132,11 @@ class Video : AppCompatActivity(), View.OnClickListener {
             val params: MutableMap<String, String> =
                 HashMap()
             params[Constants.paramKey_Usertype] =
-                ApplicationClass.userInfoModel.data!!.usertype!!
+                GlobalUsage.userInfoModel.data!!.usertype!!
             params[Constants.paramKey_PageNo] = pageNo
             params[Constants.paramKey_limit] = PagePerLimit
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.VideosService>(
@@ -143,7 +144,7 @@ class Video : AppCompatActivity(), View.OnClickListener {
                 )
             val call =
                 service.GetVideosData(
-                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<Videos_Model> {
@@ -250,13 +251,13 @@ class Video : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-            ApplicationClass.lastClick = System.currentTimeMillis() + ApplicationClass.clickInterval
+        if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+            GlobalUsage.lastClick = System.currentTimeMillis() + GlobalUsage.clickInterval
             if (view == DB_Video.imgBack) {
                 onBackPressed()
             } else if (view == DB_Video.txtUnauthOk) {
                 DB_Video.cntUnAuthorized.visibility = View.GONE
-                ApplicationClass.UserLogout(this)
+                GlobalUsage.UserLogout(this)
             }
         }
 //        else if (view == DB_Video.cntLoadmore) {

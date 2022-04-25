@@ -10,7 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Activity.HomeActivity
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.Fragment.search
 import com.rjsquare.kkmt.Model.SearchModel
 import com.rjsquare.kkmt.R
@@ -124,11 +124,11 @@ class SearchAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick =
-                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                    GlobalUsage.lastClick =
+                        System.currentTimeMillis() + GlobalUsage.clickInterval
                     if (view == DB_RawSearchFrameBinding.idFrameconstraint) {
-                        ApplicationClass.mSearchModelSelected = lSearchModelSelected
+                        GlobalUsage.mSearchModelSelected = lSearchModelSelected
                         if (HomeActivity.KeyBoardOpen) hideSoftKeyboard(moContext as HomeActivity)
                         search.DB_FSearch.edtSearchbar.clearFocus()
                         search.PrepareBottomSheetView()

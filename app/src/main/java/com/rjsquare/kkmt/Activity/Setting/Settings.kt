@@ -9,7 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.kkmt.Activity.Notifications.NotificationList
 import com.rjsquare.kkmt.Activity.Profile.Profile
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.ActivitySettingsBinding
 
@@ -29,7 +30,7 @@ class Settings : AppCompatActivity(), View.OnClickListener {
         DB_Settings = DataBindingUtil.setContentView(this, R.layout.activity_settings)
 //        setContentView(R.layout.activity_settings)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
 
             DB_Settings.imgBack.setOnClickListener(this)
             DB_Settings.cntNotificationMain.setOnClickListener(this)
@@ -56,15 +57,13 @@ class Settings : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_Settings.imgBack) {
                     onBackPressed()
                 } else if (view == DB_Settings.cntNotificationMain) {
-                    var NotifyIntent = Intent(this, NotificationList::class.java)
-                    startActivity(NotifyIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    GlobalUsage.NextScreen(this,Intent(this, NotificationList::class.java))
                 } else if (view == DB_Settings.cntPrivacyMain) {
                     Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
                 } else if (view == DB_Settings.cntSecurityMain) {
@@ -72,9 +71,7 @@ class Settings : AppCompatActivity(), View.OnClickListener {
                 } else if (view == DB_Settings.cntAdsMain) {
                     Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
                 } else if (view == DB_Settings.cntAccountMain) {
-                    var ProfileIntent = Intent(this, Profile::class.java)
-                    startActivity(ProfileIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    GlobalUsage.NextScreen(this,Intent(this, Profile::class.java))
                 } else if (view == DB_Settings.cntHelpMain) {
                     Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
                 } else if (view == DB_Settings.cntAboutMain) {

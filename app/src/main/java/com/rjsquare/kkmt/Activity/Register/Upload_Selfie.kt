@@ -19,8 +19,9 @@ import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UploadDoc_Model
@@ -53,8 +54,8 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_UploadSelfie = DataBindingUtil.setContentView(this, R.layout.activity_upload__selfie)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
-            if (ApplicationClass.IsRegisterFlow) {
+            GlobalUsage.StatusTextWhite(this, true)
+            if (GlobalUsage.IsRegisterFlow) {
                 DB_UploadSelfie.txtSkip.visibility = View.VISIBLE
             } else {
                 DB_UploadSelfie.txtSkip.visibility = View.GONE
@@ -166,7 +167,7 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
             val params: MutableMap<String, String> =
                 HashMap()
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid.toString()
+                GlobalUsage.userInfoModel.data!!.userid.toString()
             params[Constants.paramKey_Selfie] = fileString
 
             val service =
@@ -176,7 +177,7 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
             val call =
                 service.UploadSelfieDoc(
                     params,
-                    ApplicationClass.userInfoModel.data!!.access_token.toString()
+                    GlobalUsage.userInfoModel.data!!.access_token.toString()
                 )
 
             call.enqueue(object : Callback<UploadDoc_Model> {
@@ -191,16 +192,13 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
                 ) {
                     DB_UploadSelfie.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        var HomeIntent = Intent(this@Upload_Selfie, HomeActivity::class.java)
-                        startActivity(HomeIntent)
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                        if (ApplicationClass.IsRegisterFlow) {
+                        GlobalUsage.NextScreen(this@Upload_Selfie,Intent(this@Upload_Selfie, HomeActivity::class.java))
+                        if (GlobalUsage.IsRegisterFlow) {
                             Login.LoginActivity.finish()
                             Register_User.Register_UserActivity.finish()
                         }
                         upload_doc.uploadDocActyivity.finish()
                         finish()
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_UploadSelfie.cntUnAuthorized.visibility = View.VISIBLE
                     } else {
@@ -228,9 +226,9 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_UploadSelfie.cntUploadSelfie) {
                     val permissions =
                         arrayOf(
@@ -274,13 +272,11 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
                         DB_UploadSelfie.cntAlert.visibility = View.VISIBLE
                     }
                 } else if (view == DB_UploadSelfie.txtSkip) {
-                    var HomeIntent = Intent(this, HomeActivity::class.java)
-                    startActivity(HomeIntent)
+                    GlobalUsage.NextScreen(this,Intent(this, HomeActivity::class.java))
                     Login.LoginActivity.finish()
                     Register_User.Register_UserActivity.finish()
                     upload_doc.uploadDocActyivity.finish()
                     finish()
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
                 } else if (view == DB_UploadSelfie.txtAlertok) {
                     DB_UploadSelfie.cntAlert.visibility = View.GONE
                 } else if (view == DB_UploadSelfie.txtPdf) {
@@ -293,7 +289,7 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
 
                 } else if (view == DB_UploadSelfie.txtUnauthOk) {
                     DB_UploadSelfie.cntUnAuthorized.visibility = View.GONE
-                    ApplicationClass.UserLogout(this)
+                    GlobalUsage.UserLogout(this)
                 }
             }
         } catch (NE: NullPointerException) {

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.HomeActivity
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
@@ -60,7 +60,7 @@ class EmployeeHistory : Fragment() {
             EmpHistoryView = true
 
             EmpHistory = EmployeeHistoryModel()
-            if (ApplicationClass.userLogedIn) {
+            if (GlobalUsage.userLogedIn) {
                 HistoryEmpReviewData()
             }
         } catch (NE: NullPointerException) {
@@ -87,7 +87,7 @@ class EmployeeHistory : Fragment() {
                 HashMap()
 
             params[Constants.paramKey_EmployeeId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.EmployeeHistoryService>(
@@ -96,7 +96,7 @@ class EmployeeHistory : Fragment() {
             val call =
                 service.GetEmployeeHistoryData(
                     params,
-                    ApplicationClass.userInfoModel.data!!.access_token!!
+                    GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<EmployeeHistoryModel> {

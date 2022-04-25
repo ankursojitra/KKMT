@@ -70,9 +70,6 @@
             android:name=".Activity.Store.StoreLevelList"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activity.Review.AndroidCameraApi"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".Activity.Review.ReviewList"
             android:screenOrientation="portrait" />
         <activity
@@ -99,9 +96,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name=".Activity.MapsActivity"
-            android:screenOrientation="portrait" />
+<!--        <activity-->
+<!--            android:name=".Activity.MapsActivity"-->
+<!--            android:screenOrientation="portrait" />-->
         <activity
             android:name=".Activity.Video.ResultQuestion"
             android:screenOrientation="portrait" />
@@ -122,10 +119,10 @@
             android:name=".Activity.Notifications.NotificationList"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activity.Events.EventsFullView"
+            android:name=".Activity.Events.EventsDetailsScreen"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activity.Events.Events"
+            android:name=".Activity.Events.EventsHome"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.Challenges.Challenges"
@@ -147,7 +144,7 @@
             android:name=".Activity.Review.ReviewEmployeeSearch"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activity.Bussiness.Bussiness_Location"
+            android:name=".Activity.Bussiness.Bussiness_Beacon_Search"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.Setting.Settings"
@@ -159,9 +156,9 @@
             android:name=".Activity.HomeActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activity.dialoug"
-            android:screenOrientation="portrait" />
+<!--        <activity-->
+<!--            android:name=".Activity.dialoug"-->
+<!--            android:screenOrientation="portrait" />-->
         <activity
             android:name=".Activity.Register.upload_doc"
             android:exported="true"
@@ -201,9 +198,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait" />
+<!--        <activity-->
+<!--            android:name=".MainActivity"-->
+<!--            android:screenOrientation="portrait" />-->
 
         <provider
             android:name="androidx.core.content.FileProvider"

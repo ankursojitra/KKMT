@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Activity.Bussiness.Bussiness_Location">
+        tools:context=".Activity.Bussiness.Bussiness_Beacon_Search">
 
         <fragment
             android:id="@+id/map"
@@ -85,41 +85,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/expe_logo" />
-
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cnt_company"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@id/img_foundx"
-                    android:layout_toLeftOf="@id/img_foundx"
-                    app:layout_constraintBottom_toTopOf="@+id/img_foundx">
-
-                    <ImageView
-                        android:id="@+id/img_found"
-                        android:layout_width="@dimen/_48dp"
-                        android:layout_height="@dimen/_38dp"
-                        android:scaleType="centerCrop"
-                        android:src="@@drawable/expe_logo"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/img_pin"
-                        android:layout_width="@dimen/_8dp"
-                        android:layout_height="@dimen/_8dp"
-                        android:layout_marginStart="@dimen/_2dp"
-                        android:padding="@dimen/_1dp"
-                        android:src="@drawable/ic_location_pin"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </com.skyfishjy.library.RippleBackground>
 

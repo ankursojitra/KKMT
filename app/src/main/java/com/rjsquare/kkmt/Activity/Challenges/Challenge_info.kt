@@ -6,7 +6,8 @@ import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.ActivityChallengeInfoBinding
 
@@ -22,7 +23,7 @@ class Challenge_info : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_ChallengeInfo = DataBindingUtil.setContentView(this, R.layout.activity_challenge_info)
 //        setContentView(R.layout.activity_challenge_info)
-        ApplicationClass.StatusTextWhite(this, true)
+        GlobalUsage.StatusTextWhite(this, true)
 
         try {
             DB_ChallengeInfo.imgBack.setOnClickListener(this)

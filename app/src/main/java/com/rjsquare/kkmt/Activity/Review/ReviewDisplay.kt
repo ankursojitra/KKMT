@@ -11,10 +11,11 @@ import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
-import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Location
+import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Beacon_Search
 import com.rjsquare.kkmt.Activity.HomeActivity
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewDetailModel
@@ -45,7 +46,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
         DB_ReviewDisplay = DataBindingUtil.setContentView(this, R.layout.activity_review_show)
 //        setContentView(R.layout.activity_review_show)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
 
             DB_ReviewDisplay.imgBack.setOnClickListener(this)
             DB_ReviewDisplay.cntBacktohome.setOnClickListener(this)
@@ -71,16 +72,16 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun SetUpUI() {
-        Log.e("TAG", "CHECKEditFlow : " + ApplicationClass.isNewReview)
-        if (ApplicationClass.isNewReview) {
+        Log.e("TAG", "CHECKEditFlow : " + GlobalUsage.isNewReview)
+        if (GlobalUsage.isNewReview) {
             //Employee search Screen Call
             SetUIData()
 
 
-//            if (ApplicationClass.ReviewInfoModel.credit!!.bonus!!.equals("")) {
+//            if (GlobalUsage.ReviewInfoModel.credit!!.bonus!!.equals("")) {
 //                DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_verified))
-//            } else if (ApplicationClass.ReviewInfoModel.credit!!.voice_note_status!!.equals(Constants.Pending)
-//                || ApplicationClass.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Pending)) {
+//            } else if (GlobalUsage.ReviewInfoModel.credit!!.voice_note_status!!.equals(Constants.Pending)
+//                || GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Pending)) {
 //                DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_sand_clock))
 //            } else {
 //                DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_rejected))
@@ -90,7 +91,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
         } else {
             Log.e("TAG", "CHECKEditFlow")
             //Customer History Screen Call
-            val SelectedEmpInfo = ApplicationClass.empReviewModelSelected
+            val SelectedEmpInfo = GlobalUsage.empReviewModelSelected
             DB_ReviewDisplay.txtReviewName.text = SelectedEmpInfo!!.username
             Picasso.with(this).load(SelectedEmpInfo.userimage)
                 .placeholder(R.drawable.expe_logo).into(DB_ReviewDisplay.imgProfile)
@@ -107,10 +108,10 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                 HashMap()
 
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             params[Constants.paramKey_ReviewId] =
-                ApplicationClass.empReviewModelSelected!!.id!!
+                GlobalUsage.empReviewModelSelected!!.id!!
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.ReviewDetailService>(
@@ -118,7 +119,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                 )
             val call =
                 service.GetReviewDetailData(
-                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<ReviewDetailModel> {
@@ -136,7 +137,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                     Log.e("TAG", "ResponseReview : " + Gson().toJson(response.body()!!))
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
 //                        ReviewInfo = response.body()!!.data!!
-                        ApplicationClass.ReviewInfoModel = response.body()!!.data!!
+                        GlobalUsage.ReviewInfoModel = response.body()!!.data!!
                         SetUIData()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_ReviewDisplay.cntUnAuthorized.visibility = View.VISIBLE
@@ -167,12 +168,12 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
     private fun SetUIData() {
         //Latest Info update in UI
 
-        val differDate = differenceTime(ApplicationClass.ReviewInfoModel.created_at!!).toInt()
+        val differDate = differenceTime(GlobalUsage.ReviewInfoModel.created_at!!).toInt()
         Log.e("TAG", "TimeMiliessa : " + differDate)
         DB_ReviewDisplay.txtEdit.text =
             getString(R.string.editadditiondetail) + " ($differDate Hours Left)"
 
-        if (ApplicationClass.ReviewInfoModel.review_status!!.equals(Constants.Approve, true)) {
+        if (GlobalUsage.ReviewInfoModel.review_status!!.equals(Constants.Approve, true)) {
             DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
         } else {
             if (differDate < 0) {
@@ -183,29 +184,29 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
         }
 
         DB_ReviewDisplay.txtCheckinCredit.text =
-            ApplicationClass.ReviewInfoModel.credit!!.check_in_credit
+            GlobalUsage.ReviewInfoModel.credit!!.check_in_credit
         DB_ReviewDisplay.txtEmpreviewCredit.text =
-            ApplicationClass.ReviewInfoModel.credit!!.employee_review_credit
+            GlobalUsage.ReviewInfoModel.credit!!.employee_review_credit
         DB_ReviewDisplay.txtProofCredit.text =
-            ApplicationClass.ReviewInfoModel.credit!!.proof_of_purchase
+            GlobalUsage.ReviewInfoModel.credit!!.proof_of_purchase
         DB_ReviewDisplay.txtDetailCredit.text =
-            ApplicationClass.ReviewInfoModel.credit!!.additional_details
-        DB_ReviewDisplay.txtBonusCredit.text = ApplicationClass.ReviewInfoModel.credit!!.bonus
+            GlobalUsage.ReviewInfoModel.credit!!.additional_details
+        DB_ReviewDisplay.txtBonusCredit.text = GlobalUsage.ReviewInfoModel.credit!!.bonus
 
 
-        DB_ReviewDisplay.txtReviewName.text = ApplicationClass.ReviewInfoModel.employee_name
+        DB_ReviewDisplay.txtReviewName.text = GlobalUsage.ReviewInfoModel.employee_name
 
-        Picasso.with(this).load(ApplicationClass.ReviewInfoModel.employeimage)
+        Picasso.with(this).load(GlobalUsage.ReviewInfoModel.employeimage)
             .placeholder(R.drawable.expe_logo).into(DB_ReviewDisplay.imgProfile)
 
-        if (ApplicationClass.ReviewInfoModel.credit!!.check_in_status!!.equals(Constants.Approve)) {
+        if (GlobalUsage.ReviewInfoModel.credit!!.check_in_status!!.equals(Constants.Approve)) {
             DB_ReviewDisplay.imgCheckin.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_verified
                 )
             )
-        } else if (ApplicationClass.ReviewInfoModel.credit!!.check_in_status!!.equals(Constants.Pending)) {
+        } else if (GlobalUsage.ReviewInfoModel.credit!!.check_in_status!!.equals(Constants.Pending)) {
             DB_ReviewDisplay.imgCheckin.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
@@ -221,14 +222,14 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             )
         }
 
-        if (ApplicationClass.ReviewInfoModel.credit!!.receipt_status!!.equals(Constants.Approve)) {
+        if (GlobalUsage.ReviewInfoModel.credit!!.receipt_status!!.equals(Constants.Approve)) {
             DB_ReviewDisplay.imgProofofpurchase.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_verified
                 )
             )
-        } else if (ApplicationClass.ReviewInfoModel.credit!!.receipt_status!!.equals(Constants.Pending)) {
+        } else if (GlobalUsage.ReviewInfoModel.credit!!.receipt_status!!.equals(Constants.Pending)) {
             DB_ReviewDisplay.imgProofofpurchase.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
@@ -244,14 +245,14 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             )
         }
 
-        if (ApplicationClass.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Approve)) {
+        if (GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Approve)) {
             DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_verified
                 )
             )
-        } else if (ApplicationClass.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Pending)) {
+        } else if (GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Pending)) {
             DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
@@ -267,8 +268,8 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             )
         }
 
-        if (ApplicationClass.ReviewInfoModel.credit!!.voice_note_status!!.equals(Constants.Approve)
-            || ApplicationClass.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Approve)
+        if (GlobalUsage.ReviewInfoModel.credit!!.voice_note_status!!.equals(Constants.Approve)
+            || GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Approve)
         ) {
             DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -276,8 +277,8 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                     R.drawable.ic_verified
                 )
             )
-        } else if (ApplicationClass.ReviewInfoModel.credit!!.voice_note_status!!.equals(Constants.Pending)
-            || ApplicationClass.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Pending)
+        } else if (GlobalUsage.ReviewInfoModel.credit!!.voice_note_status!!.equals(Constants.Pending)
+            || GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Pending)
         ) {
             DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -293,8 +294,8 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                 )
             )
         }
-        if (!ApplicationClass.ReviewInfoModel.credit!!.bonus!!.equals("0")) {
-            if (ApplicationClass.ReviewInfoModel.review_status.equals(Constants.Approve)
+        if (!GlobalUsage.ReviewInfoModel.credit!!.bonus!!.equals("0")) {
+            if (GlobalUsage.ReviewInfoModel.review_status.equals(Constants.Approve)
             ) {
                 DB_ReviewDisplay.imgBonus.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -302,7 +303,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                         R.drawable.ic_verified
                     )
                 )
-            } else if (ApplicationClass.ReviewInfoModel.review_status.equals(Constants.Pending)
+            } else if (GlobalUsage.ReviewInfoModel.review_status.equals(Constants.Pending)
             ) {
                 DB_ReviewDisplay.imgBonus.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -356,8 +357,8 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             if (v == DB_ReviewDisplay.imgBack) {
                 onBackPressed()
             } else if (v == DB_ReviewDisplay.cntBacktohome) {
-                if (ApplicationClass.isNewReview) {
-                    Bussiness_Location.thisBussiness_Activity.finish()
+                if (GlobalUsage.isNewReview) {
+                    Bussiness_Beacon_Search.thisBussiness_Activity.finish()
                     BussinessCheckIn.thisBusinessCheckIn.finish()
                     SearchEmployee.thisSearchEmployee.finish()
                     ReviewEdit.thisReviewEdit.finish()
@@ -374,7 +375,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                 onBackPressed()
             } else if (v == DB_ReviewDisplay.txtUnauthOk) {
                 DB_ReviewDisplay.cntUnAuthorized.visibility = View.GONE
-                ApplicationClass.UserLogout(this)
+                GlobalUsage.UserLogout(this)
             } else if (v == DB_ReviewDisplay.txtAlertok) {
                 DB_ReviewDisplay.cntAlert.visibility = View.GONE
             }

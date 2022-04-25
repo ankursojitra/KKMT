@@ -8,7 +8,8 @@ import android.widget.CompoundButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.VideoDetail_Model
 import com.rjsquare.kkmt.databinding.ActivityQuestionsBinding
@@ -35,7 +36,7 @@ class Questions : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_Question = DataBindingUtil.setContentView(this, R.layout.activity_questions)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
             DB_Question.txtNextquestion.setOnClickListener(this)
 
             TotalQUestions = VideoPlayer.VideoData.question!!.size
@@ -181,34 +182,20 @@ class Questions : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_Question.txtNextquestion) {
                     if (SelectedOption == 0) {
                         DB_Question.txtAlertmsg.text = "Please select one option."
                         DB_Question.cntAlert.visibility = View.VISIBLE
                     } else if (TotalQUestions == (QuestionNo + 1)) {
-                        var ResultIntent = Intent(this, ResultQuestion::class.java)
-                        startActivity(ResultIntent)
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                        GlobalUsage.NextScreen(this,Intent(this, ResultQuestion::class.java))
                         VideoPlayer.VideoPlayerActivity.finish()
                         finish()
                     } else {
                         CheckAns(SelectedOption)
                     }
-//                if (QuestionNo == 0){
-//                    SelectedOption = 1
-//                    CheckAns(SelectedOption)
-//                    QuestionNo++
-//                }else{
-//                    var ResultIntent = Intent(this, ResultQuestion::class.java)
-//                    startActivity(ResultIntent)
-//                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-//                    VideoPlayer.VideoPlayerActivity.finish()
-//                    finish()
-//                }
-
                 } else if (view == DB_Question.cntWatchagain) {
                     finish()
                     overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)

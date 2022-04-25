@@ -8,7 +8,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.rjsquare.kkmt.Activity.Challenges.ui.mainActiveChallenges.SectionsPagerAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.ActivityActiveChallengeBinding
 
@@ -26,7 +27,7 @@ class ActiveChallenge : AppCompatActivity(), View.OnClickListener {
             DataBindingUtil.setContentView(this, R.layout.activity_active_challenge)
 //        setContentView(R.layout.activity_active_challenge)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
             val sectionsPagerAdapter =
                 SectionsPagerAdapter(this, supportFragmentManager)
 
@@ -106,9 +107,9 @@ class ActiveChallenge : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_ActiveChallenge.txtAchallenge) {
                     DB_ActiveChallenge.viewPager.currentItem = 0
                     DB_ActiveChallenge.txtAchallenge.background =

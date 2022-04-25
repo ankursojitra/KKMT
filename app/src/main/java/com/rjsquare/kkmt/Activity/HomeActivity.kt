@@ -25,14 +25,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Location
+import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Beacon_Search
 import com.rjsquare.kkmt.Activity.Challenges.ActiveChallenge
 import com.rjsquare.kkmt.Activity.Notifications.NotificationList
 import com.rjsquare.kkmt.Activity.Profile.Profile
 import com.rjsquare.kkmt.Activity.Register.upload_doc
 import com.rjsquare.kkmt.Activity.Setting.Settings
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.Fragment.*
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.IMMResult
@@ -90,7 +92,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         private fun SetUpUserVerifiedAndData() {
-            if (ApplicationClass.isApprove) {
+            if (GlobalUsage.isApprove) {
                 DB_HomeActivity.nevigationMenuview.cntUploadMenu.visibility = View.GONE
             } else {
                 DB_HomeActivity.nevigationMenuview.cntUploadMenu.visibility = View.VISIBLE
@@ -98,7 +100,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         fun SetUpEmployeeUI() {
-            if (ApplicationClass.isUserEmployee) {
+            if (GlobalUsage.isUserEmployee) {
                 HistoryFr = EmployeeHistory()
             } else {
                 HistoryFr = History()
@@ -164,16 +166,16 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_HomeActivity = DataBindingUtil.setContentView(this, R.layout.activity_home)
         try {
-            ApplicationClass.userLogedIn =
+            GlobalUsage.userLogedIn =
                 Preferences.ReadBoolean(Constants.Pref_UserLogedIn, false)
             thisHomeActivity = this
             mFragmentManager = supportFragmentManager
-            ApplicationClass.IsRegisterFlow = false
+            GlobalUsage.IsRegisterFlow = false
             EstimatedKeyboardDP =
                 DefaultKeyboardDP + if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) 48f else 0f
 
             DB_HomeActivity.txtUnauthOk.setOnClickListener(this)
-            if (!ApplicationClass.authorisedUser) {
+            if (!GlobalUsage.authorisedUser) {
                 DB_HomeActivity.cntUnAuthorized.visibility = View.VISIBLE
             }
 
@@ -184,7 +186,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
             setKeyboardListener()
 
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
 
             mCrdLoader = findViewById<CardView>(R.id.crd_loader)
             mCntLoader = findViewById<ConstraintLayout>(R.id.cnt_loader)
@@ -220,13 +222,13 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
             //setup Employee new Review
             DB_HomeActivity.HomeScreen.ContentView.cntNewreview.visibility =
-                if (ApplicationClass.isUserEmployee) View.GONE else View.VISIBLE
+                if (GlobalUsage.isUserEmployee) View.GONE else View.VISIBLE
             DB_HomeActivity.HomeScreen.ContentView.cntSelStar.visibility =
-                if (ApplicationClass.isUserEmployee) View.GONE else View.VISIBLE
+                if (GlobalUsage.isUserEmployee) View.GONE else View.VISIBLE
             DB_HomeActivity.nevigationMenuview.cntReviewsMenu.visibility =
-                if (ApplicationClass.isUserEmployee) View.GONE else View.VISIBLE
+                if (GlobalUsage.isUserEmployee) View.GONE else View.VISIBLE
             DB_HomeActivity.nevigationMenuview.cntUploadMenu.visibility =
-                if (ApplicationClass.isUserEmployee) View.GONE else View.VISIBLE
+                if (GlobalUsage.isUserEmployee) View.GONE else View.VISIBLE
 
             LoadFragmentsPages().execute()
 
@@ -248,7 +250,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
 
     private fun UserLogInViewSetup() {
-        if (ApplicationClass.userLogedIn) {
+        if (GlobalUsage.userLogedIn) {
             DB_HomeActivity.nevigationMenuview.nstMenu.visibility = View.VISIBLE
             DB_HomeActivity.nevigationMenuview.cntLoginView.visibility = View.GONE
         } else {
@@ -271,18 +273,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         DB_HomeActivity.HomeScreen.ContentView.cntSelHistory.visibility = View.INVISIBLE
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.home, menu)
-        return true
-    }
-
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
-                if (ApplicationClass.userLogedIn) {
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
+                if (GlobalUsage.userLogedIn) {
                     if (view == DB_HomeActivity.HomeScreen.ContentView.cntHome || view == DB_HomeActivity.nevigationMenuview.cntHomeMenu) {
                         HomeClick()
                     } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
@@ -297,42 +293,30 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                         if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
                             DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntProfileMenu) {
-                        var ProfileIntent = Intent(this, Profile::class.java)
-                        startActivity(ProfileIntent)
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                        GlobalUsage.NextScreen(this,Intent(this, Profile::class.java))
+                        closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntNotificationMenu) {
-                        var NotifyIntent = Intent(this, NotificationList::class.java)
-                        startActivity(NotifyIntent)
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                        GlobalUsage.NextScreen(this,Intent(this, NotificationList::class.java))
+                        closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntChallangesMenu) {
-                        var NotifyIntent = Intent(this, ActiveChallenge::class.java)
-                        startActivity(NotifyIntent)
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                        GlobalUsage.NextScreen(this,Intent(this, ActiveChallenge::class.java))
+                        closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntSettingMenu) {
-                        var SettingIntent = Intent(this, Settings::class.java)
-                        startActivity(SettingIntent)
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                        GlobalUsage.NextScreen(this,Intent(this, Settings::class.java))
+                        closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntUploadMenu) {
-                        var SettingIntent = Intent(this, upload_doc::class.java)
-                        startActivity(SettingIntent)
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+                        GlobalUsage.NextScreen(this,Intent(this, upload_doc::class.java))
+                        closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntLogoutMenu) {
-                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                        ApplicationClass.UserLogout(this)
+                        closeDrawer()
+                        GlobalUsage.UserLogout(this)
                     } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntNewreview ||
                         view == DB_HomeActivity.nevigationMenuview.cntReviewsMenu
                     ) {
-                        var StarIntent = Intent(this, Bussiness_Location::class.java)
-                        startActivity(StarIntent)
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                        GlobalUsage.NextScreen(this,Intent(this, Bussiness_Beacon_Search::class.java))
                     } else if (view == DB_HomeActivity.txtUnauthOk) {
                         DB_HomeActivity.cntUnAuthorized.visibility = View.GONE
-                        ApplicationClass.UserLogout(this)
+                        GlobalUsage.UserLogout(this)
                     }
                 } else {
                     if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
@@ -341,11 +325,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                         if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
                             DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntLogin) {
-                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                        ApplicationClass.UserLogIn(this)
+                        closeDrawer()
+                        GlobalUsage.UserLogIn(this)
                     } else {
-                        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
-                        ApplicationClass.UserLogIn(this)
+                        closeDrawer()
+                        GlobalUsage.UserLogIn(this)
                     }
                 }
             }
@@ -365,8 +349,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun closeDrawer() {
+        DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+    }
+
     private fun HomeClick() {
-        ApplicationClass.StatusTextWhite(this, true)
+        GlobalUsage.StatusTextWhite(this, true)
 
         SelectBottomTabImage()
         DB_HomeActivity.HomeScreen.ContentView.imgHome.visibility = View.INVISIBLE
@@ -387,12 +375,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         mImgHomeback.visibility = View.VISIBLE
 
         if (DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
-            DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+            closeDrawer()
 
     }
 
     private fun LeaderBoardClick() {
-        ApplicationClass.StatusTextWhite(this, true)
+        GlobalUsage.StatusTextWhite(this, true)
 
         SelectBottomTabImage()
         DB_HomeActivity.HomeScreen.ContentView.imgLeader.visibility = View.INVISIBLE
@@ -414,7 +402,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun SearchClick() {
-        ApplicationClass.StatusTextWhite(this, false)
+        GlobalUsage.StatusTextWhite(this, false)
 
         SelectBottomTabImage()
         DB_HomeActivity.HomeScreen.ContentView.imgSearch.visibility = View.INVISIBLE
@@ -437,7 +425,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun HistoryClick() {
-        ApplicationClass.StatusTextWhite(this, true)
+        GlobalUsage.StatusTextWhite(this, true)
         SelectBottomTabImage()
         DB_HomeActivity.HomeScreen.ContentView.imgHistory.visibility = View.INVISIBLE
 
@@ -448,7 +436,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         DB_HomeActivity.HomeScreen.ContentView.navHistoryFragment.visibility = View.VISIBLE
 
         var LoadView = false
-        if (ApplicationClass.isUserEmployee) {
+        if (GlobalUsage.isUserEmployee) {
             LoadView = EmployeeHistory.EmpHistoryView
         } else {
             LoadView = History.HistoryView
@@ -464,7 +452,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         mImgHomeback.visibility = View.INVISIBLE
 
         if (DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
-            DB_HomeActivity.drawerLayout.closeDrawer(GravityCompat.START)
+            closeDrawer()
 
     }
 
@@ -518,7 +506,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 R.id.nav_leader_fragment,
                 LeaderBoardFr as LeaderBoard
             )
-            if (ApplicationClass.isUserEmployee) {
+            if (GlobalUsage.isUserEmployee) {
                 HistoryfragmentTransaction.replace(
                     R.id.nav_history_fragment,
                     HistoryFr as EmployeeHistory
@@ -552,7 +540,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             HistoryfragmentTransaction.commit()
             LeaderBoardfragmentTransaction.commit()
             searchfragmentTransaction.commit()
-            ApplicationClass.HomeScreenLoad = true
+            GlobalUsage.HomeScreenLoad = true
         }
     }
 }

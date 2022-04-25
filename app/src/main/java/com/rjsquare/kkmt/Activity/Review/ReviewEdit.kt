@@ -28,15 +28,14 @@ import androidx.constraintlayout.motion.widget.MotionLayout.TransitionListener
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
-import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder
+//import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder
 import com.google.gson.Gson
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.Activity.commanUtils
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
-import com.rjsquare.kkmt.MainActivity
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewSubmitModel
@@ -61,7 +60,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     var isRecoding = false
     var looped = false
     private var recorder: MediaRecorder? = null
-    lateinit var audioFile: AndroidAudioRecorder
+//    lateinit var audioFile: AndroidAudioRecorder
     var player: MediaPlayer? = null
 
     lateinit var TimerHandler: Handler
@@ -91,7 +90,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_ReviewEdit = DataBindingUtil.setContentView(this, R.layout.activity_review_screen)
 //        try {
-        ApplicationClass.StatusTextWhite(this, true)
+        GlobalUsage.StatusTextWhite(this, true)
         thisReviewEdit = this
 
         DB_ReviewEdit.txtSubmit.setOnClickListener(this)
@@ -287,7 +286,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                 if (!focused) {
                     if (!DB_ReviewEdit.edtReceiptAmount.text.toString().equals("")) {
                         DB_ReviewEdit.edtReceiptAmount.setText(
-                            commanUtils.formatNumber(
+                            GlobalUsage.formatNumber(
                                 DB_ReviewEdit.edtReceiptAmount.text.toString().toInt()
                             )
                         )
@@ -433,20 +432,20 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun SetUpReviewData() {
-        if (ApplicationClass.isNewReview) {
+        if (GlobalUsage.isNewReview) {
             //Setup New review data
 
             NewReveiwSetup()
             DB_ReviewEdit.cnt1star.performClick()
 
-            DB_ReviewEdit.txtReviewName.text = ApplicationClass.empSlaveModel.username
+            DB_ReviewEdit.txtReviewName.text = GlobalUsage.empSlaveModel.username
 
             var UserImage = ""
-            if (ApplicationClass.empSlaveModel.employeeimage!! != null && !ApplicationClass.empSlaveModel.employeeimage!!.equals(
+            if (GlobalUsage.empSlaveModel.employeeimage!! != null && !GlobalUsage.empSlaveModel.employeeimage!!.equals(
                     ""
                 )
             ) {
-                UserImage = ApplicationClass.empSlaveModel.employeeimage!!
+                UserImage = GlobalUsage.empSlaveModel.employeeimage!!
                 Picasso.with(this).load(UserImage).into(DB_ReviewEdit.imgProfile)
             }
         } else {
@@ -577,9 +576,9 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_ReviewEdit.txtSubmit) {
                     if (CheckDataForReview()) SubmitReview()
                     else DB_ReviewEdit.cntAlert.visibility = View.VISIBLE
@@ -701,8 +700,8 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                 HashMap()
 
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!.toString()
-            params[Constants.paramKey_EmployeeId] = ApplicationClass.empSlaveModel.employeeid!!
+                GlobalUsage.userInfoModel.data!!.userid!!.toString()
+            params[Constants.paramKey_EmployeeId] = GlobalUsage.empSlaveModel.employeeid!!
             params[Constants.paramKey_receiptno] = receiptno
             params[Constants.paramKey_receiptamount] = receiptamount
             params[Constants.paramKey_UploadRecipt] = receiptImageString
@@ -717,7 +716,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                 )
             val call =
                 service.EmployeeReportData(
-                    params, ApplicationClass.userInfoModel.data!!.access_token!!.toString()
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!.toString()
                 )
 
             call.enqueue(object : Callback<ReviewSubmitModel> {
@@ -733,16 +732,13 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                     Log.e("GetResponsesasXASX", "responseHell: " + response.body()!!)
                     DB_ReviewEdit.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        ApplicationClass.ReviewInfoModel = response.body()!!.data!!
+                        GlobalUsage.ReviewInfoModel = response.body()!!.data!!
 
-                        commanUtils.NextScreen(
+                        GlobalUsage.NextScreen(
                             this@ReviewEdit,
                             Intent(this@ReviewEdit, ReviewDisplay::class.java)
                         )
                         finish()
-//                    var HelperIntent = Intent(this@ReviewEdit, ReviewDisplay::class.java)
-//                    startActivity(HelperIntent)
-//                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_ReviewEdit.cntUnAuthorized.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
@@ -885,7 +881,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             DB_ReviewEdit.imgMic.alpha = 0.2f
             StartCounter()
         } catch (e: IOException) {
-            Log.e(MainActivity::class.java.simpleName + ":playRecording()", "prepare() failed")
+            Log.e("TAG" + ":playRecording()", "prepare() failed")
         }
     }
 
@@ -954,7 +950,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         try {
             recorder!!.prepare()
         } catch (e: IOException) {
-            Log.e(MainActivity::class.java.simpleName + ":startRecording()", "prepare() failed")
+            Log.e("TAG" + ":startRecording()", "prepare() failed")
         }
         StartCounter()
         recorder!!.start()

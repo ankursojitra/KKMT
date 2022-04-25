@@ -2,6 +2,7 @@ package com.rjsquare.kkmt.Activity.Events
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
-import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.Adapter.EventsAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.Adapter.EventsByMonthAdapter
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
+import com.rjsquare.kkmt.RetrofitInstance.Events.EventsByMonth_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.databinding.FragmentCalenderBinding
 import retrofit2.Call
@@ -29,7 +29,9 @@ import java.util.*
 
 class CalenderFragment : Fragment() {
 
-    lateinit var mArray_EventsModel: ArrayList<Events_Model.EventsData>
+    lateinit var mArray_EventsByMonthModel: ArrayList<EventsByMonth_Model.EventsData>
+    lateinit var mArray_EventsByDateModel: ArrayList<EventsByMonth_Model.EventsData.DateWiseEvents>
+    lateinit var mEventsByMonth_Hash: HashMap<String, ArrayList<EventsByMonth_Model.EventsData>>
     var Month = 0
     lateinit var calendarView: CalendarView
     lateinit var events: MutableList<EventDay>
@@ -46,77 +48,83 @@ class CalenderFragment : Fragment() {
         DB_CalenderFragment =
             DataBindingUtil.inflate(inflater, R.layout.fragment_calender, container, false)
         var rootView = DB_CalenderFragment.root
-        mArray_EventsModel = ArrayList()
         // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_calender, container, false)
-        val dateFormat: DateFormat = SimpleDateFormat("MM")
-        val date = Date()
-        Month = dateFormat.format(date).toInt()
 
-        events = ArrayList()
-
-//        val calendar = Calendar.getInstance()
-//        events.add(EventDay(calendar, R.drawable.dot))
-//
-//        val calendar1 = Calendar.getInstance()
-//        calendar1.set(Calendar.DAY_OF_MONTH, 10)
-//        calendar1.set(Calendar.MONTH, Calendar.NOVEMBER)
-//        calendar1.set(Calendar.YEAR, 2022)
-//        events.add(EventDay(calendar1, R.drawable.dot))
-//
-//        val calendar2 = Calendar.getInstance()
-//        calendar2.set(Calendar.DAY_OF_MONTH, 11)
-//        events.add(
-//            EventDay(
-//                calendar2,
-//                R.drawable.dot,
-//                Color.parseColor("#228B22")
-//            )
-//        )
-//
-//        val calendar3 = Calendar.getInstance()
-//        calendar3.set(Calendar.DAY_OF_MONTH, 7)
-//        events.add(EventDay(calendar3, R.drawable.dot))
-//
-//        val calendar4 = Calendar.getInstance()
-//        calendar4.set(Calendar.DAY_OF_MONTH, 13)
-//        events.add(EventDay(calendar4, R.drawable.dot))
-
-
-        calendarView = rootView.findViewById<View>(R.id.calendarView) as CalendarView
-
-        val min = Calendar.getInstance()
-        min.add(Calendar.MONTH, 0)
-        min.add(Calendar.DAY_OF_MONTH, -1)
-
-        val max = Calendar.getInstance()
-        max.add(Calendar.MONTH, 12)
-
-        calendarView.setMinimumDate(min)
-        calendarView.setMaximumDate(max)
-
-
-//        calendarView.setDisabledDays(getDisabledDays())
-        calendarView.setOnForwardPageChangeListener {
-            GetLatestEvents((++Month).toString())
-//            Toast.makeText(requireActivity(), "Next", Toast.LENGTH_LONG).show()
-        }
-        calendarView.setOnPreviousPageChangeListener {
-            GetLatestEvents((--Month).toString())
-//            Toast.makeText(requireActivity(), "Previous", Toast.LENGTH_LONG).show()
-        }
-        calendarView.setOnDayClickListener { eventDay: EventDay ->
-//            Toast.makeText(
-//                requireContext(),
-//                eventDay.calendar.time.toString() + " "
-//                        + eventDay.isEnabled,
-//                Toast.LENGTH_SHORT
-//            ).show()
-        }
+        initListners(rootView)
 
         framesAdapter()
         GetLatestEvents((Month).toString())
+
         return rootView
+    }
+
+    private fun initListners(rootView: View) {
+
+        mArray_EventsByMonthModel = ArrayList()
+        events = ArrayList()
+
+        mArray_EventsByDateModel = ArrayList()
+        mEventsByMonth_Hash = HashMap()
+        calendarView = rootView.findViewById<View>(R.id.calendarView) as CalendarView
+
+        //Setup minimum date in calender
+        val min = Calendar.getInstance()
+        min.add(Calendar.MONTH, 0)
+        min.add(Calendar.DAY_OF_MONTH, -1)
+        calendarView.setMinimumDate(min)
+
+        //Setup maximum date in calender
+        val max = Calendar.getInstance()
+        max.add(Calendar.MONTH, 12)
+//        calendarView.setMaximumDate(max)
+
+        calendarView.setOnForwardPageChangeListener {
+            val calender = calendarView.currentPageDate.time
+            GetSelectedMonthsEvents((++Month).toString(), calender)
+        }
+        calendarView.setOnPreviousPageChangeListener {
+            val calender = calendarView.currentPageDate.time
+            GetSelectedMonthsEvents((--Month).toString(), calender)
+        }
+        calendarView.setOnDayClickListener { eventDay: EventDay ->
+            val cal = eventDay.calendar
+            val dayFormat = SimpleDateFormat("dd")
+            val calenderDate = (dayFormat.format(cal.time))
+            mArray_EventsByDateModel = ArrayList()
+
+            for (DateEvent in mArray_EventsByMonthModel) {
+
+                val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                var EventDate = dateFormat.parse(DateEvent.date.toString())
+                val dayDate = dayFormat.format(EventDate)
+                if (dayDate.equals(calenderDate, true)) {
+                    mArray_EventsByDateModel.addAll(DateEvent.events!!)
+                }
+            }
+            framesAdapter()
+        }
+
+        val dateFormat: DateFormat = SimpleDateFormat("MM")
+        val date = Date()
+        Month = dateFormat.format(date).toInt()
+    }
+
+    private fun GetSelectedMonthsEvents(month: String, calender: Date) {
+        Handler().postDelayed({
+
+            val frmt = SimpleDateFormat("yyyy-MM")
+            val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+            var EventDate = frmt.format(calender)
+//            var EventDay = frmt.format(EventDate)
+            Log.e("TAG", "GetSelected Dates : " + EventDate)
+            if (mEventsByMonth_Hash.containsKey(EventDate)) {
+                mArray_EventsByMonthModel = ArrayList()
+                mArray_EventsByMonthModel.addAll(mEventsByMonth_Hash.get(EventDate)!!)
+                SetEvents()
+            } else {
+                GetLatestEvents(month)
+            }
+        }, Constants.delayStart)
     }
 
     private fun SetEvents() {
@@ -125,18 +133,13 @@ class CalenderFragment : Fragment() {
         val dateDayFormat: DateFormat = SimpleDateFormat("dd")
         val dateYearFormat: DateFormat = SimpleDateFormat("yyyy")
         val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-//        val date = Date()
-//        Month = dateFormat.format(date).toInt()
-        for (event in mArray_EventsModel) {
-            Log.e("TAG", "DtaeGet : " + event.date)
 
+        for (event in mArray_EventsByMonthModel) {
             var EventDate = dateFormat.parse(event.date.toString())
             var EventDay = dateDayFormat.format(EventDate)
             var EventMonth = dateMonthFormat.format(EventDate)
             var EventYear = dateYearFormat.format(EventDate)
 
-            Log.e("TAG", "DtaeGetEventDay : " + EventDay)
-            Log.e("TAG", "DtaeGetEventDay : " + EventDay)
 //            event.date
             val calender = Calendar.getInstance()
             calender.set(Calendar.DAY_OF_MONTH, EventDay.toInt())
@@ -144,8 +147,6 @@ class CalenderFragment : Fragment() {
             calender.set(Calendar.YEAR, EventYear.toInt())
             events.add(EventDay(calender, R.drawable.dot))
         }
-
-
         calendarView.setEvents(events)
 
     }
@@ -170,12 +171,8 @@ class CalenderFragment : Fragment() {
 
     private fun GetLatestEvents(month: String) {
         try {
-
             DB_CalenderFragment.gifLoader.visibility = View.VISIBLE
-            mArray_EventsModel = ArrayList()
-            framesAdapter()
-            DB_CalenderFragment.txtNoEvents.visibility = View.VISIBLE
-
+            mArray_EventsByMonthModel = ArrayList()
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -183,11 +180,9 @@ class CalenderFragment : Fragment() {
             val date = Date()
             Log.d("Month", dateFormat.format(date))
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid.toString()
+                GlobalUsage.userInfoModel.data!!.userid.toString()
             params[Constants.paramKey_Month] = month
             params[Constants.paramKey_Year] = dateFormat.format(date).toString()
-//                ApplicationClass.userInfoModel.data!!.userid.toString()
-//            params[ApplicationClass.paramKey_Selfie] = fileString
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.EventsByMonthService>(
@@ -198,36 +193,31 @@ class CalenderFragment : Fragment() {
                     params
                 )
 
-            call.enqueue(object : Callback<Events_Model> {
-                override fun onFailure(call: Call<Events_Model>, t: Throwable) {
-//                    DB_CalenderFragment.gifLoader.visibility = View.GONE
-                    Log.e("GetResponsesasXASX", "Hell: ")
+            call.enqueue(object : Callback<EventsByMonth_Model> {
+                override fun onFailure(call: Call<EventsByMonth_Model>, t: Throwable) {
+                    DB_CalenderFragment.gifLoader.visibility = View.GONE
                 }
 
                 override fun onResponse(
-                    call: Call<Events_Model>,
-                    response: Response<Events_Model>
+                    call: Call<EventsByMonth_Model>,
+                    response: Response<EventsByMonth_Model>
                 ) {
                     DB_CalenderFragment.gifLoader.visibility = View.GONE
-                    Log.e(
-                        "GetResponsesasXASX",
-                        "HellResponse : " + Gson().toJson(response.body()!!)
-                    )
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        mArray_EventsModel.addAll(response.body()!!.data!!)
-//                        DB_CalenderFragment.rrEvents.adapter?.notifyDataSetChanged()
-                        SetEvents()
-                        framesAdapter()
-                        if (mArray_EventsModel.size > 0) {
-                            DB_CalenderFragment.txtNoEvents.visibility = View.GONE
-                        } else {
-                            DB_CalenderFragment.txtNoEvents.visibility = View.VISIBLE
+                        mArray_EventsByMonthModel.addAll(response.body()!!.data!!)
+                        if (!mArray_EventsByMonthModel.isNullOrEmpty()) {
+                            val frmt = SimpleDateFormat("yyyy-MM")
+                            val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                            var EventDate =
+                                dateFormat.parse(response.body()!!.data!![0].date.toString())
+                            var EventDay = frmt.format(EventDate)
+                            mEventsByMonth_Hash.put(EventDay, mArray_EventsByMonthModel)
                         }
+                        SetEvents()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        Events.DB_Events.cntUnAuthorized.visibility = View.VISIBLE
+                        EventsHome.DB_EventsHome.cntUnAuthorized.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
-//                        DB_Events.cntLoadmore.visibility = View.GONE
-//                        IsEventCallavailable = false
+
                     } else {
 
                     }
@@ -252,44 +242,21 @@ class CalenderFragment : Fragment() {
 
     fun framesAdapter() {
         try {
-//            mArray_EventsModel = ArrayList()
-            Log.e("TAG", "Size of list : " + mArray_EventsModel.size)
-            if (mArray_EventsModel != null && mArray_EventsModel.size > 0) {
+            if (mArray_EventsByDateModel != null && mArray_EventsByDateModel.size > 0) {
                 DB_CalenderFragment.txtNoEvents.visibility = View.GONE
             } else {
                 DB_CalenderFragment.txtNoEvents.visibility = View.VISIBLE
             }
-            val loEventsAdapter: EventsAdapter
-            loEventsAdapter = EventsAdapter(
-                requireActivity(), mArray_EventsModel
+            val loEventsAdapter: EventsByMonthAdapter
+            loEventsAdapter = EventsByMonthAdapter(
+                requireActivity(), mArray_EventsByDateModel
             )
 
             val linearLayoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
             DB_CalenderFragment.rrEvents.layoutManager = linearLayoutManager
-//            mRrEvents.setLayoutManager(GridLayoutManager(this, 2))
-            DB_CalenderFragment.rrEvents.adapter = loEventsAdapter
 
-//            EventListFragment.DB_EventListFragment.rrEvents.addOnScrollListener(object :
-//                RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    val layoutManager =
-//                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
-//                    val totalItemCount = layoutManager.itemCount
-//                    val lastVisible = layoutManager.findLastVisibleItemPosition()
-//                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
-//                    Log.e("TAG", "POSITION : " + totalItemCount)
-//                    Log.e("TAG", "LastPOSITION : " + lastVisible)
-//                    if (totalItemCount > 0 && endHasBeenReached) {
-//                        //you have reached to the bottom of your recycler view
-//                        Log.e("TAG", "RECYCLERVIEWLASTITEM")
-//                    }
-//                    if ((totalItemCount - 1) == lastVisible && IsEventCallavailable && dataSize == PagePerlimit) {
-//                        IsEventCallavailable = true
-//                        GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
-//                    }
-//                }
-//            })
+            DB_CalenderFragment.rrEvents.adapter = loEventsAdapter
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {

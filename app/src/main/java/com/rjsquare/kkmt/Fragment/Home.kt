@@ -10,15 +10,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.rjsquare.kkmt.Activity.Events.Events
+import com.rjsquare.kkmt.Activity.Events.EventsHome
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.LuckyDraw.LuckyDraw
 import com.rjsquare.kkmt.Activity.Notifications.NotificationList
 import com.rjsquare.kkmt.Activity.Profile.Profile
 import com.rjsquare.kkmt.Activity.Store.Store
 import com.rjsquare.kkmt.Activity.Video.Video
-import com.rjsquare.kkmt.Activity.commanUtils
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.FragmentHomeBinding
 import com.squareup.picasso.Picasso
@@ -54,7 +53,7 @@ class Home : Fragment(), View.OnClickListener {
 
             HomeActivity.mCntLoader.visibility = View.GONE
 
-            if (ApplicationClass.isUserEmployee) {
+            if (GlobalUsage.isUserEmployee) {
                 DB_FHome.txtStoreLbl.text = "GREAT SERVICE DESERVES REWARDS.\n" +
                         "REDEEM CREDITS FOR GOODS & SERVICES"
                 DB_FHome.txtEventMsg.text = "YOU’RE INVITED"
@@ -71,7 +70,7 @@ class Home : Fragment(), View.OnClickListener {
                 DB_FHome.txtVideosMsg.text = "EXPAND YOUR KNOWLEDGE"
                 DB_FHome.txtVideos.text = "Videos"
             }
-            ApplicationClass.isHomeScreenVisible = true
+            GlobalUsage.isHomeScreenVisible = true
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -103,7 +102,7 @@ class Home : Fragment(), View.OnClickListener {
         }
 
         private fun SetUpUserVerified() {
-            if (ApplicationClass.isApprove) {
+            if (GlobalUsage.isApprove) {
                 DB_FHome.imgVerified.setImageDrawable(
                     ContextCompat.getDrawable(
                         reqActivity,
@@ -124,24 +123,24 @@ class Home : Fragment(), View.OnClickListener {
         }
 
         private fun SetupUserLogInViewAndData() {
-            if (ApplicationClass.userLogedIn) {
+            if (GlobalUsage.userLogedIn) {
                 DB_FHome.cntLogin.visibility = View.GONE
                 DB_FHome.cntProfileView.visibility = View.VISIBLE
                 var UserImage = ""
-                if (ApplicationClass.userInfoModel.data!!.userimage != null
-                    && !ApplicationClass.userInfoModel.data!!.userimage.equals("")
+                if (GlobalUsage.userInfoModel.data!!.userimage != null
+                    && !GlobalUsage.userInfoModel.data!!.userimage.equals("")
                 ) {
-                    UserImage = ApplicationClass.userInfoModel.data!!.userimage!!
+                    UserImage = GlobalUsage.userInfoModel.data!!.userimage!!
                     Picasso.with(reqActivity).load(UserImage)
                         .placeholder(R.drawable.expe_logo).into(DB_FHome.imgProfile)
                 }
-                DB_FHome.txtProfName.text = ApplicationClass.userInfoModel.data!!.username
+                DB_FHome.txtProfName.text = GlobalUsage.userInfoModel.data!!.username
 
                 DB_FHome.txtLevel.text =
-                    "Level : " + ApplicationClass.userInfoModel.data!!.credit_details!!.level
+                    "Level : " + GlobalUsage.userInfoModel.data!!.credit_details!!.level
 
                 DB_FHome.txtTotalCredits.text =
-                    commanUtils.formatNumber(ApplicationClass.userInfoModel.data!!.credit_details!!.credit!!.toInt())
+                    GlobalUsage.formatNumber(GlobalUsage.userInfoModel.data!!.credit_details!!.credit!!.toInt())
 
 
             } else {
@@ -161,54 +160,54 @@ class Home : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
-                if (ApplicationClass.userLogedIn) {
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
+                if (GlobalUsage.userLogedIn) {
                     if (view == DB_FHome.cardViewStore) {
-                        commanUtils.NextScreen(
+                        GlobalUsage.NextScreen(
                             requireActivity(),
                             Intent(requireActivity(), Store::class.java)
                         )
                     } else if (view == DB_FHome.cardViewEvent) {
-                        commanUtils.NextScreen(
+                        GlobalUsage.NextScreen(
                             requireActivity(),
-                            Intent(requireActivity(), Events::class.java)
+                            Intent(requireActivity(), EventsHome::class.java)
                         )
                     } else if (view == DB_FHome.cardViewNotify) {
-                        ApplicationClass.NextScreen(
+                        GlobalUsage.NextScreen(
                             requireActivity(),
                             Intent(requireActivity(), NotificationList::class.java)
                         )
                     } else if (view == DB_FHome.cardViewLuckydraw) {
-                        commanUtils.NextScreen(
+                        GlobalUsage.NextScreen(
                             requireActivity(),
                             Intent(requireActivity(), LuckyDraw::class.java)
                         )
                     } else if (view == DB_FHome.cardViewVideos) {
-                        commanUtils.NextScreen(
+                        GlobalUsage.NextScreen(
                             requireActivity(),
                             Intent(requireActivity(), Video::class.java)
                         )
                     } else if (view == DB_FHome.crdProfile) {
-                        commanUtils.NextScreen(
+                        GlobalUsage.NextScreen(
                             requireActivity(),
                             Intent(requireActivity(), Profile::class.java)
                         )
                     }
                 } else {
                     if (view == DB_FHome.cardViewEvent) {
-                        commanUtils.NextScreen(
+                        GlobalUsage.NextScreen(
                             requireActivity(),
-                            Intent(requireActivity(), Events::class.java)
+                            Intent(requireActivity(), EventsHome::class.java)
                         )
                     } else if (view == DB_FHome.cardViewStore) {
-                        commanUtils.NextScreen(
+                        GlobalUsage.NextScreen(
                             requireActivity(),
                             Intent(requireActivity(), Store::class.java)
                         )
                     } else if (view == DB_FHome.txtLogin) {
-                        ApplicationClass.UserLogIn(requireActivity())
+                        GlobalUsage.UserLogIn(requireActivity())
                     }
                 }
             }

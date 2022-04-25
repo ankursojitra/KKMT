@@ -12,7 +12,7 @@ object ApiCallingInstance {
     var okHttpClient: OkHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient()
     val retrofitInstance: Retrofit
         get() {
-//            ApplicationClass.DecodeData(BASE_URL)
+//            GlobalUsage.DecodeData(BASE_URL)
             if (retrofit == null) {
                 retrofit = Retrofit.Builder()
                     .baseUrl(Constants.BASE_URL)

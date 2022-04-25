@@ -9,8 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.Events.VideoQuestionComplete_Model
@@ -37,7 +38,7 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
         DB_ResultQuestion = DataBindingUtil.setContentView(this, R.layout.activity_result_question)
 //        setContentView(R.layout.activity_result_question)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
 
 //            mImgBack = findViewById<ImageView>(R.id.img_back)
 //            mTxtWatchmore = findViewById<TextView>(R.id.txt_watchmore)
@@ -80,9 +81,9 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_VideoId] = VideoPlayer.VideoData.id!!
             params[Constants.paramKey_Credit] = VideoPlayer.VideoData.credit!!
             params[Constants.paramKey_Usertype] =
-                ApplicationClass.userInfoModel.data!!.usertype!!
+                GlobalUsage.userInfoModel.data!!.usertype!!
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.VideoQuestionCompleteService>(
@@ -90,7 +91,7 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
                 )
             val call =
                 service.GetVideoQuestionComplete(
-                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<VideoQuestionComplete_Model> {
@@ -108,7 +109,7 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
 
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        ApplicationClass.UserLogout(this@ResultQuestion)
+                        GlobalUsage.UserLogout(this@ResultQuestion)
                     } else {
                         DB_ResultQuestion.txtAlertmsg.text = response.body()!!.message
                         DB_ResultQuestion.cntAlert.visibility = View.VISIBLE
@@ -134,9 +135,9 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_ResultQuestion.imgBack) {
                     Video.thisVideo.finish()
                     onBackPressed()

@@ -10,16 +10,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Activity.Challenges.Challenge_info
 import com.rjsquare.kkmt.Activity.Challenges.Challenges
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.Model.ChallengesModel
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ChallangesModel
 import com.rjsquare.kkmt.databinding.RawChallengesFrameBinding
 
 class ChallengesAdapter(
     var moContext: Context,
-    var moArrayList: ArrayList<ChallengesModel>
+    var moArrayList: ArrayList<ChallangesModel.Challange>
 ) : RecyclerView.Adapter<ChallengesAdapter.View_holder>() {
-    var mChallengesModel: ChallengesModel? = null
     var Width = 0
     private var layoutInflater: LayoutInflater? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): View_holder {
@@ -47,34 +46,32 @@ class ChallengesAdapter(
     override fun onBindViewHolder(holder: View_holder, position: Int) {
         try {
             var mChallengesModel = moArrayList[position]
-            var Per_Value_old = 0.0
-            val mChallengesModel_old: ChallengesModel
             holder.lChallengesModelSelected = mChallengesModel
 
-            if (mChallengesModel.Txt1 != null && mChallengesModel.Txt1 != "") {
-                holder.DB_RawChallengesFrameBinding.txt1.text = mChallengesModel.Txt1
+            if (!mChallengesModel.sub_challanges.isNullOrEmpty()) {
+                holder.DB_RawChallengesFrameBinding.txt1.text =
+                    mChallengesModel.sub_challanges!![0].title
                 holder.DB_RawChallengesFrameBinding.txt1.visibility = View.VISIBLE
                 holder.DB_RawChallengesFrameBinding.img1.visibility = View.VISIBLE
-            } else {
-                holder.DB_RawChallengesFrameBinding.txt1.visibility = View.INVISIBLE
-                holder.DB_RawChallengesFrameBinding.img1.visibility = View.INVISIBLE
+
+                if (mChallengesModel.sub_challanges!!.size > 1) {
+                    holder.DB_RawChallengesFrameBinding.txt2.text = mChallengesModel.sub_challanges!![1].title
+                    holder.DB_RawChallengesFrameBinding.txt2.visibility = View.VISIBLE
+                    holder.DB_RawChallengesFrameBinding.img2.visibility = View.VISIBLE
+                } else {
+                    holder.DB_RawChallengesFrameBinding.txt2.visibility = View.GONE
+                    holder.DB_RawChallengesFrameBinding.img2.visibility = View.GONE
+                }
+                if (mChallengesModel.sub_challanges!!.size > 2) {
+                    holder.DB_RawChallengesFrameBinding.txt3.text = mChallengesModel.sub_challanges!![2].title
+                    holder.DB_RawChallengesFrameBinding.txt3.visibility = View.VISIBLE
+                    holder.DB_RawChallengesFrameBinding.img3.visibility = View.VISIBLE
+                } else {
+                    holder.DB_RawChallengesFrameBinding.txt3.visibility = View.GONE
+                    holder.DB_RawChallengesFrameBinding.img3.visibility = View.GONE
+                }
             }
-            if (mChallengesModel.Txt2 != null && mChallengesModel.Txt2 != "") {
-                holder.DB_RawChallengesFrameBinding.txt2.text = mChallengesModel.Txt2
-                holder.DB_RawChallengesFrameBinding.txt2.visibility = View.VISIBLE
-                holder.DB_RawChallengesFrameBinding.img2.visibility = View.VISIBLE
-            } else {
-                holder.DB_RawChallengesFrameBinding.txt2.visibility = View.INVISIBLE
-                holder.DB_RawChallengesFrameBinding.img2.visibility = View.INVISIBLE
-            }
-            if (mChallengesModel.Txt3 != null && mChallengesModel.Txt3 != "") {
-                holder.DB_RawChallengesFrameBinding.txt3.text = mChallengesModel.Txt3
-                holder.DB_RawChallengesFrameBinding.txt3.visibility = View.VISIBLE
-                holder.DB_RawChallengesFrameBinding.img3.visibility = View.VISIBLE
-            } else {
-                holder.DB_RawChallengesFrameBinding.txt3.visibility = View.INVISIBLE
-                holder.DB_RawChallengesFrameBinding.img3.visibility = View.INVISIBLE
-            }
+            holder.DB_RawChallengesFrameBinding.txtCredit.text = mChallengesModel.total_credit
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -109,7 +106,7 @@ class ChallengesAdapter(
 
         lateinit var DB_RawChallengesFrameBinding: RawChallengesFrameBinding
 
-        var lChallengesModelSelected: ChallengesModel? = null
+        var lChallengesModelSelected: ChallangesModel.Challange? = null
 
         init {
             try {
@@ -147,9 +144,9 @@ class ChallengesAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick =
-                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                    GlobalUsage.lastClick =
+                        System.currentTimeMillis() + GlobalUsage.clickInterval
                     if (view == DB_RawChallengesFrameBinding.idFrameconstraintX) {
                         var ChallengesInfoIntent = Intent(moContext, Challenge_info::class.java)
                         moContext.startActivity(ChallengesInfoIntent)

@@ -10,8 +10,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.Events.VideoDetail_Model
@@ -38,7 +39,7 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
         DB_VideoPlayer = DataBindingUtil.setContentView(this, R.layout.activity_video_player)
 
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
             VideoPlayerActivity = this
             val displayMetrics = DisplayMetrics()
             windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -47,7 +48,7 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
 
             val playerHeight = (width / 1.78)
 
-            ApplicationClass.SetLayoutHeight(DB_VideoPlayer.andExoPlayerView, playerHeight.toInt())
+            GlobalUsage.SetLayoutHeight(DB_VideoPlayer.andExoPlayerView, playerHeight.toInt())
 
             DB_VideoPlayer.imgBack.setOnClickListener(this)
             DB_VideoPlayer.txtQuestions.setOnClickListener(this)
@@ -75,16 +76,16 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
-            params[Constants.paramKey_VideoId] = ApplicationClass.mVideoesModelSelected!!.id!!
+            params[Constants.paramKey_VideoId] = GlobalUsage.mVideoesModelSelected!!.id!!
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.VideosDetailService>(
                     NetworkServices.VideosDetailService::class.java
                 )
             val call =
                 service.GetVideosDetail(
-                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<VideoDetail_Model> {
@@ -133,15 +134,13 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_VideoPlayer.imgBack) {
                     onBackPressed()
                 } else if (view == DB_VideoPlayer.txtQuestions) {
-                    var QuestionIntent = Intent(this, Questions::class.java)
-                    startActivity(QuestionIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    GlobalUsage.NextScreen(this,Intent(this, Questions::class.java))
                 }
             }
         } catch (NE: NullPointerException) {

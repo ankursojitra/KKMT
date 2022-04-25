@@ -629,7 +629,7 @@
                             android:layout_width="@dimen/_75dp"
                             android:layout_height="@dimen/_75dp"
                             android:scaleType="centerCrop"
-                            android:src="@@drawable/expe_logo"
+                            android:src="@drawable/expe_logo"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

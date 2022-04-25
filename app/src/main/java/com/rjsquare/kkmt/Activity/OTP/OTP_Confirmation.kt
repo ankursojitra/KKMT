@@ -18,13 +18,8 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.IsEmployee
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.ShowToast
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.UserLogout
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.isUserEmployee
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.userInfoModel
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
@@ -52,11 +47,9 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
 
         fun GOTO_HomeScreen() {
             Preferences.StoreBoolean(Constants.Pref_UserLogedIn, true)
-            var HomeIntent = Intent(OTPActivity, HomeActivity::class.java)
-            OTPActivity.startActivity(HomeIntent)
+            GlobalUsage.NextScreen(OTPActivity,Intent(OTPActivity, HomeActivity::class.java))
             Login.LoginActivity.finish()
             OTPActivity.finish()
-            OTPActivity.overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
         }
 
         fun User_OTPConfirmation(FinalOTPCode: String, UserId: String) {
@@ -73,12 +66,12 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                     )
                 val call = service.GetOTPData(
                     params,
-                    ApplicationClass.mLogInInfo_Model.data?.access_token.toString()
+                    GlobalUsage.mLogInInfo_Model.data?.access_token.toString()
                 )
                 call.enqueue(object : Callback<UserInfoData_Model> {
                     override fun onFailure(call: Call<UserInfoData_Model>, t: Throwable) {
                         Log.e("GetResponse", ": " + t)
-                        ShowToast(OTPActivity, "Something went wrong")
+                        GlobalUsage.ShowToast(OTPActivity, "Something went wrong")
                         DB_OTPConfirmation.cntLoader.visibility = View.GONE
                     }
 
@@ -90,13 +83,13 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                                 Constants.ResponseSucess, true
                             )
                         ) {
-                            userInfoModel = UserInfoData_Model()
-                            userInfoModel = response.body()!!
+                            GlobalUsage.userInfoModel = UserInfoData_Model()
+                            GlobalUsage.userInfoModel = response.body()!!
                             Preferences.StoreString(
                                 Constants.Pref_UserDataModel,
-                                Gson().toJson(userInfoModel)
+                                Gson().toJson(GlobalUsage.userInfoModel)
                             )
-                            isUserEmployee = IsEmployee()
+                            GlobalUsage.isUserEmployee = GlobalUsage.IsEmployee()
 
                             GOTO_HomeScreen()
                         } else if (response.body()!!.status.equals(
@@ -150,7 +143,7 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
 //        setContentView(R.layout.activity_o_t_p__confirmation)
         try {
             OTPActivity = this
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
             this.window
                 .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
 
@@ -228,20 +221,20 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_OTPConfirmation.txtVerify) {
                     FinalOTPCode = GetOTP()
                     User_OTPConfirmation(
                         FinalOTPCode,
-                        ApplicationClass.mLogInInfo_Model.data!!.userid
+                        GlobalUsage.mLogInInfo_Model.data!!.userid
                     )
                 } else if (view == DB_OTPConfirmation.txtOtpAlertok) {
                     DB_OTPConfirmation.cntAlert.visibility = View.GONE
                 } else if (view == DB_OTPConfirmation.txtUnauthOk) {
                     DB_OTPConfirmation.cntUnAuthorized.visibility = View.GONE
-                    UserLogout(this)
+                    GlobalUsage.UserLogout(this)
                 } else if (view == DB_OTPConfirmation.txtResend) {
                     LoaderVisible(true)
 //                DB_OTPConfirmation.cntLoader.visibility = View.VISIBLE
@@ -302,12 +295,12 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                 DB_OTPConfirmation.otp3.id -> if (text.length == 1) nextView!!.requestFocus()
                 DB_OTPConfirmation.otp4.id -> {
                     if (text.length == 1) {
-                        ApplicationClass.hideKeyboard(OTPActivity)
+                        GlobalUsage.hideKeyboard(OTPActivity)
                         nextView!!.requestFocus()
                         FinalOTPCode = GetOTP()
                         User_OTPConfirmation(
                             FinalOTPCode,
-                            ApplicationClass.mLogInInfo_Model.data!!.userid
+                            GlobalUsage.mLogInInfo_Model.data!!.userid
                         )
                     } else {
 

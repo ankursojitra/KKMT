@@ -11,15 +11,8 @@ import androidx.fragment.app.Fragment
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Review.ReviewList
-import com.rjsquare.kkmt.Activity.commanUtils
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mApproveReviewList
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mCancelReviewList
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mPendingReviewList
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mReviewModel
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.userLogedIn
 import com.rjsquare.kkmt.AppConstant.Constants
-import com.rjsquare.kkmt.Model.ReviewModel
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
@@ -32,6 +25,7 @@ import retrofit2.Response
 
 class History : Fragment(), View.OnClickListener {
 
+    lateinit var latestReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
     lateinit var pendingReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
     lateinit var approveReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
     lateinit var rejectedReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
@@ -55,10 +49,6 @@ class History : Fragment(), View.OnClickListener {
         try {
             DB_FHistory.cpFiveStar.maxProgress = 100.0
             DB_FHistory.cpFiveStar.setCurrentProgress(0.0)
-//            DB_FHistory.cpFiveStar.setProgress(100.0, 100.0)
-//            DB_FHistory.cpFiveStar.progress // returns 70
-//            DB_FHistory.cpFiveStar.maxProgress // returns 100
-
             DB_FHistory.cpGood.maxProgress = 100.0
             DB_FHistory.cpGood.setCurrentProgress(0.0)
 
@@ -72,12 +62,13 @@ class History : Fragment(), View.OnClickListener {
             DB_FHistory.cardViewHistory2.setOnClickListener(this)
             DB_FHistory.cardViewHistory3.setOnClickListener(this)
 
+            latestReviewList = ArrayList()
             pendingReviewList = ArrayList()
             approveReviewList = ArrayList()
             rejectedReviewList = ArrayList()
 
 
-            if (userLogedIn) {
+            if (GlobalUsage.userLogedIn) {
                 HistoryReviewData()
             }
 
@@ -107,7 +98,7 @@ class History : Fragment(), View.OnClickListener {
                 HashMap()
 
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.CustomerHistoryService>(
@@ -115,7 +106,7 @@ class History : Fragment(), View.OnClickListener {
                 )
             val call =
                 service.GetCustomerHistoryData(
-                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<CustomerHistoryModel> {
@@ -131,6 +122,9 @@ class History : Fragment(), View.OnClickListener {
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         ReviewModel = response.body()!!
+                        if (!response.body()!!.data!!.latest_review.isNullOrEmpty()) {
+                            latestReviewList.addAll(response.body()!!.data!!.latest_review!!)
+                        }
                         if (!response.body()!!.data!!.panding_review.isNullOrEmpty()) {
                             pendingReviewList.addAll(response.body()!!.data!!.panding_review!!)
                         }
@@ -140,8 +134,7 @@ class History : Fragment(), View.OnClickListener {
                         if (!response.body()!!.data!!.cancel_review.isNullOrEmpty()) {
                             rejectedReviewList.addAll(response.body()!!.data!!.cancel_review!!)
                         }
-//                        approveReviewList.addAll(response.body()!!.data!!.approve_review!!)
-////                            rejectedReviewList.addAll(response.body()!!.data!!.cancel_review!!)
+
                         FillData()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         HomeActivity.UnauthorizedUser()
@@ -186,13 +179,11 @@ class History : Fragment(), View.OnClickListener {
     private fun FillData() {
         try {
             SetRatingData()
-            mPendingReviewList = pendingReviewList
-            mApproveReviewList = approveReviewList
-            mCancelReviewList = rejectedReviewList
-            mReviewModel = ReviewModel()
-            mReviewModel.Notify_Title = ""
+            GlobalUsage.mPendingReviewList = pendingReviewList
+            GlobalUsage.mApproveReviewList = approveReviewList
+            GlobalUsage.mCancelReviewList = rejectedReviewList
 
-            var ReviewCount = mPendingReviewList.size
+            var ReviewCount = latestReviewList.size
             if (ReviewCount >= 3) {
                 DB_FHistory.cardViewHistory1.visibility = View.VISIBLE
                 DB_FHistory.cardViewHistory2.visibility = View.VISIBLE
@@ -200,9 +191,9 @@ class History : Fragment(), View.OnClickListener {
                 DB_FHistory.cardViewReview.visibility = View.VISIBLE
                 DB_FHistory.txtNoReviews.visibility = View.GONE
 
-                SetFirstReview(mPendingReviewList[0])
-                SetSecondReview(mPendingReviewList[1])
-                SetThirdReview(mPendingReviewList[2])
+                SetFirstReview(latestReviewList[0])
+                SetSecondReview(latestReviewList[1])
+                SetThirdReview(latestReviewList[2])
 
 
             } else if (ReviewCount == 2) {
@@ -212,8 +203,8 @@ class History : Fragment(), View.OnClickListener {
                 DB_FHistory.cardViewReview.visibility = View.VISIBLE
                 DB_FHistory.txtNoReviews.visibility = View.GONE
 
-                SetFirstReview(mPendingReviewList[0])
-                SetSecondReview(mPendingReviewList[1])
+                SetFirstReview(latestReviewList[0])
+                SetSecondReview(latestReviewList[1])
             } else if (ReviewCount == 1) {
                 DB_FHistory.cardViewHistory1.visibility = View.VISIBLE
                 DB_FHistory.cardViewHistory2.visibility = View.GONE
@@ -221,7 +212,7 @@ class History : Fragment(), View.OnClickListener {
                 DB_FHistory.cardViewReview.visibility = View.VISIBLE
                 DB_FHistory.txtNoReviews.visibility = View.GONE
 
-                SetFirstReview(mPendingReviewList[0])
+                SetFirstReview(latestReviewList[0])
             } else if (ReviewCount == 0) {
                 DB_FHistory.cardViewHistory1.visibility = View.GONE
                 DB_FHistory.cardViewHistory2.visibility = View.GONE
@@ -302,11 +293,11 @@ class History : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_FHistory.cardViewHistory1 || view == DB_FHistory.cardViewHistory2 || view == DB_FHistory.cardViewHistory3) {
-                    commanUtils.NextScreen(
+                    GlobalUsage.NextScreen(
                         requireActivity(),
                         Intent(requireActivity(), ReviewList::class.java)
                     )

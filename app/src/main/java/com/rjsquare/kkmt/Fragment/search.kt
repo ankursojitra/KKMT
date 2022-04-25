@@ -12,6 +12,7 @@ import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.TranslateAnimation
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.Nullable
@@ -28,10 +29,9 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
-import com.rishabhharit.roundedimageview.RoundedImageView
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Adapter.SearchAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.Model.SearchModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.FragmentSearchBinding
@@ -285,7 +285,7 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
 
         lateinit var mCntBottomView: ConstraintLayout
         lateinit var mCntBottomback: ConstraintLayout
-        lateinit var mImgSearch: RoundedImageView
+        lateinit var mImgSearch: ImageView
         lateinit var mTxtTitle: TextView
         lateinit var mTxtLocationname: TextView
 
@@ -308,9 +308,9 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
 
         fun PrepareBottomSheetView() {
             try {
-                mImgSearch.setImageDrawable(ApplicationClass.mSearchModelSelected!!.ImgLink)
-                mTxtTitle.text = ApplicationClass.mSearchModelSelected!!.TxtTitle
-                mTxtLocationname.text = ApplicationClass.mSearchModelSelected!!.TxtAddress
+                mImgSearch.setImageDrawable(GlobalUsage.mSearchModelSelected!!.ImgLink)
+                mTxtTitle.text = GlobalUsage.mSearchModelSelected!!.TxtTitle
+                mTxtLocationname.text = GlobalUsage.mSearchModelSelected!!.TxtAddress
 
                 mCntBottomView.visibility = View.VISIBLE
 
@@ -414,9 +414,9 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == mCntBottomback) {
                     mCntBottomView.visibility = View.GONE
                 } else if (view == DB_FSearch.cntOutside) {

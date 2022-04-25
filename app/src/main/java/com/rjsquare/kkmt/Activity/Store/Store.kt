@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Adapter.StoreListAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mList_StoreListModel
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
@@ -36,7 +36,7 @@ class Store : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_Store = DataBindingUtil.setContentView(this, R.layout.activity_store)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
             thisStoreActivity = this
             DB_Store.imgBack.setOnClickListener(this)
             StoreListData()
@@ -64,9 +64,9 @@ class Store : AppCompatActivity(), View.OnClickListener {
 
             var UserID = ""
             var Token = ""
-            if (ApplicationClass.userInfoModel != null) {
-                UserID = ApplicationClass.userInfoModel.data!!.userid!!.toString()
-                Token = ApplicationClass.userInfoModel.data!!.access_token!!.toString()
+            if (GlobalUsage.userInfoModel != null) {
+                UserID = GlobalUsage.userInfoModel.data!!.userid!!.toString()
+                Token = GlobalUsage.userInfoModel.data!!.access_token!!.toString()
             }
 
             params[Constants.paramKey_UserId] = UserID
@@ -91,7 +91,7 @@ class Store : AppCompatActivity(), View.OnClickListener {
                 ) {
                     DB_Store.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        mList_StoreListModel = response.body()!!.data!!
+                        GlobalUsage.mList_StoreListModel = response.body()!!.data!!
                         SetUpStoreList()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_Store.cntUnAuthorized.visibility = View.VISIBLE
@@ -134,7 +134,7 @@ class Store : AppCompatActivity(), View.OnClickListener {
     fun framesAdapter() {
         try {
 
-            if (mList_StoreListModel != null && mList_StoreListModel.size > 0) {
+            if (GlobalUsage.mList_StoreListModel != null && GlobalUsage.mList_StoreListModel.size > 0) {
                 DB_Store.txtNoStoredata.visibility = View.GONE
             } else {
                 DB_Store.txtNoStoredata.visibility = View.VISIBLE
@@ -143,7 +143,7 @@ class Store : AppCompatActivity(), View.OnClickListener {
             val loStoreListAdapter: StoreListAdapter
 //                if (mHomeModelArrayList_old == null) {
             loStoreListAdapter = StoreListAdapter(
-                this, mList_StoreListModel
+                this, GlobalUsage.mList_StoreListModel
             )
 
 //            val linearLayoutManager =
@@ -151,7 +151,7 @@ class Store : AppCompatActivity(), View.OnClickListener {
 //            mRrStoreList.setLayoutManager(linearLayoutManager)
 //            mRrStoreList.setLayoutManager(GridLayoutManager(this, 1))
             DB_Store.rrStoreList.adapter = loStoreListAdapter
-            DB_Store.rrStoreList.setItemViewCacheSize(mList_StoreListModel.size)
+            DB_Store.rrStoreList.setItemViewCacheSize(GlobalUsage.mList_StoreListModel.size)
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -170,9 +170,9 @@ class Store : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_Store.imgBack) {
                     onBackPressed()
                 }

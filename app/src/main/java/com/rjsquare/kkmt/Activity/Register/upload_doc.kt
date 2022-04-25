@@ -25,8 +25,9 @@ import androidx.databinding.DataBindingUtil
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UploadDoc_Model
@@ -65,10 +66,10 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_UploadDoc = DataBindingUtil.setContentView(this, R.layout.activity_upload_doc)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
             uploadDocActyivity = this
 
-            if (ApplicationClass.IsRegisterFlow) {
+            if (GlobalUsage.IsRegisterFlow) {
                 DB_UploadDoc.txtSkip.visibility = View.VISIBLE
 //                DB_UploadDoc.txtSaveandexplore.text = "Save"
             } else {
@@ -196,7 +197,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
             val params: MutableMap<String, String> =
                 HashMap()
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid.toString()
+                GlobalUsage.userInfoModel.data!!.userid.toString()
             params[Constants.paramKey_Document] = fileString
 
             val service =
@@ -206,7 +207,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
             val call =
                 service.UploadDoc(
                     params,
-                    ApplicationClass.userInfoModel.data!!.access_token.toString()
+                    GlobalUsage.userInfoModel.data!!.access_token.toString()
                 )
 
             call.enqueue(object : Callback<UploadDoc_Model> {
@@ -222,9 +223,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
                     DB_UploadDoc.cntLoader.visibility = View.GONE
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        var HomeIntent = Intent(this@upload_doc, Upload_Selfie::class.java)
-                        startActivity(HomeIntent)
-                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                        GlobalUsage.NextScreen(this@upload_doc,Intent(this@upload_doc, Upload_Selfie::class.java))
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_UploadDoc.cntUnAuthorized.visibility = View.VISIBLE
                     } else {
@@ -252,18 +251,16 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_UploadDoc.cntUploadDoc) {
                     DB_UploadDoc.cntUploadDocType.visibility = View.VISIBLE
                 } else if (view == DB_UploadDoc.txtSkip) {
-                    var HomeIntent = Intent(this, Upload_Selfie::class.java)
-                    startActivity(HomeIntent)
-                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+                    GlobalUsage.NextScreen(this,Intent(this, Upload_Selfie::class.java))
                 } else if (view == DB_UploadDoc.txtUnauthOk) {
                     DB_UploadDoc.cntUnAuthorized.visibility = View.GONE
-                    ApplicationClass.UserLogout(this)
+                    GlobalUsage.UserLogout(this)
                 } else if (view == DB_UploadDoc.txtPdf) {
                     val permissions =
                         arrayOf(

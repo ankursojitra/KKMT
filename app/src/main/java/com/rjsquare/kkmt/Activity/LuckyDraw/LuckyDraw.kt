@@ -9,8 +9,9 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDrawCheck_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDrawCredit_Model
@@ -40,7 +41,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
         DB_LuckyDraw = DataBindingUtil.setContentView(this, R.layout.activity_lucky_draw)
 //        setContentView(R.layout.activity_lucky_draw)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
 
             DB_LuckyDraw.luckyWheel.setLuckyWheelCenterImage(resources.getDrawable(R.drawable.blank))
             DB_LuckyDraw.luckyWheel.setLuckyWheelCursorImage(R.drawable.spin_pin)
@@ -89,7 +90,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             val params: MutableMap<String, String> =
                 HashMap()
 //            params[Constants.paramKey_UserId] =
-//                ApplicationClass.userInfoModel.data!!.userid!!
+//                GlobalUsage.userInfoModel.data!!.userid!!
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.LuckyDrawcreditService>(
@@ -168,7 +169,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             val params: MutableMap<String, String> =
                 HashMap()
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.LuckyDrawCheckService>(
@@ -176,7 +177,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                 )
             val call = service.GetLuckyDrawCheckData(
                 params,
-                ApplicationClass.userInfoModel.data!!.access_token!!
+                GlobalUsage.userInfoModel.data!!.access_token!!
             )
             call.enqueue(object : Callback<LuckyDrawCheck_Model> {
                 override fun onFailure(call: Call<LuckyDrawCheck_Model>, t: Throwable) {
@@ -227,7 +228,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             val params: MutableMap<String, String> =
                 HashMap()
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
 
             params[Constants.paramKey_Credit] = getCredit
 
@@ -237,7 +238,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                 )
             val call = service.GetLuckyDrawData(
                 params,
-                ApplicationClass.userInfoModel.data!!.access_token!!
+                GlobalUsage.userInfoModel.data!!.access_token!!
             )
             call.enqueue(object : Callback<LuckyDraw_Model> {
                 override fun onFailure(call: Call<LuckyDraw_Model>, t: Throwable) {
@@ -367,17 +368,17 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_LuckyDraw.txtSpin) {
                     if (!Spinning) {
                         var SpinTimeL =
-                            ApplicationClass.sharedPref.getLong(Constants.SpinTime, 0)
+                            GlobalUsage.sharedPref.getLong(Constants.SpinTime, 0)
                         Log.e("TAG", "SpinTimeL : " + SpinTimeL)
                         var lSpinTime = System.currentTimeMillis() + (1000 * 60 * 60 * 24)
-                        ApplicationClass.prefEditor.putLong(Constants.SpinTime, lSpinTime)
-                        ApplicationClass.prefEditor.commit()
+                        GlobalUsage.prefEditor.putLong(Constants.SpinTime, lSpinTime)
+                        GlobalUsage.prefEditor.commit()
                         Spinning = true
                     }
                     DB_LuckyDraw.luckyWheel.startLuckyWheelWithRandomTarget()
@@ -393,7 +394,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                     overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
                 } else if (view == DB_LuckyDraw.txtUnauthOk) {
                     DB_LuckyDraw.cntUnAuthorized.visibility = View.GONE
-                    ApplicationClass.UserLogout(this)
+                    GlobalUsage.UserLogout(this)
                 }
             }
         } catch (NE: NullPointerException) {

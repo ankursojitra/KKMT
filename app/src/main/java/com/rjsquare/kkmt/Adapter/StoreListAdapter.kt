@@ -7,13 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Activity.Store.Store
 import com.rjsquare.kkmt.Activity.Store.StoreLevelList
-import com.rjsquare.kkmt.Activity.commanUtils
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.Model.StoreListModel
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
 import com.rjsquare.kkmt.databinding.RawStorelistFrameBinding
@@ -39,8 +36,6 @@ class StoreListAdapter(
     override fun onBindViewHolder(holder: View_holder, position: Int) {
         try {
             var mStoreListModel = moArrayList[position]
-            var Per_Value_old = 0.0
-            val mStoreListModel_old: StoreListModel
             holder.lStoreListModelSelected = mStoreListModel
             holder.DB_RawStorelistFrameBinding.txtStorelevel.text = "Level " + mStoreListModel.level
 
@@ -120,12 +115,12 @@ class StoreListAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick =
-                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                    GlobalUsage.lastClick =
+                        System.currentTimeMillis() + GlobalUsage.clickInterval
                     if (view == DB_RawStorelistFrameBinding.txtMore) {
-                        ApplicationClass.mStoreLevelListModelSelected = lStoreListModelSelected
-                        commanUtils.NextScreen(
+                        GlobalUsage.mStoreLevelListModelSelected = lStoreListModelSelected
+                        GlobalUsage.NextScreen(
                             moContext as Store,
                             Intent(moContext, StoreLevelList::class.java)
                         )

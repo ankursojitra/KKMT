@@ -15,11 +15,8 @@ import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.GenderParam
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.isUserEmployee
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.userInfoModel
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
@@ -58,7 +55,7 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
         super.onCreate(savedInstanceState)
         DB_RegisterUser = DataBindingUtil.setContentView(this, R.layout.activity_register__user)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
             Register_UserActivity = this
 
             mGenderListView = findViewById<View>(R.id.genderlist)
@@ -106,9 +103,9 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_RegisterUser.txtSignup) {
                     if (GetValidationConfirmation()) {
                         DB_RegisterUser.cntLoader.visibility = View.VISIBLE
@@ -169,7 +166,7 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
             MobileNo = DB_RegisterUser.edtPhoneNumber.text.toString()
             EmailAddress = DB_RegisterUser.edtEmail.text.toString()
             DOB = DB_RegisterUser.txtDob.text.toString()
-            Gender = GenderParam(DB_RegisterUser.txtGender.text.toString())
+            Gender = GlobalUsage.GenderParam(DB_RegisterUser.txtGender.text.toString())
 
 
             if (FirstName.equals("") || FirstName.length <= 3
@@ -208,7 +205,7 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
 
     private fun CheckEmailValidation(): Boolean {
         if (EmailAddress.equals("", true) &&
-            !ApplicationClass.email_Pattern.matcher(EmailAddress).matches()
+            !GlobalUsage.email_Pattern.matcher(EmailAddress).matches()
         ) {
             ShowErrorMessage("Enter Email address proper format")
             Toast.makeText(
@@ -252,14 +249,14 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
                     response: retrofit2.Response<UserInfoData_Model>
                 ) {
                     Log.e("GetResponsesas", ": " + Gson().toJson(response.body()!!))
-                    userInfoModel = UserInfoData_Model()
-                    userInfoModel = response.body()!!
-                    if (userInfoModel.status.equals(Constants.ResponseSucess, true)) {
-                        ApplicationClass.prefEditor.putString(
+                    GlobalUsage.userInfoModel = UserInfoData_Model()
+                    GlobalUsage.userInfoModel = response.body()!!
+                    if (GlobalUsage.userInfoModel.status.equals(Constants.ResponseSucess, true)) {
+                        GlobalUsage.prefEditor.putString(
                             Constants.Pref_UserDataModel,
-                            Gson().toJson(userInfoModel)
+                            Gson().toJson(GlobalUsage.userInfoModel)
                         )
-                        ApplicationClass.prefEditor.commit()
+                        GlobalUsage.prefEditor.commit()
                         Preferences.StoreBoolean(Constants.Pref_UserLogedIn, true)
                         Log.e(
                             "TAG",
@@ -268,13 +265,13 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
                                 false
                             )
                         )
-                        isUserEmployee = ApplicationClass.IsEmployee()
+                        GlobalUsage.isUserEmployee = GlobalUsage.IsEmployee()
 
                         GOTOUpload()
                     } else {
                         Toast.makeText(
                             this@Register_User,
-                            userInfoModel.message,
+                            GlobalUsage.userInfoModel.message,
                             Toast.LENGTH_SHORT
                         )
                             .show()
@@ -302,10 +299,8 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
     }
 
     private fun GOTOUpload() {
-        ApplicationClass.IsRegisterFlow = true
-        var SignupIntent = Intent(this, upload_doc::class.java)
-        startActivity(SignupIntent)
-        overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+        GlobalUsage.IsRegisterFlow = true
+        GlobalUsage.NextScreen(this,Intent(this, upload_doc::class.java))
     }
 
     companion object {

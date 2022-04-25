@@ -9,9 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Review.SearchEmployee
-import com.rjsquare.kkmt.Activity.commanUtils
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.BusinessCheckInModel
@@ -38,8 +37,7 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_BussinessCheckIn =
             DataBindingUtil.setContentView(this, R.layout.activity_bussiness_check_in)
-//        setContentView(R.layout.activity_bussiness_check_in)
-        ApplicationClass.StatusTextWhite(this, false)
+        GlobalUsage.StatusTextWhite(this, false)
         thisBusinessCheckIn = this
         DB_BussinessCheckIn.imgBack.setOnClickListener(this)
         DB_BussinessCheckIn.txtContinue.setOnClickListener(this)
@@ -52,14 +50,14 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun Setupdata() {
-        ApplicationClass.selectedMasterModel
-        Picasso.with(this).load(ApplicationClass.selectedMasterModel.businessimage!!)
+        GlobalUsage.selectedMasterModel
+        Picasso.with(this).load(GlobalUsage.selectedMasterModel.businessimage!!)
             .placeholder(R.drawable.expe_logo).into(
                 DB_BussinessCheckIn.imgLogo
             )
 
         DB_BussinessCheckIn.txtBusinessName.text =
-            ApplicationClass.selectedMasterModel.bussiness_name!!
+            GlobalUsage.selectedMasterModel.bussiness_name!!
 
 
     }
@@ -71,9 +69,9 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
                 HashMap()
 
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid!!
+                GlobalUsage.userInfoModel.data!!.userid!!
             params[Constants.paramKey_BussinessId] =
-                ApplicationClass.selectedMasterModel.businessid.toString()
+                GlobalUsage.selectedMasterModel.businessid.toString()
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.BusinessCheckInService>(
@@ -81,7 +79,7 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
                 )
             val call =
                 service.GetBusinessCheckInData(
-                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<BusinessCheckInModel> {
@@ -96,7 +94,7 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
                     DB_BussinessCheckIn.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         DB_BussinessCheckIn.txtCredit.text =
-                            commanUtils.formatNumber(response.body()!!.data!!.check_in_credit!!.toInt())
+                            GlobalUsage.formatNumber(response.body()!!.data!!.check_in_credit!!.toInt())
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_BussinessCheckIn.cntUnAuthorized.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
@@ -127,15 +125,13 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
         if (v == DB_BussinessCheckIn.imgBack) {
             onBackPressed()
         } else if (v == DB_BussinessCheckIn.txtContinue) {
-            var ReviewIntent = Intent(this, SearchEmployee::class.java)
-            startActivity(ReviewIntent)
-            overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
+            GlobalUsage.NextScreen(this, Intent(this, SearchEmployee::class.java))
         } else if (v == DB_BussinessCheckIn.cntCheckout) {
             onBackPressed()
         } else if (v == DB_BussinessCheckIn.txtUnauthOk) {
-            ApplicationClass.UserLogout(this)
+            GlobalUsage.UserLogout(this)
         } else if (v == DB_BussinessCheckIn.txtAlert) {
-//            ApplicationClass.UserLogout(this)
+//            GlobalUsage.UserLogout(this)
         }
     }
 }

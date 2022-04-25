@@ -5,7 +5,7 @@
     android:id="@+id/cnt_marker"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".Activity.Bussiness.Bussiness_Location">
+    tools:context=".Activity.Bussiness.Bussiness_Beacon_Search">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

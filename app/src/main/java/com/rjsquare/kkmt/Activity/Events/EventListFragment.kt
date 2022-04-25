@@ -2,7 +2,6 @@ package com.rjsquare.kkmt.Activity.Events
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,16 +46,12 @@ class EventListFragment : Fragment() {
 
         framesAdapter()
         GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
-
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_event_list, container, false)
         return rootView
     }
 
     fun framesAdapter() {
         try {
-//            mArray_EventsModel = ArrayList()
-            Log.e("TAG", "Size of list : " + mArray_EventsModel.size)
+
             if (mArray_EventsModel != null && mArray_EventsModel.size > 0) {
                 DB_EventListFragment.txtNoEvents.visibility = View.GONE
             } else {
@@ -66,11 +61,6 @@ class EventListFragment : Fragment() {
             loEventsAdapter = EventsAdapter(
                 requireActivity(), mArray_EventsModel
             )
-
-//            val linearLayoutManager =
-//                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//            DB_Events.rrEvents.layoutManager = linearLayoutManager
-//            mRrEvents.setLayoutManager(GridLayoutManager(this, 2))
             DB_EventListFragment.rrEvents.adapter = loEventsAdapter
 
             DB_EventListFragment.rrEvents.addOnScrollListener(object :
@@ -81,11 +71,8 @@ class EventListFragment : Fragment() {
                     val totalItemCount = layoutManager.itemCount
                     val lastVisible = layoutManager.findLastVisibleItemPosition()
                     val endHasBeenReached = lastVisible + 5 >= totalItemCount
-                    Log.e("TAG", "POSITION : " + totalItemCount)
-                    Log.e("TAG", "LastPOSITION : " + lastVisible)
                     if (totalItemCount > 0 && endHasBeenReached) {
                         //you have reached to the bottom of your recycler view
-                        Log.e("TAG", "RECYCLERVIEWLASTITEM")
                     }
                     if ((totalItemCount - 1) == lastVisible && IsEventCallavailable && dataSize == PagePerlimit) {
                         IsEventCallavailable = true
@@ -117,8 +104,6 @@ class EventListFragment : Fragment() {
                 HashMap()
             params[Constants.paramKey_PageNo] = pageNo
             params[Constants.paramKey_limit] = PagePerlimit
-//                ApplicationClass.userInfoModel.data!!.userid.toString()
-//            params[ApplicationClass.paramKey_Selfie] = fileString
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.EventsService>(
@@ -132,7 +117,6 @@ class EventListFragment : Fragment() {
             call.enqueue(object : Callback<Events_Model> {
                 override fun onFailure(call: Call<Events_Model>, t: Throwable) {
                     DB_EventListFragment.gifLoader.visibility = View.GONE
-                    Log.e("GetResponsesasXASX", "Hell: ")
                 }
 
                 override fun onResponse(
@@ -153,9 +137,8 @@ class EventListFragment : Fragment() {
                             DB_EventListFragment.txtNoEvents.visibility = View.VISIBLE
                         }
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        Events.DB_Events.cntUnAuthorized.visibility = View.VISIBLE
+                        EventsHome.DB_EventsHome.cntUnAuthorized.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
-//                        DB_Events.cntLoadmore.visibility = View.GONE
                         IsEventCallavailable = false
                     } else {
 

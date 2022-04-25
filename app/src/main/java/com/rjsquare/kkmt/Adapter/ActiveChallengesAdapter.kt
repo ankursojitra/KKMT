@@ -10,7 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Activity.Challenges.ActiveChallenge
 import com.rjsquare.kkmt.Activity.Challenges.Challenge_info
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.Model.ActiveChallengesModel
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.RawChallengesFrameBinding
@@ -122,9 +123,9 @@ class ActiveChallengesAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick =
-                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                    GlobalUsage.lastClick =
+                        System.currentTimeMillis() + GlobalUsage.clickInterval
                     if (view == DB_RawChallengesFrameBinding.idFrameconstraintX) {
                         var ChallengesInfoIntent = Intent(moContext, Challenge_info::class.java)
                         moContext.startActivity(ChallengesInfoIntent)

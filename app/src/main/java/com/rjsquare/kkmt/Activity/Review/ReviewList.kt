@@ -9,7 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.ActivityReviewListBinding
@@ -34,18 +35,18 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
 
         try {
             reviewListActivity = this
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
             val sectionsPagerReviewAdapter =
                 SectionsPagerReviewAdapter(this, supportFragmentManager)
             pendingReviewItemInfo = ArrayList()
             completeReviewItemInfo = ArrayList()
-//            for (model in ApplicationClass.mPendingReviewList){
+//            for (model in GlobalUsage.mPendingReviewList){
 //                if (model.review_status!!.equals(Constants.Pending,true)){
 //                }else if (model.review_status!!.equals(Constants.Approve,true)){
 //                }
 //            }
-            pendingReviewItemInfo.addAll(ApplicationClass.mPendingReviewList)
-            completeReviewItemInfo.addAll(ApplicationClass.mApproveReviewList)
+            pendingReviewItemInfo.addAll(GlobalUsage.mPendingReviewList)
+            completeReviewItemInfo.addAll(GlobalUsage.mApproveReviewList)
 
             DB_ReviewList.viewPager.adapter = sectionsPagerReviewAdapter
             DB_ReviewList.viewPager.addOnPageChangeListener(object :
@@ -162,9 +163,9 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_ReviewList.imgBack) {
                     onBackPressed()
                 } else if (view == DB_ReviewList.txtPendingReview) {

@@ -154,7 +154,7 @@
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_companyname"
-                    app:srcCompat="@@drawable/expe_logo" />
+                    app:srcCompat="@drawable/expe_logo" />
 
                 <TextView
                     android:id="@+id/textView29"
@@ -277,16 +277,16 @@
             <!--                    app:layout_constraintTop_toBottomOf="@+id/img_found1" />-->
             <!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-            <com.tristate.radarview.RadarViewC
-                android:id="@+id/radar_view"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_centerInParent="true"
-                app:layout_constraintBottom_toTopOf="@+id/cnt_notfound"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cnt_top_header" />
+<!--            <com.tristate.radarview.RadarViewC-->
+<!--                android:id="@+id/radar_view"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                app:layout_constraintBottom_toTopOf="@+id/cnt_notfound"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.5"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/cnt_top_header" />-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"

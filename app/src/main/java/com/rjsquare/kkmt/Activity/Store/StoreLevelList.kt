@@ -7,10 +7,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.rjsquare.kkmt.Activity.commanUtils
 import com.rjsquare.kkmt.Adapter.StoreLevelItemDetailAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.AppConstant.ApplicationClass.Companion.mStoreLevelListModelSelected
+
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
 import com.rjsquare.kkmt.databinding.ActivityStoreLevelListBinding
@@ -35,13 +34,13 @@ class StoreLevelList : AppCompatActivity(), View.OnClickListener {
 
         try {
             thisStoreLevelActivity = this
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
 
             DB_StoreLevelList.imgBack.setOnClickListener(this)
 
-            DB_StoreLevelList.txtTitle.text = "Level " + mStoreLevelListModelSelected!!.level
+            DB_StoreLevelList.txtTitle.text = "Level " + GlobalUsage.mStoreLevelListModelSelected!!.level
 
-            mList_StoreItemDetailModel = mStoreLevelListModelSelected!!.store_item!!
+            mList_StoreItemDetailModel = GlobalUsage.mStoreLevelListModelSelected!!.store_item!!
 
             framesAdapter()
 
@@ -97,16 +96,16 @@ class StoreLevelList : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_StoreLevelList.imgBack) {
                     onBackPressed()
                 } else if (view == DB_StoreLevelList.cntRedeemCancel) {
                     DB_StoreLevelList.cntConfirmation.visibility = View.GONE
                 } else if (view == DB_StoreLevelList.cntRedeemConfirm) {
                     DB_StoreLevelList.cntConfirmation.visibility = View.GONE
-                    commanUtils.NextScreen(this, Intent(this, StoreItemRedeemConfirm::class.java))
+                    GlobalUsage.NextScreen(this, Intent(this, StoreItemRedeemConfirm::class.java))
                 }
             }
         } catch (NE: NullPointerException) {

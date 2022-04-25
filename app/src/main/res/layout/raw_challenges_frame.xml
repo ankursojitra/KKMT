@@ -81,7 +81,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/img_1"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_chainStyle="spread" />
+                        app:layout_constraintVertical_chainStyle="packed" />
 
                     <TextView
                         android:id="@+id/txt_2"
@@ -139,7 +139,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
-                            android:id="@+id/txt_price"
+                            android:id="@+id/txt_credit_lbl"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/lato_medium"
@@ -159,7 +159,7 @@
                         android:layout_width="@dimen/_30dp"
                         android:layout_height="@dimen/_22dp"
                         android:layout_marginTop="@dimen/_4dp"
-                        app:layout_constraintBottom_toTopOf="@+id/textView26"
+                        app:layout_constraintBottom_toTopOf="@+id/txt_credit"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
@@ -168,7 +168,7 @@
                         app:srcCompat="@drawable/ic_card" />
 
                     <TextView
-                        android:id="@+id/textView26"
+                        android:id="@+id/txt_credit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lato_heavy"

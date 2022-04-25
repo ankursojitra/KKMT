@@ -10,9 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.kkmt.Activity.Review.ReviewDisplay
 import com.rjsquare.kkmt.Activity.Review.ReviewList
-import com.rjsquare.kkmt.Activity.commanUtils
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
-import com.rjsquare.kkmt.Model.ReviewModel
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.databinding.RawReviewFrameBinding
@@ -22,7 +20,6 @@ class ReviewAdapter(
     var moContext: Context,
     var moArrayItemInfo: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
 ) : RecyclerView.Adapter<ReviewAdapter.View_holder>() {
-    var mReviewModel: ReviewModel? = null
     var Width = 0
     private var layoutInflater: LayoutInflater? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): View_holder {
@@ -97,13 +94,13 @@ class ReviewAdapter(
 
         override fun onClick(view: View?) {
             try {
-                if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                    ApplicationClass.lastClick =
-                        System.currentTimeMillis() + ApplicationClass.clickInterval
+                if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                    GlobalUsage.lastClick =
+                        System.currentTimeMillis() + GlobalUsage.clickInterval
                     if (view == DB_RawReviewFrameBinding.idFrameconstraint) {
-                        ApplicationClass.empReviewModelSelected = lReviewModelSelected
-                        ApplicationClass.isNewReview = false
-                        commanUtils.NextScreen(
+                        GlobalUsage.empReviewModelSelected = lReviewModelSelected
+                        GlobalUsage.isNewReview = false
+                        GlobalUsage.NextScreen(
                             moContext as ReviewList,
                             Intent(moContext, ReviewDisplay::class.java)
                         )

@@ -8,8 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Adapter.PrizesListAdapter
-import com.rjsquare.kkmt.AppConstant.ApplicationClass
+
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.PrizeList_Model
@@ -34,7 +35,7 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_Prizes = DataBindingUtil.setContentView(this, R.layout.activity_prizes)
         try {
-            ApplicationClass.StatusTextWhite(this, true)
+            GlobalUsage.StatusTextWhite(this, true)
 
             DB_Prizes.imgBack.setOnClickListener(this)
             DB_Prizes.txtUnauthOk.setOnClickListener(this)
@@ -64,7 +65,7 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
                 HashMap()
 
             params[Constants.paramKey_UserId] =
-                ApplicationClass.userInfoModel.data!!.userid.toString()
+                GlobalUsage.userInfoModel.data!!.userid.toString()
 
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.PriceListService>(
@@ -72,7 +73,7 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
                 )
             val call =
                 service.PriceListData(
-                    params, ApplicationClass.userInfoModel.data!!.access_token!!
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
             call.enqueue(object : Callback<PrizeList_Model> {
@@ -153,14 +154,14 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         try {
-            if (System.currentTimeMillis() < ApplicationClass.lastClick) return else {
-                ApplicationClass.lastClick =
-                    System.currentTimeMillis() + ApplicationClass.clickInterval
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_Prizes.imgBack) {
                     onBackPressed()
                 } else if (view == DB_Prizes.txtUnauthOk) {
                     DB_Prizes.cntUnAuthorized.visibility = View.GONE
-                    ApplicationClass.UserLogout(this)
+                    GlobalUsage.UserLogout(this)
                 } else if (view == DB_Prizes.txtAlertok) {
                     DB_Prizes.cntAlert.visibility = View.GONE
                 }
