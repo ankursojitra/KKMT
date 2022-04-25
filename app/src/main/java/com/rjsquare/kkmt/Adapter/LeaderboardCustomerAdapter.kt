@@ -58,7 +58,7 @@ class LeaderboardCustomerAdapter(
             holder.DB_RawLeaderboardFrameBinding.txtRank.text = holder.CustomerInfoSelected!!.rank
 
             Picasso.with(moContext).load(holder.CustomerInfoSelected!!.userimage)
-                .placeholder(R.drawable.ic_expe_logo)
+                .placeholder(R.drawable.expe_logo)
                 .into(holder.DB_RawLeaderboardFrameBinding.imgProfile)
 
         } catch (NE: NullPointerException) {

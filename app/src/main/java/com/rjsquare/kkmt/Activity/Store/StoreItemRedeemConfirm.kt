@@ -169,7 +169,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
     private fun SetUpItemData() {
         StoreLevelList.selectedStoreItemModel
         Picasso.with(this).load(StoreLevelList.selectedStoreItemModel.image!![0])
-            .placeholder(R.drawable.ic_expe_logo).into(
+            .placeholder(R.drawable.expe_logo).into(
                 DB_StoreItemRedeemConfirm.imgRedeemItem
             )
         DB_StoreItemRedeemConfirm.txtRedeemItemName.text =

@@ -483,7 +483,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
             //Business Image showen
             Log.e("TAG", "IMAGEBUSINESS")
             Picasso.with(this).load(masterList[BusinessPos].businessimage)
-                .placeholder(R.drawable.ic_expe_logo).into(imageViewBusiness,
+                .placeholder(R.drawable.expe_logo).into(imageViewBusiness,
                     object : com.squareup.picasso.Callback {
                         override fun onSuccess() {
                             Log.e("TAG", "onSuccess")
@@ -803,7 +803,7 @@ class Bussiness_Location : AppCompatActivity(), View.OnClickListener, OnMapReady
 
                 Picasso.with(this)
                     .load(ApplicationClass.selectedMasterModel.businessimage)
-                    .placeholder(R.drawable.ic_expe_logo).into(mImgLogo)
+                    .placeholder(R.drawable.expe_logo).into(mImgLogo)
                 mTxtBusinessName.text = ApplicationClass.selectedMasterModel.bussiness_name
                 ShowBusniessConfirmation()
 

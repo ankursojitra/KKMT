@@ -60,7 +60,7 @@ class LeaderboardEmployeeAdapter(
             holder.DB_RawLeaderboardFrameBinding.txtRank.text = holder.employeeInfoSelected!!.rank
 
             Picasso.with(moContext).load(holder.employeeInfoSelected!!.userimage)
-                .placeholder(R.drawable.ic_expe_logo)
+                .placeholder(R.drawable.expe_logo)
                 .into(holder.DB_RawLeaderboardFrameBinding.imgProfile)
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

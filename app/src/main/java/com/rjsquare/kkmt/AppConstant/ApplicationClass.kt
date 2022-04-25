@@ -23,6 +23,7 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
+import com.rjsquare.kkmt.Fragment.Home
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.Model.ReviewEmp_Model
 import com.rjsquare.kkmt.Model.ReviewModel
@@ -78,6 +79,7 @@ class ApplicationClass : Application(), LifecycleObserver {
         lateinit var empSlaveModel: SlaveBeaconModel.SlaveBescon
         var authorisedUser = true
         var isApprove = true
+        var isHomeScreenVisible = false
         var lastClick = 0L
         var clickInterval = 500L
         val email_Pattern: Pattern = Pattern.compile(
@@ -447,11 +449,16 @@ class ApplicationClass : Application(), LifecycleObserver {
                             isUserEmployee = IsEmployee()
                             authorisedUser = true
                             isApprove = userInfoModel.data!!.approve.equals(Constants.YES, true)
+                            if (isHomeScreenVisible) {
+                                HomeActivity.UserVerifiedUpdateUI()
+                                Home.UserInfoUpdateUI()
+                            }
                         } else if (response.body()!!.status.equals(
                                 Constants.ResponseUnauthorized,
                                 true
                             )
                         ) {
+
                             authorisedUser = false
                         } else {
                             ShowToast(ApplicationContext, response.body()!!.message)

@@ -14,5 +14,10 @@ class LuckyDrawCredit_Model : Serializable {
     @SerializedName("data")
     var data: LuckyDraw? = null
 
-    class LuckyDraw
+    class LuckyDraw{
+
+        @SerializedName("credit")
+        var credit: ArrayList<String>? = null
+
+    }
 }

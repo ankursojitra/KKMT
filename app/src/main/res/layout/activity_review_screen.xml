@@ -50,6 +50,7 @@
                 android:layout_height="@dimen/_35dp"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:padding="@dimen/_8dp"
+                android:visibility="invisible"
                 android:src="@drawable/ic_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -735,11 +736,21 @@
 
 
                         <ImageView
+                            android:id="@+id/img_profile_place"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/expe_logo"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
                             android:id="@+id/img_profile"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/event1"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

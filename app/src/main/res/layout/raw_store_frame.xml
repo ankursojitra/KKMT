@@ -77,6 +77,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:cardCornerRadius="@dimen/_7dp"
+                        app:cardElevation="0dp"
                         android:layout_marginHorizontal="@dimen/_4dp"
                         app:layout_constraintBottom_toTopOf="@+id/txt_itemName"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -89,6 +90,7 @@
                             android:id="@+id/id_childx"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@drawable/border_gray"
                             android:paddingVertical="@dimen/_8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -100,12 +102,13 @@
                                 android:id="@+id/img_storeitem"
                                 android:layout_width="@dimen/_60dp"
                                 android:layout_height="@dimen/_60dp"
+                                android:scaleType="centerInside"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="0.5"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/shop1" />
+                                app:srcCompat="@drawable/expe_logo" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.cardview.widget.CardView>
 

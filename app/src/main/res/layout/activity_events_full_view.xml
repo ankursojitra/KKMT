@@ -41,6 +41,7 @@
                 android:layout_marginLeft="@dimen/_8dp"
                 android:padding="@dimen/_10dp"
                 android:src="@drawable/ic_back"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -73,14 +74,14 @@
         <!--        app:andexo_play_when_ready="true"-->
         <!--        app:andexo_resize_mode="Fit"-->
         <!--        app:andexo_show_controller="true"-->
-        <!--        app:default_artwork="@drawable/event1" />-->
+        <!--        app:default_artwork="@drawable/expe_logo" />-->
 
         <ImageView
             android:id="@+id/img_event"
             android:layout_width="0dp"
             android:layout_height="@dimen/_170dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/event1"
+            android:src="@drawable/expe_logo"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

@@ -447,8 +447,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                 )
             ) {
                 UserImage = ApplicationClass.empSlaveModel.employeeimage!!
-                Picasso.with(this).load(UserImage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_ReviewEdit.imgProfile)
+                Picasso.with(this).load(UserImage).into(DB_ReviewEdit.imgProfile)
             }
         } else {
             //Setup edit review data

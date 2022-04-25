@@ -54,7 +54,7 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
     private fun Setupdata() {
         ApplicationClass.selectedMasterModel
         Picasso.with(this).load(ApplicationClass.selectedMasterModel.businessimage!!)
-            .placeholder(R.drawable.ic_expe_logo).into(
+            .placeholder(R.drawable.expe_logo).into(
                 DB_BussinessCheckIn.imgLogo
             )
 

@@ -62,7 +62,7 @@ class EventsAdapter(
             holder.DB_RawEventsFrameBinding.txtEventTime.text = mEventsModel.time
             holder.DB_RawEventsFrameBinding.txtEventDate.text = mEventsModel.date
             Picasso.with(moContext).load(mEventsModel.image!![0])
-                .placeholder(R.drawable.ic_expe_logo).into(holder.DB_RawEventsFrameBinding.imgEvent)
+                .placeholder(R.drawable.expe_logo).into(holder.DB_RawEventsFrameBinding.imgEvent)
             Log.e("TAG", "Event Item has : " + mEventsModel.date)
 //            Glide
 //                .with(moContext)
@@ -120,11 +120,11 @@ class EventsAdapter(
 //                    itemView.findViewById<ConstraintLayout>(R.id.id_frameconstraint)
                 DB_RawEventsFrameBinding.idFrameconstraint.setOnClickListener(this)
 
-                ApplicationClass.SetLayoutWidthHeight(
-                    DB_RawEventsFrameBinding.imgEvent,
-                    ((Width / 11) * 6),
-                    ((Width / 10) * 3)
-                )
+//                ApplicationClass.SetLayoutWidthHeight(
+//                    DB_RawEventsFrameBinding.imgEvent,
+//                    ((Width / 11) * 6),
+//                    ((Width / 10) * 3)
+//                )
 //                AppClass.SetLayoutWidth(mImgEvent, ((Width / 10) * 5))
 
 

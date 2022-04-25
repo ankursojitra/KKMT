@@ -81,6 +81,22 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         var searchFr: Fragment? = null
         var LeaderBoardFr: Fragment? = null
 
+        fun UserInfoCall() {
+            ApplicationClass.updateUserInfo()
+        }
+
+        fun UserVerifiedUpdateUI() {
+            SetUpUserVerifiedAndData()
+        }
+
+        private fun SetUpUserVerifiedAndData() {
+            if (ApplicationClass.isApprove) {
+                DB_HomeActivity.nevigationMenuview.cntUploadMenu.visibility = View.GONE
+            } else {
+                DB_HomeActivity.nevigationMenuview.cntUploadMenu.visibility = View.VISIBLE
+            }
+        }
+
         fun SetUpEmployeeUI() {
             if (ApplicationClass.isUserEmployee) {
                 HistoryFr = EmployeeHistory()
@@ -230,13 +246,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun SetUpUserVerifiedAndData() {
-        if (ApplicationClass.isApprove) {
-            DB_HomeActivity.nevigationMenuview.cntUploadMenu.visibility = View.GONE
-        } else {
-            DB_HomeActivity.nevigationMenuview.cntUploadMenu.visibility = View.VISIBLE
-        }
-    }
 
     private fun UserLogInViewSetup() {
         if (ApplicationClass.userLogedIn) {

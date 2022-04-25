@@ -154,7 +154,7 @@
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_companyname"
-                    app:srcCompat="@drawable/ic_dominos" />
+                    app:srcCompat="@@drawable/expe_logo" />
 
                 <TextView
                     android:id="@+id/textView29"
@@ -202,7 +202,7 @@
             <!--                app:layout_constraintHorizontal_bias="0.5"-->
             <!--                app:layout_constraintStart_toStartOf="@id/rippleBack"-->
             <!--                app:layout_constraintTop_toTopOf="@+id/rippleBack"-->
-            <!--                app:srcCompat="@drawable/event1" />-->
+            <!--                app:srcCompat="@drawable/expe_logo" />-->
 
 
             <!--            <androidx.constraintlayout.widget.ConstraintLayout-->

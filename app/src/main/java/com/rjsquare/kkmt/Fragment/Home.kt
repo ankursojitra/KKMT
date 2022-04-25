@@ -1,5 +1,6 @@
 package com.rjsquare.kkmt.Fragment
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
@@ -24,39 +25,12 @@ import com.squareup.picasso.Picasso
 
 
 class Home : Fragment(), View.OnClickListener {
-    lateinit var DB_FHome: FragmentHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
     }
 
-    private fun SetupUserLogInViewAndData() {
-        if (ApplicationClass.userLogedIn) {
-            DB_FHome.cntLogin.visibility = View.GONE
-            DB_FHome.cntProfileView.visibility = View.VISIBLE
-            var UserImage = ""
-            if (ApplicationClass.userInfoModel.data!!.userimage != null
-                && !ApplicationClass.userInfoModel.data!!.userimage.equals("")
-            ) {
-                UserImage = ApplicationClass.userInfoModel.data!!.userimage!!
-                Picasso.with(requireActivity()).load(UserImage)
-                    .placeholder(R.drawable.ic_expe_logo).into(DB_FHome.imgProfile)
-            }
-            DB_FHome.txtProfName.text = ApplicationClass.userInfoModel.data!!.username
-
-            DB_FHome.txtLevel.text =
-                "Level : " + ApplicationClass.userInfoModel.data!!.credit_details!!.level
-
-            DB_FHome.txtTotalCredits.text =
-                commanUtils.formatNumber(ApplicationClass.userInfoModel.data!!.credit_details!!.credit!!.toInt())
-
-
-        } else {
-            DB_FHome.cntLogin.visibility = View.VISIBLE
-            DB_FHome.cntProfileView.visibility = View.GONE
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +40,7 @@ class Home : Fragment(), View.OnClickListener {
         DB_FHome = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 //        var rootView = inflater.inflate(R.layout.fragment_home, container, false)
         try {
+            reqActivity = requireActivity()
             DB_FHome.cardViewStore.setOnClickListener(this)
             DB_FHome.cardViewEvent.setOnClickListener(this)
             DB_FHome.cardViewNotify.setOnClickListener(this)
@@ -96,7 +71,7 @@ class Home : Fragment(), View.OnClickListener {
                 DB_FHome.txtVideosMsg.text = "EXPAND YOUR KNOWLEDGE"
                 DB_FHome.txtVideos.text = "Videos"
             }
-
+            ApplicationClass.isHomeScreenVisible = true
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -115,30 +90,66 @@ class Home : Fragment(), View.OnClickListener {
     }
 
 
-    private fun SetUpUserVerified() {
-        if (ApplicationClass.isApprove) {
-            DB_FHome.imgVerified.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireActivity(),
-                    R.drawable.ic_verified
-                )
-            )
-            DB_FHome.txtVerified.text = getString(R.string.verified)
-
-        } else {
-            DB_FHome.imgVerified.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireActivity(),
-                    R.drawable.ic_nonverified
-                )
-            )
-            DB_FHome.txtVerified.text = getString(R.string.unverified)
-        }
-    }
-
     companion object {
 
+        lateinit var reqActivity:Activity
+        lateinit var DB_FHome: FragmentHomeBinding
         var HomeView = false
+
+        fun UserInfoUpdateUI() {
+            SetupUserLogInViewAndData()
+            SetUpUserVerified()
+
+        }
+
+        private fun SetUpUserVerified() {
+            if (ApplicationClass.isApprove) {
+                DB_FHome.imgVerified.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        reqActivity,
+                        R.drawable.ic_verified
+                    )
+                )
+                DB_FHome.txtVerified.text = reqActivity.getString(R.string.verified)
+
+            } else {
+                DB_FHome.imgVerified.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        reqActivity,
+                        R.drawable.ic_nonverified
+                    )
+                )
+                DB_FHome.txtVerified.text = reqActivity.getString(R.string.unverified)
+            }
+        }
+
+        private fun SetupUserLogInViewAndData() {
+            if (ApplicationClass.userLogedIn) {
+                DB_FHome.cntLogin.visibility = View.GONE
+                DB_FHome.cntProfileView.visibility = View.VISIBLE
+                var UserImage = ""
+                if (ApplicationClass.userInfoModel.data!!.userimage != null
+                    && !ApplicationClass.userInfoModel.data!!.userimage.equals("")
+                ) {
+                    UserImage = ApplicationClass.userInfoModel.data!!.userimage!!
+                    Picasso.with(reqActivity).load(UserImage)
+                        .placeholder(R.drawable.expe_logo).into(DB_FHome.imgProfile)
+                }
+                DB_FHome.txtProfName.text = ApplicationClass.userInfoModel.data!!.username
+
+                DB_FHome.txtLevel.text =
+                    "Level : " + ApplicationClass.userInfoModel.data!!.credit_details!!.level
+
+                DB_FHome.txtTotalCredits.text =
+                    commanUtils.formatNumber(ApplicationClass.userInfoModel.data!!.credit_details!!.credit!!.toInt())
+
+
+            } else {
+                DB_FHome.cntLogin.visibility = View.VISIBLE
+                DB_FHome.cntProfileView.visibility = View.GONE
+            }
+        }
+
 
         @JvmStatic
         fun newInstance() =

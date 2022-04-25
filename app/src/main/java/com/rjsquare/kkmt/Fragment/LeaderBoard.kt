@@ -346,7 +346,8 @@ class LeaderBoard : Fragment(), View.OnClickListener {
         DB_LeaderBoard.txtRankOwn.text = EmpModel.rank
         DB_LeaderBoard.txtRankOwnAmount.text = EmpModel.credit
         Picasso.with(requireActivity()).load(EmpModel.userimage)
-            .placeholder(R.drawable.ic_expe_logo).into(DB_LeaderBoard.imgRankOwnProfile)
+            .placeholder(R.drawable.expe_logo).into(DB_LeaderBoard.imgRankOwnProfile)
+        Log.e("TAG","UserImage : "+EmpModel.userimage)
     }
 
 
@@ -373,7 +374,9 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                 mLeaderboardCustomer_Model.data!!.current_customer!![0].rank
             DB_LeaderBoard.txtRankOwnAmount.text =
                 mLeaderboardCustomer_Model.data!!.current_customer!![0].credit
-
+            Picasso.with(requireActivity()).load(mLeaderboardCustomer_Model.data!!.current_customer!![0].userimage)
+                .placeholder(R.drawable.expe_logo).into(DB_LeaderBoard.imgRankOwnProfile)
+            Log.e("TAG","UserImage : "+mLeaderboardCustomer_Model.data!!.current_customer!![0].userimage)
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -388,7 +391,6 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             E.printStackTrace()
         }
     }
-
 
     companion object {
         var leaderBoardView = false

@@ -504,7 +504,7 @@
                                             android:id="@+id/img_employee"
                                             android:layout_width="@dimen/_40dp"
                                             android:layout_height="@dimen/_40dp"
-                                            android:src="@drawable/image"
+                                            android:src="@drawable/expe_logo"
                                             app:layout_constraintBottom_toBottomOf="parent"
                                             app:layout_constraintStart_toStartOf="parent"
                                             app:layout_constraintTop_toTopOf="parent" />
@@ -594,7 +594,7 @@
                                             android:id="@+id/img_employee_history2"
                                             android:layout_width="@dimen/_40dp"
                                             android:layout_height="@dimen/_40dp"
-                                            android:src="@drawable/image"
+                                            android:src="@drawable/expe_logo"
                                             app:layout_constraintBottom_toBottomOf="parent"
                                             app:layout_constraintStart_toStartOf="parent"
                                             app:layout_constraintTop_toTopOf="parent" />
@@ -688,7 +688,7 @@
                                             android:id="@+id/img_employee_history3"
                                             android:layout_width="@dimen/_40dp"
                                             android:layout_height="@dimen/_40dp"
-                                            android:src="@drawable/image"
+                                            android:src="@drawable/expe_logo"
                                             app:layout_constraintBottom_toBottomOf="parent"
                                             app:layout_constraintStart_toStartOf="parent"
                                             app:layout_constraintTop_toTopOf="parent" />

@@ -42,7 +42,7 @@ class StoreLevelItemDetailAdapter(
             holder.DB_RawStoreFrameBinding.txtItemcredit.text =
                 mStoreItemDetailModel.credit_required
             Picasso.with(moContext).load(mStoreItemDetailModel.image!![0])
-                .placeholder(R.drawable.ic_expe_logo)
+                .placeholder(R.drawable.expe_logo)
                 .into(holder.DB_RawStoreFrameBinding.imgStoreitem)
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -101,7 +101,7 @@ class StoreLevelItemDetailAdapter(
                 if (view == DB_RawStoreFrameBinding.cntStoreItem) {
                     StoreLevelList.selectedStoreItemModel = lStoreItemDetailModelSelected!!
                     Picasso.with(moContext).load(lStoreItemDetailModelSelected!!.image!![0])
-                        .placeholder(R.drawable.ic_expe_logo)
+                        .placeholder(R.drawable.expe_logo)
                         .into(StoreLevelList.DB_StoreLevelList.imgRedeemItem)
                     StoreLevelList.DB_StoreLevelList.txtRedeemItemName.text =
                         lStoreItemDetailModelSelected!!.title

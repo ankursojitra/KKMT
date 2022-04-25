@@ -39,6 +39,7 @@
                 android:layout_height="@dimen/_35dp"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:padding="@dimen/_10dp"
+                android:visibility="invisible"
                 android:src="@drawable/ic_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

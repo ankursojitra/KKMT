@@ -226,7 +226,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         ) {
             UserImage = ApplicationClass.userInfoModel.data!!.userimage!!
             Picasso.with(this).load(UserImage)
-                .placeholder(R.drawable.ic_expe_logo).into(DB_Profile.imgUserProfile)
+                .placeholder(R.drawable.expe_logo).into(DB_Profile.imgUserProfile)
         }
 
         var verifiedImage = ContextCompat.getDrawable(

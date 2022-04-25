@@ -93,7 +93,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             val SelectedEmpInfo = ApplicationClass.empReviewModelSelected
             DB_ReviewDisplay.txtReviewName.text = SelectedEmpInfo!!.username
             Picasso.with(this).load(SelectedEmpInfo.userimage)
-                .placeholder(R.drawable.ic_expe_logo).into(DB_ReviewDisplay.imgProfile)
+                .placeholder(R.drawable.expe_logo).into(DB_ReviewDisplay.imgProfile)
             DB_ReviewDisplay.cntLoader.visibility = View.VISIBLE
 
             GetLatestReviewInfo()
@@ -196,7 +196,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
         DB_ReviewDisplay.txtReviewName.text = ApplicationClass.ReviewInfoModel.employee_name
 
         Picasso.with(this).load(ApplicationClass.ReviewInfoModel.employeimage)
-            .placeholder(R.drawable.ic_expe_logo).into(DB_ReviewDisplay.imgProfile)
+            .placeholder(R.drawable.expe_logo).into(DB_ReviewDisplay.imgProfile)
 
         if (ApplicationClass.ReviewInfoModel.credit!!.check_in_status!!.equals(Constants.Approve)) {
             DB_ReviewDisplay.imgCheckin.setImageDrawable(

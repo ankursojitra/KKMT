@@ -7,11 +7,13 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDrawCheck_Model
+import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDrawCredit_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.LuckyDraw_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.databinding.ActivityLuckyDrawBinding
@@ -46,39 +48,25 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             DB_LuckyDraw.txtSpin.setOnClickListener(this)
             DB_LuckyDraw.imgBack.setOnClickListener(this)
 
-            creditList = ArrayList()
-            creditList.add("50")
-            creditList.add("100")
-            creditList.add("500")
-            creditList.add("1000")
-            creditList.add("1200")
-            creditList.add("2000")
-            creditList.add("5000")
-            creditList.add("10000")
+//            creditList = ArrayList()
+//            creditList.add("50")
+//            creditList.add("100")
+//            creditList.add("500")
+//            creditList.add("1000")
+//            creditList.add("1200")
+//            creditList.add("2000")
+//            creditList.add("5000")
+//            creditList.add("10000")
 
-            LuckyDrawItems(creditList)
+
             DB_LuckyDraw.txtUnauthOk.setOnClickListener(this)
             DB_LuckyDraw.txtAlertok.setOnClickListener(this)
             DB_LuckyDraw.cntBacktoHome.setOnClickListener(this)
-            DB_LuckyDraw.luckyWheel.setData(data)
-            DB_LuckyDraw.luckyWheel.setRound(10)
 
-            DB_LuckyDraw.luckyWheel.isTouchEnabled = false
-            DB_LuckyDraw.luckyWheel.isEnabled = false
-            DB_LuckyDraw.luckyWheel.setLuckyRoundItemSelectedListener(object :
-                LuckyWheelView.LuckyRoundItemSelectedListener {
-                override fun LuckyRoundItemSelected(index: Int) {
-                    Log.e(
-                        "TAG",
-                        "Check Item Selected : " + data.get(index).topText.toString().trim()
-                    )
-                    Log.e("TAG", "Check Item Selected : " + GetCredit(data.get(index).topText))
 
-                    LuckyDrawCreditAdd(GetCredit(data.get(index).topText))
-                }
-            })
-//            DB_LuckyDraw.cntLoader.visibility = View.VISIBLE
-//            CheckLuckyDrawAvailable()
+            creditList = ArrayList()
+            DB_LuckyDraw.cntLoader.visibility = View.VISIBLE
+            GetWheelCredits()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -91,6 +79,61 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             RE.printStackTrace()
         } catch (E: Exception) {
             E.printStackTrace()
+        }
+    }
+
+    private fun GetWheelCredits() {
+        try {
+//            creditList = ArrayList()
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+//            params[Constants.paramKey_UserId] =
+//                ApplicationClass.userInfoModel.data!!.userid!!
+
+            val service =
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.LuckyDrawcreditService>(
+                    NetworkServices.LuckyDrawcreditService::class.java
+                )
+
+            Log.e("TAG","CreditRes 123: ")
+            val call = service.GetLuckyDrawCreditData()
+            call.enqueue(object : Callback<LuckyDrawCredit_Model> {
+                override fun onFailure(call: Call<LuckyDrawCredit_Model>, t: Throwable) {
+                    Log.e("TAG","CreditRes : "+ t)
+                    DB_LuckyDraw.cntLoader.visibility = View.GONE
+                }
+
+                override fun onResponse(
+                    call: Call<LuckyDrawCredit_Model>,
+                    response: retrofit2.Response<LuckyDrawCredit_Model>
+                ) {
+//                    DB_LuckyDraw.cntLoader.visibility = View.GONE
+                    Log.e("TAG","CreditRes : "+ Gson().toJson(response.body()!!))
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        creditList.addAll(response.body()!!.data!!.credit!!)
+                        LuckyDrawItems(creditList)
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        DB_LuckyDraw.cntUnAuthorized.visibility = View.VISIBLE
+                    } else {
+
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
         }
     }
 
@@ -145,6 +188,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                     response: retrofit2.Response<LuckyDrawCheck_Model>
                 ) {
                     DB_LuckyDraw.cntLoader.visibility = View.GONE
+                    Log.e("TAG","SpinRes : "+ Gson().toJson(response.body()!!))
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         if (response.body()!!.data!!.is_eligible.equals("No", true)) {
                             DB_LuckyDraw.txtAlertmsg.text = response.body()!!.message
@@ -178,7 +222,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
 
     private fun LuckyDrawCreditAdd(getCredit: String) {
         try {
-
+            DB_LuckyDraw.cntLoader.visibility = View.VISIBLE
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -293,6 +337,24 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
         luckyItem8.color = ContextCompat.getColor(this, R.color.wheel4)
         data.add(luckyItem8)
 
+        DB_LuckyDraw.luckyWheel.setData(data)
+        DB_LuckyDraw.luckyWheel.setRound(10)
+        DB_LuckyDraw.luckyWheel.isTouchEnabled = false
+        DB_LuckyDraw.luckyWheel.isEnabled = false
+        DB_LuckyDraw.luckyWheel.setLuckyRoundItemSelectedListener(object :
+            LuckyWheelView.LuckyRoundItemSelectedListener {
+            override fun LuckyRoundItemSelected(index: Int) {
+                Log.e(
+                    "TAG",
+                    "Check Item Selected : " + data.get(index).topText.toString().trim()
+                )
+                Log.e("TAG", "Check Item Selected : " + GetCredit(data.get(index).topText))
+
+                LuckyDrawCreditAdd(GetCredit(data.get(index).topText))
+            }
+        })
+        DB_LuckyDraw.cntWheel.visibility = View.VISIBLE
+        CheckLuckyDrawAvailable()
     }
 
     fun stringSpace(text: String): String {

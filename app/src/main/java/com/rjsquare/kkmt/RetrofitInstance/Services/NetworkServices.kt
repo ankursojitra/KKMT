@@ -33,12 +33,8 @@ object NetworkServices {
 
     //LuckyDraw Data get Check Service
     interface LuckyDrawcreditService {
-        @POST("api-lucky-spin-credit-list")
-        @FormUrlEncoded
-        fun GetLuckyDrawCheckData(
-            @FieldMap params: Map<String, String>,
-            @Header("token") token: String
-        ): Call<LuckyDrawCheck_Model>
+        @GET("api-lucky-spin-credit-list")
+        fun GetLuckyDrawCreditData(): Call<LuckyDrawCredit_Model>
     }
 
     //LuckyDraw Check Service
