@@ -121,6 +121,7 @@ class CalenderFragment : Fragment() {
                 mArray_EventsByMonthModel = ArrayList()
                 mArray_EventsByMonthModel.addAll(mEventsByMonth_Hash.get(EventDate)!!)
                 SetEvents()
+
             } else {
                 GetLatestEvents(month)
             }
