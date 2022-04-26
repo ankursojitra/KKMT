@@ -245,14 +245,14 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             )
         }
 
-        if (GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Approve)) {
+        if (GlobalUsage.ReviewInfoModel.credit!!.additional_status!!.equals(Constants.Approve)) {
             DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_verified
                 )
             )
-        } else if (GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Pending)) {
+        } else if (GlobalUsage.ReviewInfoModel.credit!!.additional_status!!.equals(Constants.Pending)) {
             DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
@@ -268,32 +268,33 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             )
         }
 
-        if (GlobalUsage.ReviewInfoModel.credit!!.voice_note_status!!.equals(Constants.Approve)
-            || GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Approve)
-        ) {
-            DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_verified
-                )
-            )
-        } else if (GlobalUsage.ReviewInfoModel.credit!!.voice_note_status!!.equals(Constants.Pending)
-            || GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Pending)
-        ) {
-            DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_sand_clock
-                )
-            )
-        } else {
-            DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_rejected
-                )
-            )
-        }
+//        if (GlobalUsage.ReviewInfoModel.credit!!.voice_note_status!!.equals(Constants.Approve)
+//            || GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Approve)
+//        ) {
+//            DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
+//                ContextCompat.getDrawable(
+//                    this,
+//                    R.drawable.ic_verified
+//                )
+//            )
+//        } else if (GlobalUsage.ReviewInfoModel.credit!!.voice_note_status!!.equals(Constants.Pending)
+//            || GlobalUsage.ReviewInfoModel.credit!!.description_status!!.equals(Constants.Pending)
+//        ) {
+//            DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
+//                ContextCompat.getDrawable(
+//                    this,
+//                    R.drawable.ic_sand_clock
+//                )
+//            )
+//        } else {
+//            DB_ReviewDisplay.imgAdditionaldetail.setImageDrawable(
+//                ContextCompat.getDrawable(
+//                    this,
+//                    R.drawable.ic_rejected
+//                )
+//            )
+//        }
+
         if (!GlobalUsage.ReviewInfoModel.credit!!.bonus!!.equals("0")) {
             if (GlobalUsage.ReviewInfoModel.review_status.equals(Constants.Approve)
             ) {

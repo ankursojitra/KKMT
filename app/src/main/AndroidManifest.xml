@@ -126,7 +126,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.Challenges.Challenges"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activity.PrizesList.Prizes"
             android:screenOrientation="portrait" />
@@ -140,9 +140,9 @@
             android:exported="true">
 
         </activity>
-        <activity
-            android:name=".Activity.Review.ReviewEmployeeSearch"
-            android:screenOrientation="portrait" />
+<!--        <activity-->
+<!--            android:name=".Activity.Review.ReviewEmployeeSearch"-->
+<!--            android:screenOrientation="portrait" />-->
         <activity
             android:name=".Activity.Bussiness.Bussiness_Beacon_Search"
             android:screenOrientation="portrait" />

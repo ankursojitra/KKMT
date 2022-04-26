@@ -1,13 +1,17 @@
 package com.rjsquare.kkmt.Activity.Challenges
 
 import android.content.ActivityNotFoundException
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Adapter.ChallengesAdapter
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -25,9 +29,13 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
     lateinit var weeklyChallengesList: ArrayList<ChallangesModel.Challange>
     lateinit var monthlyChallengesList: ArrayList<ChallangesModel.Challange>
     lateinit var DB_Challenges: ActivityChallengesBinding
-    var PageNo = 0
+    var dayPageNo = 0
+    var weekPageNo = 0
+    var monthPageNo = 0
     var PagePerlimit = 10
-    var IsChallangeCallavailable = true
+    var dailyChallangeCallavailable = true
+    var weeklyChallangeCallavailable = true
+    var monthlyChallangeCallavailable = true
     var dataSize = 0
 
     override fun onBackPressed() {
@@ -44,7 +52,9 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
             initListners()
 
             fillData()
-            framesAdapter()
+            dailyframesAdapter()
+            weeklyframesAdapter()
+            monthlyframesAdapter()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -73,7 +83,9 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
 
     private fun fillData() {
         try {
-            DailyChallanges((++PageNo).toString(), PagePerlimit.toString())
+            DailyChallanges((++dayPageNo).toString(), PagePerlimit.toString())
+            WeeklyChallanges((++weekPageNo).toString(), PagePerlimit.toString())
+            MonthlyChallanges((++monthPageNo).toString(), PagePerlimit.toString())
 //            var mChallengesModel = ChallengesModel()
 //            mChallengesModel.Txt1 = "Watch 3 Videos"
 //            mChallengesModel.Txt2 = "Check-in into 1 location"
@@ -134,13 +146,13 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                     DB_Challenges.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         dailyChallengesList.addAll(response.body()!!.data!!)
-                        framesAdapter()
-                        IsChallangeCallavailable =
+                        dailyframesAdapter()
+                        dailyChallangeCallavailable =
                             response.body()!!.data!!.size >= this@Challenges.PagePerlimit
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_Challenges.cntUnAuthorized.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
-                        IsChallangeCallavailable = false
+                        dailyChallangeCallavailable = false
                     } else {
 
                     }
@@ -177,11 +189,11 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_limit] = PagePerlimit
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<NetworkServices.DailyChallangeService>(
-                    NetworkServices.DailyChallangeService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.WeeklyChallangeService>(
+                    NetworkServices.WeeklyChallangeService::class.java
                 )
             val call =
-                service.DailyChallangeData(
+                service.WeeklyChallangeData(
                     params, GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
@@ -196,14 +208,14 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                 ) {
                     DB_Challenges.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        dailyChallengesList.addAll(response.body()!!.data!!)
-                        framesAdapter()
-                        IsChallangeCallavailable =
+                        weeklyChallengesList.addAll(response.body()!!.data!!)
+                        weeklyframesAdapter()
+                        weeklyChallangeCallavailable =
                             response.body()!!.data!!.size >= this@Challenges.PagePerlimit
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_Challenges.cntUnAuthorized.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
-                        IsChallangeCallavailable = false
+                        weeklyChallangeCallavailable = false
                     } else {
 
                     }
@@ -240,11 +252,11 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_limit] = PagePerlimit
 
             val service =
-                ApiCallingInstance.retrofitInstance.create<NetworkServices.DailyChallangeService>(
-                    NetworkServices.DailyChallangeService::class.java
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.MonthlyChallangeService>(
+                    NetworkServices.MonthlyChallangeService::class.java
                 )
             val call =
-                service.DailyChallangeData(
+                service.MonthlyChallangeData(
                     params, GlobalUsage.userInfoModel.data!!.access_token!!
                 )
 
@@ -257,16 +269,17 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                     call: Call<ChallangesModel>,
                     response: Response<ChallangesModel>
                 ) {
+                    Log.e("TAG","Monthlyresponse : "+Gson().toJson(response.body()!!))
                     DB_Challenges.cntLoader.visibility = View.GONE
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        dailyChallengesList.addAll(response.body()!!.data!!)
-                        framesAdapter()
-                        IsChallangeCallavailable =
+                        monthlyChallengesList.addAll(response.body()!!.data!!)
+                        monthlyframesAdapter()
+                        monthlyChallangeCallavailable =
                             response.body()!!.data!!.size >= this@Challenges.PagePerlimit
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         DB_Challenges.cntUnAuthorized.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
-                        IsChallangeCallavailable = false
+                        monthlyChallangeCallavailable = false
                     } else {
 
                     }
@@ -290,7 +303,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
     }
 
 
-    fun framesAdapter() {
+    fun dailyframesAdapter() {
         try {
 
             if (dailyChallengesList.isNullOrEmpty()) {
@@ -315,9 +328,101 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                     if (totalItemCount > 0 && endHasBeenReached) {
                         //you have reached to the bottom of your recycler view
                     }
-                    if ((totalItemCount - 1) == lastVisible && IsChallangeCallavailable && dataSize == PagePerlimit) {
-                        IsChallangeCallavailable = true
-                        DailyChallanges((++PageNo).toString(), PagePerlimit.toString())
+                    if ((totalItemCount - 1) == lastVisible && dailyChallangeCallavailable && dataSize == PagePerlimit) {
+                        dailyChallangeCallavailable = true
+                        DailyChallanges((++dayPageNo).toString(), PagePerlimit.toString())
+                    }
+                }
+            })
+        } catch (NE: NullPointerException) {
+            NE.printStackTrace()
+        } catch (IE: IndexOutOfBoundsException) {
+            IE.printStackTrace()
+        } catch (AE: ActivityNotFoundException) {
+            AE.printStackTrace()
+        } catch (E: IllegalArgumentException) {
+            E.printStackTrace()
+        } catch (RE: RuntimeException) {
+            RE.printStackTrace()
+        } catch (E: Exception) {
+            E.printStackTrace()
+        }
+    }
+
+    fun weeklyframesAdapter() {
+        try {
+
+            if (weeklyChallengesList.isNullOrEmpty()) {
+                DB_Challenges.txtNoChallenges.visibility = View.VISIBLE
+            } else {
+                DB_Challenges.txtNoChallenges.visibility = View.GONE
+            }
+
+            DB_Challenges.rrChallengesWeekly.adapter = ChallengesAdapter(
+                this, weeklyChallengesList
+            )
+
+
+            DB_Challenges.rrChallengesWeekly.addOnScrollListener(object :
+                RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager =
+                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisible = layoutManager.findLastVisibleItemPosition()
+                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
+                    if (totalItemCount > 0 && endHasBeenReached) {
+                        //you have reached to the bottom of your recycler view
+                    }
+                    if ((totalItemCount - 1) == lastVisible && weeklyChallangeCallavailable && dataSize == PagePerlimit) {
+                        weeklyChallangeCallavailable = true
+                        WeeklyChallanges((++weekPageNo).toString(), PagePerlimit.toString())
+                    }
+                }
+            })
+        } catch (NE: NullPointerException) {
+            NE.printStackTrace()
+        } catch (IE: IndexOutOfBoundsException) {
+            IE.printStackTrace()
+        } catch (AE: ActivityNotFoundException) {
+            AE.printStackTrace()
+        } catch (E: IllegalArgumentException) {
+            E.printStackTrace()
+        } catch (RE: RuntimeException) {
+            RE.printStackTrace()
+        } catch (E: Exception) {
+            E.printStackTrace()
+        }
+    }
+
+    fun monthlyframesAdapter() {
+        try {
+
+            if (monthlyChallengesList.isNullOrEmpty()) {
+                DB_Challenges.txtNoChallenges.visibility = View.VISIBLE
+            } else {
+                DB_Challenges.txtNoChallenges.visibility = View.GONE
+            }
+
+            DB_Challenges.rrChallengesMonthly.adapter = ChallengesAdapter(
+                this, monthlyChallengesList
+            )
+
+
+            DB_Challenges.rrChallengesMonthly.addOnScrollListener(object :
+                RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager =
+                        LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisible = layoutManager.findLastVisibleItemPosition()
+                    val endHasBeenReached = lastVisible + 5 >= totalItemCount
+                    if (totalItemCount > 0 && endHasBeenReached) {
+                        //you have reached to the bottom of your recycler view
+                    }
+                    if ((totalItemCount - 1) == lastVisible && monthlyChallangeCallavailable && dataSize == PagePerlimit) {
+                        monthlyChallangeCallavailable = true
+                        MonthlyChallanges((++monthPageNo).toString(), PagePerlimit.toString())
                     }
                 }
             })
@@ -344,6 +449,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                 if (view == DB_Challenges.imgBack) {
                     onBackPressed()
                 } else if (view == DB_Challenges.txtDaily) {
+                    DB_Challenges.txtChallangesLbl.setText(getString(R.string.challangedaily))
                     UncheckSelection()
                     setUpDailyList()
                     DB_Challenges.rrChallengesDaily.visibility = View.VISIBLE
@@ -361,6 +467,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                     )
 
                 } else if (view == DB_Challenges.txtWeekly) {
+                    DB_Challenges.txtChallangesLbl.setText(getString(R.string.challangemonthly))
                     UncheckSelection()
                     setUpWeeklyList()
                     DB_Challenges.rrChallengesWeekly.visibility = View.VISIBLE
@@ -379,6 +486,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                     )
 
                 } else if (view == DB_Challenges.txtMonthly) {
+                    DB_Challenges.txtChallangesLbl.setText(getString(R.string.challangemonthly))
                     UncheckSelection()
                     setUpMonthlyList()
                     DB_Challenges.rrChallengesMonthly.visibility = View.VISIBLE
