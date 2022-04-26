@@ -339,7 +339,7 @@ object NetworkServices {
 
     //Weekly Challange Service
     interface WeeklyChallangeService {
-        @POST("api-get-challanges-daily")
+        @POST("api-get-challanges-weekly")
         @FormUrlEncoded
         fun WeeklyChallangeData(
             @FieldMap params: Map<String, String>,
@@ -350,7 +350,7 @@ object NetworkServices {
 
     //Monthly Challange Service
     interface MonthlyChallangeService {
-        @POST("api-get-challanges-daily")
+        @POST("api-get-challanges-monthly")
         @FormUrlEncoded
         fun MonthlyChallangeData(
             @FieldMap params: Map<String, String>,

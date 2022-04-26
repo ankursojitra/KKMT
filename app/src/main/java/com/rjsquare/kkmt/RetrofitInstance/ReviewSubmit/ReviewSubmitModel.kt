@@ -119,6 +119,9 @@ class ReviewInfodata {
         @SerializedName("check_in_status")
         var check_in_status: String? = null
 
+        @SerializedName("additional_status")
+        var additional_status: String? = null
+
     }
 
 }

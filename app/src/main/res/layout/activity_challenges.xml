@@ -96,12 +96,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/txt_challanges_lbl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_16dp"
                 android:fontFamily="@font/lato_medium"
-                android:text="Available Daily tasks for you"
+                android:text="@string/challangedaily"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/_14dp"
                 android:textStyle="bold"
@@ -120,7 +120,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
+                app:layout_constraintTop_toBottomOf="@+id/txt_challanges_lbl"
                 app:layout_constraintVertical_bias="0.0">
 
 
