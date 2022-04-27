@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewInfodata
 import com.rjsquare.kkmt.databinding.ActivityReviewListBinding
 
 class ReviewList : AppCompatActivity(), View.OnClickListener {
@@ -25,8 +26,8 @@ class ReviewList : AppCompatActivity(), View.OnClickListener {
     companion object {
         lateinit var reviewListActivity: Activity
         lateinit var DB_ReviewList: ActivityReviewListBinding
-        lateinit var pendingReviewItemInfo: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
-        lateinit var completeReviewItemInfo: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+        lateinit var pendingReviewItemInfo: ArrayList<ReviewInfodata>
+        lateinit var completeReviewItemInfo: ArrayList<ReviewInfodata>
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
 import android.media.MediaRecorder
@@ -38,6 +39,7 @@ import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewInfodata
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewSubmitModel
 import com.rjsquare.kkmt.databinding.ActivityReviewScreenBinding
 import com.squareup.picasso.Picasso
@@ -60,7 +62,8 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     var isRecoding = false
     var looped = false
     private var recorder: MediaRecorder? = null
-//    lateinit var audioFile: AndroidAudioRecorder
+
+    //    lateinit var audioFile: AndroidAudioRecorder
     var player: MediaPlayer? = null
 
     lateinit var TimerHandler: Handler
@@ -106,7 +109,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         DB_ReviewEdit.imgDelete.setOnClickListener(this)
         DB_ReviewEdit.imgMic.setOnClickListener(this)
         DB_ReviewEdit.imgPlaypause.setOnClickListener(this)
-        DB_ReviewEdit.txtUploadReceipt.setOnClickListener(this)
+//        DB_ReviewEdit.txtUploadReceipt.setOnClickListener(this)
         DB_ReviewEdit.txtAlertok.setOnClickListener(this)
         TimerHandler = Handler()
         if (savedInstanceState != null) {
@@ -440,16 +443,95 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 
             DB_ReviewEdit.txtReviewName.text = GlobalUsage.empSlaveModel.username
 
-            var UserImage = ""
-            if (GlobalUsage.empSlaveModel.employeeimage!! != null && !GlobalUsage.empSlaveModel.employeeimage!!.equals(
-                    ""
-                )
-            ) {
-                UserImage = GlobalUsage.empSlaveModel.employeeimage!!
-                Picasso.with(this).load(UserImage).into(DB_ReviewEdit.imgProfile)
+            if (!GlobalUsage.empSlaveModel.employeeimage.isNullOrBlank()) {
+                Picasso.with(this).load(GlobalUsage.empSlaveModel.employeeimage!!)
+                    .into(DB_ReviewEdit.imgProfile, object : com.squareup.picasso.Callback {
+                        override fun onSuccess() {
+                            DB_ReviewEdit.imgProfilePlace.visibility = View.GONE
+                        }
+
+                        override fun onError() {
+                            DB_ReviewEdit.imgProfilePlace.visibility = View.VISIBLE
+                        }
+
+                    })
             }
+
         } else {
             //Setup edit review data
+
+
+            NewReveiwSetup()
+//            DB_ReviewEdit.cnt1star.performClick()
+            setUpEditReview(GlobalUsage.ReviewInfoModel)
+
+        }
+    }
+
+    private fun setUpEditReview(reviewInfoModel: ReviewInfodata) {
+        DB_ReviewEdit.cnt5star.isClickable = false
+        DB_ReviewEdit.cntGood.isClickable = false
+        DB_ReviewEdit.cntBad.isClickable = false
+        DB_ReviewEdit.cnt1star.isClickable = false
+        DB_ReviewEdit.cntVoice.isEnabled = false
+        DB_ReviewEdit.cntReceiptUpload.isEnabled = false
+        if (reviewInfoModel.review!!.equals(Constants.fivestar)) {
+            DB_ReviewEdit.cnt5star.performClick()
+        } else if (reviewInfoModel.review!!.equals(Constants.good)) {
+            DB_ReviewEdit.cntGood.performClick()
+        } else if (reviewInfoModel.review!!.equals(Constants.bad)) {
+            DB_ReviewEdit.cntBad.performClick()
+        } else if (reviewInfoModel.review!!.equals(Constants.onestar)) {
+            DB_ReviewEdit.cnt1star.performClick()
+        }
+
+        DB_ReviewEdit.txtReviewName.text = reviewInfoModel.employee_name
+
+        if (!reviewInfoModel.employeimage.isNullOrBlank()) {
+            Picasso.with(this).load(reviewInfoModel.employeimage!!)
+                .into(DB_ReviewEdit.imgProfile, object : com.squareup.picasso.Callback {
+                    override fun onSuccess() {
+                        DB_ReviewEdit.imgProfilePlace.visibility = View.GONE
+                    }
+
+                    override fun onError() {
+                        DB_ReviewEdit.imgProfilePlace.visibility = View.VISIBLE
+                    }
+
+                })
+        }
+
+        if (!reviewInfoModel.upload_recipt.isNullOrBlank()) {
+            Log.e("TAG", "IMAGELOAD : " + reviewInfoModel.upload_recipt)
+            Picasso.with(this).load(reviewInfoModel.upload_recipt!!)
+                .into(object : com.squareup.picasso.Target {
+                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                        Log.e("TAG", "onBitmapLoaded : ")
+                        receiptImageString = convertImagetoString(bitmap!!)
+                        ChangeUploadText()
+                    }
+
+                    override fun onBitmapFailed(errorDrawable: Drawable?) {
+                        Log.e("TAG", "onBitmapFailed : ")
+
+                    }
+
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                        Log.e("TAG", "onPrepareLoad : ")
+
+                    }
+
+                })
+        }
+        DB_ReviewEdit.edtReceiptNumber.setText(reviewInfoModel.receipt_number)
+        DB_ReviewEdit.edtReceiptAmount.setText(reviewInfoModel.receipt_amount)
+        DB_ReviewEdit.edtWrittenNote.setText(reviewInfoModel.description)
+        DB_ReviewEdit.edtReceiptNumber.isEnabled = false
+        DB_ReviewEdit.edtReceiptAmount.isEnabled = false
+        DB_ReviewEdit.edtWrittenNote.isEnabled = true
+
+        if (!reviewInfoModel.voice_note.isNullOrBlank()) {
+
         }
     }
 
@@ -465,27 +547,16 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         return byteBuffer.toByteArray()
     }
 
-    fun ConvertFileOrImageToString(sUri: Uri) {
+    fun convertURItoImage(sUri: Uri) {
         //Convert File to Base64String
         try {
-//            val baos = ByteArrayOutputStream()
-//            val `in` = contentResolver.openInputStream(sUri)
 
-//            val bytes: ByteArray = getBytes(`in`!!)!!
             val bitmapImage = BitmapFactory.decodeFile(sUri.path)
             val nh = (bitmapImage.height * (512.0 / bitmapImage.width)).toInt()
             val scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true)
-//                your_imageview.setImageBitmap(scaled)
 
-            val baos = ByteArrayOutputStream()
+            receiptImageString = convertImagetoString(scaled)
 
-            scaled.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            val imageBytes = baos.toByteArray()
-            receiptImageString = Base64.encodeToString(imageBytes, Base64.DEFAULT)
-
-//            receiptImageString = Base64.encodeToString(bytes, Base64.DEFAULT)
-
-            Log.e("TAG", "ActivityResult: " + receiptImageString)
             ChangeUploadText()
             DB_ReviewEdit.cntLoader.visibility = View.GONE
         } catch (e: java.lang.Exception) {
@@ -494,6 +565,14 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             Log.d("error", "onActivityResult: $e")
             DB_ReviewEdit.cntLoader.visibility = View.GONE
         }
+    }
+
+    private fun convertImagetoString(image: Bitmap): String {
+        val baos = ByteArrayOutputStream()
+
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val imageBytes = baos.toByteArray()
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT)
     }
 
     private fun ChangeUploadText() {
@@ -516,7 +595,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode === 1 && resultCode === RESULT_OK) {
             DB_ReviewEdit.cntLoader.visibility = View.VISIBLE
-            ConvertFileOrImageToString(Uri.fromFile(photoFile))
+            convertURItoImage(Uri.fromFile(photoFile))
         }
     }
 
@@ -619,7 +698,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                 } else if (view == DB_ReviewEdit.imgPlaypause) {
                     isPlaying = !isPlaying
                     FilePlayPause()
-                } else if (view == DB_ReviewEdit.txtUploadReceipt) {
+                } else if (view == DB_ReviewEdit.cntReceiptUpload) {
                     Log.e("TAG", "txtUploadReceipt")
                     val permissions =
                         arrayOf(
@@ -1031,7 +1110,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             }
         })
 
-        AudioFileSetUp()
+//        AudioFileSetUp()
         DB_ReviewEdit.motMic.setTransitionListener(object : TransitionListener {
             override fun onTransitionStarted(
                 motionLayout: MotionLayout?,

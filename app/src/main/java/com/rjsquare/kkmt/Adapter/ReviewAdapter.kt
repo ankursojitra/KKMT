@@ -13,12 +13,13 @@ import com.rjsquare.kkmt.Activity.Review.ReviewList
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewInfodata
 import com.rjsquare.kkmt.databinding.RawReviewFrameBinding
 import com.squareup.picasso.Picasso
 
 class ReviewAdapter(
     var moContext: Context,
-    var moArrayItemInfo: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+    var moArrayItemInfo: ArrayList<ReviewInfodata>
 ) : RecyclerView.Adapter<ReviewAdapter.View_holder>() {
     var Width = 0
     private var layoutInflater: LayoutInflater? = null
@@ -39,11 +40,11 @@ class ReviewAdapter(
             var mReviewModel = moArrayItemInfo[position]
             holder.lReviewModelSelected = mReviewModel
 
-            holder.DB_RawReviewFrameBinding.txtEmpName.text = mReviewModel.username
-            holder.DB_RawReviewFrameBinding.txtEmprating.text = mReviewModel.ratings
-            holder.DB_RawReviewFrameBinding.txtEmpamount.text = ("$${mReviewModel.spend_amount}")
+            holder.DB_RawReviewFrameBinding.txtEmpName.text = mReviewModel.employee_name
+            holder.DB_RawReviewFrameBinding.txtEmprating.text = mReviewModel.review
+            holder.DB_RawReviewFrameBinding.txtEmpamount.text = ("$${mReviewModel.receipt_amount}")
             holder.DB_RawReviewFrameBinding.txtBusname.text = ("${mReviewModel.bussinessname}")
-            Picasso.with(moContext).load(mReviewModel.userimage)
+            Picasso.with(moContext).load(mReviewModel.employeimage)
                 .placeholder(R.drawable.expe_logo)
                 .into(holder.DB_RawReviewFrameBinding.imgEmpProfile)
 
@@ -69,7 +70,7 @@ class ReviewAdapter(
     inner class View_holder(itemBinding: RawReviewFrameBinding) :
         RecyclerView.ViewHolder(itemBinding.root),
         View.OnClickListener {
-        var lReviewModelSelected: CustomerHistoryModel.reviewData.reviewItemInfo? = null
+        var lReviewModelSelected: ReviewInfodata? = null
         lateinit var DB_RawReviewFrameBinding: RawReviewFrameBinding
 
         init {

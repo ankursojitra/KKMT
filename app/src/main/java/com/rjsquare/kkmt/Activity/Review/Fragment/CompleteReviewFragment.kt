@@ -11,11 +11,12 @@ import com.rjsquare.kkmt.Activity.Review.ReviewList
 import com.rjsquare.kkmt.Adapter.ReviewAdapter
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewInfodata
 import com.rjsquare.kkmt.databinding.FragmentCompleteReviewBinding
 
 class CompleteReviewFragment : Fragment() {
 
-    lateinit var arrayCompleteReviewModel: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+    lateinit var arrayCompleteReviewModel: ArrayList<ReviewInfodata>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
