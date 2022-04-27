@@ -16,6 +16,7 @@ import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
+import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewInfodata
 import com.rjsquare.kkmt.databinding.FragmentHistoryBinding
 import com.squareup.picasso.Picasso
 import retrofit2.Call
@@ -25,10 +26,10 @@ import retrofit2.Response
 
 class History : Fragment(), View.OnClickListener {
 
-    lateinit var latestReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
-    lateinit var pendingReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
-    lateinit var approveReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
-    lateinit var rejectedReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+    lateinit var latestReviewList: ArrayList<ReviewInfodata>
+    lateinit var pendingReviewList: ArrayList<ReviewInfodata>
+    lateinit var approveReviewList: ArrayList<ReviewInfodata>
+    lateinit var rejectedReviewList: ArrayList<ReviewInfodata>
     lateinit var ReviewModel: CustomerHistoryModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -267,28 +268,28 @@ class History : Fragment(), View.OnClickListener {
         DB_FHistory.txtBad.text = ("$BadPer%")
     }
 
-    private fun SetThirdReview(reviewItemInfoModel: CustomerHistoryModel.reviewData.reviewItemInfo) {
-        Picasso.with(requireActivity()).load(reviewItemInfoModel.userimage)
+    private fun SetThirdReview(reviewItemInfoModel: ReviewInfodata) {
+        Picasso.with(requireActivity()).load(reviewItemInfoModel.employeimage)
             .placeholder(R.drawable.expe_logo).into(DB_FHistory.imgEmployeeHistory3)
-        DB_FHistory.txtEmpname1History3.text = reviewItemInfoModel.username
-        DB_FHistory.txtEmpratingHistory3.text = reviewItemInfoModel.ratings
-        DB_FHistory.txtEmpTotalSupportHistory3.text = ("$${reviewItemInfoModel.spend_amount}")
+        DB_FHistory.txtEmpname1History3.text = reviewItemInfoModel.employee_name
+        DB_FHistory.txtEmpratingHistory3.text = reviewItemInfoModel.review
+        DB_FHistory.txtEmpTotalSupportHistory3.text = ("$${reviewItemInfoModel.receipt_amount}")
     }
 
-    private fun SetSecondReview(reviewItemInfoModel: CustomerHistoryModel.reviewData.reviewItemInfo) {
-        Picasso.with(requireActivity()).load(reviewItemInfoModel.userimage)
+    private fun SetSecondReview(reviewItemInfoModel: ReviewInfodata) {
+        Picasso.with(requireActivity()).load(reviewItemInfoModel.employeimage)
             .placeholder(R.drawable.expe_logo).into(DB_FHistory.imgEmployeeHistory2)
-        DB_FHistory.txtEmpname1History2.text = reviewItemInfoModel.username
-        DB_FHistory.txtEmpratingHistory2.text = reviewItemInfoModel.ratings
-        DB_FHistory.txtEmpTotalSupportHistory2.text = ("$${reviewItemInfoModel.spend_amount}")
+        DB_FHistory.txtEmpname1History2.text = reviewItemInfoModel.employee_name
+        DB_FHistory.txtEmpratingHistory2.text = reviewItemInfoModel.review
+        DB_FHistory.txtEmpTotalSupportHistory2.text = ("$${reviewItemInfoModel.receipt_amount}")
     }
 
-    private fun SetFirstReview(reviewItemInfoModel: CustomerHistoryModel.reviewData.reviewItemInfo) {
-        Picasso.with(requireActivity()).load(reviewItemInfoModel.userimage)
+    private fun SetFirstReview(reviewItemInfoModel: ReviewInfodata) {
+        Picasso.with(requireActivity()).load(reviewItemInfoModel.employeimage)
             .placeholder(R.drawable.expe_logo).into(DB_FHistory.imgEmployee)
-        DB_FHistory.txtEmpname1.text = reviewItemInfoModel.username
-        DB_FHistory.txtEmprating.text = reviewItemInfoModel.ratings
-        DB_FHistory.txtEmpTotalSupport.text = ("$${reviewItemInfoModel.spend_amount}")
+        DB_FHistory.txtEmpname1.text = reviewItemInfoModel.employee_name
+        DB_FHistory.txtEmprating.text = reviewItemInfoModel.review
+        DB_FHistory.txtEmpTotalSupport.text = ("$${reviewItemInfoModel.receipt_amount}")
     }
 
     override fun onClick(view: View?) {

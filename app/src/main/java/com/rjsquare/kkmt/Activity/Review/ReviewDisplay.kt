@@ -1,6 +1,7 @@
 package com.rjsquare.kkmt.Activity.Review
 
 import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
@@ -92,8 +93,8 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             Log.e("TAG", "CHECKEditFlow")
             //Customer History Screen Call
             val SelectedEmpInfo = GlobalUsage.empReviewModelSelected
-            DB_ReviewDisplay.txtReviewName.text = SelectedEmpInfo!!.username
-            Picasso.with(this).load(SelectedEmpInfo.userimage)
+            DB_ReviewDisplay.txtReviewName.text = SelectedEmpInfo!!.employee_name
+            Picasso.with(this).load(SelectedEmpInfo.employeimage)
                 .placeholder(R.drawable.expe_logo).into(DB_ReviewDisplay.imgProfile)
             DB_ReviewDisplay.cntLoader.visibility = View.VISIBLE
 
@@ -168,18 +169,18 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
     private fun SetUIData() {
         //Latest Info update in UI
 
-        val differDate = differenceTime(GlobalUsage.ReviewInfoModel.created_at!!).toInt()
-        Log.e("TAG", "TimeMiliessa : " + differDate)
+        val differHours = differenceTime(GlobalUsage.ReviewInfoModel.created_at!!)
+        Log.e("TAG", "TimeMiliessa : " + differHours)
         DB_ReviewDisplay.txtEdit.text =
-            getString(R.string.editadditiondetail) + " ($differDate Hours Left)"
+            getString(R.string.editadditiondetail) + " ($differHours Hours Left)"
 
         if (GlobalUsage.ReviewInfoModel.review_status!!.equals(Constants.Approve, true)) {
             DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
         } else {
-            if (differDate < 0) {
-                DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
-            } else {
+            if (differHours > GlobalUsage.EditReviewHours) {
                 DB_ReviewDisplay.cntEditdetails.visibility = View.VISIBLE
+            } else {
+                DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
             }
         }
 
@@ -328,7 +329,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
 
     }
 
-    private fun differenceTime(createdAt: String): String {
+    private fun differenceTime(createdAt: String): Int {
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
         var dateCreate = simpleDateFormat.parse(createdAt)
@@ -339,18 +340,22 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
 
         val cal = Calendar.getInstance(Locale.ENGLISH)
         cal.timeInMillis = System.currentTimeMillis()
-        val datez: String = DateFormat.format("yyyy-MM-dd HH:mm:ss", cal).toString()
-        var dateCurrent = df.parse(datez)
-        var dateCreated = df.parse(dateCreateds)
+        val serverDateFormate: String = DateFormat.format("yyyy-MM-dd HH:mm:ss", cal).toString()
+        var currentDate = df.parse(serverDateFormate)
+        var reviewDate = df.parse(dateCreateds)
 
-        val difference: Long = dateCreated.time - dateCurrent.time
-        var days = (difference / (1000 * 60 * 60 * 24)).toInt()
-        var hours = ((difference - 1000 * 60 * 60 * 24 * days) / (1000 * 60 * 60)).toInt()
+        val difference: Long = currentDate.time - reviewDate.time
+        val seconds = (difference / 1000).toInt()
+        val minutes = (seconds / 60).toInt()
+        val hours = (minutes / 60).toInt()
+        val days = (hours / 24).toInt()
+
+//        var days = (difference / (1000 * 60 * 60 * 24)).toInt()
+//        var hours = ((difference - 1000 * 60 * 60 * 24 * days) / (1000 * 60 * 60)).toInt()
 //       var hours = ((((difference) / (1000 * 60 * 60)).toInt())-1000 * 60 * 60 * 24 * days)
-        var min =
-            (difference - 1000 * 60 * 60 * 24 * days - 1000 * 60 * 60 * hours).toInt() / (1000 * 60)
+//        var min = (difference - 1000 * 60 * 60 * 24 * days - 1000 * 60 * 60 * hours).toInt() / (1000 * 60)
 //        hours = if (hours < 0) -hours else hours
-        return hours.toString()
+        return hours
     }
 
     override fun onClick(v: View?) {
@@ -373,7 +378,8 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                 }
 
             } else if (v == DB_ReviewDisplay.cntEditdetails) {
-                onBackPressed()
+                GlobalUsage.isNewReview = false
+                GlobalUsage.NextScreen(this, Intent(this,ReviewEdit::class.java))
             } else if (v == DB_ReviewDisplay.txtUnauthOk) {
                 DB_ReviewDisplay.cntUnAuthorized.visibility = View.GONE
                 GlobalUsage.UserLogout(this)

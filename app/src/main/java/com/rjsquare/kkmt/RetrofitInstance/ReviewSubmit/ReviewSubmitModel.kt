@@ -87,6 +87,18 @@ class ReviewInfodata {
     @SerializedName("employee_name")
     var employee_name: String? = null
 
+    @SerializedName("bussinessname")
+    var bussinessname: String? = null
+
+    @SerializedName("bussinessimage")
+    var bussinessimage: String? = null
+
+    @SerializedName("spend_amount")
+    var spend_amount: String? = null
+
+    @SerializedName("gain_credit_from_admin")
+    var gain_credit_from_admin: String? = null
+
     @SerializedName("credit")
     var credit: CreditInfo? = null
 

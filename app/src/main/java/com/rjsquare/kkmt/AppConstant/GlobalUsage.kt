@@ -35,16 +35,16 @@ import java.text.DecimalFormat
 import java.util.regex.Pattern
 
 object GlobalUsage {
-    lateinit var mPendingReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
-    lateinit var mApproveReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
-    lateinit var mCancelReviewList: ArrayList<CustomerHistoryModel.reviewData.reviewItemInfo>
+    lateinit var mPendingReviewList: ArrayList<ReviewInfodata>
+    lateinit var mApproveReviewList: ArrayList<ReviewInfodata>
+    lateinit var mCancelReviewList: ArrayList<ReviewInfodata>
     lateinit var mList_StoreListModel: ArrayList<StoreList_Model.StoreItemData>
     var mStoreLevelListModelSelected: StoreList_Model.StoreItemData? = null
     var isUserEmployee: Boolean = false
     var appBackground: Boolean = false
     var userLogedIn: Boolean = false
     var isNewReview = true
-    var empReviewModelSelected: CustomerHistoryModel.reviewData.reviewItemInfo? = null
+    var empReviewModelSelected: ReviewInfodata? = null
     var mSearchModelSelected: SearchModel? = null
     var mEventsModelSelected: Events_Model.EventsData? = null
     var mEventsByMonthModelSelected: EventsByMonth_Model.EventsData.DateWiseEvents? = null
@@ -52,6 +52,7 @@ object GlobalUsage {
     var IsRegisterFlow = false
     var HomeScreenLoad = false
 
+    var EditReviewHours = 24
     var clickInterval = 500L
     lateinit var ReviewInfoModel: ReviewInfodata
     lateinit var mLogInInfo_Model: UserLogIn_Model
