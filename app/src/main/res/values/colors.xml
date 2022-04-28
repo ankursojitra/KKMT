@@ -14,7 +14,7 @@
     <color name="dropshadow">#2E000000</color>
     <color name="dropshadowcenter">#05000000</color>
     <color name="dropshadowbottom">#00000000</color>
-    <color name="dialoug_back">#802C2B2B</color>
+    <color name="dialog_back">#802C2B2B</color>
     <color name="menu_saperator">#FC9A1F</color>
     <color name="menu_icon_back">#323352</color>
     <color name="blue_darklight">#2C2E4D</color>

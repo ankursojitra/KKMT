@@ -32,7 +32,10 @@ import com.google.gson.Gson
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.Register.upload_doc
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -119,7 +122,6 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         mGenderListView.txt_male.setOnClickListener(this)
         mGenderListView.txt_female.setOnClickListener(this)
         mGenderListView.txt_other.setOnClickListener(this)
-        DB_Profile.txtUnauthOk.setOnClickListener(this)
 
         DB_Profile.imgUserProfile.isClickable = false
         DB_Profile.txtGender.isEnabled = false
@@ -143,7 +145,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                 val data: Intent = result.data!!
                 // check condition
                 if (data != null) {
-                    DB_Profile.cntLoader.visibility = View.VISIBLE
+                    Loader.showLoader(this)
                     // When data is not equal to empty
                     // Get PDf uri
                     val sUri: Uri? = data.data
@@ -282,8 +284,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         } catch (e: java.lang.Exception) {
             // TODO: handle exception
             e.printStackTrace()
-            Log.d("error", "onActivityResult: $e")
-            DB_Profile.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
         }
     }
 
@@ -339,8 +340,6 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                     DB_Profile.cntUserProfile.visibility = View.VISIBLE
                 } else if (view == DB_Profile.imgEditProfile) {
                     EditProfileSetup()
-                } else if (view == DB_Profile.txtUnauthOk) {
-                    GlobalUsage.UserLogout(this)
                 } else if (view == mGenderListView.txt_male) {
                     DB_Profile.txtGender.text = "Male"
                     mGenderListView.visibility = View.GONE
@@ -494,7 +493,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
     private fun UpdateProfile() {
         try {
             //Here the json data is add to a hash map with key data
-            DB_Profile.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             val params: MutableMap<String, String> =
                 HashMap()
 
@@ -511,8 +510,9 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                 if (GlobalUsage.isValidEmail(DB_Profile.edtEmail.text.toString())) {
                     params[Constants.paramKey_EmailAddress] = DB_Profile.edtEmail.text.toString()
                 } else {
-                    DB_Profile.txtAlertmsg.setText(getString(R.string.invalidemail))
-                    DB_Profile.cntAlert.visibility = View.VISIBLE
+                    Alert.showDialog(this,getString(R.string.invalidemail))
+//                    DB_Profile.txtAlertmsg.setText(getString(R.string.invalidemail))
+//                    DB_Profile.cntAlert.visibility = View.VISIBLE
                     return
                 }
             } else {
@@ -545,20 +545,14 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
             )
             call.enqueue(object : Callback<UserInfoData_Model> {
                 override fun onFailure(call: Call<UserInfoData_Model>, t: Throwable) {
-                    Log.e("GetResponse", ": " + t)
-                    GlobalUsage.ShowToast(
-                        thisProfileActivity,
-                        "Something went wrong"
-                    )
-                    DB_Profile.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<UserInfoData_Model>,
                     response: retrofit2.Response<UserInfoData_Model>
                 ) {
-                    DB_Profile.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "UpdateInfo : " + Gson().toJson(response.body()))
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(
                             Constants.ResponseSucess, true
                         )
@@ -569,12 +563,12 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                             Constants.ResponseUnauthorized, true
                         )
                     ) {
-                        DB_Profile.cntUnAuthorized.visibility =
-                            View.VISIBLE
+                        UnAuthorized.showDialog(this@Profile)
                     } else {
                         Log.e("TAG", "Messageerror : " + response.body()!!.message)
-                        DB_Profile.txtOtpAlertmsg.text = response.body()!!.message
-                        DB_Profile.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@Profile,response.body()!!.message!!)
+//                        DB_Profile.txtOtpAlertmsg.text = response.body()!!.message
+//                        DB_Profile.cntAlert.visibility = View.VISIBLE
                     }
                 }
             })
@@ -648,20 +642,14 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
             )
             call.enqueue(object : Callback<DisplayNameModel> {
                 override fun onFailure(call: Call<DisplayNameModel>, t: Throwable) {
-                    Log.e("GetResponse", ": " + t)
-                    GlobalUsage.ShowToast(
-                        thisProfileActivity,
-                        "Something went wrong"
-                    )
-                    DB_Profile.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<DisplayNameModel>,
                     response: retrofit2.Response<DisplayNameModel>
                 ) {
-                    DB_Profile.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "MessageRes : " + Gson().toJson(response.body()!!))
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(
                             Constants.ResponseSucess, true
                         )
@@ -671,11 +659,9 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                             Constants.ResponseUnauthorized, true
                         )
                     ) {
-                        DB_Profile.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@Profile)
                     } else {
-                        Log.e("TAG", "Messageerror : " + response.body()!!.message)
-                        DB_Profile.txtOtpAlertmsg.text = response.body()!!.message
-                        DB_Profile.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@Profile,response.body()!!.message!!)
                     }
                 }
             })
@@ -711,7 +697,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
 
         override fun onPreExecute() {
             super.onPreExecute()
-            DB_Profile.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(thisProfileActivity)
         }
 
         fun getFolderSize(file: File): Long {
@@ -765,7 +751,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            DB_Profile.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
         }
     }
 

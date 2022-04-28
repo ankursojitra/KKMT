@@ -25,7 +25,6 @@ import com.rjsquare.kkmt.RetrofitInstance.Events.EventsByMonth_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.Videos_Model
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
-import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.MasterBeaconModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewInfodata
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.SlaveBeaconModel
@@ -64,6 +63,8 @@ object GlobalUsage {
     var isApprove = true
     var isHomeScreenVisible = false
     var lastClick = 0L
+
+    var ItemRedeemed = false
 
     lateinit var sharedPref: SharedPreferences
     lateinit var prefEditor: SharedPreferences.Editor

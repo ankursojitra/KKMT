@@ -1,6 +1,5 @@
 package com.rjsquare.kkmt.Activity.Store
 
-import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -38,7 +40,6 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
         lateinit var DB_StoreItemRedeemConfirm: ActivityStoreItemRedeemConfirmBinding
         var DeliveryAddress = ""
         var IsPickUpStore = false
-        var ItemRedeemed = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,9 +128,6 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
                 TextView.OnEditorActionListener {
                 override fun onEditorAction(v: TextView?, actionId: Int, p2: KeyEvent?): Boolean {
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                        var imm = getSystemService(
-//                            Context.INPUT_METHOD_SERVICE);
-//                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                         GlobalUsage.HiddenKeyBoard(
                             this@StoreItemRedeemConfirm,
                             DB_StoreItemRedeemConfirm.cntTopView
@@ -147,8 +145,6 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             DB_StoreItemRedeemConfirm.cntRedeemConfirm.setOnClickListener(this)
             DB_StoreItemRedeemConfirm.cntRedeemCancel.setOnClickListener(this)
             DB_StoreItemRedeemConfirm.imgBack.setOnClickListener(this)
-            DB_StoreItemRedeemConfirm.txtAlertok.setOnClickListener(this)
-            DB_StoreItemRedeemConfirm.txtUnauthOk.setOnClickListener(this)
             SetUpItemData()
             LocationList = ArrayList()
             GetPickUpLocation()
@@ -181,7 +177,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
 
     private fun GetPickUpLocation() {
         try {
-            DB_StoreItemRedeemConfirm.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.PickUpLocationService>(
                     NetworkServices.PickUpLocationService::class.java
@@ -191,27 +187,23 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<PickUpLocation_Model> {
                 override fun onFailure(call: Call<PickUpLocation_Model>, t: Throwable) {
-                    DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
-                    Log.e("GetResponsesasXASX", "Hell: ")
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<PickUpLocation_Model>,
                     response: Response<PickUpLocation_Model>
                 ) {
-                    DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
-
-//                    Log.e("GetResponsesasXASX", "Hell: "+Gson().toJson(response.body()!!))
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         LocationList.addAll(response.body()!!.data!!)
                         SetUpDataUI()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_StoreItemRedeemConfirm.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@StoreItemRedeemConfirm)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        DB_StoreItemRedeemConfirm.txtAlertmsg.text = response.body()!!.message
-                        DB_StoreItemRedeemConfirm.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@StoreItemRedeemConfirm,response.body()!!.message!!)
                     }
                 }
             })
@@ -234,7 +226,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
 
     private fun ItemRedeemRequest() {
         try {
-            DB_StoreItemRedeemConfirm.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -248,7 +240,7 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             params[Constants.paramKey_LocationType] = GetLocation()
             params[Constants.paramKey_Location] = DeliveryAddress
 
-            DB_StoreItemRedeemConfirm.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.ItemRedeemService>(
                     NetworkServices.ItemRedeemService::class.java
@@ -261,27 +253,23 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<ItemRedeem_Model> {
                 override fun onFailure(call: Call<ItemRedeem_Model>, t: Throwable) {
-                    DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
-                    Log.e("GetResponsesasXASX", "Hell: " + t)
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<ItemRedeem_Model>,
                     response: Response<ItemRedeem_Model>
                 ) {
-                    Log.e("GetResponsesasXASX", "Hell: " + Gson().toJson(response.body()!!))
-                    DB_StoreItemRedeemConfirm.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        ItemRedeemed = true
-                        DB_StoreItemRedeemConfirm.txtAlertmsg.text = response.body()!!.message
-                        DB_StoreItemRedeemConfirm.cntAlert.visibility = View.VISIBLE
+                        GlobalUsage.ItemRedeemed = true
+                        Alert.showDialog(this@StoreItemRedeemConfirm,response.body()!!.message!!)
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_StoreItemRedeemConfirm.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@StoreItemRedeemConfirm)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        DB_StoreItemRedeemConfirm.txtAlertmsg.text = response.body()!!.message
-                        DB_StoreItemRedeemConfirm.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@StoreItemRedeemConfirm,response.body()!!.message!!)
                     }
                 }
             })
@@ -369,18 +357,6 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
                 DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
             } else if (view == DB_StoreItemRedeemConfirm.imgBack) {
                 onBackPressed()
-            } else if (view == DB_StoreItemRedeemConfirm.txtUnauthOk) {
-                GlobalUsage.UserLogout(this)
-            } else if (view == DB_StoreItemRedeemConfirm.txtAlertok) {
-                if (ItemRedeemed) {
-//                Store.thisStoreActivity.finish()
-                    setResult(Activity.RESULT_OK)
-                    StoreLevelList.thisStoreLevelActivity.finish()
-                    finish()
-                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
-                } else {
-                    DB_StoreItemRedeemConfirm.cntAlert.visibility = View.GONE
-                }
             }
         }
     }

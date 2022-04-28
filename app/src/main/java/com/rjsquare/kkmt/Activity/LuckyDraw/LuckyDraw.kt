@@ -9,6 +9,9 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -59,14 +62,11 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
 //            creditList.add("5000")
 //            creditList.add("10000")
 
-
-            DB_LuckyDraw.txtUnauthOk.setOnClickListener(this)
-            DB_LuckyDraw.txtAlertok.setOnClickListener(this)
             DB_LuckyDraw.cntBacktoHome.setOnClickListener(this)
 
 
             creditList = ArrayList()
-            DB_LuckyDraw.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             GetWheelCredits()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -97,25 +97,22 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                     NetworkServices.LuckyDrawcreditService::class.java
                 )
 
-            Log.e("TAG","CreditRes 123: ")
             val call = service.GetLuckyDrawCreditData()
             call.enqueue(object : Callback<LuckyDrawCredit_Model> {
                 override fun onFailure(call: Call<LuckyDrawCredit_Model>, t: Throwable) {
-                    Log.e("TAG","CreditRes : "+ t)
-                    DB_LuckyDraw.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<LuckyDrawCredit_Model>,
                     response: retrofit2.Response<LuckyDrawCredit_Model>
                 ) {
-//                    DB_LuckyDraw.cntLoader.visibility = View.GONE
-                    Log.e("TAG","CreditRes : "+ Gson().toJson(response.body()!!))
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         creditList.addAll(response.body()!!.data!!.credit!!)
                         LuckyDrawItems(creditList)
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_LuckyDraw.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@LuckyDraw)
                     } else {
 
                     }
@@ -181,24 +178,24 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             )
             call.enqueue(object : Callback<LuckyDrawCheck_Model> {
                 override fun onFailure(call: Call<LuckyDrawCheck_Model>, t: Throwable) {
-                    DB_LuckyDraw.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<LuckyDrawCheck_Model>,
                     response: retrofit2.Response<LuckyDrawCheck_Model>
                 ) {
-                    DB_LuckyDraw.cntLoader.visibility = View.GONE
-                    Log.e("TAG","SpinRes : "+ Gson().toJson(response.body()!!))
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         if (response.body()!!.data!!.is_eligible.equals("No", true)) {
-                            DB_LuckyDraw.txtAlertmsg.text = response.body()!!.message
-                            DB_LuckyDraw.cntAlert.visibility = View.VISIBLE
+                            Alert.showDialog(this@LuckyDraw,response.body()!!.message!!)
+//                            DB_LuckyDraw.txtAlertmsg.text = response.body()!!.message
+//                            DB_LuckyDraw.cntAlert.visibility = View.VISIBLE
                         } else {
                             Log.e("TAG", "Spin available")
                         }
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_LuckyDraw.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@LuckyDraw)
                     } else {
 
                     }
@@ -223,7 +220,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
 
     private fun LuckyDrawCreditAdd(getCredit: String) {
         try {
-            DB_LuckyDraw.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -242,22 +239,23 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             )
             call.enqueue(object : Callback<LuckyDraw_Model> {
                 override fun onFailure(call: Call<LuckyDraw_Model>, t: Throwable) {
-                    DB_LuckyDraw.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<LuckyDraw_Model>,
                     response: retrofit2.Response<LuckyDraw_Model>
                 ) {
-                    DB_LuckyDraw.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         DB_LuckyDraw.txtCreditEarn.text = getCredit
                         DB_LuckyDraw.cntConfirmation.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_LuckyDraw.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@LuckyDraw)
                     } else {
-                        DB_LuckyDraw.txtAlertmsg.text = response.body()!!.message
-                        DB_LuckyDraw.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@LuckyDraw,response.body()!!.message!!)
+//                        DB_LuckyDraw.txtAlertmsg.text = response.body()!!.message
+//                        DB_LuckyDraw.cntAlert.visibility = View.VISIBLE
                     }
                 }
 
@@ -388,13 +386,6 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                     DB_LuckyDraw.cntConfirmation.visibility = View.GONE
                     finish()
                     overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
-                } else if (view == DB_LuckyDraw.txtAlertok) {
-                    DB_LuckyDraw.cntAlert.visibility = View.GONE
-                    finish()
-                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
-                } else if (view == DB_LuckyDraw.txtUnauthOk) {
-                    DB_LuckyDraw.cntUnAuthorized.visibility = View.GONE
-                    GlobalUsage.UserLogout(this)
                 }
             }
         } catch (NE: NullPointerException) {

@@ -8,6 +8,7 @@ import android.widget.CompoundButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.rjsquare.kkmt.Activity.Dialog.Alert
 
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
@@ -44,7 +45,7 @@ class Questions : AppCompatActivity(), View.OnClickListener {
             SetUpQuestion(QuestionNo)
             DB_Question.cntWatchagain.setOnClickListener(this)
             DB_Question.cntWatchmore.setOnClickListener(this)
-            DB_Question.txtAlertok.setOnClickListener(this)
+//            DB_Question.txtAlertok.setOnClickListener(this)
             DB_Question.rdOption1.setOnCheckedChangeListener(object :
                 CompoundButton.OnCheckedChangeListener {
                 override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
@@ -187,8 +188,9 @@ class Questions : AppCompatActivity(), View.OnClickListener {
                     System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_Question.txtNextquestion) {
                     if (SelectedOption == 0) {
-                        DB_Question.txtAlertmsg.text = "Please select one option."
-                        DB_Question.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this,"Please select one option.")
+//                        DB_Question.txtAlertmsg.text = "Please select one option."
+//                        DB_Question.cntAlert.visibility = View.VISIBLE
                     } else if (TotalQUestions == (QuestionNo + 1)) {
                         GlobalUsage.NextScreen(this,Intent(this, ResultQuestion::class.java))
                         VideoPlayer.VideoPlayerActivity.finish()
@@ -203,8 +205,6 @@ class Questions : AppCompatActivity(), View.OnClickListener {
                     VideoPlayer.VideoPlayerActivity.finish()
                     finish()
                     overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
-                } else if (view == DB_Question.txtAlertok) {
-                    DB_Question.cntAlert.visibility = View.GONE
                 }
             }
         } catch (NE: NullPointerException) {

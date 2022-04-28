@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -46,10 +48,9 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
             DB_ResultQuestion.imgBack.setOnClickListener(this)
             DB_ResultQuestion.txtWatchmore.setOnClickListener(this)
             DB_ResultQuestion.cntBacktohome.setOnClickListener(this)
-            DB_ResultQuestion.txtAlertok.setOnClickListener(this)
 
             SetUpUIData()
-            DB_ResultQuestion.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             CompleteQuestion()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -96,23 +97,22 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<VideoQuestionComplete_Model> {
                 override fun onFailure(call: Call<VideoQuestionComplete_Model>, t: Throwable) {
-                    Log.e("GetResponsesasXASX", "Hell: ")
-                    DB_ResultQuestion.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<VideoQuestionComplete_Model>,
                     response: Response<VideoQuestionComplete_Model>
                 ) {
-                    Log.e("GetResponsesas", "Hell: " + Gson().toJson(response.body()))
-                    DB_ResultQuestion.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
 
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         GlobalUsage.UserLogout(this@ResultQuestion)
                     } else {
-                        DB_ResultQuestion.txtAlertmsg.text = response.body()!!.message
-                        DB_ResultQuestion.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@ResultQuestion, response.body()!!.message!!)
+//                        DB_ResultQuestion.txtAlertmsg.text = response.body()!!.message
+//                        DB_ResultQuestion.cntAlert.visibility = View.VISIBLE
                     }
                 }
             })
@@ -147,8 +147,6 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
                 } else if (view == DB_ResultQuestion.cntBacktohome) {
                     Video.thisVideo.finish()
                     onBackPressed()
-                } else if (view == DB_ResultQuestion.txtAlertok) {
-                    DB_ResultQuestion.cntAlert.visibility = View.GONE
                 }
             }
         } catch (NE: NullPointerException) {

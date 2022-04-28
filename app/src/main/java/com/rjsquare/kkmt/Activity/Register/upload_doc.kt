@@ -25,6 +25,9 @@ import androidx.databinding.DataBindingUtil
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -84,9 +87,6 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
             DB_UploadDoc.txtGallery.setOnClickListener(this)
             DB_UploadDoc.cntUploadDocType.setOnClickListener(this)
             DB_UploadDoc.txtCancel.setOnClickListener(this)
-            DB_UploadDoc.txtAlertok.setOnClickListener(this)
-            DB_UploadDoc.txtUnauthOk.setOnClickListener(this)
-
 
             // Initialize result launcher
             resultLauncher = registerForActivityResult(
@@ -96,7 +96,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
                     val data: Intent = result.data!!
                     // check condition
                     if (data != null) {
-                        DB_UploadDoc.cntLoader.visibility = View.VISIBLE
+                        Loader.showLoader(this)
                         // When data is not equal to empty
                         // Get PDf uri
                         val sUri: Uri? = data.data
@@ -132,8 +132,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
         } catch (e: java.lang.Exception) {
             // TODO: handle exception
             e.printStackTrace()
-            Log.d("error", "onActivityResult: $e")
-            DB_UploadDoc.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
         }
     }
 
@@ -212,23 +211,21 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<UploadDoc_Model> {
                 override fun onFailure(call: Call<UploadDoc_Model>, t: Throwable) {
-                    Log.e("GetResponsesasXASX", "Hell: ")
-                    DB_UploadDoc.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<UploadDoc_Model>,
                     response: Response<UploadDoc_Model>
                 ) {
-                    DB_UploadDoc.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         GlobalUsage.NextScreen(this@upload_doc,Intent(this@upload_doc, Upload_Selfie::class.java))
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_UploadDoc.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@upload_doc)
                     } else {
-                        DB_UploadDoc.txtAlertmsg.text = response.body()!!.message
-                        DB_UploadDoc.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@upload_doc,response.body()!!.message!!)
                     }
                 }
             })
@@ -258,9 +255,6 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
                     DB_UploadDoc.cntUploadDocType.visibility = View.VISIBLE
                 } else if (view == DB_UploadDoc.txtSkip) {
                     GlobalUsage.NextScreen(this,Intent(this, Upload_Selfie::class.java))
-                } else if (view == DB_UploadDoc.txtUnauthOk) {
-                    DB_UploadDoc.cntUnAuthorized.visibility = View.GONE
-                    GlobalUsage.UserLogout(this)
                 } else if (view == DB_UploadDoc.txtPdf) {
                     val permissions =
                         arrayOf(
@@ -370,14 +364,11 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
                     DB_UploadDoc.cntUploadDocType.visibility = View.GONE
                 } else if (view == DB_UploadDoc.txtSaveandContinue) {
                     if (!PDFString.equals("", true)) {
-                        DB_UploadDoc.cntLoader.visibility = View.VISIBLE
+                        Loader.showLoader(this)
                         UploadDoc(PDFString)
                     } else {
-                        DB_UploadDoc.txtAlertmsg.text = "Invalid Document."
-                        DB_UploadDoc.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this, "Invalid Document.")
                     }
-                } else if (view == DB_UploadDoc.txtAlertok) {
-                    DB_UploadDoc.cntAlert.visibility = View.GONE
                 }
             }
         } catch (NE: NullPointerException) {
@@ -451,7 +442,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
 
         override fun onPreExecute() {
             super.onPreExecute()
-            DB_UploadDoc.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(uploadDocActyivity)
         }
 
         override fun doInBackground(vararg params: Void?): String? {
@@ -487,7 +478,7 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            DB_UploadDoc.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
         }
     }
 }

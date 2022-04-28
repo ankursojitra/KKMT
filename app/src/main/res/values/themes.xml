@@ -1,3 +1,75 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.MyApplication" parent="Theme.AppCompat.Light">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="Transparent" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <!--    By removing this style I can make transparent activity to work -->
+    <style name="ScrollViewStyle" />
+
+    <style name="dialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/loader_dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+        <item name="android:windowMinWidthMajor">1%</item>
+        <item name="android:windowMinWidthMinor">1%</item>
+    </style>
+
+    <style name="alertdialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/alert_dialog</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowMinWidthMajor">1%</item>
+        <item name="android:windowMinWidthMinor">1%</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+<!--        <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/black-->
+<!--        </item>-->
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent
+        </item>
+
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MyRadioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
+
+        <item name="android:textColor">@drawable/radio_button</item>
+        <item name="buttonTint">@drawable/radio_button</item>
+
+    </style>
+
+    <style name="customfontstyle" parent="AppTheme">
+        <item name="colorAccent">@color/white</item>
+
+        <item name="android:fontFamily">@font/lato_semibold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <!--        <item name="buttonTint">@drawable/radio_button</item>-->
+    </style>
 
 </resources>

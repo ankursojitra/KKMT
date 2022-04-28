@@ -25,7 +25,6 @@ class ActiveChallenge : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_ActiveChallenge =
             DataBindingUtil.setContentView(this, R.layout.activity_active_challenge)
-//        setContentView(R.layout.activity_active_challenge)
         try {
             GlobalUsage.StatusTextWhite(this, true)
             val sectionsPagerAdapter =

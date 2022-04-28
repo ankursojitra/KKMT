@@ -34,6 +34,9 @@ import com.google.gson.Gson
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -109,8 +112,6 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         DB_ReviewEdit.imgDelete.setOnClickListener(this)
         DB_ReviewEdit.imgMic.setOnClickListener(this)
         DB_ReviewEdit.imgPlaypause.setOnClickListener(this)
-//        DB_ReviewEdit.txtUploadReceipt.setOnClickListener(this)
-        DB_ReviewEdit.txtAlertok.setOnClickListener(this)
         TimerHandler = Handler()
         if (savedInstanceState != null) {
 
@@ -558,12 +559,11 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             receiptImageString = convertImagetoString(scaled)
 
             ChangeUploadText()
-            DB_ReviewEdit.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
         } catch (e: java.lang.Exception) {
             // TODO: handle exception
             e.printStackTrace()
-            Log.d("error", "onActivityResult: $e")
-            DB_ReviewEdit.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
         }
     }
 
@@ -594,7 +594,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode === 1 && resultCode === RESULT_OK) {
-            DB_ReviewEdit.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             convertURItoImage(Uri.fromFile(photoFile))
         }
     }
@@ -660,12 +660,11 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                     System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_ReviewEdit.txtSubmit) {
                     if (CheckDataForReview()) SubmitReview()
-                    else DB_ReviewEdit.cntAlert.visibility = View.VISIBLE
+                    else Alert.showDialog(this,getString(R.string.reviewnoteserror))
                 } else if (view == DB_ReviewEdit.imgBack) {
                     onBackPressed()
-                } else if (view == DB_ReviewEdit.txtAlertok) {
-                    DB_ReviewEdit.cntAlert.visibility = View.GONE
-                } else if (view == DB_ReviewEdit.cnt1star) {
+                }
+                else if (view == DB_ReviewEdit.cnt1star) {
                     UncheckedReview()
                     star = Constants.onestar
                     DB_ReviewEdit.cnt1star.setBackgroundResource(R.drawable.review_selection)
@@ -685,7 +684,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                     VoiceRecordingSetup()
                 } else if (view == DB_ReviewEdit.txtConfirm) {
                     DB_ReviewEdit.cntVoiceDialoug.visibility = View.GONE
-                    DB_ReviewEdit.cntLoader.visibility = View.VISIBLE
+                    Loader.showLoader(this)
                     ConvertAudioToBase64()
                 } else if (view == DB_ReviewEdit.txtCancel) {
                     DB_ReviewEdit.cntVoiceDialoug.visibility = View.GONE
@@ -763,7 +762,6 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             if (WrittenNote.trim().length > 0 || voiceNoteString.trim().length > 0) {
                 return true
             } else {
-                DB_ReviewEdit.txtAlertmsg.text = getString(R.string.reviewnoteserror)
                 return false
             }
         } else {
@@ -773,7 +771,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 
     private fun SubmitReview() {
         try {
-            DB_ReviewEdit.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -800,16 +798,14 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<ReviewSubmitModel> {
                 override fun onFailure(call: Call<ReviewSubmitModel>, t: Throwable) {
-                    DB_ReviewEdit.cntLoader.visibility = View.GONE
-                    Log.e("GetResponsesasXASX", "Hell: " + t)
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<ReviewSubmitModel>,
                     response: Response<ReviewSubmitModel>
                 ) {
-                    Log.e("GetResponsesasXASX", "responseHell: " + response.body()!!)
-                    DB_ReviewEdit.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         GlobalUsage.ReviewInfoModel = response.body()!!.data!!
 
@@ -819,12 +815,13 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                         )
                         finish()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_ReviewEdit.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@ReviewEdit)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        DB_ReviewEdit.txtAlertmsg.text = response.body()!!.message
-                        DB_ReviewEdit.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@ReviewEdit,response.body()!!.message!!)
+//                        DB_ReviewEdit.txtAlertmsg.text = response.body()!!.messageresponse.body()!!.message
+//                        DB_ReviewEdit.cntAlert.visibility = View.VISIBLE
                     }
                 }
             })
@@ -870,7 +867,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 //            } catch (e: java.lang.Exception) {
 ////                DiagnosticHelper.writeException(e)
 //            }
-            DB_ReviewEdit.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
 
         } catch (e: java.lang.Exception) {
 //            DiagnosticHelper.writeException(e)

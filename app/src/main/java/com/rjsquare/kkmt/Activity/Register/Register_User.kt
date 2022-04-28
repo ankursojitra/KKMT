@@ -15,6 +15,8 @@ import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.Helpers.Preferences
@@ -67,7 +69,6 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
             mGenderListView.txt_male.setOnClickListener(this)
             mGenderListView.txt_female.setOnClickListener(this)
             mGenderListView.txt_other.setOnClickListener(this)
-            DB_RegisterUser.txtOtpAlertok.setOnClickListener(this)
 
             DB_RegisterUser.txtSignup.setOnClickListener(this)
             DB_RegisterUser.txtLogin.setOnClickListener(this)
@@ -108,15 +109,17 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
                     System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_RegisterUser.txtSignup) {
                     if (GetValidationConfirmation()) {
-                        DB_RegisterUser.cntLoader.visibility = View.VISIBLE
+                        Loader.showLoader(this)
                         RegisterNewUser()
                     }
                 } else if (view == DB_RegisterUser.txtLogin) {
                     finish()
                     overridePendingTransition(R.anim.activity_in, R.anim.activity_out)
-                } else if (view == DB_RegisterUser.txtOtpAlertok) {
-                    DB_RegisterUser.cntAlert.visibility = View.GONE
-                } else if (view!!.id == R.id.constraintLayougender) {
+                }
+//                else if (view == DB_RegisterUser.txtOtpAlertok) {
+//                    DB_RegisterUser.cntAlert.visibility = View.GONE
+//                }
+                else if (view!!.id == R.id.constraintLayougender) {
 
                 } else if (view == mGenderListView.txt_male) {
                     DB_RegisterUser.txtGender.text = "Male"
@@ -153,8 +156,8 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
     }
 
     fun ShowErrorMessage(alertMsg: String) {
-        DB_RegisterUser.txtAlertmsg.text = alertMsg
-        DB_RegisterUser.cntAlert.visibility = View.VISIBLE
+//        DB_RegisterUser.txtAlertmsg.text = alertMsg
+//        DB_RegisterUser.cntAlert.visibility = View.VISIBLE
     }
 
     private fun GetValidationConfirmation(): Boolean {
@@ -171,18 +174,22 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
 
             if (FirstName.equals("") || FirstName.length <= 3
             ) {
-                ShowErrorMessage(fNameErrorMsg)
+                Alert.showDialog(this,fNameErrorMsg)
+//                ShowErrorMessage(fNameErrorMsg)
                 Valid = false
             } else if (LastName.equals("") || LastName.length <= 3
             ) {
-                ShowErrorMessage(lNameErrorMsg)
+                Alert.showDialog(this,lNameErrorMsg)
+//                ShowErrorMessage(lNameErrorMsg)
                 Valid = false
             } else if (MobileNo.equals("") || MobileNo.length < 9 || MobileNo.length > 13
             ) {
-                ShowErrorMessage(mobileErrorMsg)
+                Alert.showDialog(this,mobileErrorMsg)
+//                ShowErrorMessage(mobileErrorMsg)
                 Valid = false
             } else if (EmailAddress.length > 0) {
-                ShowErrorMessage(emailErrorMsg)
+                Alert.showDialog(this,emailErrorMsg)
+//                ShowErrorMessage(emailErrorMsg)
                 Valid = false
             } else {
                 Valid = true
@@ -239,16 +246,14 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
             val call = service.GetRegisterUserData(params)
             call.enqueue(object : Callback<UserInfoData_Model> {
                 override fun onFailure(call: Call<UserInfoData_Model>, t: Throwable) {
-                    Log.e("GetResponse", ": " + t)
-//                    RELiveMatcheScore()
-                    DB_RegisterUser.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<UserInfoData_Model>,
                     response: retrofit2.Response<UserInfoData_Model>
                 ) {
-                    Log.e("GetResponsesas", ": " + Gson().toJson(response.body()!!))
+                    Loader.hideLoader()
                     GlobalUsage.userInfoModel = UserInfoData_Model()
                     GlobalUsage.userInfoModel = response.body()!!
                     if (GlobalUsage.userInfoModel.status.equals(Constants.ResponseSucess, true)) {
@@ -276,7 +281,6 @@ class Register_User : AppCompatActivity(), View.OnClickListener, OnSelectDateLis
                         )
                             .show()
                     }
-                    DB_RegisterUser.cntLoader.visibility = View.GONE
 
                 }
 

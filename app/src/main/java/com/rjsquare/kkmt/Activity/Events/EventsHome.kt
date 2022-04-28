@@ -118,8 +118,6 @@ class EventsHome : AppCompatActivity(), View.OnClickListener, OnDayClickListener
 
     private fun initListners() {
         DB_EventsHome.imgBack.setOnClickListener(this)
-
-        DB_EventsHome.txtUnauthOk.setOnClickListener(this)
     }
 
     private fun getDisabledDays(): List<Calendar>? {
@@ -213,9 +211,6 @@ class EventsHome : AppCompatActivity(), View.OnClickListener, OnDayClickListener
             GlobalUsage.lastClick = System.currentTimeMillis() + GlobalUsage.clickInterval
             if (view == DB_EventsHome.imgBack) {
                 onBackPressed()
-            } else if (view == DB_EventsHome.txtUnauthOk) {
-                DB_EventsHome.cntUnAuthorized.visibility = View.GONE
-                GlobalUsage.UserLogout(this)
             }
         }
 //        else if (view == DB_EventsHome.cntLoadmore) {

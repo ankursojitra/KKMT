@@ -10,7 +10,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.HomeActivity
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
@@ -56,13 +58,12 @@ class EmployeeHistory : Fragment() {
             DB_FEmployeeHistory.cpOverallBad.maxProgress = 100.0
             DB_FEmployeeHistory.cpOverallBad.setCurrentProgress(0.0)
 
-            HomeActivity.mCntLoader.visibility = View.GONE
-            EmpHistoryView = true
-
             EmpHistory = EmployeeHistoryModel()
             if (GlobalUsage.userLogedIn) {
                 HistoryEmpReviewData()
             }
+            EmpHistoryView = true
+//            Loader.hideLoader()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -81,7 +82,7 @@ class EmployeeHistory : Fragment() {
 
     private fun HistoryEmpReviewData() {
         try {
-            DB_FEmployeeHistory.cntLoader.visibility = View.VISIBLE
+//            Loader.showLoader(requireActivity())
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -101,22 +102,23 @@ class EmployeeHistory : Fragment() {
 
             call.enqueue(object : Callback<EmployeeHistoryModel> {
                 override fun onFailure(call: Call<EmployeeHistoryModel>, t: Throwable) {
-                    DB_FEmployeeHistory.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "EMPHistoryDataError : " + t)
+                    Loader.hideLoader()
+                    Log.e("TAG","HistoryEmpReviewData t: "+t)
                 }
 
                 override fun onResponse(
                     call: Call<EmployeeHistoryModel>,
                     response: Response<EmployeeHistoryModel>
                 ) {
-                    DB_FEmployeeHistory.cntLoader.visibility = View.GONE
+                    Log.e("TAG","HistoryEmpReviewData : ")
+                    Loader.hideLoader()
                     Log.e("TAG", "EMPHistoryData : " + Gson().toJson(response.body()!!))
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         EmpHistory = response.body()!!
                         SetOverallRatingData()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        HomeActivity.UnauthorizedUser()
+                        UnAuthorized.showDialog(requireActivity())
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
