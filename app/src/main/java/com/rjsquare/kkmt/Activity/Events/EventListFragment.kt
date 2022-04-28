@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.EventsAdapter
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.R
@@ -137,7 +138,7 @@ class EventListFragment : Fragment() {
                             DB_EventListFragment.txtNoEvents.visibility = View.VISIBLE
                         }
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        EventsHome.DB_EventsHome.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(requireActivity())
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
                         IsEventCallavailable = false
                     } else {

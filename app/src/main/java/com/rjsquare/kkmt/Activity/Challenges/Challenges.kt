@@ -1,18 +1,17 @@
 package com.rjsquare.kkmt.Activity.Challenges
 
 import android.content.ActivityNotFoundException
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.ChallengesAdapter
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -37,6 +36,9 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
     var weeklyChallangeCallavailable = true
     var monthlyChallangeCallavailable = true
     var dataSize = 0
+    var dailyDataAvailable = false
+    var weeklyDataAvailable = false
+    var monthlyDataAvailable = false
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -83,6 +85,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
 
     private fun fillData() {
         try {
+            Loader.showLoader(this)
             DailyChallanges((++dayPageNo).toString(), PagePerlimit.toString())
             WeeklyChallanges((++weekPageNo).toString(), PagePerlimit.toString())
             MonthlyChallanges((++monthPageNo).toString(), PagePerlimit.toString())
@@ -136,25 +139,25 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<ChallangesModel> {
                 override fun onFailure(call: Call<ChallangesModel>, t: Throwable) {
-                    DB_Challenges.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<ChallangesModel>,
                     response: Response<ChallangesModel>
                 ) {
-                    DB_Challenges.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         dailyChallengesList.addAll(response.body()!!.data!!)
                         dailyframesAdapter()
                         dailyChallangeCallavailable =
                             response.body()!!.data!!.size >= this@Challenges.PagePerlimit
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_Challenges.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@Challenges)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
                         dailyChallangeCallavailable = false
                     } else {
-
+                        Alert.showDialog(this@Challenges, response.body()!!.message!!)
                     }
                 }
             })
@@ -199,25 +202,25 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<ChallangesModel> {
                 override fun onFailure(call: Call<ChallangesModel>, t: Throwable) {
-                    DB_Challenges.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<ChallangesModel>,
                     response: Response<ChallangesModel>
                 ) {
-                    DB_Challenges.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         weeklyChallengesList.addAll(response.body()!!.data!!)
                         weeklyframesAdapter()
                         weeklyChallangeCallavailable =
                             response.body()!!.data!!.size >= this@Challenges.PagePerlimit
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_Challenges.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@Challenges)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
                         weeklyChallangeCallavailable = false
                     } else {
-
+                        Alert.showDialog(this@Challenges, response.body()!!.message!!)
                     }
                 }
             })
@@ -262,26 +265,25 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<ChallangesModel> {
                 override fun onFailure(call: Call<ChallangesModel>, t: Throwable) {
-                    DB_Challenges.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<ChallangesModel>,
                     response: Response<ChallangesModel>
                 ) {
-                    Log.e("TAG","Monthlyresponse : "+Gson().toJson(response.body()!!))
-                    DB_Challenges.cntLoader.visibility = View.GONE
+                    HideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         monthlyChallengesList.addAll(response.body()!!.data!!)
                         monthlyframesAdapter()
                         monthlyChallangeCallavailable =
                             response.body()!!.data!!.size >= this@Challenges.PagePerlimit
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_Challenges.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@Challenges)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
                         monthlyChallangeCallavailable = false
                     } else {
-
+                        Alert.showDialog(this@Challenges, response.body()!!.message!!)
                     }
                 }
             })
@@ -300,6 +302,11 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
         } catch (CE: ClassNotFoundException) {
             print(CE)
         }
+    }
+
+    private fun HideLoader() {
+        if (dailyDataAvailable && weeklyDataAvailable && monthlyDataAvailable)
+            Loader.hideLoader()
     }
 
 
@@ -330,6 +337,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                     }
                     if ((totalItemCount - 1) == lastVisible && dailyChallangeCallavailable && dataSize == PagePerlimit) {
                         dailyChallangeCallavailable = true
+                        Loader.showLoader(this@Challenges)
                         DailyChallanges((++dayPageNo).toString(), PagePerlimit.toString())
                     }
                 }
@@ -376,6 +384,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                     }
                     if ((totalItemCount - 1) == lastVisible && weeklyChallangeCallavailable && dataSize == PagePerlimit) {
                         weeklyChallangeCallavailable = true
+                        Loader.showLoader(this@Challenges)
                         WeeklyChallanges((++weekPageNo).toString(), PagePerlimit.toString())
                     }
                 }
@@ -422,6 +431,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                     }
                     if ((totalItemCount - 1) == lastVisible && monthlyChallangeCallavailable && dataSize == PagePerlimit) {
                         monthlyChallangeCallavailable = true
+                        Loader.showLoader(this@Challenges)
                         MonthlyChallanges((++monthPageNo).toString(), PagePerlimit.toString())
                     }
                 }

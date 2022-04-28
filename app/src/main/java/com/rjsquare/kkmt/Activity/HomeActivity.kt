@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
-import android.view.Menu
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
@@ -27,6 +26,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Beacon_Search
 import com.rjsquare.kkmt.Activity.Challenges.ActiveChallenge
+import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Activity.Notifications.NotificationList
 import com.rjsquare.kkmt.Activity.Profile.Profile
 import com.rjsquare.kkmt.Activity.Register.upload_doc
@@ -55,8 +56,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
         lateinit var thisHomeActivity: Activity
         lateinit var DB_HomeActivity: ActivityHomeBinding
-        lateinit var mCrdLoader: CardView
-        lateinit var mCntLoader: ConstraintLayout
         var height: Int = 0
         var ismEdtSearchbarInit = false
         lateinit var mFragmentManager: FragmentManager
@@ -106,11 +105,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                 HistoryFr = History()
             }
         }
-
-        fun UnauthorizedUser() {
-            DB_HomeActivity.cntUnAuthorized.visibility = View.VISIBLE
-        }
-
     }
 
     fun isSoftKeyboardShown(
@@ -166,6 +160,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         DB_HomeActivity = DataBindingUtil.setContentView(this, R.layout.activity_home)
         try {
+
             GlobalUsage.userLogedIn =
                 Preferences.ReadBoolean(Constants.Pref_UserLogedIn, false)
             thisHomeActivity = this
@@ -174,9 +169,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             EstimatedKeyboardDP =
                 DefaultKeyboardDP + if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) 48f else 0f
 
-            DB_HomeActivity.txtUnauthOk.setOnClickListener(this)
             if (!GlobalUsage.authorisedUser) {
-                DB_HomeActivity.cntUnAuthorized.visibility = View.VISIBLE
+                UnAuthorized.showDialog(this)
             }
 
             val displayMetrics = DisplayMetrics()
@@ -188,16 +182,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
             GlobalUsage.StatusTextWhite(this, true)
 
-            mCrdLoader = findViewById<CardView>(R.id.crd_loader)
-            mCntLoader = findViewById<ConstraintLayout>(R.id.cnt_loader)
-
             UncheckedAll()
             mTxtTitle = findViewById<TextView>(R.id.txt_title)
             mImgHomeback = findViewById<ImageView>(R.id.img_homeback)
 
             UserLogInViewSetup()
 
-            mCntLoader.setOnClickListener(this)
             DB_HomeActivity.HomeScreen.ContentView.cntHome.setOnClickListener(this)
             DB_HomeActivity.HomeScreen.ContentView.cntSearch.setOnClickListener(this)
             DB_HomeActivity.HomeScreen.ContentView.cntLeaderboard.setOnClickListener(this)
@@ -218,7 +208,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
             DB_HomeActivity.HomeScreen.ContentView.imgHome.visibility = View.INVISIBLE
             DB_HomeActivity.HomeScreen.ContentView.cntSelHome.visibility = View.VISIBLE
-            mCntLoader.visibility = View.VISIBLE
+
+            Loader.showLoader(this)
 
             //setup Employee new Review
             DB_HomeActivity.HomeScreen.ContentView.cntNewreview.visibility =
@@ -314,9 +305,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                         view == DB_HomeActivity.nevigationMenuview.cntReviewsMenu
                     ) {
                         GlobalUsage.NextScreen(this,Intent(this, Bussiness_Beacon_Search::class.java))
-                    } else if (view == DB_HomeActivity.txtUnauthOk) {
-                        DB_HomeActivity.cntUnAuthorized.visibility = View.GONE
-                        GlobalUsage.UserLogout(this)
                     }
                 } else {
                     if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
@@ -366,9 +354,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         DB_HomeActivity.HomeScreen.ContentView.navHomeFragment.visibility = View.VISIBLE
 
         if (Home.HomeView) {
-            mCntLoader.visibility = View.GONE
+            Loader.hideLoader()
         } else {
-            mCntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
         }
 
         SetTitleBarView(false, resources.getString(R.string.home))
@@ -392,9 +380,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         DB_HomeActivity.HomeScreen.ContentView.navLeaderFragment.visibility = View.VISIBLE
 
         if (LeaderBoard.leaderBoardView) {
-            mCntLoader.visibility = View.GONE
+            Loader.hideLoader()
         } else {
-            mCntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
         }
 
         SetTitleBarView(false, resources.getString(R.string.leaderboard))
@@ -414,9 +402,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         DB_HomeActivity.HomeScreen.ContentView.navSearchFragment.visibility = View.VISIBLE
 
         if (search.searchView) {
-            mCntLoader.visibility = View.GONE
+            Loader.hideLoader()
         } else {
-            mCntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
         }
 
         SetTitleBarView(true, resources.getString(R.string.search))
@@ -443,9 +431,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         if (LoadView) {
-            mCntLoader.visibility = View.GONE
+            Loader.hideLoader()
         } else {
-            mCntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
         }
         SetTitleBarView(false, resources.getString(R.string.history))
 
@@ -541,6 +529,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             LeaderBoardfragmentTransaction.commit()
             searchfragmentTransaction.commit()
             GlobalUsage.HomeScreenLoad = true
+            
         }
     }
 }

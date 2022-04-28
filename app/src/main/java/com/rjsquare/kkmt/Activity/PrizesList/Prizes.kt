@@ -7,6 +7,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.PrizesListAdapter
 
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -38,8 +41,6 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
             GlobalUsage.StatusTextWhite(this, true)
 
             DB_Prizes.imgBack.setOnClickListener(this)
-            DB_Prizes.txtUnauthOk.setOnClickListener(this)
-            DB_Prizes.txtAlertok.setOnClickListener(this)
 
             GetLatestPrizes()
         } catch (NE: NullPointerException) {
@@ -59,7 +60,7 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
 
     private fun GetLatestPrizes() {
         try {
-            DB_Prizes.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -78,26 +79,25 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<PrizeList_Model> {
                 override fun onFailure(call: Call<PrizeList_Model>, t: Throwable) {
-                    DB_Prizes.cntLoader.visibility = View.GONE
-                    Log.e("GetResponsesasXASX", "Hell: ")
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<PrizeList_Model>,
                     response: Response<PrizeList_Model>
                 ) {
-                    Log.e("GetResponsesasXASX", "responseHell: " + response.body()!!)
-                    DB_Prizes.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         mList_StoreListModel = response.body()!!.data!!
                         SetUpPrizeList()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_Prizes.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@Prizes)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        DB_Prizes.txtAlertmsg.text = response.body()!!.message
-                        DB_Prizes.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@Prizes,response.body()!!.message!!)
+//                        DB_Prizes.txtAlertmsg.text = response.body()!!.message
+//                        DB_Prizes.cntAlert.visibility = View.VISIBLE
                     }
                 }
             })
@@ -159,11 +159,6 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
                     System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_Prizes.imgBack) {
                     onBackPressed()
-                } else if (view == DB_Prizes.txtUnauthOk) {
-                    DB_Prizes.cntUnAuthorized.visibility = View.GONE
-                    GlobalUsage.UserLogout(this)
-                } else if (view == DB_Prizes.txtAlertok) {
-                    DB_Prizes.cntAlert.visibility = View.GONE
                 }
             }
 

@@ -8,7 +8,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.Review.SearchEmployee
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
@@ -42,7 +44,6 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
         DB_BussinessCheckIn.imgBack.setOnClickListener(this)
         DB_BussinessCheckIn.txtContinue.setOnClickListener(this)
         DB_BussinessCheckIn.cntCheckout.setOnClickListener(this)
-        DB_BussinessCheckIn.txtUnauthOk.setOnClickListener(this)
 
         Setupdata()
         CheckInCredit()
@@ -84,19 +85,18 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<BusinessCheckInModel> {
                 override fun onFailure(call: Call<BusinessCheckInModel>, t: Throwable) {
-                    DB_BussinessCheckIn.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<BusinessCheckInModel>,
                     response: Response<BusinessCheckInModel>
-                ) {
-                    DB_BussinessCheckIn.cntLoader.visibility = View.GONE
+                ) {Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         DB_BussinessCheckIn.txtCredit.text =
                             GlobalUsage.formatNumber(response.body()!!.data!!.check_in_credit!!.toInt())
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_BussinessCheckIn.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@BussinessCheckIn)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
@@ -128,10 +128,6 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
             GlobalUsage.NextScreen(this, Intent(this, SearchEmployee::class.java))
         } else if (v == DB_BussinessCheckIn.cntCheckout) {
             onBackPressed()
-        } else if (v == DB_BussinessCheckIn.txtUnauthOk) {
-            GlobalUsage.UserLogout(this)
-        } else if (v == DB_BussinessCheckIn.txtAlert) {
-//            GlobalUsage.UserLogout(this)
         }
     }
 }

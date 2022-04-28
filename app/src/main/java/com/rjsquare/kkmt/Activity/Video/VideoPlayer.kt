@@ -10,6 +10,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -52,7 +53,7 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
 
             DB_VideoPlayer.imgBack.setOnClickListener(this)
             DB_VideoPlayer.txtQuestions.setOnClickListener(this)
-            DB_VideoPlayer.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             GetVideoDetails()
 
         } catch (NE: NullPointerException) {
@@ -90,14 +91,14 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<VideoDetail_Model> {
                 override fun onFailure(call: Call<VideoDetail_Model>, t: Throwable) {
-                    DB_VideoPlayer.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<VideoDetail_Model>,
                     response: Response<VideoDetail_Model>
                 ) {
-                    DB_VideoPlayer.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         VideoData = response.body()!!.data!!
                     } else {

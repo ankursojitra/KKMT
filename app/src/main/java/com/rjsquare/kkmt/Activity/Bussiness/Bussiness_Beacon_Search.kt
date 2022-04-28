@@ -45,7 +45,10 @@ import com.minew.beaconplus.sdk.interfaces.OnBluetoothStateChangedListener
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.Review.SearchEmployee
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -113,7 +116,8 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DB_BussinessBeaconSearch = DataBindingUtil.setContentView(this, R.layout.activity_bussiness_beacon_search)
+        DB_BussinessBeaconSearch =
+            DataBindingUtil.setContentView(this, R.layout.activity_bussiness_beacon_search)
         try {
             GlobalUsage.StatusTextWhite(this, false)
             val mapFragment = supportFragmentManager
@@ -180,8 +184,6 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
             mCntNotfind.setOnClickListener(this)
             mImgClose.setOnClickListener(this)
             mImgBusRepClose.setOnClickListener(this)
-            DB_BussinessBeaconSearch.txtUnauthOk.setOnClickListener(this)
-            DB_BussinessBeaconSearch.txtAlertok.setOnClickListener(this)
             DB_BussinessBeaconSearch.layoutBussinessConfirm.cntNotfind.setOnClickListener(this)
 
             runnable = Runnable {
@@ -261,7 +263,7 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
     }
 
     private fun MasterBleDeviceInfo() {
-        DB_BussinessBeaconSearch.cntLoader.visibility = View.VISIBLE
+        Loader.showLoader(this)
         var beaconOBJ = JSONObject()
         var arrayJ = JSONArray()
         for (Mac in BeaconMACList) {
@@ -293,15 +295,14 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
 
             call.enqueue(object : Callback<MasterBeaconModel> {
                 override fun onFailure(call: Call<MasterBeaconModel>, t: Throwable) {
-                    DB_BussinessBeaconSearch.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<MasterBeaconModel>,
                     response: Response<MasterBeaconModel>
                 ) {
-                    DB_BussinessBeaconSearch.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "CHECKRESPONSE : " + Gson().toJson(response.body()))
+                    Loader.hideLoader()
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         masterList = response.body()!!.data!!
@@ -311,7 +312,7 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        ShowAlert(response.body()!!.message)
+                        Alert.showDialog(this@Bussiness_Beacon_Search, response.body()!!.message!!)
                     }
                 }
             })
@@ -335,11 +336,11 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
 
     private fun ShowUnauthorization() {
         CloseViews()
-        DB_BussinessBeaconSearch.cntUnAuthorized.visibility = View.VISIBLE
+        UnAuthorized.showDialog(this)
     }
 
     private fun BusinessNotFound() {
-        DB_BussinessBeaconSearch.cntLoader.visibility = View.VISIBLE
+        Loader.showLoader(this)
         var beaconOBJ = JSONObject()
         var arrayJ = JSONArray()
         for (Mac in BeaconMACList) {
@@ -369,16 +370,14 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
 
             call.enqueue(object : Callback<BusinessNotFoundModel> {
                 override fun onFailure(call: Call<BusinessNotFoundModel>, t: Throwable) {
-                    DB_BussinessBeaconSearch.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<BusinessNotFoundModel>,
                     response: Response<BusinessNotFoundModel>
                 ) {
-                    DB_BussinessBeaconSearch.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "CHECKRESPONSE : " + Gson().toJson(response.body()))
-
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         ShowThankyouPopup()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
@@ -386,7 +385,7 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        ShowAlert(response.body()!!.message)
+                        Alert.showDialog(this@Bussiness_Beacon_Search, response.body()!!.message!!)
                     }
                 }
             })
@@ -413,10 +412,10 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
         DB_BussinessBeaconSearch.layoutBussinessThankyou.BusinessThankyou.visibility = View.VISIBLE
     }
 
-    private fun ShowAlert(message: String?) {
-        DB_BussinessBeaconSearch.txtAlertmsg.text = message
-        DB_BussinessBeaconSearch.cntAlert.visibility = View.VISIBLE
-    }
+//    private fun ShowAlert(message: String?) {
+//        DB_BussinessBeaconSearch.txtAlertmsg.text = message
+//        DB_BussinessBeaconSearch.cntAlert.visibility = View.VISIBLE
+//    }
 
     private fun getMarkerBitmapFromView(customMarkerView: View): Bitmap {
         //HERE YOU CAN ADD YOUR CUSTOM VIEW
@@ -627,7 +626,12 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
                             BusinessNotFound()
                         } else {
                             // Business Name is mendatory
-                            ShowAlert("Business name is require.")
+//                            ShowAlert(ShowAlert("Business name is require.")
+                            Alert.showDialog(
+                                this@Bussiness_Beacon_Search,
+                                "Business name is require."
+                            )
+//                            GlobalUsage.LaunchAlert(this@Bussiness_Beacon_Search,"Business name is require.")
                         }
                     } else if (mCh2.isChecked) {
                         CloseViews()
@@ -653,11 +657,6 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
                 } else if (view == mCntConfirm) {
                     ShowBusniessMainView()
                     BusinessCheckInFlow()
-                } else if (view == DB_BussinessBeaconSearch.txtUnauthOk) {
-                    HideUnauthorization()
-                    GlobalUsage.UserLogout(this)
-                } else if (view == DB_BussinessBeaconSearch.txtAlertok) {
-                    HideAlert()
                 } else if (view == DB_BussinessBeaconSearch.layoutBussinessConfirm.cntNotfind) {
                     HideBusinessConfiramation()
                     ShowBusinessReport()
@@ -690,14 +689,6 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
     private fun ShowBusinessReport() {
         CloseViews()
         DB_BussinessBeaconSearch.layoutBussinessReport.BusinessReport.visibility = View.VISIBLE
-    }
-
-    private fun HideUnauthorization() {
-        DB_BussinessBeaconSearch.cntUnAuthorized.visibility = View.GONE
-    }
-
-    private fun HideAlert() {
-        DB_BussinessBeaconSearch.cntAlert.visibility = View.GONE
     }
 
     private fun CloseViews() {

@@ -17,8 +17,11 @@ import androidx.databinding.DataBindingUtil
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -69,8 +72,6 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
             DB_UploadSelfie.txtGallery.setOnClickListener(this)
             DB_UploadSelfie.cntUploadDocType.setOnClickListener(this)
             DB_UploadSelfie.txtCancel.setOnClickListener(this)
-            DB_UploadSelfie.txtAlertok.setOnClickListener(this)
-            DB_UploadSelfie.txtUnauthOk.setOnClickListener(this)
 
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -124,7 +125,7 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode === 1 && resultCode === RESULT_OK) {
-            DB_UploadSelfie.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             ConvertFileOrImageToString(Uri.fromFile(photoFile))
         }
     }
@@ -150,13 +151,11 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
 
             PDFString = Base64.encodeToString(bytes, Base64.DEFAULT)
 
-            Log.e("TAG", "ActivityResult: " + PDFString)
-            DB_UploadSelfie.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
         } catch (e: java.lang.Exception) {
             // TODO: handle exception
             e.printStackTrace()
-            Log.d("error", "onActivityResult: $e")
-            DB_UploadSelfie.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
         }
     }
 
@@ -182,15 +181,14 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<UploadDoc_Model> {
                 override fun onFailure(call: Call<UploadDoc_Model>, t: Throwable) {
-                    Log.e("GetResponsesasXASX", "Hell: ")
-                    DB_UploadSelfie.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<UploadDoc_Model>,
                     response: Response<UploadDoc_Model>
                 ) {
-                    DB_UploadSelfie.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         GlobalUsage.NextScreen(this@Upload_Selfie,Intent(this@Upload_Selfie, HomeActivity::class.java))
                         if (GlobalUsage.IsRegisterFlow) {
@@ -200,10 +198,9 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
                         upload_doc.uploadDocActyivity.finish()
                         finish()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_UploadSelfie.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@Upload_Selfie)
                     } else {
-                        DB_UploadSelfie.txtAlertmsg.text = response.body()!!.message
-                        DB_UploadSelfie.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@Upload_Selfie,response.body()!!.message!!)
                     }
                 }
             })
@@ -265,11 +262,12 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
                     })
                 } else if (view == DB_UploadSelfie.txtSaveandexplore) {
                     if (!PDFString.equals("", true)) {
-                        DB_UploadSelfie.cntLoader.visibility = View.VISIBLE
+                        Loader.showLoader(this)
                         UploadSelfie(PDFString)
                     } else {
-                        DB_UploadSelfie.txtAlertmsg.text = "Invalid Selfie."
-                        DB_UploadSelfie.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this,"Invalid Selfie.")
+//                        DB_UploadSelfie.txtAlertmsg.text = "Invalid Selfie."
+//                        DB_UploadSelfie.cntAlert.visibility = View.VISIBLE
                     }
                 } else if (view == DB_UploadSelfie.txtSkip) {
                     GlobalUsage.NextScreen(this,Intent(this, HomeActivity::class.java))
@@ -277,9 +275,8 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
                     Register_User.Register_UserActivity.finish()
                     upload_doc.uploadDocActyivity.finish()
                     finish()
-                } else if (view == DB_UploadSelfie.txtAlertok) {
-                    DB_UploadSelfie.cntAlert.visibility = View.GONE
-                } else if (view == DB_UploadSelfie.txtPdf) {
+                }
+                else if (view == DB_UploadSelfie.txtPdf) {
 
                 } else if (view == DB_UploadSelfie.txtCamera) {
 
@@ -287,9 +284,6 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
                     DB_UploadSelfie.cntUploadDocType.visibility = View.GONE
                 } else if (view == DB_UploadSelfie.txtGallery) {
 
-                } else if (view == DB_UploadSelfie.txtUnauthOk) {
-                    DB_UploadSelfie.cntUnAuthorized.visibility = View.GONE
-                    GlobalUsage.UserLogout(this)
                 }
             }
         } catch (NE: NullPointerException) {

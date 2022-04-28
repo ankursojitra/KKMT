@@ -29,13 +29,10 @@ class ChallengActive : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-//        var lf = inflater.inflate(R.layout.fragment_challeng_active, container, false)
         DB_ChallengeActive =
             DataBindingUtil.inflate(inflater, R.layout.fragment_challeng_active, container, false)
         var rootView = DB_ChallengeActive.root
         try {
-
-//        framesData()
             framesAdapter()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -85,7 +82,6 @@ class ChallengActive : Fragment() {
             }
 
             val loActiveChallengesAdapter: ActiveChallengesAdapter
-//                if (mHomeModelArrayList_old == null) {
             loActiveChallengesAdapter = ActiveChallengesAdapter(
                 requireActivity(), mArray_ActiveChallengesModel
             )

@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Adapter.SearchAdapter
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -66,7 +67,6 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
     ): View? {
         // Inflate the layout for this fragment
         DB_FSearch = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
-//        var rootView = inflater.inflate(R.layout.fragment_search, container, false)
         try {
             activitySearch = requireActivity()
 
@@ -158,9 +158,8 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
 
 
             filldata()
-
-            HomeActivity.mCntLoader.visibility = View.GONE
             searchView = true
+//            Loader.hideLoader()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {

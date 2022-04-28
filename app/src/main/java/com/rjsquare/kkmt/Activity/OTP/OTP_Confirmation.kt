@@ -16,8 +16,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.Helpers.Preferences
@@ -54,7 +57,7 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
 
         fun User_OTPConfirmation(FinalOTPCode: String, UserId: String) {
             try {
-                LoaderVisible(true)
+                Loader.showLoader(OTPActivity)
                 //Here the json data is add to a hash map with key data
                 val params: MutableMap<String, String> =
                     HashMap()
@@ -70,15 +73,14 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                 )
                 call.enqueue(object : Callback<UserInfoData_Model> {
                     override fun onFailure(call: Call<UserInfoData_Model>, t: Throwable) {
-                        Log.e("GetResponse", ": " + t)
-                        GlobalUsage.ShowToast(OTPActivity, "Something went wrong")
-                        DB_OTPConfirmation.cntLoader.visibility = View.GONE
+                        Loader.hideLoader()
                     }
 
                     override fun onResponse(
                         call: Call<UserInfoData_Model>,
                         response: retrofit2.Response<UserInfoData_Model>
                     ) {
+                        Loader.hideLoader()
                         if (response.body()!!.status.equals(
                                 Constants.ResponseSucess, true
                             )
@@ -96,20 +98,12 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                                 Constants.ResponseUnauthorized, true
                             )
                         ) {
-                            DB_OTPConfirmation.cntUnAuthorized.visibility = View.VISIBLE
+                            UnAuthorized.showDialog(OTPActivity)
                         } else {
-                            DB_OTPConfirmation.txtOtpAlertmsg.text = response.body()!!.message
-                            DB_OTPConfirmation.cntAlert.visibility = View.VISIBLE
+                            Alert.showDialog(OTPActivity,response.body()!!.message!!)
                         }
 
-                        LoaderVisible(false)
-
-//                        if (userInfoModel.status.equals(Constants.ResponseSucess, true)) {
-//
-//                        } else {
-//                            ShowToast(OTPActivity, userInfoModel.message)
-//                        }
-//                        DB_OTPConfirmation.cntLoader.visibility = View.GONE
+                        Loader.hideLoader()
                     }
                 })
             } catch (E: Exception) {
@@ -128,35 +122,24 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                 print(CE)
             }
         }
-
-        private fun LoaderVisible(loading: Boolean) {
-            DB_OTPConfirmation.cntLoader.visibility = if (loading) View.VISIBLE else View.GONE
-        }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DB_OTPConfirmation =
             DataBindingUtil.setContentView(this, R.layout.activity_o_t_p__confirmation)
-
-//        setContentView(R.layout.activity_o_t_p__confirmation)
         try {
             OTPActivity = this
             GlobalUsage.StatusTextWhite(this, true)
             this.window
                 .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
 
-            LoaderVisible(false)
-//            DB_OTPConfirmation.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
             DB_OTPConfirmation.cntSent.visibility = View.GONE
 
             DB_OTPConfirmation.txtVerify.setOnClickListener(this)
             DB_OTPConfirmation.txtResend.setOnClickListener(this)
-            DB_OTPConfirmation.cntLoader.setOnClickListener(this)
             DB_OTPConfirmation.cntSent.setOnClickListener(this)
-            DB_OTPConfirmation.txtOtpAlertok.setOnClickListener(this)
-            DB_OTPConfirmation.txtUnauthOk.setOnClickListener(this)
 
             sb = StringBuilder()
             DB_OTPConfirmation.otp1.addTextChangedListener(
@@ -230,18 +213,11 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                         FinalOTPCode,
                         GlobalUsage.mLogInInfo_Model.data!!.userid
                     )
-                } else if (view == DB_OTPConfirmation.txtOtpAlertok) {
-                    DB_OTPConfirmation.cntAlert.visibility = View.GONE
-                } else if (view == DB_OTPConfirmation.txtUnauthOk) {
-                    DB_OTPConfirmation.cntUnAuthorized.visibility = View.GONE
-                    GlobalUsage.UserLogout(this)
                 } else if (view == DB_OTPConfirmation.txtResend) {
-                    LoaderVisible(true)
-//                DB_OTPConfirmation.cntLoader.visibility = View.VISIBLE
+                    Loader.showLoader(this)
                     val handler = Handler()
                     val runnablex = Runnable {
-                        LoaderVisible(false)
-//                    DB_OTPConfirmation.cntLoader.visibility = View.GONE
+                        Loader.hideLoader()
                         DB_OTPConfirmation.cntSent.visibility = View.VISIBLE
                         val handler = Handler()
                         val runnable = Runnable {

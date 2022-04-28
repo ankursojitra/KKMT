@@ -12,8 +12,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Challenges.Challenges
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.PrizesList.Prizes
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.LeaderboardCustomerAdapter
 import com.rjsquare.kkmt.Adapter.LeaderboardEmployeeAdapter
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -76,14 +78,13 @@ class LeaderBoard : Fragment(), View.OnClickListener {
 
             DB_LeaderBoard.crdPrizes.setOnClickListener(this)
             DB_LeaderBoard.crdChallenges.setOnClickListener(this)
-
-            HomeActivity.mCntLoader.visibility = View.GONE
             leaderBoardView = true
             mLeaderboardCustomer_Model = LeaderboardCustomer_Model()
 
 //            FillData()
 //            framesAdapter()
 
+//            Loader.hideLoader()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -168,7 +169,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
 
     private fun LeaderBoardDataCustomer() {
         try {
-            DB_LeaderBoard.cntLoader.visibility = View.VISIBLE
+//            Loader.showLoader(requireActivity())
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -185,19 +186,21 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             )
             call.enqueue(object : Callback<LeaderboardCustomer_Model> {
                 override fun onFailure(call: Call<LeaderboardCustomer_Model>, t: Throwable) {
-                    DB_LeaderBoard.cntLoader.visibility = View.GONE
+                    Log.e("TAG","LeaderBoardDataCustomer : t"+t)
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<LeaderboardCustomer_Model>,
                     response: Response<LeaderboardCustomer_Model>
                 ) {
-                    DB_LeaderBoard.cntLoader.visibility = View.GONE
+                    Log.e("TAG","LeaderBoardDataCustomer : ")
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         mLeaderboardCustomer_Model = response.body()!!
                         FillData()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        HomeActivity.UnauthorizedUser()
+                        UnAuthorized.showDialog(requireActivity())
                     } else {
 
                     }
@@ -222,8 +225,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
 
     private fun LeaderBoardDataEmployee() {
         try {
-            DB_LeaderBoard.cntLoader.visibility = View.VISIBLE
-            Log.e("TAG", "CHECKRESEMPLOYEEDATA : ")
+//            Loader.showLoader(requireActivity())
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -242,21 +244,21 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             )
             call.enqueue(object : Callback<LeaderboardEmployee_Model> {
                 override fun onFailure(call: Call<LeaderboardEmployee_Model>, t: Throwable) {
-                    DB_LeaderBoard.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "CHECKRESEMPLOYEEDATA : " + t)
+                    Log.e("TAG","LeaderBoardDataCustomer t: "+t)
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<LeaderboardEmployee_Model>,
                     response: Response<LeaderboardEmployee_Model>
                 ) {
-                    DB_LeaderBoard.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "CHECKRESEMPLOYEEDATA : " + response.body())
+                    Log.e("TAG","LeaderBoardDataCustomer : ")
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         mLeaderboardEmployee_Model = response.body()!!
                         FillEmpData()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        HomeActivity.UnauthorizedUser()
+                        UnAuthorized.showDialog(requireActivity())
                     } else {
 
                     }
@@ -421,10 +423,10 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                 } else if (view == DB_LeaderBoard.crdChallenges) {
                     var ChallengesIntent = Intent(activity, Challenges::class.java)
                     requireActivity().startActivity(ChallengesIntent)
-                    requireActivity().overridePendingTransition(
-                        R.anim.activity_in,
-                        R.anim.activity_out
-                    )
+//                    requireActivity().overridePendingTransition(
+//                        R.anim.activity_in,
+//                        R.anim.activity_out
+//                    )
                 } else if (view == DB_LeaderBoard.txtEmployee) {
                     DB_LeaderBoard.txtEmployee.background =
                         ContextCompat.getDrawable(requireActivity(), R.drawable.tab_selection)

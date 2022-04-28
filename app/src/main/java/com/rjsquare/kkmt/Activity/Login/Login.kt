@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.OTP.OTP_Confirmation
 import com.rjsquare.kkmt.Activity.Register.Register_User
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -42,8 +44,6 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
             GlobalUsage.StatusTextWhite(this, true)
             LoginActivity = this
 
-            DB_Login.txtLoginAlertcancle.setOnClickListener(this)
-
             // Set an editor action listener for edit text
             DB_Login.edtPhoneNum.setOnEditorActionListener(object :
                 TextView.OnEditorActionListener {
@@ -54,10 +54,10 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
                 ): Boolean {
                     // If user press done key
                     if (i == EditorInfo.IME_ACTION_DONE) {
-                        DB_Login.cntLoader.visibility = View.VISIBLE
+                        Loader.showLoader(this@Login)
                         GlobalUsage.HiddenKeyBoard(this@Login, DB_Login.imgBack)
                         if (GetValidationConfirmation()) {
-                            DB_Login.cntLoader.visibility = View.VISIBLE
+                            Loader.showLoader(this@Login)
                             LogInExistingUser()
                         }
                         return true
@@ -91,7 +91,6 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
             val params: MutableMap<String, String> =
                 HashMap()
             params[Constants.paramKey_PhoneNo] = DB_Login.edtPhoneNum.text.toString()
-//            params[GlobalUsage.paramKey_DeviceType] = "A"
             val service =
                 ApiCallingInstance.retrofitInstance.create<NetworkServices.LogInCallService>(
                     NetworkServices.LogInCallService::class.java
@@ -99,31 +98,35 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
             val call = service.GetLoginData(params)
             call.enqueue(object : Callback<UserLogIn_Model> {
                 override fun onFailure(call: Call<UserLogIn_Model>, t: Throwable) {
-                    Log.e("GetResponse", ": " + t)
-                    DB_Login.cntLoader.visibility = View.GONE
-                    Toast.makeText(this@Login, "Something went wrong.", Toast.LENGTH_SHORT).show()
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<UserLogIn_Model>,
                     response: Response<UserLogIn_Model>
                 ) {
-                    Log.e("GetResponsesas", ": " + Gson().toJson(response.body()!!))
+                    Loader.hideLoader()
                     if (!response.body()!!.status.equals("200")) {
-                        DB_Login.txtLoginAlertmsg.text = response.body()!!.message
-                        DB_Login.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@Login, response.body()!!.message!!)
                     } else {
                         GlobalUsage.mLogInInfo_Model =
                             UserLogIn_Model()
                         GlobalUsage.mLogInInfo_Model = response.body()!!
-                        if (GlobalUsage.mLogInInfo_Model.status.equals(Constants.ResponseSucess, true)) {
+                        if (GlobalUsage.mLogInInfo_Model.status.equals(
+                                Constants.ResponseSucess,
+                                true
+                            )
+                        ) {
                             GOTO_OTP()
                         } else {
-                            Toast.makeText(this@Login, GlobalUsage.mLogInInfo_Model.message, Toast.LENGTH_SHORT)
+                            Toast.makeText(
+                                this@Login,
+                                GlobalUsage.mLogInInfo_Model.message,
+                                Toast.LENGTH_SHORT
+                            )
                                 .show()
                         }
                     }
-                    DB_Login.cntLoader.visibility = View.GONE
                 }
             })
         } catch (E: Exception) {
@@ -144,7 +147,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
     }
 
     private fun GOTO_OTP() {
-        GlobalUsage.NextScreen(this,Intent(this, OTP_Confirmation::class.java))
+        GlobalUsage.NextScreen(this, Intent(this, OTP_Confirmation::class.java))
     }
 
     private fun GetValidationConfirmation(): Boolean {
@@ -153,13 +156,7 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
             MobileNo = DB_Login.edtPhoneNum.text.toString()
             if (MobileNo.equals("") || MobileNo.length < 6 && MobileNo.length >= 13
             ) {
-                DB_Login.txtLoginAlertmsg.text = "Invalid Mobile Number."
-                DB_Login.cntAlert.visibility = View.VISIBLE
-//                Toast.makeText(
-//                    this,
-//                    "Enter Mobile Correct Number",
-//                    Toast.LENGTH_SHORT
-//                ).show()
+                Alert.showDialog(this,"Invalid Mobile Number.")
                 Valid = false
             } else {
                 Valid = true
@@ -187,13 +184,11 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
                     System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_Login.txtProceed) {
                     if (GetValidationConfirmation()) {
-                        DB_Login.cntLoader.visibility = View.VISIBLE
+                        Loader.showLoader(this)
                         LogInExistingUser()
                     }
                 } else if (view == DB_Login.txtSignup) {
-                    GlobalUsage.NextScreen(this,Intent(this, Register_User::class.java))
-                } else if (view == DB_Login.txtLoginAlertcancle) {
-                    DB_Login.cntAlert.visibility = View.GONE
+                    GlobalUsage.NextScreen(this, Intent(this, Register_User::class.java))
                 }
             }
         } catch (NE: NullPointerException) {

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.VideosAdapter
 
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -63,8 +64,6 @@ class Video : AppCompatActivity(), View.OnClickListener {
 
             mArray_VideosModel = ArrayList()
             DB_Video.imgBack.setOnClickListener(this)
-            DB_Video.txtUnauthOk.setOnClickListener(this)
-//            DB_Video.cntLoadmore.setOnClickListener(this)
 
             IsVideoCallavailable = false
 
@@ -170,9 +169,8 @@ class Video : AppCompatActivity(), View.OnClickListener {
                             DB_Video.txtNoEvents.visibility = View.VISIBLE
                         }
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_Video.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@Video)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
-//                        DB_Video.cntLoadmore.visibility = View.GONE
                         IsVideoCallavailable = false
                     } else {
 
@@ -255,15 +253,7 @@ class Video : AppCompatActivity(), View.OnClickListener {
             GlobalUsage.lastClick = System.currentTimeMillis() + GlobalUsage.clickInterval
             if (view == DB_Video.imgBack) {
                 onBackPressed()
-            } else if (view == DB_Video.txtUnauthOk) {
-                DB_Video.cntUnAuthorized.visibility = View.GONE
-                GlobalUsage.UserLogout(this)
             }
         }
-//        else if (view == DB_Video.cntLoadmore) {
-//            if (IsVideoCallavailable) {
-//                GetLatestVideos((++PageNo).toString(), PagePerlimit.toString())
-//            }
-//        }
     }
 }

@@ -41,7 +41,6 @@ class ComplateChallenges : Fragment() {
 
             framesData()
             framesAdapter()
-            // Inflate the layout for this fragment
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -90,7 +89,6 @@ class ComplateChallenges : Fragment() {
             }
 
             val loActiveChallengesAdapter: ActiveChallengesAdapter
-//                if (mHomeModelArrayList_old == null) {
             loActiveChallengesAdapter = ActiveChallengesAdapter(
                 requireActivity(), mArray_ActiveChallengesModel
             )

@@ -11,9 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Beacon_Search
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.HomeActivity
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -52,9 +55,6 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             DB_ReviewDisplay.imgBack.setOnClickListener(this)
             DB_ReviewDisplay.cntBacktohome.setOnClickListener(this)
             DB_ReviewDisplay.cntEditdetails.setOnClickListener(this)
-            DB_ReviewDisplay.txtUnauthOk.setOnClickListener(this)
-            DB_ReviewDisplay.txtAlertok.setOnClickListener(this)
-
             SetUpUI()
 
         } catch (NE: NullPointerException) {
@@ -96,7 +96,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             DB_ReviewDisplay.txtReviewName.text = SelectedEmpInfo!!.employee_name
             Picasso.with(this).load(SelectedEmpInfo.employeimage)
                 .placeholder(R.drawable.expe_logo).into(DB_ReviewDisplay.imgProfile)
-            DB_ReviewDisplay.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
 
             GetLatestReviewInfo()
         }
@@ -125,15 +125,14 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<ReviewDetailModel> {
                 override fun onFailure(call: Call<ReviewDetailModel>, t: Throwable) {
-                    DB_ReviewDisplay.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "ResponseReview t : " + t)
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<ReviewDetailModel>,
                     response: Response<ReviewDetailModel>
                 ) {
-                    DB_ReviewDisplay.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
 
                     Log.e("TAG", "ResponseReview : " + Gson().toJson(response.body()!!))
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
@@ -141,11 +140,11 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                         GlobalUsage.ReviewInfoModel = response.body()!!.data!!
                         SetUIData()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_ReviewDisplay.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@ReviewDisplay)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-
+                        Alert.showDialog(this@ReviewDisplay,response.body()!!.message!!)
                     }
                 }
             })
@@ -380,11 +379,6 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             } else if (v == DB_ReviewDisplay.cntEditdetails) {
                 GlobalUsage.isNewReview = false
                 GlobalUsage.NextScreen(this, Intent(this,ReviewEdit::class.java))
-            } else if (v == DB_ReviewDisplay.txtUnauthOk) {
-                DB_ReviewDisplay.cntUnAuthorized.visibility = View.GONE
-                GlobalUsage.UserLogout(this)
-            } else if (v == DB_ReviewDisplay.txtAlertok) {
-                DB_ReviewDisplay.cntAlert.visibility = View.GONE
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

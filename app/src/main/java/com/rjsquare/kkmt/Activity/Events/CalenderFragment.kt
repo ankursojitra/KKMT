@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.EventsByMonthAdapter
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -216,7 +217,7 @@ class CalenderFragment : Fragment() {
                         }
                         SetEvents()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        EventsHome.DB_EventsHome.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(requireActivity())
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {

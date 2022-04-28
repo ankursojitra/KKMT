@@ -8,6 +8,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.StoreListAdapter
 
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -57,7 +60,7 @@ class Store : AppCompatActivity(), View.OnClickListener {
 
     private fun StoreListData() {
         try {
-            DB_Store.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -82,24 +85,23 @@ class Store : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<StoreList_Model> {
                 override fun onFailure(call: Call<StoreList_Model>, t: Throwable) {
-                    DB_Store.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<StoreList_Model>,
                     response: Response<StoreList_Model>
                 ) {
-                    DB_Store.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         GlobalUsage.mList_StoreListModel = response.body()!!.data!!
                         SetUpStoreList()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_Store.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@Store)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        DB_Store.txtAlertmsg.text = response.body()!!.message
-                        DB_Store.cntAlert.visibility = View.VISIBLE
+                        Alert.showDialog(this@Store,response.body()!!.message!!)
                     }
                 }
             })
@@ -141,15 +143,9 @@ class Store : AppCompatActivity(), View.OnClickListener {
             }
 
             val loStoreListAdapter: StoreListAdapter
-//                if (mHomeModelArrayList_old == null) {
             loStoreListAdapter = StoreListAdapter(
                 this, GlobalUsage.mList_StoreListModel
             )
-
-//            val linearLayoutManager =
-//                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-//            mRrStoreList.setLayoutManager(linearLayoutManager)
-//            mRrStoreList.setLayoutManager(GridLayoutManager(this, 1))
             DB_Store.rrStoreList.adapter = loStoreListAdapter
             DB_Store.rrStoreList.setItemViewCacheSize(GlobalUsage.mList_StoreListModel.size)
 

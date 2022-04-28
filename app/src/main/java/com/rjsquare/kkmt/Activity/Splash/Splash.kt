@@ -6,7 +6,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
+import com.rjsquare.kkmt.Activity.Dialog.Alert
+import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Activity.HomeActivity
+import com.rjsquare.kkmt.AlertScreen
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -52,6 +56,8 @@ class Splash : AppCompatActivity() {
                         Intent(this@Splash, HomeActivity::class.java)
                     )
                     finish()
+//                    Loader.showLoader(this@Splash)
+//                    UnAuthorized.showDialog(this@Splash)
                 }
 
                 override fun onTransitionTrigger(

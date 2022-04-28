@@ -3,14 +3,17 @@ package com.rjsquare.kkmt.Fragment
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Review.ReviewList
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
@@ -73,8 +76,8 @@ class History : Fragment(), View.OnClickListener {
                 HistoryReviewData()
             }
 
-            HomeActivity.mCntLoader.visibility = View.VISIBLE
             HistoryView = true
+//            Loader.hideLoader()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -93,7 +96,7 @@ class History : Fragment(), View.OnClickListener {
 
     private fun HistoryReviewData() {
         try {
-            DB_FHistory.cntLoader.visibility = View.VISIBLE
+//            Loader.showLoader(requireActivity())
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -112,15 +115,16 @@ class History : Fragment(), View.OnClickListener {
 
             call.enqueue(object : Callback<CustomerHistoryModel> {
                 override fun onFailure(call: Call<CustomerHistoryModel>, t: Throwable) {
-                    DB_FHistory.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
+                    Log.e("TAG","HistoryReviewData t: "+t)
                 }
 
                 override fun onResponse(
                     call: Call<CustomerHistoryModel>,
                     response: Response<CustomerHistoryModel>
                 ) {
-                    DB_FHistory.cntLoader.visibility = View.GONE
-
+                    Loader.hideLoader()
+                    Log.e("TAG","HistoryReviewData : ")
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         ReviewModel = response.body()!!
                         if (!response.body()!!.data!!.latest_review.isNullOrEmpty()) {
@@ -138,7 +142,7 @@ class History : Fragment(), View.OnClickListener {
 
                         FillData()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        HomeActivity.UnauthorizedUser()
+                        UnAuthorized.showDialog(requireActivity())
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {

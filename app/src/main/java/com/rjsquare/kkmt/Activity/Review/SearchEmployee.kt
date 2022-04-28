@@ -35,8 +35,11 @@ import com.minew.beaconplus.sdk.interfaces.OnBluetoothStateChangedListener
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Beacon_Search
+import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -222,9 +225,6 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
         mTxtBacktohome.setOnClickListener(this)
         mTxtSubmit.setOnClickListener(this)
         mImgClose.setOnClickListener(this)
-        DB_SearchEmployee.txtUnauthOk.setOnClickListener(this)
-        DB_SearchEmployee.txtAlertok.setOnClickListener(this)
-
         BeaconMACList = ArrayList()
         handler = Handler()
         HandlerCallavailable = true
@@ -279,7 +279,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun SlaveBleDeviceInfo() {
-        DB_SearchEmployee.cntLoader.visibility = View.VISIBLE
+        Loader.showLoader(this)
         var beaconOBJ = JSONObject()
         var arrayJ = JSONArray()
         for (Mac in BeaconMACList) {
@@ -310,16 +310,14 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<SlaveBeaconModel> {
                 override fun onFailure(call: Call<SlaveBeaconModel>, t: Throwable) {
-                    DB_SearchEmployee.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "CHECKERROR : " + t)
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<SlaveBeaconModel>,
                     response: Response<SlaveBeaconModel>
                 ) {
-                    DB_SearchEmployee.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "CHECKRESPONSESlave : " + Gson().toJson(response.body()))
+                    Loader.hideLoader()
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         GlobalUsage.slaveModellist = ArrayList()
@@ -327,7 +325,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                         ShowEmployees()
 
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        DB_SearchEmployee.cntUnAuthorized.visibility = View.VISIBLE
+                        UnAuthorized.showDialog(this@SearchEmployee)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
@@ -517,7 +515,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun EmployeeNotFound() {
-        DB_SearchEmployee.cntLoader.visibility = View.VISIBLE
+        Loader.showLoader(this)
         var beaconOBJ = JSONObject()
         var arrayJ = JSONArray()
         for (Mac in BeaconMACList) {
@@ -551,24 +549,24 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
             call.enqueue(object : Callback<EmployeeNotFoundModel> {
                 override fun onFailure(call: Call<EmployeeNotFoundModel>, t: Throwable) {
-                    DB_SearchEmployee.cntLoader.visibility = View.GONE
+                    Loader.hideLoader()
                 }
 
                 override fun onResponse(
                     call: Call<EmployeeNotFoundModel>,
                     response: Response<EmployeeNotFoundModel>
                 ) {
-                    DB_SearchEmployee.cntLoader.visibility = View.GONE
-                    Log.e("TAG", "CHECKRESPONSE : " + Gson().toJson(response.body()))
+                    Loader.hideLoader()
 
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         ShowThankyouPopup()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
-                        ShowUnauthorization()
+                        CloseViews()
+                        UnAuthorized.showDialog(this@SearchEmployee)
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        ShowAlert(response.body()!!.message)
+                        Alert.showDialog(this@SearchEmployee,response.body()!!.message!!)
                     }
                 }
             })
@@ -591,18 +589,13 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun ShowAlert(message: String?) {
-        DB_SearchEmployee.txtAlertmsg.text = message
-        DB_SearchEmployee.cntAlert.visibility = View.VISIBLE
+//        DB_SearchEmployee.txtAlertmsg.text = message
+//        DB_SearchEmployee.cntAlert.visibility = View.VISIBLE
     }
 
     private fun ShowThankyouPopup() {
         CloseViews()
         DB_SearchEmployee.layoutHelperThankyou.cntReportThankYouView.visibility = View.VISIBLE
-    }
-
-    private fun ShowUnauthorization() {
-        CloseViews()
-        DB_SearchEmployee.cntUnAuthorized.visibility = View.VISIBLE
     }
 
     private fun ReviewScreen() {
@@ -697,7 +690,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
     private fun HideAlert() {
         Log.e("TAG", "CHECKALERT")
-        DB_SearchEmployee.cntAlert.visibility = View.GONE
+//        DB_SearchEmployee.cntAlert.visibility = View.GONE
     }
 
     override fun onClick(view: View?) {
@@ -713,7 +706,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     if (!notFoundEmployeeReason.equals("".trim(), true)) {
                         EmployeeNotFound()
                     } else {
-                        ShowAlert("KKMT ID required.")
+                        Alert.showDialog(this@SearchEmployee,"KKMT ID required.")
+//                        ShowAlert("KKMT ID required.")
                     }
                 } else if (mCh2.isChecked) {
                     notFoundEmployeeReason = getString(R.string.empreson2)
@@ -723,10 +717,8 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     notFoundEmployeeReason = getString(R.string.empreson3)
                     EmployeeNotFound()
                 }
-            } else if (view == DB_SearchEmployee.txtAlertok) {
-                Log.e("TAG", "AlertOk")
-                HideAlert()
-            } else if (view == mTxtBacktohome) {
+            }
+            else if (view == mTxtBacktohome) {
                 if (!GlobalUsage.selectedMasterModel.check_in!!.equals("Yes", true)) {
                     BussinessCheckIn.thisBusinessCheckIn.finish()
                 }
@@ -739,8 +731,6 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
             } else if (view == mImgClose) {
                 CloseViews()
                 DB_SearchEmployee.cntEmpmainView.visibility = View.VISIBLE
-            } else if (view == DB_SearchEmployee.txtUnauthOk) {
-                GlobalUsage.UserLogout(this)
             }
         }
     }
@@ -795,7 +785,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode === 1 && resultCode === RESULT_OK) {
-            DB_SearchEmployee.cntLoader.visibility = View.VISIBLE
+            Loader.showLoader(this)
             ConvertFileOrImageToString(Uri.fromFile(photoFile))
         }
     }
@@ -829,13 +819,11 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
             PDFString = Base64.encodeToString(bytes, Base64.DEFAULT)
 
-            Log.e("TAG", "ActivityResult: " + PDFString)
-            DB_SearchEmployee.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
         } catch (e: java.lang.Exception) {
             // TODO: handle exception
             e.printStackTrace()
-            Log.d("error", "onActivityResult: $e")
-            DB_SearchEmployee.cntLoader.visibility = View.GONE
+            Loader.hideLoader()
         }
     }
 
