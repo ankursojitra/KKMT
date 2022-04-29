@@ -15,6 +15,7 @@ import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Beacon_Search
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
@@ -96,8 +97,11 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
             DB_ReviewDisplay.txtReviewName.text = SelectedEmpInfo!!.employee_name
             Picasso.with(this).load(SelectedEmpInfo.employeimage)
                 .placeholder(R.drawable.expe_logo).into(DB_ReviewDisplay.imgProfile)
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return
+            }
             Loader.showLoader(this)
-
             GetLatestReviewInfo()
         }
     }

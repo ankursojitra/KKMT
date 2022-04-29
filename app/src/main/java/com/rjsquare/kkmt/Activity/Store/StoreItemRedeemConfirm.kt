@@ -14,6 +14,7 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -147,6 +148,10 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
             DB_StoreItemRedeemConfirm.imgBack.setOnClickListener(this)
             SetUpItemData()
             LocationList = ArrayList()
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return
+            }
             GetPickUpLocation()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -352,6 +357,10 @@ class StoreItemRedeemConfirm : AppCompatActivity(), View.OnClickListener {
                 DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.VISIBLE
             } else if (view == DB_StoreItemRedeemConfirm.cntRedeemConfirm) {
                 DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE
+                if (!GlobalUsage.IsNetworkAvailable(this)) {
+                    Network.showDialog(this)
+                    return
+                }
                 ItemRedeemRequest()
             } else if (view == DB_StoreItemRedeemConfirm.cntRedeemCancel) {
                 DB_StoreItemRedeemConfirm.cntConfirmation.visibility = View.GONE

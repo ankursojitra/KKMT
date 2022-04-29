@@ -10,6 +10,7 @@ import com.rjsquare.kkmt.databinding.UnauthorizedDialogBinding
 
 object UnAuthorized {
     fun showDialog(activity: Activity) {
+        if (GlobalUsage.unauthorizedDialogVisible) return
         val DB_UnauthorizedDialog: UnauthorizedDialogBinding? =
             DataBindingUtil.inflate(
                 LayoutInflater.from(activity),
@@ -24,9 +25,10 @@ object UnAuthorized {
             setView(DB_UnauthorizedDialog.root)
             setCancelable(false)
         }.show()
-
+        GlobalUsage.unauthorizedDialogVisible = true
         DB_UnauthorizedDialog.txtUnaithorizedOk.setOnClickListener {
             GlobalUsage.UserLogout(activity)
+            GlobalUsage.unauthorizedDialogVisible = false
             customDialog.dismiss()
         }
     }

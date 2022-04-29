@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -50,6 +51,10 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
             DB_ResultQuestion.cntBacktohome.setOnClickListener(this)
 
             SetUpUIData()
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return
+            }
             Loader.showLoader(this)
             CompleteQuestion()
         } catch (NE: NullPointerException) {

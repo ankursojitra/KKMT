@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +40,7 @@ class Home : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         DB_FHome = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 //        var rootView = inflater.inflate(R.layout.fragment_home, container, false)
-        try {
+//        try {
             reqActivity = requireActivity()
             DB_FHome.cardViewStore.setOnClickListener(this)
             DB_FHome.cardViewEvent.setOnClickListener(this)
@@ -71,20 +72,22 @@ class Home : Fragment(), View.OnClickListener {
             GlobalUsage.isHomeScreenVisible = true
 
 //            Loader.hideLoader()
-        } catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
+//        } catch (NE: NullPointerException) {
+//            NE.printStackTrace()
+//        } catch (IE: IndexOutOfBoundsException) {
+//            IE.printStackTrace()
+//        } catch (AE: ActivityNotFoundException) {
+//            AE.printStackTrace()
+//        } catch (E: IllegalArgumentException) {
+//            E.printStackTrace()
+//        } catch (RE: RuntimeException) {
+//            RE.printStackTrace()
+//        } catch (E: Exception) {
+//            E.printStackTrace()
+//        }
         HomeView = true
+        HomeActivity.HideLoader()
+        Log.e("TAG","LoaderXX:HomeView")
         return DB_FHome.root
     }
 

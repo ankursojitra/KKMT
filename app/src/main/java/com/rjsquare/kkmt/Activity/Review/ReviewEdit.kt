@@ -36,6 +36,7 @@ import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -60,9 +61,12 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     var photoFileName = "photo.jpg"
     var photoFile: File? = null
     var DaudioFilePath = ""
-    var audioFilePath = ""
+    var audioFilePath = "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+
+    //    var audioFilePath = ""
     var isPlaying = false
     var isRecoding = false
+    var hasAudio = false
     var looped = false
     private var recorder: MediaRecorder? = null
 
@@ -74,6 +78,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     private var seconds = 0
     private var running = false
     private var wasRunning = false
+    private var isConfirmAudio = false
     var receiptno = ""
     var receiptamount = ""
     var star = ""
@@ -130,6 +135,14 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         SetUpReviewData()
 
         TimerRunnable = Runnable {
+            Log.e("TAG","StartCounterRunnable ; ")
+            if (running) {
+                seconds++
+                TimerHandler.postDelayed(TimerRunnable!!, 1000)
+            } else {
+                TimerHandler.removeCallbacks(TimerRunnable!!)
+            }
+
 //            fun run() {
             val hours: Int = seconds / 3600
             val minutes: Int = seconds % 3600 / 60
@@ -154,14 +167,9 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 
             // If running is true, increment the
             // seconds variable.
-            if (running) {
-                seconds++
-            }
-            if (running) {
-                TimerHandler.postDelayed(TimerRunnable!!, 1000)
-            } else {
-                TimerHandler.removeCallbacks(TimerRunnable!!)
-            }
+//            if (running) {
+//                seconds++
+//            }
 
 
             // Post the code again
@@ -351,7 +359,59 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             }
 
         })
+        DB_ReviewEdit.motMic.setTransitionListener(object : TransitionListener {
+            override fun onTransitionStarted(
+                motionLayout: MotionLayout?,
+                startId: Int,
+                endId: Int
+            ) {
 
+            }
+
+            override fun onTransitionChange(
+                motionLayout: MotionLayout?,
+                startId: Int,
+                endId: Int,
+                progress: Float
+            ) {
+
+            }
+
+            override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+
+                Log.e("TAG", "isRecoding" + isRecoding)
+                if (isRecoding) {
+                    Log.e("TA", "Recording")
+                    if (DB_ReviewEdit.motMic.transitionToStart() == motionLayout!!.transitionToStart()) {
+                        motionLayout.transitionToEnd()
+                    } else {
+                        motionLayout.transitionToStart()
+                    }
+//                    if (!looped) {
+//                        motionLayout!!.transitionToStart();
+//                        looped = true
+//                    }
+//                    else {
+//                        motionLayout!!.transitionToEnd();
+//                        looped = false
+//                    }
+
+                } else {
+                    motionLayout!!.transitionToEnd()
+                    Log.e("TA", "Recording NOt")
+                }
+            }
+
+            override fun onTransitionTrigger(
+                motionLayout: MotionLayout?,
+                triggerId: Int,
+                positive: Boolean,
+                progress: Float
+            ) {
+
+            }
+
+        })
     }
 
     private fun UncheckedReview() {
@@ -436,10 +496,10 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun SetUpReviewData() {
+        NewReveiwSetup()
         if (GlobalUsage.isNewReview) {
             //Setup New review data
 
-            NewReveiwSetup()
             DB_ReviewEdit.cnt1star.performClick()
 
             DB_ReviewEdit.txtReviewName.text = GlobalUsage.empSlaveModel.username
@@ -461,8 +521,6 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         } else {
             //Setup edit review data
 
-
-            NewReveiwSetup()
 //            DB_ReviewEdit.cnt1star.performClick()
             setUpEditReview(GlobalUsage.ReviewInfoModel)
 
@@ -474,7 +532,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         DB_ReviewEdit.cntGood.isClickable = false
         DB_ReviewEdit.cntBad.isClickable = false
         DB_ReviewEdit.cnt1star.isClickable = false
-        DB_ReviewEdit.cntVoice.isEnabled = false
+//        DB_ReviewEdit.cntVoice.isEnabled = false
         DB_ReviewEdit.cntReceiptUpload.isEnabled = false
         if (reviewInfoModel.review!!.equals(Constants.fivestar)) {
             DB_ReviewEdit.cnt5star.performClick()
@@ -532,7 +590,9 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         DB_ReviewEdit.edtWrittenNote.isEnabled = true
 
         if (!reviewInfoModel.voice_note.isNullOrBlank()) {
-
+            audioFilePath = reviewInfoModel.voice_note!!
+            hasAudio = true
+            setVoiceNoteUI()
         }
     }
 
@@ -653,102 +713,6 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    override fun onClick(view: View?) {
-        try {
-            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
-                GlobalUsage.lastClick =
-                    System.currentTimeMillis() + GlobalUsage.clickInterval
-                if (view == DB_ReviewEdit.txtSubmit) {
-                    if (CheckDataForReview()) SubmitReview()
-                    else Alert.showDialog(this,getString(R.string.reviewnoteserror))
-                } else if (view == DB_ReviewEdit.imgBack) {
-                    onBackPressed()
-                }
-                else if (view == DB_ReviewEdit.cnt1star) {
-                    UncheckedReview()
-                    star = Constants.onestar
-                    DB_ReviewEdit.cnt1star.setBackgroundResource(R.drawable.review_selection)
-                } else if (view == DB_ReviewEdit.cntBad) {
-                    UncheckedReview()
-                    star = Constants.bad
-                    DB_ReviewEdit.cntBad.setBackgroundResource(R.drawable.review_selection)
-                } else if (view == DB_ReviewEdit.cntGood) {
-                    UncheckedReview()
-                    star = Constants.good
-                    DB_ReviewEdit.cntGood.setBackgroundResource(R.drawable.review_selection)
-                } else if (view == DB_ReviewEdit.cnt5star) {
-                    UncheckedReview()
-                    star = Constants.fivestar
-                    DB_ReviewEdit.cnt5star.setBackgroundResource(R.drawable.review_selection)
-                } else if (view == DB_ReviewEdit.cntVoice) {
-                    VoiceRecordingSetup()
-                } else if (view == DB_ReviewEdit.txtConfirm) {
-                    DB_ReviewEdit.cntVoiceDialoug.visibility = View.GONE
-                    Loader.showLoader(this)
-                    ConvertAudioToBase64()
-                } else if (view == DB_ReviewEdit.txtCancel) {
-                    DB_ReviewEdit.cntVoiceDialoug.visibility = View.GONE
-                    ResetRecording()
-                } else if (view == DB_ReviewEdit.imgDelete) {
-                    ResetRecording()
-                } else if (view == DB_ReviewEdit.imgMic) {
-                    isRecoding = !isRecoding
-                    AudioRecording()
-                } else if (view == DB_ReviewEdit.imgPlaypause) {
-                    isPlaying = !isPlaying
-                    FilePlayPause()
-                } else if (view == DB_ReviewEdit.cntReceiptUpload) {
-                    Log.e("TAG", "txtUploadReceipt")
-                    val permissions =
-                        arrayOf(
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        )
-                    Permissions.check(this, permissions, null, null, object : PermissionHandler() {
-                        override fun onGranted() {
-                            // do your task.
-                            Log.e("TAG", "onGranted")
-                            selectImageCam()
-                        }
-
-                        override fun onDenied(
-                            context: Context?,
-                            deniedPermissions: java.util.ArrayList<String>?
-                        ) {
-                            super.onDenied(context, deniedPermissions)
-                        }
-
-                        override fun onBlocked(
-                            context: Context?,
-                            blockedList: java.util.ArrayList<String>?
-                        ): Boolean {
-                            return super.onBlocked(context, blockedList)
-                        }
-
-                        override fun onJustBlocked(
-                            context: Context?,
-                            justBlockedList: java.util.ArrayList<String>?,
-                            deniedPermissions: java.util.ArrayList<String>?
-                        ) {
-                            super.onJustBlocked(context, justBlockedList, deniedPermissions)
-                        }
-                    })
-                }
-            }
-        } catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
-    }
 
     private fun CheckDataForReview(): Boolean {
         receiptno = DB_ReviewEdit.edtReceiptNumber.text.toString()
@@ -819,7 +783,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        Alert.showDialog(this@ReviewEdit,response.body()!!.message!!)
+                        Alert.showDialog(this@ReviewEdit, response.body()!!.message!!)
 //                        DB_ReviewEdit.txtAlertmsg.text = response.body()!!.messageresponse.body()!!.message
 //                        DB_ReviewEdit.cntAlert.visibility = View.VISIBLE
                     }
@@ -867,6 +831,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 //            } catch (e: java.lang.Exception) {
 ////                DiagnosticHelper.writeException(e)
 //            }
+//            setVoiceNoteUI()
             Loader.hideLoader()
 
         } catch (e: java.lang.Exception) {
@@ -875,7 +840,64 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 
         }
 
-//        Log.e("TAG","StringAudio : "+ConvertFileOrImageToString(Uri.parse(audioFilePath)))
+    }
+
+    private fun setVoiceNoteUI() {
+        if (audioFilePath.isBlank()) {
+            DB_ReviewEdit.imgVoiceNote.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_voice_none
+                )
+            )
+            DB_ReviewEdit.imgVoiceVerified.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_nonverified
+                )
+            )
+            DB_ReviewEdit.txtRecodinglbl.visibility = View.INVISIBLE
+            DB_ReviewEdit.crdPlaypause.visibility = View.INVISIBLE
+            DB_ReviewEdit.crdDelete.visibility = View.INVISIBLE
+            DB_ReviewEdit.txtConfirm.isClickable = false
+            DB_ReviewEdit.txtConfirm.background =
+                ContextCompat.getDrawable(this, R.drawable.proceedback_default)
+            DB_ReviewEdit.imgIconMic.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_voice_none
+                )
+            )
+            isRecoding = false
+            DB_ReviewEdit.motMic.transitionToEnd()
+        } else {
+            DB_ReviewEdit.imgVoiceNote.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_voice_colored
+                )
+            )
+            DB_ReviewEdit.imgVoiceVerified.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_verified
+                )
+            )
+            DB_ReviewEdit.txtRecodinglbl.visibility = View.INVISIBLE
+            DB_ReviewEdit.crdPlaypause.visibility = View.VISIBLE
+            DB_ReviewEdit.crdDelete.visibility = View.VISIBLE
+            DB_ReviewEdit.txtConfirm.isClickable = true
+            DB_ReviewEdit.txtConfirm.background =
+                ContextCompat.getDrawable(this, R.drawable.proceedback_orange)
+            DB_ReviewEdit.imgIconMic.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_voice_colored
+                )
+            )
+            isRecoding = false
+            DB_ReviewEdit.motMic.transitionToEnd()
+        }
     }
 
 
@@ -919,6 +941,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun StartCounter() {
+        Log.e("TAG","StartCounter ; ")
         running = true
         TimerHandler.postDelayed(TimerRunnable!!, 0)
     }
@@ -973,14 +996,16 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 
     private fun ResetRecording() {
         StopPlaying()
+        ResetCounter()
         DB_ReviewEdit.txtRecodinglbl.visibility = View.INVISIBLE
         DB_ReviewEdit.motMic.transitionToEnd()
         DB_ReviewEdit.crdPlaypause.visibility = View.INVISIBLE
         DB_ReviewEdit.crdDelete.visibility = View.INVISIBLE
-        ResetCounter()
-        if (File(audioFilePath).exists()) {
-            File(audioFilePath).delete()
-        }
+
+//        if (File(audioFilePath).exists()) {
+//            File(audioFilePath).delete()
+//            audioFilePath = ""
+//        }
         DB_ReviewEdit.txtConfirm.isClickable = false
         DB_ReviewEdit.txtConfirm.background =
             ContextCompat.getDrawable(this, R.drawable.proceedback_default)
@@ -999,24 +1024,77 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             recorder = null
         }
         ResetCounter()
-        DB_ReviewEdit.crdPlaypause.visibility = View.VISIBLE
-        DB_ReviewEdit.crdDelete.visibility = View.VISIBLE
-        DB_ReviewEdit.txtConfirm.isClickable = true
-        DB_ReviewEdit.txtConfirm.background =
-            ContextCompat.getDrawable(this, R.drawable.proceedback_orange)
-        DB_ReviewEdit.imgIconMic.setImageDrawable(
-            ContextCompat.getDrawable(
-                this,
-                R.drawable.ic_voice_colored
-            )
-        )
+        hasAudio = true
+        setVoiceNoteUI()
+//        availableRecordingFileUI()
+
     }
+
+//    private fun availableRecordingFileUI() {
+//        if (audioFilePath.isBlank()) {
+////            DB_ReviewEdit.imgVoiceNote.setImageDrawable(
+////                ContextCompat.getDrawable(
+////                    this,
+////                    R.drawable.ic_voice_none
+////                )
+////            )
+////            DB_ReviewEdit.imgVoiceVerified.setImageDrawable(
+////                ContextCompat.getDrawable(
+////                    this,
+////                    R.drawable.ic_nonverified
+////                )
+////            )
+//            DB_ReviewEdit.txtRecodinglbl.visibility = View.INVISIBLE
+//            DB_ReviewEdit.crdPlaypause.visibility = View.INVISIBLE
+//            DB_ReviewEdit.crdDelete.visibility = View.INVISIBLE
+//            DB_ReviewEdit.txtConfirm.isClickable = false
+//            DB_ReviewEdit.txtConfirm.background =
+//                ContextCompat.getDrawable(this, R.drawable.proceedback_default)
+//            DB_ReviewEdit.imgIconMic.setImageDrawable(
+//                ContextCompat.getDrawable(
+//                    this,
+//                    R.drawable.ic_voice_none
+//                )
+//            )
+//            isRecoding = false
+//            DB_ReviewEdit.motMic.transitionToEnd()
+//        } else {
+////            DB_ReviewEdit.imgVoiceNote.setImageDrawable(
+////                ContextCompat.getDrawable(
+////                    this,
+////                    R.drawable.ic_voice_colored
+////                )
+////            )
+////            DB_ReviewEdit.imgVoiceVerified.setImageDrawable(
+////                ContextCompat.getDrawable(
+////                    this,
+////                    R.drawable.ic_verified
+////                )
+////            )
+//            DB_ReviewEdit.txtRecodinglbl.visibility = View.INVISIBLE
+//            DB_ReviewEdit.crdPlaypause.visibility = View.VISIBLE
+//            DB_ReviewEdit.crdDelete.visibility = View.VISIBLE
+//            DB_ReviewEdit.txtConfirm.isClickable = true
+//            DB_ReviewEdit.txtConfirm.background =
+//                ContextCompat.getDrawable(this, R.drawable.proceedback_orange)
+//            DB_ReviewEdit.imgIconMic.setImageDrawable(
+//                ContextCompat.getDrawable(
+//                    this,
+//                    R.drawable.ic_voice_colored
+//                )
+//            )
+//            isRecoding = false
+//            DB_ReviewEdit.motMic.transitionToEnd()
+//        }
+//    }
 
     private fun StartRecording() {
         ResetRecording()
         DB_ReviewEdit.motMic.transitionToStart()
         DB_ReviewEdit.txtRecodinglbl.visibility = View.VISIBLE
 //        audioFile.record()
+
+        audioFilePath = getAudioFileUri("review.mp3").absolutePath
         recorder = MediaRecorder()
         recorder!!.setAudioSource(MediaRecorder.AudioSource.MIC)
         recorder!!.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
@@ -1030,6 +1108,8 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         }
         StartCounter()
         recorder!!.start()
+
+
     }
 
 
@@ -1065,23 +1145,37 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun AudioFileSetUp() {
-//        audioFilePath = "${Environment.getExternalStorageDirectory()} /recorded_audio.wav";
-        DaudioFilePath = getAudioFileUri("review1.wav").absolutePath
-        audioFilePath = getAudioFileUri("review.wav").absolutePath
-        Log.e("TAG", "FilePathSaved : " + audioFilePath)
-
-    }
+//    private fun AudioFileSetUp() {
+////        audioFilePath = "${Environment.getExternalStorageDirectory()} /recorded_audio.wav";
+//        DaudioFilePath = getAudioFileUri("review.mp3").absolutePath
+//        audioFilePath = getAudioFileUri("review.mp3").absolutePath
+//        Log.e("TAG", "FilePathSaved : " + audioFilePath)
+//
+//    }
 
     private fun VoiceRecordingSetup() {
-        DB_ReviewEdit.cntVoiceDialoug.visibility = View.VISIBLE
-        ResetRecording()
         val permissions =
-            arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            arrayOf(
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
         Permissions.check(this, permissions, null, null, object : PermissionHandler() {
             override fun onGranted() {
                 // do your task.
-                AudioFileSetUp()
+
+                DB_ReviewEdit.cntVoiceDialoug.visibility = View.VISIBLE
+                Log.e("TAG", "CheckIfRecordingAvailable : Uri : " + CheckIfRecordingAvailable())
+                if (audioFilePath.isBlank()) {
+                    ResetRecording()
+                }
+//        availableRecordingFileUI()
+                setVoiceNoteUI()
+
+                if (hasAudio) {
+
+                } else {
+                    Log.e("TAG", "CHeck : Uri : " + audioFilePath)
+                }
             }
 
             override fun onDenied(
@@ -1106,60 +1200,115 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                 super.onJustBlocked(context, justBlockedList, deniedPermissions)
             }
         })
+    }
 
-//        AudioFileSetUp()
-        DB_ReviewEdit.motMic.setTransitionListener(object : TransitionListener {
-            override fun onTransitionStarted(
-                motionLayout: MotionLayout?,
-                startId: Int,
-                endId: Int
-            ) {
+    private fun CheckIfRecordingAvailable(): Boolean {
+        return !audioFilePath.isBlank()
+    }
 
-            }
-
-            override fun onTransitionChange(
-                motionLayout: MotionLayout?,
-                startId: Int,
-                endId: Int,
-                progress: Float
-            ) {
-
-            }
-
-            override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-
-                Log.e("TAG", "isRecoding" + isRecoding)
-                if (isRecoding) {
-                    Log.e("TA", "Recording")
-                    if (DB_ReviewEdit.motMic.transitionToStart() == motionLayout!!.transitionToStart()) {
-                        motionLayout.transitionToEnd()
-                    } else {
-                        motionLayout.transitionToStart()
+    override fun onClick(view: View?) {
+        try {
+            if (System.currentTimeMillis() < GlobalUsage.lastClick) return else {
+                GlobalUsage.lastClick =
+                    System.currentTimeMillis() + GlobalUsage.clickInterval
+                if (view == DB_ReviewEdit.txtSubmit) {
+                    if (!GlobalUsage.IsNetworkAvailable(this)) {
+                        Network.showDialog(this)
+                        return
                     }
-//                    if (!looped) {
-//                        motionLayout!!.transitionToStart();
-//                        looped = true
-//                    }
-//                    else {
-//                        motionLayout!!.transitionToEnd();
-//                        looped = false
-//                    }
+                    if (CheckDataForReview()) SubmitReview()
+                    else Alert.showDialog(this, getString(R.string.reviewnoteserror))
+                } else if (view == DB_ReviewEdit.imgBack) {
+                    onBackPressed()
+                } else if (view == DB_ReviewEdit.cnt1star) {
+                    UncheckedReview()
+                    star = Constants.onestar
+                    DB_ReviewEdit.cnt1star.setBackgroundResource(R.drawable.review_selection)
+                } else if (view == DB_ReviewEdit.cntBad) {
+                    UncheckedReview()
+                    star = Constants.bad
+                    DB_ReviewEdit.cntBad.setBackgroundResource(R.drawable.review_selection)
+                } else if (view == DB_ReviewEdit.cntGood) {
+                    UncheckedReview()
+                    star = Constants.good
+                    DB_ReviewEdit.cntGood.setBackgroundResource(R.drawable.review_selection)
+                } else if (view == DB_ReviewEdit.cnt5star) {
+                    UncheckedReview()
+                    star = Constants.fivestar
+                    DB_ReviewEdit.cnt5star.setBackgroundResource(R.drawable.review_selection)
+                } else if (view == DB_ReviewEdit.cntVoice) {
+                    VoiceRecordingSetup()
+                } else if (view == DB_ReviewEdit.txtConfirm) {
+                    DB_ReviewEdit.cntVoiceDialoug.visibility = View.GONE
+                    Loader.showLoader(this)
+                    ConvertAudioToBase64()
+                    isConfirmAudio = true
+                } else if (view == DB_ReviewEdit.txtCancel) {
+                    DB_ReviewEdit.cntVoiceDialoug.visibility = View.GONE
+                    if (!isConfirmAudio) audioFilePath = ""
+                    StopPlaying()
+                    setVoiceNoteUI()
+                } else if (view == DB_ReviewEdit.imgDelete) {
+                    audioFilePath = ""
+                    hasAudio = false
+                    VoiceRecordingSetup()
+                } else if (view == DB_ReviewEdit.imgMic) {
+                    isRecoding = !isRecoding
+                    AudioRecording()
+                } else if (view == DB_ReviewEdit.imgPlaypause) {
+                    isPlaying = !isPlaying
+                    FilePlayPause()
+                } else if (view == DB_ReviewEdit.cntReceiptUpload) {
+                    Log.e("TAG", "txtUploadReceipt")
+                    val permissions =
+                        arrayOf(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                    Permissions.check(this, permissions, null, null, object : PermissionHandler() {
+                        override fun onGranted() {
+                            // do your task.
+                            Log.e("TAG", "onGranted")
+                            selectImageCam()
+                        }
 
-                } else {
-                    motionLayout!!.transitionToEnd()
-                    Log.e("TA", "Recording NOt")
+                        override fun onDenied(
+                            context: Context?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onDenied(context, deniedPermissions)
+                        }
+
+                        override fun onBlocked(
+                            context: Context?,
+                            blockedList: java.util.ArrayList<String>?
+                        ): Boolean {
+                            return super.onBlocked(context, blockedList)
+                        }
+
+                        override fun onJustBlocked(
+                            context: Context?,
+                            justBlockedList: java.util.ArrayList<String>?,
+                            deniedPermissions: java.util.ArrayList<String>?
+                        ) {
+                            super.onJustBlocked(context, justBlockedList, deniedPermissions)
+                        }
+                    })
                 }
             }
-
-            override fun onTransitionTrigger(
-                motionLayout: MotionLayout?,
-                triggerId: Int,
-                positive: Boolean,
-                progress: Float
-            ) {
-
-            }
-
-        })
+        } catch (NE: NullPointerException) {
+            NE.printStackTrace()
+        } catch (IE: IndexOutOfBoundsException) {
+            IE.printStackTrace()
+        } catch (AE: ActivityNotFoundException) {
+            AE.printStackTrace()
+        } catch (E: IllegalArgumentException) {
+            E.printStackTrace()
+        } catch (RE: RuntimeException) {
+            RE.printStackTrace()
+        } catch (E: Exception) {
+            E.printStackTrace()
+        }
     }
+
 }

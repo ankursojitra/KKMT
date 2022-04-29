@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.EventsByMonthAdapter
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -54,7 +55,9 @@ class CalenderFragment : Fragment() {
         initListners(rootView)
 
         framesAdapter()
-        GetLatestEvents((Month).toString())
+        if (!GlobalUsage.IsNetworkAvailable(requireActivity())) {
+            Network.showDialog(requireActivity())
+        } else GetLatestEvents((Month).toString())
 
         return rootView
     }

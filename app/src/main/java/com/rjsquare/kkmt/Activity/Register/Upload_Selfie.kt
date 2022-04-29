@@ -19,6 +19,7 @@ import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
@@ -262,12 +263,14 @@ class Upload_Selfie : AppCompatActivity(), View.OnClickListener {
                     })
                 } else if (view == DB_UploadSelfie.txtSaveandexplore) {
                     if (!PDFString.equals("", true)) {
+                        if (!GlobalUsage.IsNetworkAvailable(this)) {
+                            Network.showDialog(this)
+                            return
+                        }
                         Loader.showLoader(this)
                         UploadSelfie(PDFString)
                     } else {
                         Alert.showDialog(this,"Invalid Selfie.")
-//                        DB_UploadSelfie.txtAlertmsg.text = "Invalid Selfie."
-//                        DB_UploadSelfie.cntAlert.visibility = View.VISIBLE
                     }
                 } else if (view == DB_UploadSelfie.txtSkip) {
                     GlobalUsage.NextScreen(this,Intent(this, HomeActivity::class.java))

@@ -29,7 +29,6 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
-import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Adapter.SearchAdapter
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -98,11 +97,11 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
             mArray_SearchModel = ArrayList()
 
 //            mMapView = rootView.findViewById<View>(R.id.mapView) as MapView
-            DB_FSearch.mapView.onCreate(savedInstanceState)
+//            DB_FSearch.mapView.onCreate(savedInstanceState)
 
             BusinessListUpside(false)
 
-            DB_FSearch.mapView.onResume()
+//            DB_FSearch.mapView.onResume()
             try {
                 MapsInitializer.initialize(requireActivity().applicationContext)
             } catch (e: java.lang.Exception) {
@@ -159,7 +158,9 @@ class search : Fragment(), DialogInterface.OnCancelListener, View.OnClickListene
 
             filldata()
             searchView = true
+            Log.e("TAG","LoaderXX:SearchView")
 //            Loader.hideLoader()
+            HomeActivity.HideLoader()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {

@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -67,6 +68,10 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
 
             creditList = ArrayList()
             Loader.showLoader(this)
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return
+            }
             GetWheelCredits()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -343,12 +348,10 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
         DB_LuckyDraw.luckyWheel.setLuckyRoundItemSelectedListener(object :
             LuckyWheelView.LuckyRoundItemSelectedListener {
             override fun LuckyRoundItemSelected(index: Int) {
-                Log.e(
-                    "TAG",
-                    "Check Item Selected : " + data.get(index).topText.toString().trim()
-                )
-                Log.e("TAG", "Check Item Selected : " + GetCredit(data.get(index).topText))
-
+                if (!GlobalUsage.IsNetworkAvailable(this@LuckyDraw)) {
+                    Network.showDialog(this@LuckyDraw)
+                    return
+                }
                 LuckyDrawCreditAdd(GetCredit(data.get(index).topText))
             }
         })

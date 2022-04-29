@@ -10,9 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.EventsAdapter
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
@@ -46,7 +48,9 @@ class EventListFragment : Fragment() {
         mArray_EventsModel = ArrayList()
 
         framesAdapter()
-        GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
+        if (!GlobalUsage.IsNetworkAvailable(requireActivity())) {
+            Network.showDialog(requireActivity())
+        } else GetLatestEvents((++PageNo).toString(), PagePerlimit.toString())
         return rootView
     }
 
@@ -130,7 +134,8 @@ class EventListFragment : Fragment() {
                         mArray_EventsModel.addAll(response.body()!!.data!!)
                         DB_EventListFragment.rrEvents.adapter!!.notifyDataSetChanged()
 
-                        IsEventCallavailable = response.body()!!.data!!.size >= this@EventListFragment.PagePerlimit
+                        IsEventCallavailable =
+                            response.body()!!.data!!.size >= this@EventListFragment.PagePerlimit
 
                         if (mArray_EventsModel.size > 0) {
                             DB_EventListFragment.txtNoEvents.visibility = View.GONE

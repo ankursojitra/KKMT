@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -53,9 +54,12 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
 
             DB_VideoPlayer.imgBack.setOnClickListener(this)
             DB_VideoPlayer.txtQuestions.setOnClickListener(this)
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return
+            }
             Loader.showLoader(this)
             GetVideoDetails()
-
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -141,7 +145,7 @@ class VideoPlayer : AppCompatActivity(), View.OnClickListener {
                 if (view == DB_VideoPlayer.imgBack) {
                     onBackPressed()
                 } else if (view == DB_VideoPlayer.txtQuestions) {
-                    GlobalUsage.NextScreen(this,Intent(this, Questions::class.java))
+                    GlobalUsage.NextScreen(this, Intent(this, Questions::class.java))
                 }
             }
         } catch (NE: NullPointerException) {

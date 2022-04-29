@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.PrizesListAdapter
 
@@ -41,7 +42,10 @@ class Prizes : AppCompatActivity(), View.OnClickListener {
             GlobalUsage.StatusTextWhite(this, true)
 
             DB_Prizes.imgBack.setOnClickListener(this)
-
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return
+            }
             GetLatestPrizes()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

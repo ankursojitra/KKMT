@@ -13,13 +13,14 @@ import androidx.fragment.app.Fragment
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Challenges.Challenges
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.PrizesList.Prizes
-import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.LeaderboardCustomerAdapter
 import com.rjsquare.kkmt.Adapter.LeaderboardEmployeeAdapter
-import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.Leaderboard.EmpInfo
@@ -61,16 +62,19 @@ class LeaderBoard : Fragment(), View.OnClickListener {
         try {
             Log.e("TAG", "CHECKEMPLOYEE : " + GlobalUsage.isUserEmployee)
             if (GlobalUsage.userLogedIn) {
-                if (GlobalUsage.isUserEmployee) {
-                    DB_LeaderBoard.cntEmporuser.visibility = View.GONE
-                    IsCurrentBussiness = false
-                    LeaderBoardDataEmployee()
+                if (!GlobalUsage.IsNetworkAvailable(requireActivity())) {
+                    Network.showDialog(requireActivity())
                 } else {
-                    LeaderBoardDataCustomer()
-                    DB_LeaderBoard.cntEmporuser.visibility = View.GONE
+                    if (GlobalUsage.isUserEmployee) {
+                        DB_LeaderBoard.cntEmporuser.visibility = View.GONE
+                        IsCurrentBussiness = false
+                        LeaderBoardDataEmployee()
+                    } else {
+                        LeaderBoardDataCustomer()
+                        DB_LeaderBoard.cntEmporuser.visibility = View.GONE
+                    }
                 }
             }
-
 
             DB_LeaderBoard.txtEmployee.setOnClickListener(this)
             DB_LeaderBoard.txtUser.setOnClickListener(this)
@@ -80,10 +84,11 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             DB_LeaderBoard.crdChallenges.setOnClickListener(this)
             leaderBoardView = true
             mLeaderboardCustomer_Model = LeaderboardCustomer_Model()
-
+            Log.e("TAG","LoaderXX:leaderBoardView")
 //            FillData()
 //            framesAdapter()
 
+            HomeActivity.HideLoader()
 //            Loader.hideLoader()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -100,6 +105,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
         }
         return DB_LeaderBoard.root
     }
+
 //    private fun FillData() {
 //        try {
 //            mArray_LeaderBoardModel = ArrayList()
@@ -186,7 +192,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             )
             call.enqueue(object : Callback<LeaderboardCustomer_Model> {
                 override fun onFailure(call: Call<LeaderboardCustomer_Model>, t: Throwable) {
-                    Log.e("TAG","LeaderBoardDataCustomer : t"+t)
+                    Log.e("TAG", "LeaderBoardDataCustomer : t" + t)
                     Loader.hideLoader()
                 }
 
@@ -194,7 +200,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                     call: Call<LeaderboardCustomer_Model>,
                     response: Response<LeaderboardCustomer_Model>
                 ) {
-                    Log.e("TAG","LeaderBoardDataCustomer : ")
+                    Log.e("TAG", "LeaderBoardDataCustomer : ")
                     Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         mLeaderboardCustomer_Model = response.body()!!
@@ -244,7 +250,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
             )
             call.enqueue(object : Callback<LeaderboardEmployee_Model> {
                 override fun onFailure(call: Call<LeaderboardEmployee_Model>, t: Throwable) {
-                    Log.e("TAG","LeaderBoardDataCustomer t: "+t)
+                    Log.e("TAG", "LeaderBoardDataCustomer t: " + t)
                     Loader.hideLoader()
                 }
 
@@ -252,7 +258,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                     call: Call<LeaderboardEmployee_Model>,
                     response: Response<LeaderboardEmployee_Model>
                 ) {
-                    Log.e("TAG","LeaderBoardDataCustomer : ")
+                    Log.e("TAG", "LeaderBoardDataCustomer : ")
                     Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         mLeaderboardEmployee_Model = response.body()!!
@@ -349,7 +355,7 @@ class LeaderBoard : Fragment(), View.OnClickListener {
         DB_LeaderBoard.txtRankOwnAmount.text = EmpModel.credit
         Picasso.with(requireActivity()).load(EmpModel.userimage)
             .placeholder(R.drawable.expe_logo).into(DB_LeaderBoard.imgRankOwnProfile)
-        Log.e("TAG","UserImage : "+EmpModel.userimage)
+        Log.e("TAG", "UserImage : " + EmpModel.userimage)
     }
 
 
@@ -376,9 +382,13 @@ class LeaderBoard : Fragment(), View.OnClickListener {
                 mLeaderboardCustomer_Model.data!!.current_customer!![0].rank
             DB_LeaderBoard.txtRankOwnAmount.text =
                 mLeaderboardCustomer_Model.data!!.current_customer!![0].credit
-            Picasso.with(requireActivity()).load(mLeaderboardCustomer_Model.data!!.current_customer!![0].userimage)
+            Picasso.with(requireActivity())
+                .load(mLeaderboardCustomer_Model.data!!.current_customer!![0].userimage)
                 .placeholder(R.drawable.expe_logo).into(DB_LeaderBoard.imgRankOwnProfile)
-            Log.e("TAG","UserImage : "+mLeaderboardCustomer_Model.data!!.current_customer!![0].userimage)
+            Log.e(
+                "TAG",
+                "UserImage : " + mLeaderboardCustomer_Model.data!!.current_customer!![0].userimage
+            )
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {

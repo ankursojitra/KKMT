@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.ChallengesAdapter
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -86,6 +87,10 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
     private fun fillData() {
         try {
             Loader.showLoader(this)
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return
+            }
             DailyChallanges((++dayPageNo).toString(), PagePerlimit.toString())
             WeeklyChallanges((++weekPageNo).toString(), PagePerlimit.toString())
             MonthlyChallanges((++monthPageNo).toString(), PagePerlimit.toString())
