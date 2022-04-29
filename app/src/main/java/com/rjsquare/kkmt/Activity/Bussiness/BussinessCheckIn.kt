@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Review.SearchEmployee
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -46,6 +47,10 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
         DB_BussinessCheckIn.cntCheckout.setOnClickListener(this)
 
         Setupdata()
+        if (!GlobalUsage.IsNetworkAvailable(this)) {
+            Network.showDialog(this)
+            return
+        }
         CheckInCredit()
 
     }

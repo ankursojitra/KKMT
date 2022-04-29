@@ -15,6 +15,7 @@ import com.rjsquare.kkmt.databinding.LoaderDialogBinding
 object Loader {
     lateinit var customDialog:AlertDialog
     fun showLoader(activity: Activity) {
+        if (GlobalUsage.loaderDialogVisible) return
         val DB_LoaderDialog: LoaderDialogBinding? =
             DataBindingUtil.inflate(
                 LayoutInflater.from(activity),
@@ -32,6 +33,7 @@ object Loader {
             setView(DB_LoaderDialog?.root)
             setCancelable(false)
         }.show()
+        GlobalUsage.loaderDialogVisible = true
 
 //        DB_LoaderDialog.txtAlertok.setOnClickListener {
 //            if (GlobalUsage.ItemRedeemed) {
@@ -49,6 +51,7 @@ object Loader {
     }
 
     fun hideLoader() {
+        GlobalUsage.loaderDialogVisible = false
         customDialog.dismiss()
     }
 }

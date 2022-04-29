@@ -34,6 +34,7 @@ import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Register.upload_doc
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
@@ -431,6 +432,10 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                         }
                     })
                 } else if (view == DB_Profile.cntSave) {
+                    if (!GlobalUsage.IsNetworkAvailable(this)) {
+                        Network.showDialog(this)
+                        return
+                    }
                     UpdateProfile()
                 } else if (view == DB_Profile.txtCancel) {
                     DB_Profile.cntUserProfile.visibility = View.GONE

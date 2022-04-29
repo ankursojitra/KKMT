@@ -11,10 +11,11 @@ import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Loader
-import com.rjsquare.kkmt.Activity.HomeActivity
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
-import com.rjsquare.kkmt.AppConstant.GlobalUsage
+import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.AppConstant.Constants
+import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.EmployeeHistoryModel
@@ -60,10 +61,14 @@ class EmployeeHistory : Fragment() {
 
             EmpHistory = EmployeeHistoryModel()
             if (GlobalUsage.userLogedIn) {
-                HistoryEmpReviewData()
+                if (!GlobalUsage.IsNetworkAvailable(requireActivity())) {
+                    Network.showDialog(requireActivity())
+                } else
+                    HistoryEmpReviewData()
             }
-            EmpHistoryView = true
+            HomeActivity.HistoryViewLoad = true
 //            Loader.hideLoader()
+            HomeActivity.HideLoader()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -103,14 +108,14 @@ class EmployeeHistory : Fragment() {
             call.enqueue(object : Callback<EmployeeHistoryModel> {
                 override fun onFailure(call: Call<EmployeeHistoryModel>, t: Throwable) {
                     Loader.hideLoader()
-                    Log.e("TAG","HistoryEmpReviewData t: "+t)
+                    Log.e("TAG", "HistoryEmpReviewData t: " + t)
                 }
 
                 override fun onResponse(
                     call: Call<EmployeeHistoryModel>,
                     response: Response<EmployeeHistoryModel>
                 ) {
-                    Log.e("TAG","HistoryEmpReviewData : ")
+                    Log.e("TAG", "HistoryEmpReviewData : ")
                     Loader.hideLoader()
                     Log.e("TAG", "EMPHistoryData : " + Gson().toJson(response.body()!!))
 
@@ -230,7 +235,7 @@ class EmployeeHistory : Fragment() {
     }
 
     companion object {
-        var EmpHistoryView = false
+//        var EmpHistoryView = false
 
         @JvmStatic
         fun newInstance(

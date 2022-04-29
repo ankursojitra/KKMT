@@ -9,10 +9,9 @@ import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.AlertDialogBinding
 
-object Alert {
-    fun showDialog(activity: Activity, Message: String) {
-        if (GlobalUsage.alertDialogVisible) return
-
+object Network {
+    fun showDialog(activity: Activity) {
+        if (GlobalUsage.networkDialogVisible) return
         val DB_AlertDialog: AlertDialogBinding? =
             DataBindingUtil.inflate(
                 LayoutInflater.from(activity),
@@ -22,25 +21,15 @@ object Alert {
             )
 
         val customDialog = AlertDialog.Builder(activity, R.style.alertdialogTheme).create()
-        DB_AlertDialog?.txtAlertmsg!!.text = Message
+        DB_AlertDialog?.txtAlertmsg!!.text = activity.getString(R.string.networkmeaasge)
+        DB_AlertDialog.txtAlert.text = activity.getString(R.string.networktitle)
         customDialog.apply {
             setView(DB_AlertDialog.root)
             setCancelable(false)
         }.show()
-        GlobalUsage.alertDialogVisible = true
-
+        GlobalUsage.networkDialogVisible = true
         DB_AlertDialog.txtAlertok.setOnClickListener {
-            if (GlobalUsage.ItemRedeemed) {
-                GlobalUsage.ItemRedeemed = false
-                activity.setResult(Activity.RESULT_OK)
-                StoreLevelList.thisStoreLevelActivity.finish()
-                activity.finish()
-                activity.overridePendingTransition(
-                    R.anim.activity_back_in,
-                    R.anim.activity_back_out
-                )
-            }
-            GlobalUsage.alertDialogVisible = false
+            GlobalUsage.networkDialogVisible = false
             customDialog.dismiss()
         }
     }

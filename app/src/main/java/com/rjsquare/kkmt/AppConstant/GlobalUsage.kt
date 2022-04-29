@@ -9,8 +9,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.AsyncTask
 import android.os.Build
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.WindowManager
@@ -20,6 +24,7 @@ import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
 import com.rjsquare.kkmt.Helpers.Preferences
 import com.rjsquare.kkmt.Model.SearchModel
+import com.rjsquare.kkmt.Network.InternetCheck
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.RetrofitInstance.Events.EventsByMonth_Model
 import com.rjsquare.kkmt.RetrofitInstance.Events.Events_Model
@@ -30,6 +35,9 @@ import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewInfodata
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.SlaveBeaconModel
 import com.rjsquare.kkmt.RetrofitInstance.PickUpLocation.StoreList_Model
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
+import java.io.IOException
+import java.net.InetSocketAddress
+import java.net.Socket
 import java.text.DecimalFormat
 import java.util.regex.Pattern
 
@@ -86,9 +94,61 @@ object GlobalUsage {
         Pattern.compile(" ^[0-9+]{0,1}+[0-9]{5,16}\$")
 
     var mBiconReviewImageX: Bitmap? = null
+    var alertDialogVisible = false
+    var networkDialogVisible = false
+    var unauthorizedDialogVisible = false
+    var loaderDialogVisible = false
 
 
     //Functions
+
+    fun IsNetworkAvailable(activity: Activity):Boolean{
+        var isNetwork = false
+        val connectivityManager = activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        // if the android version is equal to M
+        // or greater we need to use the
+        // NetworkCapabilities to check what type of
+        // network has the internet connection
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            // Returns a Network object corresponding to
+            // the currently active default data network.
+            val network = connectivityManager.activeNetwork ?: return false
+
+            // Representation of the capabilities of an active network.
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+            return when {
+                // Indicates this network uses a Wi-Fi transport,
+                // or WiFi has network connectivity
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+
+                // Indicates this network uses a Cellular transport. or
+                // Cellular has network connectivity
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+
+                // else return false
+                else -> false
+            }
+        } else {
+            // if the android version is below M
+            @Suppress("DEPRECATION") val networkInfo =
+                connectivityManager.activeNetworkInfo ?: return false
+            @Suppress("DEPRECATION")
+            return networkInfo.isConnected
+        }
+
+//        InternetCheck(object : InternetCheck.Consumer {
+//            override fun accept(internet: Boolean?) {
+//                isNetwork = internet!!
+                Log.d("test", "asdasdas : " + isNetwork)
+//            }
+//        })
+//        return isNetwork
+    }
+
+
     fun NextScreen(activity: Activity, NextScreenIntent: Intent) {
         activity.startActivity(NextScreenIntent)
         activity.overridePendingTransition(R.anim.activity_in, R.anim.activity_out)

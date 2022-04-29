@@ -12,6 +12,8 @@
     <string name="verified">Verified</string>
     <string name="unverified">Unverified</string>
     <string name="checkin">CheckIn</string>
+    <string name="networkmeaasge">Network Not Available</string>
+    <string name="networktitle">Network issue</string>
     <string name="challangedaily">Available Daily tasks for you</string>
     <string name="challangeweekly">Available Weekly tasks for you</string>
     <string name="challangemonthly">Available Monthly tasks for you</string>

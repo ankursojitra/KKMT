@@ -11,9 +11,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
+import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Review.ReviewList
-import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
@@ -50,7 +51,7 @@ class History : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         DB_FHistory = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
 
-        try {
+//        try {
             DB_FHistory.cpFiveStar.maxProgress = 100.0
             DB_FHistory.cpFiveStar.setCurrentProgress(0.0)
             DB_FHistory.cpGood.maxProgress = 100.0
@@ -73,24 +74,29 @@ class History : Fragment(), View.OnClickListener {
 
 
             if (GlobalUsage.userLogedIn) {
-                HistoryReviewData()
+                if (!GlobalUsage.IsNetworkAvailable(requireActivity())) {
+                    Network.showDialog(requireActivity())
+                } else
+                    HistoryReviewData()
             }
 
-            HistoryView = true
+        HomeActivity.HistoryViewLoad = true
+            Log.e("TAG","LoaderXX:HistoryView : "+ HomeActivity.HistoryViewLoad)
 //            Loader.hideLoader()
-        } catch (NE: NullPointerException) {
-            NE.printStackTrace()
-        } catch (IE: IndexOutOfBoundsException) {
-            IE.printStackTrace()
-        } catch (AE: ActivityNotFoundException) {
-            AE.printStackTrace()
-        } catch (E: IllegalArgumentException) {
-            E.printStackTrace()
-        } catch (RE: RuntimeException) {
-            RE.printStackTrace()
-        } catch (E: Exception) {
-            E.printStackTrace()
-        }
+            HomeActivity.HideLoader()
+//        } catch (NE: NullPointerException) {
+//            NE.printStackTrace()
+//        } catch (IE: IndexOutOfBoundsException) {
+//            IE.printStackTrace()
+//        } catch (AE: ActivityNotFoundException) {
+//            AE.printStackTrace()
+//        } catch (E: IllegalArgumentException) {
+//            E.printStackTrace()
+//        } catch (RE: RuntimeException) {
+//            RE.printStackTrace()
+//        } catch (E: Exception) {
+//            E.printStackTrace()
+//        }
         return DB_FHistory.root
     }
 
@@ -116,7 +122,7 @@ class History : Fragment(), View.OnClickListener {
             call.enqueue(object : Callback<CustomerHistoryModel> {
                 override fun onFailure(call: Call<CustomerHistoryModel>, t: Throwable) {
                     Loader.hideLoader()
-                    Log.e("TAG","HistoryReviewData t: "+t)
+                    Log.e("TAG", "HistoryReviewData t: " + t)
                 }
 
                 override fun onResponse(
@@ -124,7 +130,7 @@ class History : Fragment(), View.OnClickListener {
                     response: Response<CustomerHistoryModel>
                 ) {
                     Loader.hideLoader()
-                    Log.e("TAG","HistoryReviewData : ")
+                    Log.e("TAG", "HistoryReviewData : ")
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
                         ReviewModel = response.body()!!
                         if (!response.body()!!.data!!.latest_review.isNullOrEmpty()) {
@@ -168,7 +174,7 @@ class History : Fragment(), View.OnClickListener {
     }
 
     companion object {
-        var HistoryView = false
+//        var HistoryView = false
 
         @JvmStatic
         fun newInstance(

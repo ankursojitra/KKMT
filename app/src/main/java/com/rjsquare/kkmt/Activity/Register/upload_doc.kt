@@ -27,6 +27,7 @@ import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -364,6 +365,10 @@ class upload_doc : AppCompatActivity(), View.OnClickListener {
                     DB_UploadDoc.cntUploadDocType.visibility = View.GONE
                 } else if (view == DB_UploadDoc.txtSaveandContinue) {
                     if (!PDFString.equals("", true)) {
+                        if (!GlobalUsage.IsNetworkAvailable(this)) {
+                            Network.showDialog(this)
+                            return
+                        }
                         Loader.showLoader(this)
                         UploadDoc(PDFString)
                     } else {

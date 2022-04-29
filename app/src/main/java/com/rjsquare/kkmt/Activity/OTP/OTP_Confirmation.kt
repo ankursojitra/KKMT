@@ -18,6 +18,7 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Login.Login
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
@@ -209,6 +210,10 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                     System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_OTPConfirmation.txtVerify) {
                     FinalOTPCode = GetOTP()
+                    if (!GlobalUsage.IsNetworkAvailable(this)) {
+                        Network.showDialog(this)
+                        return
+                    }
                     User_OTPConfirmation(
                         FinalOTPCode,
                         GlobalUsage.mLogInInfo_Model.data!!.userid
@@ -274,6 +279,10 @@ class OTP_Confirmation : AppCompatActivity(), View.OnClickListener {
                         GlobalUsage.hideKeyboard(OTPActivity)
                         nextView!!.requestFocus()
                         FinalOTPCode = GetOTP()
+                        if (!GlobalUsage.IsNetworkAvailable(OTPActivity)) {
+                            Network.showDialog(OTPActivity)
+                            return
+                        }
                         User_OTPConfirmation(
                             FinalOTPCode,
                             GlobalUsage.mLogInInfo_Model.data!!.userid

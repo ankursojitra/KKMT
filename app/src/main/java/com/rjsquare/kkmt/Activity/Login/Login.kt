@@ -17,6 +17,7 @@ import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.OTP.OTP_Confirmation
 import com.rjsquare.kkmt.Activity.Register.Register_User
 import com.rjsquare.kkmt.AppConstant.Constants
@@ -57,8 +58,12 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
                         Loader.showLoader(this@Login)
                         GlobalUsage.HiddenKeyBoard(this@Login, DB_Login.imgBack)
                         if (GetValidationConfirmation()) {
-                            Loader.showLoader(this@Login)
-                            LogInExistingUser()
+                            if (!GlobalUsage.IsNetworkAvailable(this@Login)) {
+                                Network.showDialog(this@Login)
+                            } else {
+                                Loader.showLoader(this@Login)
+                                LogInExistingUser()
+                            }
                         }
                         return true
                     }
@@ -184,6 +189,10 @@ class Login : AppCompatActivity(), View.OnClickListener, CompoundButton.OnChecke
                     System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_Login.txtProceed) {
                     if (GetValidationConfirmation()) {
+                        if (!GlobalUsage.IsNetworkAvailable(this)) {
+                            Network.showDialog(this)
+                            return
+                        }
                         Loader.showLoader(this)
                         LogInExistingUser()
                     }

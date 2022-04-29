@@ -47,6 +47,7 @@ import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Review.SearchEmployee
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 
@@ -188,6 +189,10 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
 
             runnable = Runnable {
                 mMtCentralManager!!.stopScan()
+                if (!GlobalUsage.IsNetworkAvailable(this)) {
+                    Network.showDialog(this)
+                    return@Runnable
+                }
                 MasterBleDeviceInfo()
             }
             val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()

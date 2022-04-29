@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.VideosAdapter
 
@@ -68,6 +69,10 @@ class Video : AppCompatActivity(), View.OnClickListener {
             IsVideoCallavailable = false
 
             framesAdapter()
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return
+            }
             GetLatestVideos((++PageNo).toString(), PagePerlimit.toString())
 
 //            filldata()
@@ -93,6 +98,10 @@ class Video : AppCompatActivity(), View.OnClickListener {
                 Log.e("TAG", "GetCallFromComplete : ")
                 PageNo = 0
                 mArray_VideosModel = ArrayList()
+                if (!GlobalUsage.IsNetworkAvailable(this)) {
+                    Network.showDialog(this)
+                    return
+                }
                 GetLatestVideos((++PageNo).toString(), PagePerlimit.toString())
             }
         }

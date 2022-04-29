@@ -28,19 +28,18 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
-import com.google.gson.Gson
 import com.minew.beaconplus.sdk.MTCentralManager
 import com.minew.beaconplus.sdk.enums.BluetoothState
 import com.minew.beaconplus.sdk.interfaces.OnBluetoothStateChangedListener
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Beacon_Search
+import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
-
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
@@ -241,6 +240,10 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
         runnable = Runnable {
             mMtCentralManager!!.stopScan()
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return@Runnable
+            }
             SlaveBleDeviceInfo()
         }
     }
@@ -566,7 +569,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        Alert.showDialog(this@SearchEmployee,response.body()!!.message!!)
+                        Alert.showDialog(this@SearchEmployee, response.body()!!.message!!)
                     }
                 }
             })
@@ -600,7 +603,7 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
     private fun ReviewScreen() {
         GlobalUsage.isNewReview = true
-        GlobalUsage.NextScreen(this,Intent(this, ReviewEdit::class.java))
+        GlobalUsage.NextScreen(this, Intent(this, ReviewEdit::class.java))
     }
 
     private fun ensureBleExists(): Boolean {
@@ -704,21 +707,31 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                     notFoundEmployeekkmtid = edtEmployeekkmtID.text.toString()
                     notFoundEmployeeReason = getString(R.string.empreson1)
                     if (!notFoundEmployeeReason.equals("".trim(), true)) {
+                        if (!GlobalUsage.IsNetworkAvailable(this)) {
+                            Network.showDialog(this)
+                            return
+                        }
                         EmployeeNotFound()
                     } else {
-                        Alert.showDialog(this@SearchEmployee,"KKMT ID required.")
+                        Alert.showDialog(this@SearchEmployee, "KKMT ID required.")
 //                        ShowAlert("KKMT ID required.")
                     }
                 } else if (mCh2.isChecked) {
                     notFoundEmployeeReason = getString(R.string.empreson2)
+                    if (!GlobalUsage.IsNetworkAvailable(this)) {
+                        Network.showDialog(this)
+                        return
+                    }
                     EmployeeNotFound()
-
                 } else if (mCh3.isChecked) {
                     notFoundEmployeeReason = getString(R.string.empreson3)
+                    if (!GlobalUsage.IsNetworkAvailable(this)) {
+                        Network.showDialog(this)
+                        return
+                    }
                     EmployeeNotFound()
                 }
-            }
-            else if (view == mTxtBacktohome) {
+            } else if (view == mTxtBacktohome) {
                 if (!GlobalUsage.selectedMasterModel.check_in!!.equals("Yes", true)) {
                     BussinessCheckIn.thisBusinessCheckIn.finish()
                 }

@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
+import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Adapter.StoreListAdapter
 
@@ -42,6 +43,10 @@ class Store : AppCompatActivity(), View.OnClickListener {
             GlobalUsage.StatusTextWhite(this, true)
             thisStoreActivity = this
             DB_Store.imgBack.setOnClickListener(this)
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return
+            }
             StoreListData()
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
@@ -129,6 +134,10 @@ class Store : AppCompatActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            if (!GlobalUsage.IsNetworkAvailable(this)) {
+                Network.showDialog(this)
+                return
+            }
             StoreListData()
         }
     }

@@ -16,7 +16,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -59,6 +58,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         var height: Int = 0
         var ismEdtSearchbarInit = false
         lateinit var mFragmentManager: FragmentManager
+        var HistoryViewLoad = false
 
         // Lollipop includes button bar in the root. Add height of button bar (48dp) to maxDiff
         var EstimatedKeyboardDP = 0f
@@ -88,6 +88,18 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
         fun UserVerifiedUpdateUI() {
             SetUpUserVerifiedAndData()
+        }
+
+        fun HideLoader() {
+            Log.e("TAG", "CHECKLOADERSSD Home : " + Home.HomeView)
+            Log.e("TAG", "CHECKLOADERSSD LeaderBoard : " + LeaderBoard.leaderBoardView)
+            Log.e("TAG", "CHECKLOADERSSD search : " + search.searchView)
+            Log.e("TAG", "CHECKLOADERSSD HistoryViewLoad : " + HistoryViewLoad)
+            if (Home.HomeView && LeaderBoard.leaderBoardView && search.searchView && HistoryViewLoad) {
+
+                Log.e("TAG", "HideLoaderCHECKLOADER")
+                Loader.hideLoader()
+            }
         }
 
         private fun SetUpUserVerifiedAndData() {
@@ -284,19 +296,19 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                         if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
                             DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntProfileMenu) {
-                        GlobalUsage.NextScreen(this,Intent(this, Profile::class.java))
+                        GlobalUsage.NextScreen(this, Intent(this, Profile::class.java))
                         closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntNotificationMenu) {
-                        GlobalUsage.NextScreen(this,Intent(this, NotificationList::class.java))
+                        GlobalUsage.NextScreen(this, Intent(this, NotificationList::class.java))
                         closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntChallangesMenu) {
-                        GlobalUsage.NextScreen(this,Intent(this, ActiveChallenge::class.java))
+                        GlobalUsage.NextScreen(this, Intent(this, ActiveChallenge::class.java))
                         closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntSettingMenu) {
-                        GlobalUsage.NextScreen(this,Intent(this, Settings::class.java))
+                        GlobalUsage.NextScreen(this, Intent(this, Settings::class.java))
                         closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntUploadMenu) {
-                        GlobalUsage.NextScreen(this,Intent(this, upload_doc::class.java))
+                        GlobalUsage.NextScreen(this, Intent(this, upload_doc::class.java))
                         closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntLogoutMenu) {
                         closeDrawer()
@@ -304,7 +316,10 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                     } else if (view == DB_HomeActivity.HomeScreen.ContentView.cntNewreview ||
                         view == DB_HomeActivity.nevigationMenuview.cntReviewsMenu
                     ) {
-                        GlobalUsage.NextScreen(this,Intent(this, Bussiness_Beacon_Search::class.java))
+                        GlobalUsage.NextScreen(
+                            this,
+                            Intent(this, Bussiness_Beacon_Search::class.java)
+                        )
                     }
                 } else {
                     if (view == DB_HomeActivity.HomeScreen.ContentView.cntSearch) {
@@ -353,11 +368,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         HideAllFragment()
         DB_HomeActivity.HomeScreen.ContentView.navHomeFragment.visibility = View.VISIBLE
 
-        if (Home.HomeView) {
-            Loader.hideLoader()
-        } else {
-            Loader.showLoader(this)
-        }
+
 
         SetTitleBarView(false, resources.getString(R.string.home))
         mImgHomeback.visibility = View.VISIBLE
@@ -379,11 +390,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         HideAllFragment()
         DB_HomeActivity.HomeScreen.ContentView.navLeaderFragment.visibility = View.VISIBLE
 
-        if (LeaderBoard.leaderBoardView) {
-            Loader.hideLoader()
-        } else {
-            Loader.showLoader(this)
-        }
+//        if (LeaderBoard.leaderBoardView) {
+//            Loader.hideLoader()
+//        } else {
+//            Loader.showLoader(this)
+//        }
 
         SetTitleBarView(false, resources.getString(R.string.leaderboard))
         mImgHomeback.visibility = View.VISIBLE
@@ -401,11 +412,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         HideAllFragment()
         DB_HomeActivity.HomeScreen.ContentView.navSearchFragment.visibility = View.VISIBLE
 
-        if (search.searchView) {
-            Loader.hideLoader()
-        } else {
-            Loader.showLoader(this)
-        }
+//        if (search.searchView) {
+//            Loader.hideLoader()
+//        } else {
+//            Loader.showLoader(this)
+//        }
 
         SetTitleBarView(true, resources.getString(R.string.search))
 
@@ -423,18 +434,22 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         HideAllFragment()
         DB_HomeActivity.HomeScreen.ContentView.navHistoryFragment.visibility = View.VISIBLE
 
-        var LoadView = false
-        if (GlobalUsage.isUserEmployee) {
-            LoadView = EmployeeHistory.EmpHistoryView
-        } else {
-            LoadView = History.HistoryView
-        }
 
-        if (LoadView) {
-            Loader.hideLoader()
-        } else {
-            Loader.showLoader(this)
-        }
+//        if (GlobalUsage.userLogedIn) {
+//            if (GlobalUsage.isUserEmployee) {
+//                HistoryViewLoad = EmployeeHistory.EmpHistoryView
+//            } else {
+//                HistoryViewLoad = History.HistoryView
+//            }
+//        } else {
+//            HistoryViewLoad = History.HistoryView
+//        }
+
+//        if (LoadView) {
+//            Loader.hideLoader()
+//        } else {
+//            Loader.showLoader(this)
+//        }
         SetTitleBarView(false, resources.getString(R.string.history))
 
         mImgHomeback.visibility = View.INVISIBLE
@@ -529,7 +544,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
             LeaderBoardfragmentTransaction.commit()
             searchfragmentTransaction.commit()
             GlobalUsage.HomeScreenLoad = true
-            
+
         }
     }
 }
