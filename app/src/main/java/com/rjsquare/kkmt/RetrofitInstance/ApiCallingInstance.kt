@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ApiCallingInstance {
 
     private var retrofit: Retrofit? = null
-    var okHttpClient: OkHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient()
+    var okHttpClient: OkHttpClient = UnsafeOkHttpClient.unsafeOkHttpClient
     val retrofitInstance: Retrofit
         get() {
 //            GlobalUsage.DecodeData(BASE_URL)
