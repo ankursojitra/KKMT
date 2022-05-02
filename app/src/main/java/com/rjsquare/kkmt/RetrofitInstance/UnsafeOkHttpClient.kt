@@ -1,57 +1,62 @@
-package com.rjsquare.kkmt.RetrofitInstance;
+package com.rjsquare.kkmt.RetrofitInstance
 
-import java.security.cert.CertificateException;
+import okhttp3.OkHttpClient
+import java.lang.Exception
+import java.lang.RuntimeException
+import java.security.SecureRandom
+import java.security.cert.CertificateException
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+object UnsafeOkHttpClient {
+    // Create a trust manager that does not validate certificate chains
+    val unsafeOkHttpClient: OkHttpClient
 
-import okhttp3.OkHttpClient;
+    // Install the all-trusting trust manager
 
-public class UnsafeOkHttpClient {
-    public static OkHttpClient getUnsafeOkHttpClient() {
-        try {
+        // Create an ssl socket factory with our all-trusting manager
+        get() = try {
             // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+            val trustAllCerts =
+                arrayOf<TrustManager>(
+                    object : X509TrustManager {
+                        @Throws(CertificateException::class)
+                        override fun checkClientTrusted(
+                            chain: Array<X509Certificate>,
+                            authType: String
+                        ) {
                         }
 
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        @Throws(CertificateException::class)
+                        override fun checkServerTrusted(
+                            chain: Array<X509Certificate>,
+                            authType: String
+                        ) {
                         }
 
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return new java.security.cert.X509Certificate[]{};
+                        override fun getAcceptedIssuers(): Array<X509Certificate> {
+                            return arrayOf()
                         }
                     }
-            };
+                )
 
             // Install the all-trusting trust manager
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            val sslContext =
+                SSLContext.getInstance("SSL")
+            sslContext.init(null, trustAllCerts, SecureRandom())
 
             // Create an ssl socket factory with our all-trusting manager
-            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-            builder.hostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-
-            OkHttpClient okHttpClient = builder.build();
-            return okHttpClient;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            val sslSocketFactory = sslContext.socketFactory
+            val builder = OkHttpClient.Builder()
+            builder.sslSocketFactory(
+                sslSocketFactory,
+                trustAllCerts[0] as X509TrustManager
+            )
+            builder.hostnameVerifier { hostname, session -> true }
+            builder.build()
+        } catch (e: Exception) {
+            throw RuntimeException(e)
         }
-    }
 }

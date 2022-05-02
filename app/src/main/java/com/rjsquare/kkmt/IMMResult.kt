@@ -1,32 +1,26 @@
-package com.rjsquare.kkmt;
+package com.rjsquare.kkmt
 
-import android.os.Bundle;
-import android.os.ResultReceiver;
-import android.util.Log;
+import android.os.Bundle
+import android.os.ResultReceiver
+import android.util.Log
 
-public class IMMResult extends ResultReceiver {
-    public int result = -1;
-
-    public IMMResult() {
-        super(null);
-    }
-
-    @Override
-    public void onReceiveResult(int r, Bundle data) {
-        result = r;
+class IMMResult : ResultReceiver(null) {
+    var results = -1
+    public override fun onReceiveResult(r: Int, data: Bundle) {
+        results = r
     }
 
     // poll result value for up to 500 milliseconds
-    public int getResult() {
+    fun getResult(): Int {
         try {
-            int sleep = 0;
-            while (result == -1 && sleep < 500) {
-                Thread.sleep(100);
-                sleep += 100;
+            var sleep = 0
+            while (results == -1 && sleep < 500) {
+                Thread.sleep(100)
+                sleep += 100
             }
-        } catch (InterruptedException e) {
-            Log.e("IMMResult", e.getMessage());
+        } catch (e: InterruptedException) {
+            Log.e("IMMResult", e.message!!)
         }
-        return result;
+        return results
     }
 }
