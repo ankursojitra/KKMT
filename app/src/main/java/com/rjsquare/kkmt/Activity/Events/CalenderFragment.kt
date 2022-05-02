@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
+import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
@@ -82,31 +84,49 @@ class CalenderFragment : Fragment() {
         max.add(Calendar.MONTH, 12)
 //        calendarView.setMaximumDate(max)
 
-        calendarView.setOnForwardPageChangeListener {
-            val calender = calendarView.currentPageDate.time
-            GetSelectedMonthsEvents((++Month).toString(), calender)
-        }
-        calendarView.setOnPreviousPageChangeListener {
-            val calender = calendarView.currentPageDate.time
-            GetSelectedMonthsEvents((--Month).toString(), calender)
-        }
-        calendarView.setOnDayClickListener { eventDay: EventDay ->
-            val cal = eventDay.calendar
-            val dayFormat = SimpleDateFormat("dd")
-            val calenderDate = (dayFormat.format(cal.time))
-            mArray_EventsByDateModel = ArrayList()
-
-            for (DateEvent in mArray_EventsByMonthModel) {
-
-                val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-                var EventDate = dateFormat.parse(DateEvent.date.toString())
-                val dayDate = dayFormat.format(EventDate)
-                if (dayDate.equals(calenderDate, true)) {
-                    mArray_EventsByDateModel.addAll(DateEvent.events!!)
-                }
+        calendarView.setOnForwardPageChangeListener(object :OnCalendarPageChangeListener{
+            override fun onChange() {
+                val calender = calendarView.currentPageDate.time
+                GetSelectedMonthsEvents((++Month).toString(), calender)
             }
-            framesAdapter()
-        }
+        })
+        calendarView.setOnPreviousPageChangeListener(object :OnCalendarPageChangeListener{
+            override fun onChange() {
+                val calender = calendarView.currentPageDate.time
+                GetSelectedMonthsEvents((--Month).toString(), calender)
+            }
+        })
+
+        calendarView.setOnDayClickListener(object :OnDayClickListener{
+            override fun onDayClick(eventDay: EventDay) {
+                val cal = eventDay.calendar
+                val dayFormat = SimpleDateFormat("dd")
+                val calenderDate = (dayFormat.format(cal.time))
+                mArray_EventsByDateModel = ArrayList()
+
+                for (DateEvent in mArray_EventsByMonthModel) {
+
+                    val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                    var EventDate = dateFormat.parse(DateEvent.date.toString())
+                    val dayDate = dayFormat.format(EventDate)
+                    if (dayDate.equals(calenderDate, true)) {
+                        mArray_EventsByDateModel.addAll(DateEvent.events!!)
+                    }
+                }
+                framesAdapter()
+            }
+        })
+
+//        calendarView.setOnForwardPageChangeListener {
+//
+//        }
+//        calendarView.setOnPreviousPageChangeListener {
+//            val calender = calendarView.currentPageDate.time
+//            GetSelectedMonthsEvents((--Month).toString(), calender)
+//        }
+//        calendarView.setOnDayClickListener { eventDay: EventDay ->
+//
+//        }
 
         val dateFormat: DateFormat = SimpleDateFormat("MM")
         val date = Date()

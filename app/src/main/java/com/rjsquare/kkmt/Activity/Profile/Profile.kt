@@ -760,7 +760,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         }
     }
 
-    override fun onSelect(calendar: MutableList<Calendar>?) {
+    override fun onSelect(calendar: List<Calendar>) {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val sendSDF = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDateandTime = sdf.format(calendar!![0].time)

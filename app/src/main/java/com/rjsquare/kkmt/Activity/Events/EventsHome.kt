@@ -3,13 +3,13 @@ package com.rjsquare.kkmt.Activity.Events
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.os.Handler
+import android.text.format.DateUtils
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
-import com.applandeo.materialcalendarview.utils.DateUtils
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
 import com.rjsquare.kkmt.databinding.ActivityEventsHomeBinding
@@ -120,23 +120,23 @@ class EventsHome : AppCompatActivity(), View.OnClickListener, OnDayClickListener
         DB_EventsHome.imgBack.setOnClickListener(this)
     }
 
-    private fun getDisabledDays(): List<Calendar>? {
-        val firstDisabled =
-            DateUtils.getCalendar()
-        firstDisabled.add(Calendar.DAY_OF_MONTH, 2)
-        val secondDisabled =
-            DateUtils.getCalendar()
-        secondDisabled.add(Calendar.DAY_OF_MONTH, 1)
-        val thirdDisabled =
-            DateUtils.getCalendar()
-        thirdDisabled.add(Calendar.DAY_OF_MONTH, 18)
-        val calendars: MutableList<Calendar> =
-            java.util.ArrayList()
-        calendars.add(firstDisabled)
-        calendars.add(secondDisabled)
-        calendars.add(thirdDisabled)
-        return calendars
-    }
+//    private fun getDisabledDays(): List<Calendar>? {
+//        val firstDisabled =
+//            DateUtils.getCalendar()
+//        firstDisabled.add(Calendar.DAY_OF_MONTH, 2)
+//        val secondDisabled =
+//            DateUtils.getCalendar()
+//        secondDisabled.add(Calendar.DAY_OF_MONTH, 1)
+//        val thirdDisabled =
+//            DateUtils.getCalendar()
+//        thirdDisabled.add(Calendar.DAY_OF_MONTH, 18)
+//        val calendars: MutableList<Calendar> =
+//            java.util.ArrayList()
+//        calendars.add(firstDisabled)
+//        calendars.add(secondDisabled)
+//        calendars.add(thirdDisabled)
+//        return calendars
+//    }
 
     private fun getRandomCalendar(): Calendar? {
         val random = Random()
@@ -222,9 +222,8 @@ class EventsHome : AppCompatActivity(), View.OnClickListener, OnDayClickListener
 //        }
     }
 
-    override fun onDayClick(eventDay: EventDay?) {
+    override fun onDayClick(eventDay: EventDay) {
 
     }
-
 
 }
