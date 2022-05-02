@@ -92,7 +92,7 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 //    implementation 'com.applandeo:material-calendar-view:1.7.0'
-//    implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
+    implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
