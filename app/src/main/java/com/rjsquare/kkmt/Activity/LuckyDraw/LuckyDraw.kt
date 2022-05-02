@@ -352,7 +352,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                     Network.showDialog(this@LuckyDraw)
                     return
                 }
-                LuckyDrawCreditAdd(GetCredit(data.get(index).topText))
+                LuckyDrawCreditAdd(GetCredit(data.get(index).topText!!))
             }
         })
         DB_LuckyDraw.cntWheel.visibility = View.VISIBLE

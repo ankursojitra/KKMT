@@ -1,13 +1,12 @@
-package rubikstudio.library.model;
+package rubikstudio.library.model
 
 /**
- * Created by kiennguyen on 11/5/16.
+ * Created by Ankur on 21/1/22.
  */
-
-public class LuckyItem {
-    public String topText;
-    public String secondaryText;
-    public int secondaryTextOrientation;
-    public int icon;
-    public int color;
+class LuckyItem {
+    var topText: String? = null
+    var secondaryText: String? = null
+    var secondaryTextOrientation = 0
+    var icon = 0
+    var color = 0
 }

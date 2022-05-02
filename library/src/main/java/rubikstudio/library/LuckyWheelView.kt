@@ -111,11 +111,11 @@ class LuckyWheelView : RelativeLayout, PieRotateListener {
         addView(frameLayout)
     }
 
-    var isTouchEnabled: Boolean
-        get() = pielView!!.isTouchEnabled
-        set(touchEnabled) {
-            pielView!!.isTouchEnabled = touchEnabled
-        }
+    var isTouchEnabled: Boolean = PielView.touchsEnabled
+//        get() = pielView!!.isTouchEnabled
+//        set(touchEnabled) {
+//            pielView!!.isTouchEnabled = touchEnabled
+//        }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         //This is to control that the touch events triggered are only going to the PieView
@@ -161,7 +161,7 @@ class LuckyWheelView : RelativeLayout, PieRotateListener {
     /**
      * @param data
      */
-    fun setData(data: List<LuckyItem?>?) {
+    fun setData(data: List<LuckyItem>) {
         pielView!!.setData(data)
     }
 
@@ -185,6 +185,6 @@ class LuckyWheelView : RelativeLayout, PieRotateListener {
 
     fun startLuckyWheelWithRandomTarget() {
         val r = Random()
-        pielView!!.rotateTo(r.nextInt(pielView!!.luckyItemListSize - 1))
+        pielView!!.rotateTo(r.nextInt(pielView!!.getLuckyItemListSize() - 1))
     }
 }
