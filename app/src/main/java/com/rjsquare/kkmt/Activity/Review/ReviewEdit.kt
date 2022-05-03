@@ -135,7 +135,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         SetUpReviewData()
 
         TimerRunnable = Runnable {
-            Log.e("TAG","StartCounterRunnable ; ")
+//            Log.e("TAG","StartCounterRunnable ; ")
             if (running) {
                 seconds++
                 TimerHandler.postDelayed(TimerRunnable!!, 1000)

@@ -294,7 +294,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/scrl_view"
                 android:layout_width="0dp"

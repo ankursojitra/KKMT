@@ -519,13 +519,13 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
 
     private fun EmployeeNotFound() {
         Loader.showLoader(this)
-        var beaconOBJ = JSONObject()
-        var arrayJ = JSONArray()
-        for (Mac in BeaconMACList) {
-            arrayJ.put(Mac)
-            Log.e("TAG", "CheckMac : " + Mac)
-        }
-        beaconOBJ.put("becon_list", arrayJ)
+//        var beaconOBJ = JSONObject()
+//        var arrayJ = JSONArray()
+//        for (Mac in BeaconMACList) {
+//            arrayJ.put(Mac)
+//            Log.e("TAG", "CheckMac : " + Mac)
+//        }
+//        beaconOBJ.put("becon_list", arrayJ)
         try {
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
@@ -706,15 +706,14 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 if (mCh1.isChecked) {
                     notFoundEmployeekkmtid = edtEmployeekkmtID.text.toString()
                     notFoundEmployeeReason = getString(R.string.empreson1)
-                    if (!notFoundEmployeeReason.equals("".trim(), true)) {
+                    if (!notFoundEmployeekkmtid.equals("".trim(), true)) {
                         if (!GlobalUsage.IsNetworkAvailable(this)) {
                             Network.showDialog(this)
                             return
                         }
                         EmployeeNotFound()
                     } else {
-                        Alert.showDialog(this@SearchEmployee, "KKMT ID required.")
-//                        ShowAlert("KKMT ID required.")
+                        Alert.showDialog(this@SearchEmployee, getString(R.string.KKMTidrequired))
                     }
                 } else if (mCh2.isChecked) {
                     notFoundEmployeeReason = getString(R.string.empreson2)
@@ -740,7 +739,6 @@ class SearchEmployee : AppCompatActivity(), View.OnClickListener {
                 overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
             } else if (view == this.imgCamera) {
                 TakeCameraPicture()
-
             } else if (view == mImgClose) {
                 CloseViews()
                 DB_SearchEmployee.cntEmpmainView.visibility = View.VISIBLE

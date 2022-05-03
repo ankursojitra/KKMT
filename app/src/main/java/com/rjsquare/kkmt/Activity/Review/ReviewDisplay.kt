@@ -11,14 +11,13 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
-import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Bussiness.BussinessCheckIn
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Beacon_Search
+import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.Dialog.Network
-import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
-
+import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
@@ -148,7 +147,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                     } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
 
                     } else {
-                        Alert.showDialog(this@ReviewDisplay,response.body()!!.message!!)
+                        Alert.showDialog(this@ReviewDisplay, response.body()!!.message!!)
                     }
                 }
             })
@@ -180,7 +179,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
         if (GlobalUsage.ReviewInfoModel.review_status!!.equals(Constants.Approve, true)) {
             DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
         } else {
-            if (differHours > GlobalUsage.EditReviewHours) {
+            if (differHours < GlobalUsage.EditReviewHours) {
                 DB_ReviewDisplay.cntEditdetails.visibility = View.VISIBLE
             } else {
                 DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
@@ -211,6 +210,29 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                 )
             )
         } else if (GlobalUsage.ReviewInfoModel.credit!!.check_in_status!!.equals(Constants.Pending)) {
+            DB_ReviewDisplay.imgCheckin.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_sand_clock
+                )
+            )
+        } else {
+            DB_ReviewDisplay.imgCheckin.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_rejected
+                )
+            )
+        }
+
+        if (GlobalUsage.ReviewInfoModel.review_status!!.equals(Constants.Approve)) {
+            DB_ReviewDisplay.imgCheckin.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_verified
+                )
+            )
+        } else if (GlobalUsage.ReviewInfoModel.review_status!!.equals(Constants.Pending)) {
             DB_ReviewDisplay.imgCheckin.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
@@ -382,7 +404,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
 
             } else if (v == DB_ReviewDisplay.cntEditdetails) {
                 GlobalUsage.isNewReview = false
-                GlobalUsage.NextScreen(this, Intent(this,ReviewEdit::class.java))
+                GlobalUsage.NextScreen(this, Intent(this, ReviewEdit::class.java))
             }
         } catch (NE: NullPointerException) {
             NE.printStackTrace()

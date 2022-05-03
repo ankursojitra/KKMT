@@ -634,7 +634,7 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
 //                            ShowAlert(ShowAlert("Business name is require.")
                             Alert.showDialog(
                                 this@Bussiness_Beacon_Search,
-                                "Business name is require."
+                                getString(R.string.businessmsg)
                             )
 //                            GlobalUsage.LaunchAlert(this@Bussiness_Beacon_Search,"Business name is require.")
                         }
@@ -647,11 +647,11 @@ class Bussiness_Beacon_Search : AppCompatActivity(), View.OnClickListener, OnMap
                         notFoundBusinessReason = getString(R.string.businessrason3)
                         BusinessNotFound()
                     } else {
-                        Toast.makeText(
-                            this,
-                            "Please select atleast one option from above.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+//                        Toast.makeText(
+//                            this,
+//                            "Please select atleast one option from above.",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
                     }
                 } else if (view == mCntBackToHome) {
                     onBackPressed()

@@ -64,20 +64,63 @@
                 app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.potyvideo.library.AndExoPlayerView
-            android:id="@+id/andExoPlayerView"
-            android:layout_width="match_parent"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout26"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            app:andexo_aspect_ratio="aspect_16_9"
-            app:andexo_full_screen="true"
-            app:andexo_play_when_ready="true"
-            app:andexo_resize_mode="Fit"
-            app:andexo_show_controller="true"
-            app:default_artwork="@drawable/expe_logo"
+            app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cnt_tool" />
+            app:layout_constraintTop_toBottomOf="@+id/cnt_tool">
+
+<!--            <com.potyvideo.library.AndExoPlayerView-->
+<!--                android:id="@+id/andExoPlayerView"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="0dp"-->
+<!--                app:andexo_aspect_ratio="aspect_16_9"-->
+<!--                app:andexo_full_screen="true"-->
+<!--                app:andexo_resize_mode="Fit"-->
+<!--                app:andexo_show_controller="true"-->
+<!--                app:default_artwork="@drawable/expe_logo"-->
+
+<!--                app:layout_constraintDimensionRatio="16:9"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.5"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+                        <com.google.android.exoplayer2.ui.PlayerView
+                            android:id="@+id/video_view"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintDimensionRatio="16:9"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.youtube.player.YouTubePlayerView
+                android:id="@+id/youtube_player_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView-->
+<!--            android:id="@+id/youtube_player_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:videoId="J1rOfVst-EQ"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/cnt_tool"/>-->
 
 
         <!--    <androidx.core.widget.NestedScrollView-->
@@ -90,6 +133,7 @@
         <!--        app:layout_constraintTop_toBottomOf="@+id/andExoPlayerView">-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout25"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:padding="@dimen/_12dp"
@@ -97,7 +141,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/andExoPlayerView">
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout26">
 
             <ImageView
                 android:id="@+id/img_video_credit"
