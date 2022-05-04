@@ -28,15 +28,14 @@ import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.DatePicker
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
-import com.google.gson.Gson
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.Dialog.Network
-import com.rjsquare.kkmt.Activity.Register.upload_doc
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
+import com.rjsquare.kkmt.Activity.Register.upload_doc
 import com.rjsquare.kkmt.AppConstant.ApplicationClass
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
@@ -436,6 +435,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                         Network.showDialog(this)
                         return
                     }
+                    UpdateDone()
                     UpdateProfile()
                 } else if (view == DB_Profile.txtCancel) {
                     DB_Profile.cntUserProfile.visibility = View.GONE
@@ -515,7 +515,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                 if (GlobalUsage.isValidEmail(DB_Profile.edtEmail.text.toString())) {
                     params[Constants.paramKey_EmailAddress] = DB_Profile.edtEmail.text.toString()
                 } else {
-                    Alert.showDialog(this,getString(R.string.invalidemail))
+                    Alert.showDialog(this, getString(R.string.invalidemail))
 //                    DB_Profile.txtAlertmsg.setText(getString(R.string.invalidemail))
 //                    DB_Profile.cntAlert.visibility = View.VISIBLE
                     return
@@ -563,7 +563,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                         )
                     ) {
                         ApplicationClass.updateUserInfo()
-                        UpdateDone()
+
                     } else if (response.body()!!.status.equals(
                             Constants.ResponseUnauthorized, true
                         )
@@ -571,7 +571,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                         UnAuthorized.showDialog(this@Profile)
                     } else {
                         Log.e("TAG", "Messageerror : " + response.body()!!.message)
-                        Alert.showDialog(this@Profile,response.body()!!.message!!)
+                        Alert.showDialog(this@Profile, response.body()!!.message!!)
 //                        DB_Profile.txtOtpAlertmsg.text = response.body()!!.message
 //                        DB_Profile.cntAlert.visibility = View.VISIBLE
                     }
@@ -602,12 +602,18 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
         DB_Profile.cntEmail.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
         DB_Profile.cntGender.background = ContextCompat.getDrawable(this, R.drawable.profile_field)
 
+        DB_Profile.cntSave.visibility = View.GONE
+
         DB_Profile.imgUserProfile.isClickable = false
         DB_Profile.txtDob.isEnabled = false
         DB_Profile.txtGender.isEnabled = false
         DB_Profile.imgEditProfile.visibility = View.VISIBLE
         DB_Profile.edtDisplayName.isEnabled = false
         DB_Profile.edtEmail.isEnabled = false
+//        if (DB_Profile.txtDob.text.isBlank()){
+//            DB_Profile.txtDob.text = ""
+//        }
+
 
 //        if (GlobalUsage.userInfoModel.data!!.dob!!.trim().equals("")) {
 //            DB_Profile.txtDob.setHint(getString(R.string.birthdate))
@@ -622,9 +628,17 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
 ////            DB_Profile.edtDisplayName.setText("")
 //        } else {
 //        }
-        DB_Profile.txtDob.hint = DB_Profile.txtDob.text
-        DB_Profile.txtGender.hint = DB_Profile.txtGender.text
-        DB_Profile.edtDisplayName.hint = DB_Profile.edtDisplayName.text.toString()
+        if (!DB_Profile.txtDob.text.isNullOrBlank()) {
+            DB_Profile.txtDob.hint = DB_Profile.txtDob.text
+        }
+        if (!DB_Profile.txtGender.text.isNullOrBlank()) {
+            DB_Profile.txtGender.hint = DB_Profile.txtGender.text
+        }
+        if (!DB_Profile.edtDisplayName.text.isNullOrBlank()) {
+            DB_Profile.edtDisplayName.hint = DB_Profile.edtDisplayName.text.toString()
+        }
+
+
     }
 
     private fun DisplayName(isEnable: Boolean) {
@@ -666,7 +680,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                     ) {
                         UnAuthorized.showDialog(this@Profile)
                     } else {
-                        Alert.showDialog(this@Profile,response.body()!!.message!!)
+                        Alert.showDialog(this@Profile, response.body()!!.message!!)
                     }
                 }
             })

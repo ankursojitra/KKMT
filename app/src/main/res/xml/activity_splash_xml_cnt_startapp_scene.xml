@@ -17,7 +17,7 @@
         <Constraint
             android:id="@+id/progressBar"
             android:layout_width="0dp"
-            android:layout_height="@dimen/_5dp"
+            android:layout_height="@dimen/_8dp"
             android:layout_marginStart="@dimen/_40dp"
             android:layout_marginTop="@dimen/_10dp"
             android:layout_marginEnd="@dimen/_40dp"
