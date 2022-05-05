@@ -108,7 +108,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:id="@+id/linearLayout11"
+                android:id="@+id/ll_sap"
                 android:layout_width="@dimen/_25dp"
                 android:layout_height="@dimen/_3dp"
                 android:layout_marginLeft="@dimen/_2dp"
@@ -128,8 +128,8 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/_16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/linearLayout11"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout11" />
+                app:layout_constraintStart_toStartOf="@+id/ll_sap"
+                app:layout_constraintTop_toBottomOf="@+id/ll_sap" />
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="0dp"

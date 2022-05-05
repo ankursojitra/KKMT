@@ -168,17 +168,17 @@ class EmployeeHistory : Fragment() {
         if (OverallOneStar == 0) OverallOneStarPer = 0.0
         if (OverallBad == 0) OverallBadPer = 0.0
 
-        DB_FEmployeeHistory.txtTotalAmount.text = "Sales Total : $$OverallTotalAmount"
+        DB_FEmployeeHistory.txtTotalAmount.text = "Sales Total : TT$$OverallTotalAmount"
 
         DB_FEmployeeHistory.cpOverallFiveStar.setCurrentProgress(OverallFiveStarPer)
         DB_FEmployeeHistory.cpOverallGood.setCurrentProgress(OverallGoodPer)
         DB_FEmployeeHistory.cpOverallOneStar.setCurrentProgress(OverallOneStarPer)
         DB_FEmployeeHistory.cpOverallBad.setCurrentProgress(OverallBadPer)
 
-        DB_FEmployeeHistory.txtFiveStar.text = String.format("%.1f", OverallFiveStarPer) + "%"
-        DB_FEmployeeHistory.txtGood.text = String.format("%.1f", OverallGoodPer) + "%"
-        DB_FEmployeeHistory.txtOneStar.text = String.format("%.1f", OverallOneStarPer) + "%"
-        DB_FEmployeeHistory.txtBad.text = String.format("%.1f", OverallBadPer) + "%"
+        DB_FEmployeeHistory.txtFiveStar.text = ("${GlobalUsage.perFormat(OverallFiveStarPer)}%")
+        DB_FEmployeeHistory.txtGood.text = ("${GlobalUsage.perFormat(OverallGoodPer)}%")
+        DB_FEmployeeHistory.txtOneStar.text = ("${GlobalUsage.perFormat(OverallOneStarPer)}%")
+        DB_FEmployeeHistory.txtBad.text = ("${GlobalUsage.perFormat(OverallBadPer)}%")
 
         //----Set Last week Data----
         var LastWeekTotalReview = EmpHistory.data!!.last_week!!.total_star_count.toString().toInt()

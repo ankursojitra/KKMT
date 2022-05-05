@@ -1,5 +1,7 @@
 package com.rjsquare.kkmt.Activity.Review
 
+//import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder
+
 import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -29,7 +31,6 @@ import androidx.constraintlayout.motion.widget.MotionLayout.TransitionListener
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
-//import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder
 import com.google.gson.Gson
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
@@ -38,7 +39,6 @@ import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
-
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
@@ -51,7 +51,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.*
-import java.nio.charset.StandardCharsets
 import java.util.*
 
 
@@ -62,8 +61,9 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     var photoFileName = "photo.jpg"
     var photoFile: File? = null
     var DaudioFilePath = ""
-//    var audioFilePath = "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
-        var audioFilePath = ""
+
+    //    var audioFilePath = "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+    var audioFilePath = ""
     var isPlaying = false
     var isRecoding = false
     var hasAudio = false
@@ -84,6 +84,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     var star = ""
     var WrittenNote = ""
     var voiceNoteString = ""
+    var empID = ""
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -422,7 +423,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     }
 
     fun NewReveiwSetup() {
-
+        empID = GlobalUsage.empSlaveModel.employeeid!!
 
         //Clear fields
         DB_ReviewEdit.imgReceipt.setImageDrawable(
@@ -496,10 +497,10 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun SetUpReviewData() {
-        NewReveiwSetup()
+
         if (GlobalUsage.isNewReview) {
             //Setup New review data
-
+            NewReveiwSetup()
             DB_ReviewEdit.cnt1star.performClick()
 
             DB_ReviewEdit.txtReviewName.text = GlobalUsage.empSlaveModel.username
@@ -528,6 +529,14 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setUpEditReview(reviewInfoModel: ReviewInfodata) {
+        empID = reviewInfoModel.employee_id!!
+        receiptno = reviewInfoModel.receipt_number!!
+        receiptamount = reviewInfoModel.receipt_amount!!
+//        receiptImageString
+        star = reviewInfoModel.review!!
+        WrittenNote = reviewInfoModel.description!!
+//        voiceNoteString
+
         DB_ReviewEdit.cnt5star.isClickable = false
         DB_ReviewEdit.cntGood.isClickable = false
         DB_ReviewEdit.cntBad.isClickable = false
@@ -742,7 +751,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
 
             params[Constants.paramKey_UserId] =
                 GlobalUsage.userInfoModel.data!!.userid!!.toString()
-            params[Constants.paramKey_EmployeeId] = GlobalUsage.empSlaveModel.employeeid!!
+            params[Constants.paramKey_EmployeeId] = empID
             params[Constants.paramKey_receiptno] = receiptno
             params[Constants.paramKey_receiptamount] = receiptamount
             params[Constants.paramKey_UploadRecipt] = receiptImageString
@@ -945,7 +954,7 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun StartCounter() {
-        Log.e("TAG","StartCounter ; ")
+        Log.e("TAG", "StartCounter ; ")
         running = true
         TimerHandler.postDelayed(TimerRunnable!!, 0)
     }
@@ -1220,8 +1229,14 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
                         Network.showDialog(this)
                         return
                     }
-                    if (CheckDataForReview()) SubmitReview()
-                    else Alert.showDialog(this, getString(R.string.reviewnoteserror))
+                    if (CheckDataForReview()) {
+                        GlobalUsage.isReviewChange = true
+                        if (GlobalUsage.isNewReview) {
+                            SubmitReview()
+                        } else {
+                            UpdateReview()
+                        }
+                    } else Alert.showDialog(this, getString(R.string.reviewnoteserror))
                 } else if (view == DB_ReviewEdit.imgBack) {
                     onBackPressed()
                 } else if (view == DB_ReviewEdit.cnt1star) {
@@ -1312,6 +1327,78 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
             RE.printStackTrace()
         } catch (E: Exception) {
             E.printStackTrace()
+        }
+    }
+
+    private fun UpdateReview() {
+        try {
+            Loader.showLoader(this)
+            //Here the json data is add to a hash map with key data
+            val params: MutableMap<String, String> =
+                HashMap()
+
+            params[Constants.paramKey_UserId] =
+                GlobalUsage.userInfoModel.data!!.userid!!.toString()
+            params[Constants.paramKey_EmployeeId] = empID
+            params[Constants.paramKey_receiptno] = receiptno
+            params[Constants.paramKey_receiptamount] = receiptamount
+            params[Constants.paramKey_UploadRecipt] = receiptImageString
+            params[Constants.paramKey_star] = star
+            params[Constants.paramKey_WrittenNote] = WrittenNote
+            params[Constants.paramKey_VoiceNote] = voiceNoteString
+
+            Log.e("TAG", "Call Param : " + Gson().toJson(params))
+            val service =
+                ApiCallingInstance.retrofitInstance.create<NetworkServices.EmployeeReportUpdateService>(
+                    NetworkServices.EmployeeReportUpdateService::class.java
+                )
+            val call =
+                service.EmployeeReportData(
+                    params, GlobalUsage.userInfoModel.data!!.access_token!!.toString()
+                )
+
+            call.enqueue(object : Callback<ReviewSubmitModel> {
+                override fun onFailure(call: Call<ReviewSubmitModel>, t: Throwable) {
+                    Loader.hideLoader()
+                }
+
+                override fun onResponse(
+                    call: Call<ReviewSubmitModel>,
+                    response: Response<ReviewSubmitModel>
+                ) {
+                    Loader.hideLoader()
+                    if (response.body()!!.status.equals(Constants.ResponseSucess)) {
+                        GlobalUsage.ReviewInfoModel = response.body()!!.data!!
+                        GlobalUsage.NextScreen(
+                            this@ReviewEdit,
+                            Intent(this@ReviewEdit, ReviewDisplay::class.java)
+                        )
+                        finish()
+                    } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
+                        UnAuthorized.showDialog(this@ReviewEdit)
+                    } else if (response.body()!!.status.equals(Constants.ResponseEmpltyList)) {
+
+                    } else {
+                        Alert.showDialog(this@ReviewEdit, response.body()!!.message!!)
+//                        DB_ReviewEdit.txtAlertmsg.text = response.body()!!.messageresponse.body()!!.message
+//                        DB_ReviewEdit.cntAlert.visibility = View.VISIBLE
+                    }
+                }
+            })
+        } catch (E: Exception) {
+            print(E)
+        } catch (NE: NullPointerException) {
+            print(NE)
+        } catch (IE: IndexOutOfBoundsException) {
+            print(IE)
+        } catch (IE: IllegalStateException) {
+            print(IE)
+        } catch (AE: ActivityNotFoundException) {
+            print(AE)
+        } catch (KNE: KotlinNullPointerException) {
+            print(KNE)
+        } catch (CE: ClassNotFoundException) {
+            print(CE)
         }
     }
 

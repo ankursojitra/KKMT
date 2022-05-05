@@ -12,10 +12,10 @@ import com.rjsquare.kkmt.Activity.Review.ReviewDisplay
 import com.rjsquare.kkmt.Activity.Review.ReviewList
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
-import com.rjsquare.kkmt.RetrofitInstance.OTPCall.CustomerHistoryModel
 import com.rjsquare.kkmt.RetrofitInstance.OTPCall.ReviewInfodata
 import com.rjsquare.kkmt.databinding.RawReviewFrameBinding
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
 
 class ReviewAdapter(
     var moContext: Context,
@@ -39,15 +39,23 @@ class ReviewAdapter(
         try {
             var mReviewModel = moArrayItemInfo[position]
             holder.lReviewModelSelected = mReviewModel
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            val df =
+                SimpleDateFormat("dd-MM-yyyy") // pass the format pattern that you like and done.
+
+            var dateCreate = simpleDateFormat.parse(mReviewModel.created_at)
+
+            var fDate = df.format(dateCreate)
 
             holder.DB_RawReviewFrameBinding.txtEmpName.text = mReviewModel.employee_name
             holder.DB_RawReviewFrameBinding.txtEmprating.text = mReviewModel.review
-            holder.DB_RawReviewFrameBinding.txtEmpamount.text = ("$${mReviewModel.receipt_amount}")
+            holder.DB_RawReviewFrameBinding.txtEmpamount.text = ("TT$ ${GlobalUsage.formatNumber(mReviewModel.receipt_amount!!.toInt())}")
             holder.DB_RawReviewFrameBinding.txtBusname.text = ("${mReviewModel.bussinessname}")
             Picasso.with(moContext).load(mReviewModel.employeimage)
                 .placeholder(R.drawable.expe_logo)
                 .into(holder.DB_RawReviewFrameBinding.imgEmpProfile)
 
+            holder.DB_RawReviewFrameBinding.txtReviewDate.text = fDate
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
@@ -99,6 +107,7 @@ class ReviewAdapter(
                     GlobalUsage.lastClick =
                         System.currentTimeMillis() + GlobalUsage.clickInterval
                     if (view == DB_RawReviewFrameBinding.idFrameconstraint) {
+                        GlobalUsage.isReviewChange = false
                         GlobalUsage.empReviewModelSelected = lReviewModelSelected
                         GlobalUsage.isNewReview = false
                         GlobalUsage.NextScreen(

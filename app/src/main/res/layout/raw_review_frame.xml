@@ -10,7 +10,8 @@
             android:id="@+id/id_frameconstraint"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_8dp"
+            android:layout_marginHorizontal="@dimen/_8dp"
+            android:layout_marginVertical="@dimen/_4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -37,11 +38,12 @@
                     app:layout_constraintStart_toStartOf="parent">
 
                     <androidx.cardview.widget.CardView
-                        android:id="@+id/cardView_img_history2"
+                        android:id="@+id/cardView_img1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_5dp"
                         app:cardCornerRadius="@dimen/_4dp"
+                        app:cardElevation="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -61,18 +63,32 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.cardview.widget.CardView>
 
+
+                    <TextView
+                        android:id="@+id/txt_review_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2dp"
+                        android:fontFamily="@font/lato_heavy"
+                        android:singleLine="true"
+                        android:text="@string/app_name"
+                        android:textColor="@color/darkgray"
+                        android:textSize="@dimen/_10dp"
+                        app:layout_constraintEnd_toEndOf="@+id/txt_empamount"
+                        app:layout_constraintTop_toTopOf="parent" />
+
                     <TextView
                         android:id="@+id/txt_empamount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_12dp"
+                        android:layout_marginRight="@dimen/_8dp"
                         android:fontFamily="@font/lato_heavy"
-                        android:text="$300"
+                        android:text="TT$ 300"
                         android:textColor="@color/appcolor"
-                        android:textSize="@dimen/_14dp"
+                        android:textSize="@dimen/_12dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@+id/txt_review_date" />
 
                     <TextView
                         android:id="@+id/txt_empName"
@@ -87,7 +103,7 @@
                         app:layout_constraintBottom_toTopOf="@+id/txt_emprating"
                         app:layout_constraintEnd_toStartOf="@+id/txt_empamount"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/cardView_img_history2"
+                        app:layout_constraintStart_toEndOf="@+id/cardView_img1"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_chainStyle="packed" />
 

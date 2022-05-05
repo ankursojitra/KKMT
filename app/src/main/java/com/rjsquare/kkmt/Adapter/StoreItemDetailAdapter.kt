@@ -37,7 +37,7 @@ class StoreItemDetailAdapter(
             holder.lStoreItemDetailModelSelected = mStoreItemDetailModel
             holder.DB_RawStoreFrameBinding.txtItemName.text = mStoreItemDetailModel.title
             holder.DB_RawStoreFrameBinding.txtItemcredit.text =
-                mStoreItemDetailModel.credit_required
+               "${GlobalUsage.formatNumber(mStoreItemDetailModel.credit_required!!.toInt())}"
             Picasso.with(moContext).load(mStoreItemDetailModel.image!![0])
                 .placeholder(R.drawable.expe_logo)
                 .into(holder.DB_RawStoreFrameBinding.imgStoreitem)
