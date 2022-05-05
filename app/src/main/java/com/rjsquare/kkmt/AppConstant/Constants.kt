@@ -50,6 +50,7 @@ object Constants {
     val paramKey_BusinessName = "busssines_name"
     val paramKey_BeconList = "becon_list[]"
     val User = "U"
+    val VerifiedUserLevel = 4
 
     //Star value
     val onestar = "1 Star"

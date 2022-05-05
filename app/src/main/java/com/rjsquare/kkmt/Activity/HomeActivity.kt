@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.rjsquare.kkmt.Activity.Bussiness.Bussiness_Beacon_Search
 import com.rjsquare.kkmt.Activity.Challenges.ActiveChallenge
+import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
 import com.rjsquare.kkmt.Activity.Notifications.NotificationList
@@ -91,14 +92,16 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         fun HideLoader() {
-            Log.e("TAG", "CHECKLOADERSSD Home : " + Home.HomeView)
-            Log.e("TAG", "CHECKLOADERSSD LeaderBoard : " + LeaderBoard.leaderBoardView)
-            Log.e("TAG", "CHECKLOADERSSD search : " + search.searchView)
-            Log.e("TAG", "CHECKLOADERSSD HistoryViewLoad : " + HistoryViewLoad)
             if (Home.HomeView && LeaderBoard.leaderBoardView && search.searchView && HistoryViewLoad) {
-
-                Log.e("TAG", "HideLoaderCHECKLOADER")
                 Loader.hideLoader()
+                CheckUserLevelVerified()
+            }
+        }
+
+        private fun CheckUserLevelVerified() {
+            if (GlobalUsage.userInfoModel.data!!.credit_details!!.level!!.toInt() >= Constants.VerifiedUserLevel
+                && GlobalUsage.userInfoModel.data!!.approve.equals(Constants.NO)) {
+                    Alert.showDialog(thisHomeActivity, thisHomeActivity.getString(R.string.unverifiedlevel))
             }
         }
 

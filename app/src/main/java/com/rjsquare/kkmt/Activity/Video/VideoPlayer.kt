@@ -1,17 +1,13 @@
 package com.rjsquare.kkmt.Activity.Video
 
-import android.R.attr.bitmap
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
-import android.media.ThumbnailUtils
 import android.os.Bundle
-import android.provider.MediaStore.Video.Thumbnails.MINI_KIND
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -75,7 +71,8 @@ class VideoPlayer : YouTubeBaseActivity(), View.OnClickListener,
 
 //            GlobalUsage.SetLayoutHeight(DB_VideoPlayer.VideoPlayer, playerHeight.toInt())
 
-            Picasso.with(this).load("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
+            Picasso.with(this)
+                .load("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
                 .into(object : com.squareup.picasso.Target {
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                         Log.e("TAG", "onBitmapLoaded : ")
@@ -95,27 +92,17 @@ class VideoPlayer : YouTubeBaseActivity(), View.OnClickListener,
 
                 })
 
-           var player = SimpleExoPlayer.Builder(this)
-                .build()
-                .also { exoPlayer ->
-                    DB_VideoPlayer.videoView.player = exoPlayer
-                    val mediaItem = MediaItem.fromUri("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
-                    exoPlayer.setMediaItem(mediaItem)
-                    exoPlayer.playWhenReady = playWhenReady
-                    exoPlayer.seekTo(currentWindow, playbackPosition)
-                    exoPlayer.prepare()
-                }
 
-            try {
-                val bitmap = ThumbnailUtils.createVideoThumbnail("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", MINI_KIND);
-//                    retriveVideoFrameFromVideo("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
-                if (bitmap != null) {
+//            try {
+//                val bitmap = ThumbnailUtils.createVideoThumbnail("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", MICRO_KIND);
+////                    retriveVideoFrameFromVideo("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
+//                if (bitmap != null) {
 //                    DB_VideoPlayer.videoView.defaultArtwork = BitmapDrawable(bitmap)
-                    DB_VideoPlayer.videoView.defaultArtwork = ContextCompat.getDrawable(this,R.drawable.expe_logo)
-                }
-            } catch (throwable: Throwable) {
-                throwable.printStackTrace()
-            }
+////                    DB_VideoPlayer.videoView.defaultArtwork = ContextCompat.getDrawable(this,R.drawable.expe_logo)
+//                }
+//            } catch (throwable: Throwable) {
+//                throwable.printStackTrace()
+//            }
 //            try {
 //                val mediacontroller = MediaController(this)
 //                mediacontroller.setAnchorView(DB_VideoPlayer.VideoPlayer)
@@ -199,6 +186,7 @@ class VideoPlayer : YouTubeBaseActivity(), View.OnClickListener,
         }
         return bitmap
     }
+
     private fun GetVideoDetails() {
         try {
 
@@ -255,49 +243,39 @@ class VideoPlayer : YouTubeBaseActivity(), View.OnClickListener,
 
     private fun setUpUI() {
         Log.e("TAG", "CHEcKURI : " + VideoData.video)
-//        if (VideoData.video!!.contains("youtube.com", true)
-//            || VideoData.video!!.contains("youtu.be", true)
-//        ) {
-//            Log.e("TAG", "Do CHEcKURI : " + VideoData.video)
-//            DB_VideoPlayer.youtubePlayerView.initialize(getString(R.string.youtubeAPIKey), this)
-//            DB_VideoPlayer.youtubePlayerView.visibility = View.VISIBLE
-//            DB_VideoPlayer.videoView.visibility = View.GONE
-//        } else {
-
-            Log.e("TAG", "Else CHEcKURI : " + VideoData.video)
-            VideoData.video =
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-            Picasso.with(this).load(VideoData.video)
-                .into(object : com.squareup.picasso.Target {
-                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                        Log.e("TAG", "onBitmapLoaded : ")
-//                        val d: Drawable = BitmapDrawable(attr.bitmap)
-                        DB_VideoPlayer.videoView.defaultArtwork = BitmapDrawable(bitmap)
-                    }
-
-                    override fun onBitmapFailed(errorDrawable: Drawable?) {
-                        Log.e("TAG", "onBitmapFailed : ")
-
-                    }
-
-                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                        Log.e("TAG", "onPrepareLoad : ")
-
-                    }
-
-                })
-
+        if (VideoData.video!!.contains("youtube.com", true)
+            || VideoData.video!!.contains("youtu.be", true)
+        ) {
+            Log.e("TAG", "Do CHEcKURI : " + VideoData.video)
+            DB_VideoPlayer.youtubePlayerView.initialize(getString(R.string.youtubeAPIKey), this)
+            DB_VideoPlayer.youtubePlayerView.visibility = View.VISIBLE
+            DB_VideoPlayer.videoView.visibility = View.GONE
+        } else {
             DB_VideoPlayer.youtubePlayerView.visibility = View.GONE
             DB_VideoPlayer.videoView.visibility = View.VISIBLE
 
 //            http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4
             if (!VideoData.video.contentEquals("http://", true)) {
+                var player = SimpleExoPlayer.Builder(this)
+                    .build()
+                    .also { exoPlayer ->
+                        DB_VideoPlayer.videoView.player = exoPlayer
+                        DB_VideoPlayer.videoView.setShowNextButton(false)
+                        DB_VideoPlayer.videoView.setShowPreviousButton(false)
+
+//                        val mediaItem = MediaItem.fromUri("https://file-examples.com/storage/fed7f5feae62719de971a0c/2017/04/file_example_MP4_1920_18MG.mp4")
+                        val mediaItem = MediaItem.fromUri(VideoData.video!!)
+                        exoPlayer.setMediaItem(mediaItem)
+                        exoPlayer.playWhenReady = playWhenReady
+                        exoPlayer.seekTo(currentWindow, playbackPosition)
+                        exoPlayer.prepare()
+                    }
 //                DB_VideoPlayer.andExoPlayerView.setSource("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
 //                DB_VideoPlayer.andExoPlayerView.setSource(VideoData.video)
             } else {
                 Alert.showDialog(this, "There is an issue on video, Please try again leter.")
             }
-//        }
+        }
 
     }
 
