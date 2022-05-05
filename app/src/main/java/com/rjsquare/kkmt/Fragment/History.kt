@@ -26,6 +26,8 @@ import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class History : Fragment(), View.OnClickListener {
@@ -35,6 +37,9 @@ class History : Fragment(), View.OnClickListener {
     lateinit var approveReviewList: ArrayList<ReviewInfodata>
     lateinit var rejectedReviewList: ArrayList<ReviewInfodata>
     lateinit var ReviewModel: CustomerHistoryModel
+    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    val df =
+        SimpleDateFormat("dd-MM-yyyy") // pass the format pattern that you like and done.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,38 +57,38 @@ class History : Fragment(), View.OnClickListener {
         DB_FHistory = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
 
 //        try {
-            DB_FHistory.cpFiveStar.maxProgress = 100.0
-            DB_FHistory.cpFiveStar.setCurrentProgress(0.0)
-            DB_FHistory.cpGood.maxProgress = 100.0
-            DB_FHistory.cpGood.setCurrentProgress(0.0)
+        DB_FHistory.cpFiveStar.maxProgress = 100.0
+        DB_FHistory.cpFiveStar.setCurrentProgress(0.0)
+        DB_FHistory.cpGood.maxProgress = 100.0
+        DB_FHistory.cpGood.setCurrentProgress(0.0)
 
-            DB_FHistory.cpOneStar.maxProgress = 100.0
-            DB_FHistory.cpOneStar.setCurrentProgress(0.0)
+        DB_FHistory.cpOneStar.maxProgress = 100.0
+        DB_FHistory.cpOneStar.setCurrentProgress(0.0)
 
-            DB_FHistory.cpBad.maxProgress = 100.0
-            DB_FHistory.cpBad.setCurrentProgress(0.0)
+        DB_FHistory.cpBad.maxProgress = 100.0
+        DB_FHistory.cpBad.setCurrentProgress(0.0)
 
-            DB_FHistory.cardViewHistory1.setOnClickListener(this)
-            DB_FHistory.cardViewHistory2.setOnClickListener(this)
-            DB_FHistory.cardViewHistory3.setOnClickListener(this)
+        DB_FHistory.cardViewHistory1.setOnClickListener(this)
+        DB_FHistory.cardViewHistory2.setOnClickListener(this)
+        DB_FHistory.cardViewHistory3.setOnClickListener(this)
 
-            latestReviewList = ArrayList()
-            pendingReviewList = ArrayList()
-            approveReviewList = ArrayList()
-            rejectedReviewList = ArrayList()
+        latestReviewList = ArrayList()
+        pendingReviewList = ArrayList()
+        approveReviewList = ArrayList()
+        rejectedReviewList = ArrayList()
 
 
-            if (GlobalUsage.userLogedIn) {
-                if (!GlobalUsage.IsNetworkAvailable(requireActivity())) {
-                    Network.showDialog(requireActivity())
-                } else
-                    HistoryReviewData()
-            }
+        if (GlobalUsage.userLogedIn) {
+            if (!GlobalUsage.IsNetworkAvailable(requireActivity())) {
+                Network.showDialog(requireActivity())
+            } else
+                HistoryReviewData()
+        }
 
         HomeActivity.HistoryViewLoad = true
-            Log.e("TAG","LoaderXX:HistoryView : "+ HomeActivity.HistoryViewLoad)
+        Log.e("TAG", "LoaderXX:HistoryView : " + HomeActivity.HistoryViewLoad)
 //            Loader.hideLoader()
-            HomeActivity.HideLoader()
+        HomeActivity.HideLoader()
 //        } catch (NE: NullPointerException) {
 //            NE.printStackTrace()
 //        } catch (IE: IndexOutOfBoundsException) {
@@ -135,15 +140,19 @@ class History : Fragment(), View.OnClickListener {
                         ReviewModel = response.body()!!
                         if (!response.body()!!.data!!.latest_review.isNullOrEmpty()) {
                             latestReviewList.addAll(response.body()!!.data!!.latest_review!!)
+                            Collections.reverse(latestReviewList)
                         }
                         if (!response.body()!!.data!!.panding_review.isNullOrEmpty()) {
                             pendingReviewList.addAll(response.body()!!.data!!.panding_review!!)
+                            Collections.reverse(pendingReviewList)
                         }
                         if (!response.body()!!.data!!.approve_review.isNullOrEmpty()) {
                             approveReviewList.addAll(response.body()!!.data!!.approve_review!!)
+                            Collections.reverse(approveReviewList)
                         }
                         if (!response.body()!!.data!!.cancel_review.isNullOrEmpty()) {
                             rejectedReviewList.addAll(response.body()!!.data!!.cancel_review!!)
+                            Collections.reverse(rejectedReviewList)
                         }
 
                         FillData()
@@ -265,41 +274,71 @@ class History : Fragment(), View.OnClickListener {
         if (OneStar == 0) OneStarPer = 0.0
         if (Bad == 0) BadPer = 0.0
 
-        DB_FHistory.txtTotalAmount.text = "Support Total : $$TotalAmount"
+        DB_FHistory.txtTotalAmount.text =
+            "Support Total : TT$ ${GlobalUsage.formatNumber(TotalAmount)}"
 
         DB_FHistory.cpFiveStar.setCurrentProgress(FiveStarPer)
         DB_FHistory.cpGood.setCurrentProgress(GoodPer)
         DB_FHistory.cpOneStar.setCurrentProgress(OneStarPer)
         DB_FHistory.cpBad.setCurrentProgress(BadPer)
 
-        DB_FHistory.txtFiveStar.text = ("$FiveStarPer%")
-        DB_FHistory.txtGood.text = ("$GoodPer%")
-        DB_FHistory.txtOneStar.text = ("$OneStarPer%")
-        DB_FHistory.txtBad.text = ("$BadPer%")
+        DB_FHistory.txtFiveStar.text = ("${GlobalUsage.perFormat(FiveStarPer)}%")
+        DB_FHistory.txtGood.text = ("${GlobalUsage.perFormat(GoodPer)}%")
+        DB_FHistory.txtOneStar.text = ("${GlobalUsage.perFormat(OneStarPer)}%")
+        DB_FHistory.txtBad.text = ("${GlobalUsage.perFormat(BadPer)}%")
     }
 
     private fun SetThirdReview(reviewItemInfoModel: ReviewInfodata) {
+        var dateCreate = simpleDateFormat.parse(reviewItemInfoModel.created_at)
+        var fDate = df.format(dateCreate)
+
+        val status = if (reviewItemInfoModel.review_status!!.equals(Constants.Approve)) GlobalUsage.ReviewStatus.Approve
+                            else if (reviewItemInfoModel.review_status!!.equals(Constants.Pending)) GlobalUsage.ReviewStatus.Pending
+                                else GlobalUsage.ReviewStatus.Rejected
         Picasso.with(requireActivity()).load(reviewItemInfoModel.employeimage)
             .placeholder(R.drawable.expe_logo).into(DB_FHistory.imgEmployeeHistory3)
-        DB_FHistory.txtEmpname1History3.text = reviewItemInfoModel.employee_name
-        DB_FHistory.txtEmpratingHistory3.text = reviewItemInfoModel.review
-        DB_FHistory.txtEmpTotalSupportHistory3.text = ("$${reviewItemInfoModel.receipt_amount}")
+        DB_FHistory.txtEmpname2.text = reviewItemInfoModel.employee_name
+        DB_FHistory.txtEmprating2.text = reviewItemInfoModel.review
+        DB_FHistory.txtReviewDate2.text = fDate
+        DB_FHistory.txtBusname2.text = reviewItemInfoModel.bussinessname
+        DB_FHistory.txtReviewStatus2.text = "Review: ${status}"
+        DB_FHistory.txtEmpTotalSupportHistory3.text =
+            ("TT$ ${GlobalUsage.formatNumber(reviewItemInfoModel.receipt_amount!!.toInt())}")
+        Log.e("TAFG", "EnumCheck : " + GlobalUsage.ReviewStatus.Pending)
     }
 
     private fun SetSecondReview(reviewItemInfoModel: ReviewInfodata) {
+        var dateCreate = simpleDateFormat.parse(reviewItemInfoModel.created_at)
+        var fDate = df.format(dateCreate)
+        val status = if (reviewItemInfoModel.review_status!!.equals(Constants.Approve)) GlobalUsage.ReviewStatus.Approve
+        else if (reviewItemInfoModel.review_status!!.equals(Constants.Pending)) GlobalUsage.ReviewStatus.Pending
+        else GlobalUsage.ReviewStatus.Rejected
         Picasso.with(requireActivity()).load(reviewItemInfoModel.employeimage)
             .placeholder(R.drawable.expe_logo).into(DB_FHistory.imgEmployeeHistory2)
-        DB_FHistory.txtEmpname1History2.text = reviewItemInfoModel.employee_name
-        DB_FHistory.txtEmpratingHistory2.text = reviewItemInfoModel.review
-        DB_FHistory.txtEmpTotalSupportHistory2.text = ("$${reviewItemInfoModel.receipt_amount}")
+        DB_FHistory.txtEmpname1.text = reviewItemInfoModel.employee_name
+        DB_FHistory.txtEmprating1.text = reviewItemInfoModel.review
+        DB_FHistory.txtReviewDate1.text = fDate
+        DB_FHistory.txtBusname1.text = reviewItemInfoModel.bussinessname
+        DB_FHistory.txtReviewStatus1.text = "Review: $status"
+        DB_FHistory.txtEmpTotalSupportHistory2.text =
+            ("TT$ ${GlobalUsage.formatNumber(reviewItemInfoModel.receipt_amount!!.toInt())}")
     }
 
     private fun SetFirstReview(reviewItemInfoModel: ReviewInfodata) {
+        var dateCreate = simpleDateFormat.parse(reviewItemInfoModel.created_at)
+        var fDate = df.format(dateCreate)
+        val status = if (reviewItemInfoModel.review_status!!.equals(Constants.Approve)) GlobalUsage.ReviewStatus.Approve
+        else if (reviewItemInfoModel.review_status!!.equals(Constants.Pending)) GlobalUsage.ReviewStatus.Pending
+        else GlobalUsage.ReviewStatus.Rejected
         Picasso.with(requireActivity()).load(reviewItemInfoModel.employeimage)
             .placeholder(R.drawable.expe_logo).into(DB_FHistory.imgEmployee)
-        DB_FHistory.txtEmpname1.text = reviewItemInfoModel.employee_name
+        DB_FHistory.txtEmpname.text = reviewItemInfoModel.employee_name
         DB_FHistory.txtEmprating.text = reviewItemInfoModel.review
-        DB_FHistory.txtEmpTotalSupport.text = ("$${reviewItemInfoModel.receipt_amount}")
+        DB_FHistory.txtReviewDate.text = fDate
+        DB_FHistory.txtBusname.text = reviewItemInfoModel.bussinessname
+        DB_FHistory.txtReviewStatus.text = "Review: $status"
+        DB_FHistory.txtEmpTotalSupport.text =
+            ("TT$ ${GlobalUsage.formatNumber(reviewItemInfoModel.receipt_amount!!.toInt())}")
     }
 
     override fun onClick(view: View?) {

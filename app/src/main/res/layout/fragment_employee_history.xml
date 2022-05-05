@@ -30,7 +30,7 @@
                 android:fontFamily="@font/lato_heavy"
                 android:gravity="center"
                 android:padding="@dimen/_6dp"
-                android:text="Sales Total : $500"
+                android:text="Sales Total : TT$500"
                 android:textColor="@color/appcolor"
                 android:textSize="@dimen/_16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -739,7 +739,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/_12dp"
                                     android:fontFamily="@font/lato_heavy"
-                                    android:text="$300"
+                                    android:text="TT$300"
                                     android:textColor="@color/appcolor"
                                     android:textSize="@dimen/_14dp"
                                     app:layout_constraintBottom_toBottomOf="parent"
@@ -798,7 +798,7 @@
                                 app:layout_constraintStart_toStartOf="parent">
 
                                 <androidx.cardview.widget.CardView
-                                    android:id="@+id/cardView_img_history2"
+                                    android:id="@+id/cardView_img1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/_5dp"
@@ -829,7 +829,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/_12dp"
                                     android:fontFamily="@font/lato_heavy"
-                                    android:text="$300"
+                                    android:text="TT$300"
                                     android:textColor="@color/appcolor"
                                     android:textSize="@dimen/_14dp"
                                     app:layout_constraintBottom_toBottomOf="parent"
@@ -849,7 +849,7 @@
                                     app:layout_constraintBottom_toTopOf="@+id/textView18_history2"
                                     app:layout_constraintEnd_toStartOf="@+id/textView16_history2"
                                     app:layout_constraintHorizontal_bias="0.5"
-                                    app:layout_constraintStart_toEndOf="@+id/cardView_img_history2"
+                                    app:layout_constraintStart_toEndOf="@+id/cardView_img1"
                                     app:layout_constraintTop_toTopOf="parent"
                                     app:layout_constraintVertical_chainStyle="packed" />
 
@@ -892,7 +892,7 @@
                                 app:layout_constraintStart_toStartOf="parent">
 
                                 <androidx.cardview.widget.CardView
-                                    android:id="@+id/cardView_img_history3"
+                                    android:id="@+id/cardView_img2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/_5dp"
@@ -923,7 +923,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/_12dp"
                                     android:fontFamily="@font/lato_heavy"
-                                    android:text="$300"
+                                    android:text="TT$300"
                                     android:textColor="@color/appcolor"
                                     android:textSize="@dimen/_14dp"
                                     app:layout_constraintBottom_toBottomOf="parent"
@@ -941,7 +941,7 @@
                                     android:textColor="@android:color/white"
                                     android:textSize="@dimen/_12dp"
                                     app:layout_constraintBottom_toTopOf="@+id/textView18_history3"
-                                    app:layout_constraintStart_toEndOf="@+id/cardView_img_history3"
+                                    app:layout_constraintStart_toEndOf="@+id/cardView_img2"
                                     app:layout_constraintTop_toTopOf="parent"
                                     app:layout_constraintVertical_chainStyle="packed" />
 

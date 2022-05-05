@@ -49,15 +49,7 @@
         tools:targetApi="n">
         <activity
             android:name=".Activity.Survey.SurveyScreen"
-            android:exported="true" >
-            <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN"
-                    android:screenOrientation="portrait" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"/>
         <activity
             android:name=".AlertScreen"
             android:theme="@style/Transparent" />
@@ -194,13 +186,13 @@
             android:name=".Activity.Splash.Splash"
             android:exported="true"
             android:screenOrientation="portrait">
-<!--            <intent-filter>-->
-<!--                <action-->
-<!--                    android:name="android.intent.action.MAIN"-->
-<!--                    android:screenOrientation="portrait" />-->
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.MAIN"
+                    android:screenOrientation="portrait" />
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity> <!-- <activity -->
         <!-- android:name=".MainActivity" -->
         <!-- android:screenOrientation="portrait" /> -->

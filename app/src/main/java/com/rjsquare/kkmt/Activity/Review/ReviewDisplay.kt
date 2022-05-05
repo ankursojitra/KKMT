@@ -176,7 +176,7 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
         DB_ReviewDisplay.txtEdit.text =
             getString(R.string.editadditiondetail) + " ($differHours Hours Left)"
 
-        if (GlobalUsage.ReviewInfoModel.review_status!!.equals(Constants.Approve, true)) {
+        if (GlobalUsage.ReviewInfoModel.review_status!!.equals(Constants.Approve, true) || GlobalUsage.isReviewChange) {
             DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
         } else {
             if (differHours < GlobalUsage.EditReviewHours) {

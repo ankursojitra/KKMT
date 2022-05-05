@@ -85,7 +85,7 @@
 
 
             <LinearLayout
-                android:id="@+id/linearLayout11"
+                android:id="@+id/ll_sap"
                 android:layout_width="@dimen/_25dp"
                 android:layout_height="@dimen/_3dp"
                 android:layout_marginVertical="@dimen/_12dp"
@@ -109,7 +109,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout11" />
+                app:layout_constraintTop_toBottomOf="@+id/ll_sap" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout

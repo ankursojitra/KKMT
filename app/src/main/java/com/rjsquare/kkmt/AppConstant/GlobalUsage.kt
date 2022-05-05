@@ -51,6 +51,7 @@ object GlobalUsage {
     var appBackground: Boolean = false
     var userLogedIn: Boolean = false
     var isNewReview = true
+    var isReviewChange = true
     var empReviewModelSelected: ReviewInfodata? = null
     var mSearchModelSelected: SearchModel? = null
     var mEventsModelSelected: Events_Model.EventsData? = null
@@ -101,6 +102,10 @@ object GlobalUsage {
 
 
     //Functions
+
+    enum class ReviewStatus {
+        Pending, Approve, Rejected
+    }
 
     fun IsNetworkAvailable(activity: Activity):Boolean{
         var isNetwork = false
@@ -161,6 +166,11 @@ object GlobalUsage {
 
     fun formatNumber(number: Int): String {
         val df = DecimalFormat("#,###,###")
+        return df.format(number)
+    }
+
+    fun perFormat(number: Double): String {
+        val df = DecimalFormat("###.#")
         return df.format(number)
     }
 

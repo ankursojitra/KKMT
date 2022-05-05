@@ -301,7 +301,16 @@ object NetworkServices {
             @FieldMap params: Map<String, String>,
             @Header("token") token: String
         ): Call<ReviewSubmitModel>
+    }
 
+    //Item Redeem Service
+    interface EmployeeReportUpdateService {
+        @POST("api-employee-report-update")
+        @FormUrlEncoded
+        fun EmployeeReportData(
+            @FieldMap params: Map<String, String>,
+            @Header("token") token: String
+        ): Call<ReviewSubmitModel>
     }
 
     //Item Redeem Service
