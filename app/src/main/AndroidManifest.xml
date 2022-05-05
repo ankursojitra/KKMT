@@ -45,10 +45,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="n">
         <activity
             android:name=".Activity.Survey.SurveyScreen"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.MAIN"
+                    android:screenOrientation="portrait" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".AlertScreen"
             android:theme="@style/Transparent" />
@@ -168,19 +177,7 @@
         <activity
             android:name=".Activity.Register.upload_doc"
             android:exported="true"
-            android:screenOrientation="portrait">
-
-            <!--
-            <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN"
-                    android:screenOrientation="portrait" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-
-        </activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activity.Register.Register_User"
             android:screenOrientation="portrait" />
@@ -197,13 +194,13 @@
             android:name=".Activity.Splash.Splash"
             android:exported="true"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN"
-                    android:screenOrientation="portrait" />
+<!--            <intent-filter>-->
+<!--                <action-->
+<!--                    android:name="android.intent.action.MAIN"-->
+<!--                    android:screenOrientation="portrait" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity> <!-- <activity -->
         <!-- android:name=".MainActivity" -->
         <!-- android:screenOrientation="portrait" /> -->

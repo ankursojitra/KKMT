@@ -110,6 +110,7 @@ REDEEM CREDITS FOR GOODS &amp; SERVICES</string>
     <string name="review_msg">By submitting the reviews you will earn points describe below </string>
     <string name="networkmeaasge">Network Not Available</string>
     <string name="KKMTidrequired">KKMT ID required.</string>
+    <string name="unverifiedlevel">You need to verify first to earn/spend credits.</string>
 
 
     <string name="onestar">1 star</string>

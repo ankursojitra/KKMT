@@ -39,8 +39,8 @@
                 android:layout_height="@dimen/_35dp"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:padding="@dimen/_10dp"
-                android:visibility="invisible"
                 android:src="@drawable/ic_back"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -75,30 +75,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cnt_tool">
 
-<!--            <com.potyvideo.library.AndExoPlayerView-->
-<!--                android:id="@+id/andExoPlayerView"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="0dp"-->
-<!--                app:andexo_aspect_ratio="aspect_16_9"-->
-<!--                app:andexo_full_screen="true"-->
-<!--                app:andexo_resize_mode="Fit"-->
-<!--                app:andexo_show_controller="true"-->
-<!--                app:default_artwork="@drawable/expe_logo"-->
+            <!--            <com.potyvideo.library.AndExoPlayerView-->
+            <!--                android:id="@+id/andExoPlayerView"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="0dp"-->
+            <!--                app:andexo_aspect_ratio="aspect_16_9"-->
+            <!--                app:andexo_full_screen="true"-->
+            <!--                app:andexo_resize_mode="Fit"-->
+            <!--                app:andexo_show_controller="true"-->
+            <!--                app:default_artwork="@drawable/expe_logo"-->
 
-<!--                app:layout_constraintDimensionRatio="16:9"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.5"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-                        <com.google.android.exoplayer2.ui.PlayerView
-                            android:id="@+id/video_view"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintDimensionRatio="16:9"
-                            app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+            <!--                app:layout_constraintDimensionRatio="16:9"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintHorizontal_bias="0.5"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent" />-->
+            <com.google.android.exoplayer2.ui.PlayerView
+                android:id="@+id/video_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:surface_type="surface_view"
+                app:use_controller="true"
+                app:default_artwork="@drawable/expe_logo"
+                app:use_artwork="true"
+                app:layout_constraintDimensionRatio="16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.youtube.player.YouTubePlayerView
                 android:id="@+id/youtube_player_view"
@@ -113,14 +117,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-<!--        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView-->
-<!--            android:id="@+id/youtube_player_view"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:videoId="J1rOfVst-EQ"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/cnt_tool"/>-->
+        <!--        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView-->
+        <!--            android:id="@+id/youtube_player_view"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:videoId="J1rOfVst-EQ"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/cnt_tool"/>-->
 
 
         <!--    <androidx.core.widget.NestedScrollView-->

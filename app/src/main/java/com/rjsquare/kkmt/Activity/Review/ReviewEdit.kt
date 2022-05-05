@@ -51,6 +51,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.*
+import java.nio.charset.StandardCharsets
 import java.util.*
 
 
@@ -61,9 +62,8 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     var photoFileName = "photo.jpg"
     var photoFile: File? = null
     var DaudioFilePath = ""
-    var audioFilePath = "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
-
-    //    var audioFilePath = ""
+//    var audioFilePath = "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+        var audioFilePath = ""
     var isPlaying = false
     var isRecoding = false
     var hasAudio = false
@@ -807,16 +807,20 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun ConvertAudioToBase64() {
-
-        val audioBytes: ByteArray
         try {
             val file = File(audioFilePath)
             val bytes: ByteArray = loadFile(file)!!
-
             // Here goes the Base64 string
-            voiceNoteString = Base64.encodeToString(bytes, Base64.DEFAULT)
-            Log.e("TAG", "StringAudio : " + voiceNoteString)
+            voiceNoteString = Base64.encodeToString(bytes, Base64.NO_WRAP)
 
+            //Print long string in logcat
+//            val maxLogSize = 1000
+//            for (i in 0..voiceNoteString.length / maxLogSize) {
+//                val start = i * maxLogSize
+//                var end = (i + 1) * maxLogSize
+//                end = if (end > voiceNoteString.length) voiceNoteString.length else end
+//                Log.e("TAG ::: ", voiceNoteString.substring(start, end))
+//            }
 
             //Decode Audio File
 //            val fos = FileOutputStream(File(DaudioFilePath))
@@ -1094,12 +1098,12 @@ class ReviewEdit : AppCompatActivity(), View.OnClickListener {
         DB_ReviewEdit.txtRecodinglbl.visibility = View.VISIBLE
 //        audioFile.record()
 
-        audioFilePath = getAudioFileUri("review.mp3").absolutePath
+        audioFilePath = getAudioFileUri("review.m4a").absolutePath
         recorder = MediaRecorder()
         recorder!!.setAudioSource(MediaRecorder.AudioSource.MIC)
-        recorder!!.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+        recorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
         recorder!!.setOutputFile(audioFilePath)
-        recorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+        recorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
 
         try {
             recorder!!.prepare()
