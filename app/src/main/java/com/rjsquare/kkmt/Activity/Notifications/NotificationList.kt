@@ -1,5 +1,6 @@
 package com.rjsquare.kkmt.Activity.Notifications
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
@@ -17,6 +18,7 @@ class NotificationList : AppCompatActivity(), View.OnClickListener {
     lateinit var mArray_NotificationModel: ArrayList<NotificationModel>
 
     override fun onBackPressed() {
+//        setResult(Activity.RESULT_OK)
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
     }

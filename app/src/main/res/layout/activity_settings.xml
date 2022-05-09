@@ -46,7 +46,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
+            <View
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_2dp"
                 android:background="@color/white_8"

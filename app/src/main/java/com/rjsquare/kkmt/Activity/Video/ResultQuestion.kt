@@ -50,7 +50,6 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
             DB_ResultQuestion.txtWatchmore.setOnClickListener(this)
             DB_ResultQuestion.cntBacktohome.setOnClickListener(this)
 
-            SetUpUIData()
             if (!GlobalUsage.IsNetworkAvailable(this)) {
                 Network.showDialog(this)
                 return
@@ -75,7 +74,7 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
     private fun SetUpUIData() {
         val ansTotal = VideoPlayer.VideoData.question!!.size
         DB_ResultQuestion.txtCorrect.text = "Correct : $ansTotal Answers"
-        DB_ResultQuestion.txtCredit.text = VideoPlayer.VideoData.credit
+        DB_ResultQuestion.txtCredit.text = GlobalUsage.formatNumber(VideoPlayer.VideoData.credit!!.toInt())
     }
 
     private fun CompleteQuestion() {
@@ -111,7 +110,7 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
                 ) {
                     Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-
+                        SetUpUIData()
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         GlobalUsage.UserLogout(this@ResultQuestion)
                     } else {
@@ -144,13 +143,13 @@ class ResultQuestion : AppCompatActivity(), View.OnClickListener {
                 GlobalUsage.lastClick =
                     System.currentTimeMillis() + GlobalUsage.clickInterval
                 if (view == DB_ResultQuestion.imgBack) {
-                    Video.thisVideo.finish()
+                    Video.thisVideo.onBackPressed()
                     onBackPressed()
                 } else if (view == DB_ResultQuestion.txtWatchmore) {
                     setResult(Activity.RESULT_OK)
                     onBackPressed()
                 } else if (view == DB_ResultQuestion.cntBacktohome) {
-                    Video.thisVideo.finish()
+                    Video.thisVideo.onBackPressed()
                     onBackPressed()
                 }
             }

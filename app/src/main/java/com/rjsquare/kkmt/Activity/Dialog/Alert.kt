@@ -30,6 +30,8 @@ object Alert {
         GlobalUsage.alertDialogVisible = true
 
         DB_AlertDialog.txtAlertok.setOnClickListener {
+            GlobalUsage.alertDialogVisible = false
+            customDialog.dismiss()
             if (GlobalUsage.ItemRedeemed) {
                 GlobalUsage.ItemRedeemed = false
                 activity.setResult(Activity.RESULT_OK)
@@ -39,9 +41,10 @@ object Alert {
                     R.anim.activity_back_in,
                     R.anim.activity_back_out
                 )
+            } else if (!GlobalUsage.isLuckySpinAvailable) {
+                GlobalUsage.isLuckySpinAvailable = true
+                activity.onBackPressed()
             }
-            GlobalUsage.alertDialogVisible = false
-            customDialog.dismiss()
         }
     }
 }

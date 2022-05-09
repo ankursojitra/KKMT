@@ -67,15 +67,15 @@ class Settings : AppCompatActivity(), View.OnClickListener {
                 } else if (view == DB_Settings.cntPrivacyMain) {
                     Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
                 } else if (view == DB_Settings.cntSecurityMain) {
-                    Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+                    GlobalUsage.NextScreen(this, Intent(this, Security::class.java))
                 } else if (view == DB_Settings.cntAdsMain) {
-                    Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+                    GlobalUsage.NextScreen(this, Intent(this, Ads::class.java))
                 } else if (view == DB_Settings.cntAccountMain) {
                     GlobalUsage.NextScreen(this,Intent(this, Profile::class.java))
                 } else if (view == DB_Settings.cntHelpMain) {
-                    Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+                    GlobalUsage.NextScreen(this,Intent(this, Help::class.java))
                 } else if (view == DB_Settings.cntAboutMain) {
-                    Toast.makeText(this, "Coming soon...", Toast.LENGTH_SHORT).show()
+                    GlobalUsage.NextScreen(this,Intent(this, About::class.java))
                 }
             }
         } catch (NE: NullPointerException) {

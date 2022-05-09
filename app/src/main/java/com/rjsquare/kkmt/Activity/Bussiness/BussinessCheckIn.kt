@@ -131,6 +131,7 @@ class BussinessCheckIn : AppCompatActivity(), View.OnClickListener {
             onBackPressed()
         } else if (v == DB_BussinessCheckIn.txtContinue) {
             GlobalUsage.NextScreen(this, Intent(this, SearchEmployee::class.java))
+            finish()
         } else if (v == DB_BussinessCheckIn.cntCheckout) {
             onBackPressed()
         }

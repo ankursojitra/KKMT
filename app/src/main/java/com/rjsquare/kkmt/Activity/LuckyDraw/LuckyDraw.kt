@@ -1,5 +1,6 @@
 package com.rjsquare.kkmt.Activity.LuckyDraw
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.util.Log
@@ -7,13 +8,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
 import com.rjsquare.kkmt.Activity.Dialog.Alert
 import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.Dialog.Network
 import com.rjsquare.kkmt.Activity.Dialog.UnAuthorized
-
 import com.rjsquare.kkmt.AppConstant.Constants
 import com.rjsquare.kkmt.AppConstant.GlobalUsage
 import com.rjsquare.kkmt.R
@@ -32,6 +31,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
     lateinit var creditList: ArrayList<String>
     var Spinning = false
     override fun onBackPressed() {
+        setResult(Activity.RESULT_OK)
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
     }
@@ -50,18 +50,7 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
             DB_LuckyDraw.luckyWheel.setLuckyWheelCenterImage(resources.getDrawable(R.drawable.blank))
             DB_LuckyDraw.luckyWheel.setLuckyWheelCursorImage(R.drawable.spin_pin)
 
-            DB_LuckyDraw.txtSpin.setOnClickListener(this)
             DB_LuckyDraw.imgBack.setOnClickListener(this)
-
-//            creditList = ArrayList()
-//            creditList.add("50")
-//            creditList.add("100")
-//            creditList.add("500")
-//            creditList.add("1000")
-//            creditList.add("1200")
-//            creditList.add("2000")
-//            creditList.add("5000")
-//            creditList.add("10000")
 
             DB_LuckyDraw.cntBacktoHome.setOnClickListener(this)
 
@@ -143,30 +132,11 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
     private fun GetCredit(CreditText: String): String {
         val newString = CreditText.replace(" ", "")
         return newString
-//        if (CreditText.equals("5 0", true)) {
-//            return "50"
-//        } else if (CreditText.equals("1 0 0", true)) {
-//            return "100"
-//        } else if (CreditText.equals("5 0 0", true)) {
-//            return "500"
-//        } else if (CreditText.equals("1 0 0 0", true)) {
-//            return "1000"
-//        } else if (CreditText.equals("1 2 0 0", true)) {
-//            return "1200"
-//        } else if (CreditText.equals("2 0 0 0", true)) {
-//            return "2000"
-//        } else if (CreditText.equals("5 0 0 0", true)) {
-//            return "5000"
-//        } else if (CreditText.equals("1 0 0 0 0", true)) {
-//            return "10000"
-//        } else {
-//            return "0"
-//        }
     }
 
     private fun CheckLuckyDrawAvailable() {
         try {
-
+            Loader.showLoader(this)
             //Here the json data is add to a hash map with key data
             val params: MutableMap<String, String> =
                 HashMap()
@@ -192,10 +162,15 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                 ) {
                     Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        if (response.body()!!.data!!.is_eligible.equals("No", true)) {
-                            Alert.showDialog(this@LuckyDraw,response.body()!!.message!!)
-//                            DB_LuckyDraw.txtAlertmsg.text = response.body()!!.message
-//                            DB_LuckyDraw.cntAlert.visibility = View.VISIBLE
+                        if (response.body()!!.data!!.is_eligible.equals(Constants.NO, true)) {
+                            GlobalUsage.isLuckySpinAvailable = false
+                            Alert.showDialog(this@LuckyDraw, response.body()!!.message!!)
+                        } else if (response.body()!!.data!!.is_eligible.equals(
+                                Constants.YES,
+                                true
+                            )
+                        ) {
+                            DB_LuckyDraw.txtSpin.setOnClickListener(this@LuckyDraw)
                         } else {
                             Log.e("TAG", "Spin available")
                         }
@@ -253,12 +228,13 @@ class LuckyDraw : AppCompatActivity(), View.OnClickListener {
                 ) {
                     Loader.hideLoader()
                     if (response.body()!!.status.equals(Constants.ResponseSucess)) {
-                        DB_LuckyDraw.txtCreditEarn.text = getCredit
+                        DB_LuckyDraw.txtCreditEarn.text =
+                            "${GlobalUsage.formatNumber(getCredit.toInt())}"
                         DB_LuckyDraw.cntConfirmation.visibility = View.VISIBLE
                     } else if (response.body()!!.status.equals(Constants.ResponseUnauthorized)) {
                         UnAuthorized.showDialog(this@LuckyDraw)
                     } else {
-                        Alert.showDialog(this@LuckyDraw,response.body()!!.message!!)
+                        Alert.showDialog(this@LuckyDraw, response.body()!!.message!!)
 //                        DB_LuckyDraw.txtAlertmsg.text = response.body()!!.message
 //                        DB_LuckyDraw.cntAlert.visibility = View.VISIBLE
                     }

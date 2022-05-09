@@ -1,5 +1,6 @@
 package com.rjsquare.kkmt.AppConstant
 
+import android.app.Activity
 import android.app.Application
 import android.content.ActivityNotFoundException
 import android.util.Log
@@ -9,10 +10,10 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.gson.Gson
 import com.rjsquare.cricketscore.Retrofit2Services.MatchPointTable.ApiCallingInstance
+import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Fragment.Home
 import com.rjsquare.kkmt.Helpers.Preferences
-import com.rjsquare.kkmt.Network.InternetCheck
 import com.rjsquare.kkmt.RetrofitInstance.Events.NetworkServices
 import com.rjsquare.kkmt.RetrofitInstance.LogInCall.UserLogIn_Model
 import com.rjsquare.kkmt.RetrofitInstance.RegisterUserCall.UserInfoData_Model
@@ -55,8 +56,9 @@ class ApplicationClass : Application(), LifecycleObserver {
             return mUserInfoData_Model
         }
 
-        fun updateUserInfo() {
+        fun updateUserInfo(activity: Activity) {
             try {
+                Loader.showLoader(activity)
                 val userModel = GlobalUsage.userInfoModel.data!!
                 //Here the json data is add to a hash map with key data
                 val params: MutableMap<String, String> =
@@ -83,7 +85,7 @@ class ApplicationClass : Application(), LifecycleObserver {
                         Log.e("GetResponsesas", ": " + Gson().toJson(response.body()!!))
 
                         if (response.body()!!.status.equals(Constants.ResponseSucess, true)) {
-
+                            Loader.hideLoader()
                             GlobalUsage.userInfoModel = response.body()!!
                             Preferences.StoreString(
                                 Constants.Pref_UserDataModel,
@@ -166,10 +168,7 @@ class ApplicationClass : Application(), LifecycleObserver {
 //            IsUserEmployee = IsEmployee()
 //        }
 
-        if (GlobalUsage.userLogedIn) {
-            updateUserInfo()
-            GlobalUsage.isUserEmployee = GlobalUsage.IsEmployee()
-        }
+
 
     }
 }

@@ -93,7 +93,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
             }
             DailyChallanges((++dayPageNo).toString(), PagePerlimit.toString())
             WeeklyChallanges((++weekPageNo).toString(), PagePerlimit.toString())
-            MonthlyChallanges((++monthPageNo).toString(), PagePerlimit.toString())
+//            MonthlyChallanges((++monthPageNo).toString(), PagePerlimit.toString())
 //            var mChallengesModel = ChallengesModel()
 //            mChallengesModel.Txt1 = "Watch 3 Videos"
 //            mChallengesModel.Txt2 = "Check-in into 1 location"
@@ -482,7 +482,7 @@ class Challenges : AppCompatActivity(), View.OnClickListener {
                     )
 
                 } else if (view == DB_Challenges.txtWeekly) {
-                    DB_Challenges.txtChallangesLbl.setText(getString(R.string.challangemonthly))
+                    DB_Challenges.txtChallangesLbl.setText(getString(R.string.challangeweekly))
                     UncheckSelection()
                     setUpWeeklyList()
                     DB_Challenges.rrChallengesWeekly.visibility = View.VISIBLE

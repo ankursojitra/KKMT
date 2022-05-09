@@ -35,14 +35,6 @@ class VideosAdapter(
         val width = parent.measuredWidth
         Width = width
         return View_holder(binding)
-
-//        val view: View =
-//            LayoutInflater.from(parent.context).inflate(R.layout.raw_video_frame, parent, false)
-//        val height = parent.measuredHeight
-//        val width = parent.measuredWidth
-//        Width = width
-////        view.layoutParams = RecyclerView.LayoutParams(width, height)
-//        return View_holder(view)
     }
 
     override fun onBindViewHolder(holder: View_holder, position: Int) {
@@ -52,7 +44,7 @@ class VideosAdapter(
             holder.lVideoesModelSelected = mVideoesModel
 
             holder.DB_RawVideoFrameBinding.txtVideoTitle.text = mVideoesModel.title
-            holder.DB_RawVideoFrameBinding.txtPoints.text = mVideoesModel.credit
+            holder.DB_RawVideoFrameBinding.txtPoints.text = GlobalUsage.formatNumber(mVideoesModel.credit!!.toInt())
         } catch (NE: NullPointerException) {
             NE.printStackTrace()
         } catch (IE: IndexOutOfBoundsException) {
