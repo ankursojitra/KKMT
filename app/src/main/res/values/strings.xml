@@ -11,6 +11,7 @@
     <string name="verified">Verified</string>
     <string name="unverified">Unverified</string>
     <string name="checkin">CheckIn</string>
+    <string name="successful">Successful</string>
     <string name="cancel">Cancel</string>
     <string name="recording">Recording...</string>
     <string name="attention">Attention</string>
@@ -78,6 +79,8 @@
     <string name="nostore">No Store data found</string>
     <string name="deliverylocation">Delivery Location</string>
     <string name="picklocation">Pick Up Location</string>
+    <string name="about">About</string>
+    <string name="privacypolicy">Privacy Policy</string>
 
 
     <string name="networktitle">Network issue</string>
@@ -89,7 +92,7 @@
     <!--    Messages-->
     <string name="challengesmsg">Complete Challenges to Earn Additional Credits</string>
     <string name="loginmsg">WE ARE HAPPY TO HAVE YOU.\n LOGIN OR SIGNUP
-        TO BEGIN YOUR EXPERIENCE.</string>
+            TO BEGIN YOUR EXPERIENCE.</string>
     <string name="otpmsg">ONE-TIME PASSWORD (OTP) WAS SENT TO YOUR MOBILE TELEPHONE NUMBER. PLEASE ENTER IT BELOW.</string>
     <string name="docmsg">File must be in PDF or JPG</string>
     <string name="doc_msg">Upload and verify document</string>
@@ -98,7 +101,7 @@
     <string name="loginalertmsg">Login Message</string>
     <string name="docvalidatemsg">File must be less than 5 MB in size.</string>
     <string name="store_msg">YOUR FEEDBACK MATTERS.
-REDEEM CREDITS FOR GOODS &amp; SERVICES</string>
+            REDEEM CREDITS FOR GOODS &amp; SERVICES</string>
     <string name="businessmsg">Business name is require.</string>
     <string name="LuckyDrawmsg">SPIN TO WIN FREE CREDITS</string>
     <string name="eventsmsg">YOU’RE INVITED</string>
@@ -111,7 +114,26 @@ REDEEM CREDITS FOR GOODS &amp; SERVICES</string>
     <string name="review_msg">By submitting the reviews you will earn points describe below </string>
     <string name="networkmeaasge">Network Not Available</string>
     <string name="KKMTidrequired">KKMT ID required.</string>
-    <string name="unverifiedlevel">You need to verify first to earn/spend credits.</string>
+    <string name="security">All Reviews you submit are Confidential.\n\n
+        Reviews are stored on our server and protected by our security systems.\n\n
+        We do not disclose any of your specific personal details to Employees or Business owners.\n\n
+        Our staff members are bound by Confidentiality Agreements and will be severely penalized if your personal details are ever disclosed to any third party.
+            </string>
+    <string name="ads">We pride ourselves in not offering traditional Ads.\n\n
+All of our content is geared toward customer education and employee improvement.\n\n
+Viewing any of our video content is completely Optional.\n\n
+We do not sell your data to any third parties.</string>
+    <!--    <string name="unverifiedlevel">You need to verify first to earn/spend credits.</string>-->
+    <string name="unverifiedlevel">To Protect the integrity of our system, please Become a Verified User by Uploading the relevant documents.\n\n
+            You may continue using the EXPE app but you will not earn any more credits until you become Verified.</string>
+    <string name="help">If you have any questions, feel free to reach out.\n\n
+        Whatsapp or Call: 1(868)283-5568 or 1(868)313-5568\n\n
+        Email: HELP@KKMTGROUP.com
+</string>
+    <string name="aboutmsg">The EXPE Mobile Application and all respective trademarks are owned and operated by KKMT Research Limited, a subsidiary of KKMT Holdings Limited.\n\n
+The KKMT Group of Companies was formed to create positive disruption in Customer Service within Trinidad and Tobago whilst delivering dynamic solutions to all of our partners.\n\n
+We look forward to serving you.
+</string>
 
 
     <string name="onestar">1 star</string>

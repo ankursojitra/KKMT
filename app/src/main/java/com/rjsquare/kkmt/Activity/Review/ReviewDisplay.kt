@@ -176,7 +176,11 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
         DB_ReviewDisplay.txtEdit.text =
             getString(R.string.editadditiondetail) + " ($differHours Hours Left)"
 
-        if (GlobalUsage.ReviewInfoModel.review_status!!.equals(Constants.Approve, true) || GlobalUsage.isReviewChange) {
+        if (GlobalUsage.ReviewInfoModel.review_status!!.equals(
+                Constants.Approve,
+                true
+            ) || GlobalUsage.isReviewChange
+        ) {
             DB_ReviewDisplay.cntEditdetails.visibility = View.GONE
         } else {
             if (differHours < GlobalUsage.EditReviewHours) {
@@ -389,12 +393,16 @@ class ReviewDisplay : AppCompatActivity(), View.OnClickListener {
                 onBackPressed()
             } else if (v == DB_ReviewDisplay.cntBacktohome) {
                 if (GlobalUsage.isNewReview) {
+//                    var LogInIntent = Intent(this, HomeActivity::class.java)
+//                    LogInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                    startActivity(LogInIntent)
+//                    finish()
+                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
                     Bussiness_Beacon_Search.thisBussiness_Activity.finish()
-                    BussinessCheckIn.thisBusinessCheckIn.finish()
+//                    BussinessCheckIn.thisBusinessCheckIn.finish()
                     SearchEmployee.thisSearchEmployee.finish()
                     ReviewEdit.thisReviewEdit.finish()
                     finish()
-                    overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
                 } else {
                     HomeActivity.DB_HomeActivity.HomeScreen.ContentView.cntHome.performClick()
                     ReviewList.reviewListActivity.finish()

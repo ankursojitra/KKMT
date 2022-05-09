@@ -52,6 +52,7 @@ object GlobalUsage {
     var userLogedIn: Boolean = false
     var isNewReview = true
     var isReviewChange = true
+    var isLuckySpinAvailable = true
     var empReviewModelSelected: ReviewInfodata? = null
     var mSearchModelSelected: SearchModel? = null
     var mEventsModelSelected: Events_Model.EventsData? = null
@@ -99,7 +100,6 @@ object GlobalUsage {
     var networkDialogVisible = false
     var unauthorizedDialogVisible = false
     var loaderDialogVisible = false
-
 
     //Functions
 
@@ -170,7 +170,7 @@ object GlobalUsage {
     }
 
     fun perFormat(number: Double): String {
-        val df = DecimalFormat("###.#")
+        val df = DecimalFormat("###.##")
         return df.format(number)
     }
 

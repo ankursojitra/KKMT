@@ -55,6 +55,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
         lateinit var thisHomeActivity: Activity
+        val RECALL_USERHISTORY = 1001
         lateinit var DB_HomeActivity: ActivityHomeBinding
         var height: Int = 0
         var ismEdtSearchbarInit = false
@@ -84,7 +85,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         var LeaderBoardFr: Fragment? = null
 
         fun UserInfoCall() {
-            ApplicationClass.updateUserInfo()
+            ApplicationClass.updateUserInfo(thisHomeActivity)
         }
 
         fun UserVerifiedUpdateUI() {
@@ -99,9 +100,13 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         private fun CheckUserLevelVerified() {
-            if (GlobalUsage.userInfoModel.data!!.credit_details!!.level!!.toInt() >= Constants.VerifiedUserLevel
-                && GlobalUsage.userInfoModel.data!!.approve.equals(Constants.NO)) {
-                    Alert.showDialog(thisHomeActivity, thisHomeActivity.getString(R.string.unverifiedlevel))
+            if (GlobalUsage.userInfoModel.data!!.credit_details!!.level!!.toInt() > Constants.VerifiedUserLevel
+                && GlobalUsage.userInfoModel.data!!.approve.equals(Constants.NO)
+            ) {
+                Alert.showDialog(
+                    thisHomeActivity,
+                    thisHomeActivity.getString(R.string.unverifiedlevel)
+                )
             }
         }
 
@@ -178,6 +183,10 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
 
             GlobalUsage.userLogedIn =
                 Preferences.ReadBoolean(Constants.Pref_UserLogedIn, false)
+            if (GlobalUsage.userLogedIn) {
+                ApplicationClass.updateUserInfo(this)
+                GlobalUsage.isUserEmployee = GlobalUsage.IsEmployee()
+            }
             thisHomeActivity = this
             mFragmentManager = supportFragmentManager
             GlobalUsage.IsRegisterFlow = false
@@ -299,7 +308,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                         if (!DB_HomeActivity.drawerLayout.isDrawerOpen(GravityCompat.START))
                             DB_HomeActivity.drawerLayout.openDrawer(GravityCompat.START)
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntProfileMenu) {
-                        GlobalUsage.NextScreen(this, Intent(this, Profile::class.java))
+                        GlobalUsage.NextScreenForResult(this,
+                            RECALL_USERHISTORY, Intent(this, Profile::class.java))
                         closeDrawer()
                     } else if (view == DB_HomeActivity.nevigationMenuview.cntNotificationMenu) {
                         GlobalUsage.NextScreen(this, Intent(this, NotificationList::class.java))
@@ -500,6 +510,14 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
                     R.drawable.ic_menu
                 )
             )
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RECALL_USERHISTORY && resultCode == Activity.RESULT_OK) {
+
+            ApplicationClass.updateUserInfo(this)
         }
     }
 

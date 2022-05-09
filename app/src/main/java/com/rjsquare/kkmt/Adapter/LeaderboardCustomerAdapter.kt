@@ -51,8 +51,8 @@ class LeaderboardCustomerAdapter(
             holder.CustomerInfoSelected = mLeaderBoardModel
             holder.DB_RawLeaderboardFrameBinding.txtName.text =
                 holder.CustomerInfoSelected!!.username
-            holder.DB_RawLeaderboardFrameBinding.txtCredits.text =
-                holder.CustomerInfoSelected!!.credit
+            holder.DB_RawLeaderboardFrameBinding.txtCredits.text = "${GlobalUsage.formatNumber(holder.CustomerInfoSelected!!.credit.toInt())}"
+
             holder.DB_RawLeaderboardFrameBinding.txtRank.text = holder.CustomerInfoSelected!!.rank
 
             Picasso.with(moContext).load(holder.CustomerInfoSelected!!.userimage)

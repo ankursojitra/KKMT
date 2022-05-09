@@ -36,6 +36,7 @@ class Video : AppCompatActivity(), View.OnClickListener {
     var IsVideoCallavailable = false
 
     override fun onBackPressed() {
+        setResult(Activity.RESULT_OK)
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
     }

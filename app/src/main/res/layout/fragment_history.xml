@@ -194,11 +194,11 @@
                             android:fontFamily="@font/lato_regular"
                             android:gravity="center"
                             android:padding="@dimen/_4dp"
-                            android:text="70%"
+                            android:text="0%"
                             android:singleLine="true"
                             android:maxLines="1"
                             android:textColor="@android:color/white"
-                            android:textSize="@dimen/_12dp"
+                            android:textSize="@dimen/_11dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -262,9 +262,9 @@
                             android:padding="@dimen/_4dp"
                             android:singleLine="true"
                             android:maxLines="1"
-                            android:text="05%"
+                            android:text="0%"
                             android:textColor="@android:color/white"
-                            android:textSize="@dimen/_12dp"
+                            android:textSize="@dimen/_11dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -325,11 +325,11 @@
                             android:fontFamily="@font/lato_regular"
                             android:gravity="center"
                             android:padding="@dimen/_4dp"
-                            android:text="25%"
+                            android:text="0%"
                             android:singleLine="true"
                             android:maxLines="1"
                             android:textColor="@android:color/white"
-                            android:textSize="@dimen/_12dp"
+                            android:textSize="@dimen/_11dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -390,11 +390,11 @@
                             android:fontFamily="@font/lato_regular"
                             android:gravity="center"
                             android:padding="@dimen/_4dp"
-                            android:text="00%"
+                            android:text="0%"
                             android:singleLine="true"
                             android:maxLines="1"
                             android:textColor="@android:color/white"
-                            android:textSize="@dimen/_12dp"
+                            android:textSize="@dimen/_11dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -596,6 +596,7 @@
                                     android:layout_width="@dimen/_5dp"
                                     android:layout_height="@dimen/_5dp"
                                     android:layout_margin="@dimen/_2dp"
+                                    android:layout_marginTop="8dp"
                                     android:background="@drawable/round_sap"
                                     app:layout_constraintBottom_toBottomOf="@+id/txt_emprating"
                                     app:layout_constraintEnd_toStartOf="@id/txt_busname"
@@ -612,7 +613,7 @@
                                     android:text="@string/app_name"
                                     android:textColor="@color/darkgray"
                                     android:textSize="@dimen/_10dp"
-                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="@+id/txt_emprating"
                                     app:layout_constraintEnd_toEndOf="@+id/txt_empname"
                                     app:layout_constraintStart_toEndOf="@+id/view_sap"
                                     app:layout_constraintTop_toTopOf="@+id/txt_emprating" />
@@ -703,10 +704,11 @@
                                     android:text="Review : Pending"
                                     android:textColor="@color/appcolor"
                                     android:textSize="@dimen/_10dp"
+                                    app:layout_constraintBottom_toTopOf="@id/txt_empname1"
                                     app:layout_constraintEnd_toStartOf="@+id/txt_review_date1"
                                     app:layout_constraintStart_toEndOf="@+id/cardView_img1"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintBottom_toTopOf="@id/txt_empname1" />
+                                    app:layout_constraintVertical_chainStyle="packed" />
 
                                 <TextView
                                     android:id="@+id/txt_empname1"
@@ -739,12 +741,12 @@
                                     app:layout_constraintTop_toBottomOf="@+id/txt_empname1" />
 
 
-
                                 <View
                                     android:id="@+id/view_sap1"
                                     android:layout_width="@dimen/_5dp"
                                     android:layout_height="@dimen/_5dp"
                                     android:layout_margin="@dimen/_2dp"
+                                    android:layout_marginTop="9dp"
                                     android:background="@drawable/round_sap"
                                     app:layout_constraintBottom_toBottomOf="@+id/txt_emprating1"
                                     app:layout_constraintEnd_toStartOf="@id/txt_busname1"
@@ -853,10 +855,11 @@
                                     android:text="Review : Pending"
                                     android:textColor="@color/appcolor"
                                     android:textSize="@dimen/_10dp"
+                                    app:layout_constraintBottom_toTopOf="@id/txt_empname2"
                                     app:layout_constraintEnd_toStartOf="@+id/txt_review_date2"
                                     app:layout_constraintStart_toEndOf="@+id/cardView_img2"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintBottom_toTopOf="@id/txt_empname2"/>
+                                    app:layout_constraintVertical_chainStyle="packed" />
 
                                 <TextView
                                     android:id="@+id/txt_empname2"
@@ -893,6 +896,7 @@
                                     android:layout_width="@dimen/_5dp"
                                     android:layout_height="@dimen/_5dp"
                                     android:layout_margin="@dimen/_2dp"
+                                    android:layout_marginTop="9dp"
                                     android:background="@drawable/round_sap"
                                     app:layout_constraintBottom_toBottomOf="@+id/txt_emprating2"
                                     app:layout_constraintEnd_toStartOf="@id/txt_busname2"

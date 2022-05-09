@@ -48,8 +48,23 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="n">
         <activity
+            android:name=".Activity.Setting.PrivacyPolicy"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Setting.About"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Setting.Help"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Setting.Ads"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Setting.Security"
+            android:exported="false" />
+        <activity
             android:name=".Activity.Survey.SurveyScreen"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".AlertScreen"
             android:theme="@style/Transparent" />
@@ -110,15 +125,17 @@
         <activity
             android:name=".Activity.Video.VideoPlayer"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:screenOrientation="portrait"
-            android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action-->
-<!--                    android:name="android.intent.action.MAIN"-->
-<!--                    android:screenOrientation="portrait" />-->
+            android:exported="true"
+            android:screenOrientation="portrait">
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action -->
+            <!-- android:name="android.intent.action.MAIN" -->
+            <!-- android:screenOrientation="portrait" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".Activity.Video.Video"
@@ -169,7 +186,7 @@
         <activity
             android:name=".Activity.Register.upload_doc"
             android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.Register.Register_User"
             android:screenOrientation="portrait" />

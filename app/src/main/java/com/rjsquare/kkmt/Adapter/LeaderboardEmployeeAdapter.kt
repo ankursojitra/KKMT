@@ -39,8 +39,8 @@ class LeaderboardEmployeeAdapter(
             holder.employeeInfoSelected = mLeaderBoardModel
             holder.DB_RawLeaderboardFrameBinding.txtName.text =
                 holder.employeeInfoSelected!!.username
-            holder.DB_RawLeaderboardFrameBinding.txtCredits.text =
-                holder.employeeInfoSelected!!.credit
+            holder.DB_RawLeaderboardFrameBinding.txtCredits.text = "${GlobalUsage.formatNumber(holder.employeeInfoSelected!!.credit.toInt())}"
+
             holder.DB_RawLeaderboardFrameBinding.txtRank.text = holder.employeeInfoSelected!!.rank
 
             Picasso.with(moContext).load(holder.employeeInfoSelected!!.userimage)

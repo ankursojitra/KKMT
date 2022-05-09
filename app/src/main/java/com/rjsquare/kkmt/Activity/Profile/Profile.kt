@@ -69,6 +69,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
     private lateinit var mGenderListView: View
 
     override fun onBackPressed() {
+        setResult(Activity.RESULT_OK)
         super.onBackPressed()
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out)
     }
@@ -562,7 +563,7 @@ class Profile : AppCompatActivity(), View.OnClickListener, OnSelectDateListener 
                             Constants.ResponseSucess, true
                         )
                     ) {
-                        ApplicationClass.updateUserInfo()
+                        ApplicationClass.updateUserInfo(this@Profile)
 
                     } else if (response.body()!!.status.equals(
                             Constants.ResponseUnauthorized, true

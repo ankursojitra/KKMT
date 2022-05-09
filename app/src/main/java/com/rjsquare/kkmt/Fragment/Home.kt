@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.rjsquare.kkmt.Activity.Dialog.Loader
 import com.rjsquare.kkmt.Activity.Events.EventsHome
 import com.rjsquare.kkmt.Activity.HomeActivity
 import com.rjsquare.kkmt.Activity.LuckyDraw.LuckyDraw
@@ -183,8 +182,8 @@ class Home : Fragment(), View.OnClickListener {
                             Intent(requireActivity(), NotificationList::class.java)
                         )
                     } else if (view == DB_FHome.cardViewLuckydraw) {
-                        GlobalUsage.NextScreen(
-                            requireActivity(),
+                        GlobalUsage.NextScreenForResult(
+                            requireActivity(), HomeActivity.RECALL_USERHISTORY,
                             Intent(requireActivity(), LuckyDraw::class.java)
                         )
                     } else if (view == DB_FHome.cardViewVideos) {
@@ -193,8 +192,8 @@ class Home : Fragment(), View.OnClickListener {
                             Intent(requireActivity(), Video::class.java)
                         )
                     } else if (view == DB_FHome.crdProfile) {
-                        GlobalUsage.NextScreen(
-                            requireActivity(),
+                        GlobalUsage.NextScreenForResult(
+                            requireActivity(), HomeActivity.RECALL_USERHISTORY,
                             Intent(requireActivity(), Profile::class.java)
                         )
                     }
