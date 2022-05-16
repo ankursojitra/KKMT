@@ -122,6 +122,32 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cnt_editProfile"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:visibility="invisible"
+                            android:background="@color/dialog_back1"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:id="@+id/img_userProfilae"
+                                android:layout_width="@dimen/_25dp"
+                                android:layout_height="@dimen/_25dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_img_picker"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:tint="@color/white" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,7 @@
     <color name="dropshadowcenter">#05000000</color>
     <color name="dropshadowbottom">#00000000</color>
     <color name="dialog_back">#802C2B2B</color>
+    <color name="dialog_back1">#992C2B2B</color>
     <color name="menu_saperator">#FC9A1F</color>
     <color name="menu_icon_back">#323352</color>
     <color name="blue_darklight">#2C2E4D</color>
@@ -39,7 +40,7 @@
     <color name="search1">#007DC6</color>
     <color name="search2">#DB2637</color>
     <color name="search3">#F3A009</color>
-    <color name="bottom_saperator">#4D007DC6</color>
+    <color name="bottom_saperator">#4DFFFFFF</color>
     <color name="leader_rank">#F2F2F2</color>
     <color name="current_rank">#FFE9CE</color>
     <color name="blue_saperator">#2120213A</color>

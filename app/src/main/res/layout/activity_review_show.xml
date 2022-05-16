@@ -127,25 +127,41 @@
 
 
                     <TextView
-                        android:id="@+id/textView19"
+                        android:id="@+id/txt_review"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/lato_bold"
                         android:gravity="center"
                         android:maxLines="3"
-                        android:text="REVIEW SUBMITTED \n\nA KKMT TEAM MEMBER WILL REVIEW SHORTLY"
+                        android:text="@string/newreview"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/_11dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/txt_reviewMessage"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/lato_bold"
+                        android:gravity="center"
+                        android:maxLines="3"
+                        android:layout_marginTop="@dimen/_12dp"
+                        android:text="@string/newreviewmsg"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/_11dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@+id/txt_review" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/scrl_view"
