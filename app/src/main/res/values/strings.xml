@@ -102,6 +102,10 @@
     <string name="docvalidatemsg">File must be less than 5 MB in size.</string>
     <string name="store_msg">YOUR FEEDBACK MATTERS.
             REDEEM CREDITS FOR GOODS &amp; SERVICES</string>
+    <string name="newreview">REVIEW SUBMITTED</string>
+    <string name="newreviewmsg">A KKMT TEAM MEMBER WILL REVIEW SHORTLY</string>
+    <string name="updatereview">YOUR REVIEW HAS BEEN UPDATED</string>
+    <string name="updatereviewmsg">CREDITS HAVE BEEN ADDED.\n IF YOU HAVE ANY QUERIES PLEASE CONTACT US VIA WHATSAPP</string>
     <string name="businessmsg">Business name is require.</string>
     <string name="LuckyDrawmsg">SPIN TO WIN FREE CREDITS</string>
     <string name="eventsmsg">YOU’RE INVITED</string>
@@ -135,6 +139,8 @@ The KKMT Group of Companies was formed to create positive disruption in Customer
 We look forward to serving you.
 </string>
 
+    <string name="GPSAlertDialogTitle">GPSAlertDialogTitle</string>
+    <string name="GPSAlertDialogMessage">GPSAlertDialogMessage</string>
 
     <string name="onestar">1 star</string>
     <string name="bad">Bad</string>

@@ -285,7 +285,7 @@
                 android:id="@+id/constraintLayout22"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bottomround"
+                android:background="@drawable/bus_bottom_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"

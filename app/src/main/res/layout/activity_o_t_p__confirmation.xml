@@ -41,7 +41,7 @@
                     android:id="@+id/constraintLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bottomround"
+                    android:background="@drawable/bus_bottom_back"
                     android:padding="@dimen/_8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
